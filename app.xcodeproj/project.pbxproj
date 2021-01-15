@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		09EEF7F325B160DB00838065 /* NativeSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 09EEF7F225B160DB00838065 /* NativeSDK */; };
+		09EEF7F725B1754F00838065 /* NativeSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 09EEF7F625B1754F00838065 /* NativeSDK */; };
 		4B27063524A3F24C00F12B48 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B27063424A3F24C00F12B48 /* AppDelegate.swift */; };
 		4B27063724A3F24C00F12B48 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B27063624A3F24C00F12B48 /* SceneDelegate.swift */; };
 		4B27063E24A3F25000F12B48 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4B27063D24A3F25000F12B48 /* Assets.xcassets */; };
@@ -94,7 +94,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				09EEF7F325B160DB00838065 /* NativeSDK in Frameworks */,
+				09EEF7F725B1754F00838065 /* NativeSDK in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -206,7 +206,7 @@
 			);
 			name = app;
 			packageProductDependencies = (
-				09EEF7F225B160DB00838065 /* NativeSDK */,
+				09EEF7F625B1754F00838065 /* NativeSDK */,
 			);
 			productName = app;
 			productReference = 4B27063124A3F24C00F12B48 /* NativeApp.app */;
@@ -219,7 +219,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1150;
-				LastUpgradeCheck = 1150;
+				LastUpgradeCheck = 1230;
 				ORGANIZATIONNAME = 2GIS;
 				TargetAttributes = {
 					4B27063024A3F24C00F12B48 = {
@@ -237,7 +237,7 @@
 			);
 			mainGroup = 4B27062824A3F24C00F12B48;
 			packageReferences = (
-				09EEF7F125B160DB00838065 /* XCRemoteSwiftPackageReference "NativeSDK" */,
+				09EEF7F525B1754F00838065 /* XCRemoteSwiftPackageReference "native-sdk-ios-swift-package" */,
 			);
 			productRefGroup = 4B27063224A3F24C00F12B48 /* Products */;
 			projectDirPath = "";
@@ -336,6 +336,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -396,6 +397,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -491,20 +493,20 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		09EEF7F125B160DB00838065 /* XCRemoteSwiftPackageReference "NativeSDK" */ = {
+		09EEF7F525B1754F00838065 /* XCRemoteSwiftPackageReference "native-sdk-ios-swift-package" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/brandFromNSK/NativeSDK.git";
+			repositoryURL = "https://github.com/2gis/native-sdk-ios-swift-package.git";
 			requirement = {
-				branch = main;
+				branch = master;
 				kind = branch;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		09EEF7F225B160DB00838065 /* NativeSDK */ = {
+		09EEF7F625B1754F00838065 /* NativeSDK */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 09EEF7F125B160DB00838065 /* XCRemoteSwiftPackageReference "NativeSDK" */;
+			package = 09EEF7F525B1754F00838065 /* XCRemoteSwiftPackageReference "native-sdk-ios-swift-package" */;
 			productName = NativeSDK;
 		};
 /* End XCSwiftPackageProductDependency section */

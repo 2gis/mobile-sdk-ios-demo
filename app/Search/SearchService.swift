@@ -34,6 +34,8 @@ final class SearchService {
 					dispatcher(.searchQuery(handler!.searchQuery()!))
 				case .incompleteTextHandler(let handler):
 					dispatcher(.setQueryText(handler!.queryText()))
+				@unknown default:
+					fatalError()
 			}
 		}
 	}

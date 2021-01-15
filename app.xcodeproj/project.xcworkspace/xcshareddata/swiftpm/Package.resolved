@@ -3,10 +3,10 @@
     "pins": [
       {
         "package": "NativeSDK",
-        "repositoryURL": "https://github.com/brandFromNSK/NativeSDK.git",
+        "repositoryURL": "https://github.com/2gis/native-sdk-ios-swift-package.git",
         "state": {
-          "branch": "main",
-          "revision": "e3d90c630564ef2c5f905d7145ef2cfc66dbc790",
+          "branch": "master",
+          "revision": "ad5a132cbff734222ea3671d651766d8e4efb341",
           "version": null
         }
       }

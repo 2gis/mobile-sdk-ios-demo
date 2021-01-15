@@ -36,6 +36,8 @@ private func makeIcon(for handler: SuggestHandler) -> Image {
 			icon = Image(systemName: "magnifyingglass")
 		case .incompleteTextHandler:
 			icon = Image(systemName: "text.insert")
+		@unknown default:
+			fatalError()
 	}
 	return icon
 }
