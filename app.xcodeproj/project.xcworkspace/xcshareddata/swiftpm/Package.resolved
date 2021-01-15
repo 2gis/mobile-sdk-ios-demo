@@ -1,0 +1,16 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "NativeSDK",
+        "repositoryURL": "https://github.com/brandFromNSK/NativeSDK.git",
+        "state": {
+          "branch": "main",
+          "revision": "e3d90c630564ef2c5f905d7145ef2cfc66dbc790",
+          "version": null
+        }
+      }
+    ]
+  },
+  "version": 1
+}
