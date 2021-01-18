@@ -57,9 +57,9 @@ struct RootView: View {
 					.default(Text("Тест перелетов")) {
 						self.viewModel.testCamera()
 					},
-					.default(Text("Тест добавления маркеров")) {
-						// TODO
-					},
+					// TODO
+					// .default(Text("Тест добавления маркеров")) {
+					// },
 					.cancel(Text("Отмена"))
 				])
 		}
