@@ -17,7 +17,7 @@ struct RootView: View {
 		NavigationView  {
 			ZStack(alignment: .bottomTrailing) {
 				self.viewFactory.makeMapView()
-				self.mapTestButton()
+				self.settingsButton()
 			}
 			.navigationBarItems(
 				leading: self.navigationBarLeadingItem()
@@ -36,14 +36,32 @@ struct RootView: View {
 		}
 	}
 
-	private func mapTestButton() -> some View {
+	@State private var showActionSheet = false
+	private func settingsButton() -> some View {
 		Button(action: {
-			self.viewModel.testCamera()
-		}) {
-			Image(systemName: "mappin.and.ellipse")
-				.background(Image(systemName: "circle").scaleEffect(2))
-				.padding([.bottom, .trailing], 40)
-				.contentShape(Rectangle().scale(2))
+			self.showActionSheet = true
+		}, label: {
+			Image(systemName: "list.bullet")
+				.frame(width: 40, height: 40, alignment: .center)
+				.contentShape(Rectangle())
+				.background(
+					Circle().fill(Color.white)
+				)
+		})
+		.padding([.bottom, .trailing], 40)
+		.actionSheet(isPresented: $showActionSheet) {
+			ActionSheet(
+				title: Text("Тестовые кейсы"),
+				message: Text("Выберите необходимый"),
+				buttons: [
+					.default(Text("Тест перелетов")) {
+						self.viewModel.testCamera()
+					},
+					.default(Text("Тест добавления маркеров")) {
+						// TODO
+					},
+					.cancel(Text("Отмена"))
+				])
 		}
 	}
 }
