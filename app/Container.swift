@@ -3,17 +3,13 @@ import PlatformSDK
 
 final class Container {
 
-	var map: Viewport {
-		self.sdk.viewport
-	}
-
 	private lazy var apiKeys: APIKeys = {
 		guard let info = Bundle.main.infoDictionary,
 			let dirKey = info["DGISDirectoryAPIKey"] as? String,
 			let mapKey = info["DGISMapAPIKey"] as? String,
 			let apiKeys = APIKeys(directory: dirKey, map: mapKey)
 		else {
-			fatalError("2GIS API keys are missing or invalid. Check info.plist")
+			fatalError("2GIS API keys are missing or invalid. Check Info.plist")
 		}
 		return apiKeys
 	}()
@@ -42,7 +38,7 @@ final class Container {
 			searchManagerFactory: { [sdk = self.sdk] in
 				sdk.searchManagerFactory.makeOnlineManager()!
 			},
-			viewport: self.sdk.viewport
+			map: self.sdk.map
 		)
 		return rootViewModel
 	}

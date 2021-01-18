@@ -6,7 +6,7 @@ final class RootViewModel {
 	let searchStore: SearchStore
 
 	private let searchManagerFactory: () -> ISearchManager
-	private let viewport: Viewport
+	private let map: Map
 
 	private var moveCameraCancellable: Cancellable?
 	private let testPoints: [(position: CameraPosition, time: TimeInterval, type: CameraAnimationType)] = {
@@ -46,10 +46,10 @@ final class RootViewModel {
 
 	init(
 		searchManagerFactory: @escaping () -> ISearchManager,
-		viewport: Viewport
+		map: Map
 	) {
 		self.searchManagerFactory = searchManagerFactory
-		self.viewport = viewport
+		self.map = map
 
 		let service = SearchService(
 			searchManagerFactory: self.searchManagerFactory,
@@ -81,7 +81,7 @@ final class RootViewModel {
 		let tuple = self.testPoints[index]
 		DispatchQueue.main.async {
 			self.moveCameraCancellable?.cancel()
-			self.moveCameraCancellable = self.viewport
+			self.moveCameraCancellable = self.map
 				.camera()
 				.move(
 					position: tuple.position,
