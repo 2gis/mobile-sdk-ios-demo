@@ -17,12 +17,13 @@ struct RootView: View {
 		NavigationView  {
 			ZStack(alignment: .bottomTrailing) {
 				self.viewFactory.makeMapView()
-					.navigationBarItems(
-						leading: self.navigationBarLeadingItem()
-					)
-					.navigationBarTitle("2GIS", displayMode: .inline)
 				self.mapTestButton()
 			}
+			.navigationBarItems(
+				leading: self.navigationBarLeadingItem()
+			)
+			.navigationBarTitle("2GIS", displayMode: .inline)
+			.edgesIgnoringSafeArea(.all)
 		}.navigationViewStyle(StackNavigationViewStyle())
 	}
 
@@ -41,7 +42,7 @@ struct RootView: View {
 		}) {
 			Image(systemName: "mappin.and.ellipse")
 				.background(Image(systemName: "circle").scaleEffect(2))
-				.padding([.bottom, .trailing], 30)
+				.padding([.bottom, .trailing], 40)
 				.contentShape(Rectangle().scale(2))
 		}
 	}
