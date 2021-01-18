@@ -17,13 +17,14 @@ struct RootView: View {
 		NavigationView  {
 			ZStack(alignment: .bottomTrailing) {
 				self.viewFactory.makeMapView()
-					.navigationBarItems(
-						leading: self.navigationBarLeadingItem()
-					)
-					.navigationBarTitle("2GIS", displayMode: .inline)
-				self.mapTestButton()
+				self.settingsButton()
 			}
-		}
+			.navigationBarItems(
+				leading: self.navigationBarLeadingItem()
+			)
+			.navigationBarTitle("2GIS", displayMode: .inline)
+			.edgesIgnoringSafeArea(.all)
+		}.navigationViewStyle(StackNavigationViewStyle())
 	}
 
 	private func navigationBarLeadingItem() -> some View {
@@ -35,14 +36,32 @@ struct RootView: View {
 		}
 	}
 
-	private func mapTestButton() -> some View {
+	@State private var showActionSheet = false
+	private func settingsButton() -> some View {
 		Button(action: {
-			self.viewModel.testCamera()
-		}) {
-			Image(systemName: "mappin.and.ellipse")
-				.background(Image(systemName: "circle").scaleEffect(2))
-				.padding([.bottom, .trailing], 30)
-				.contentShape(Rectangle().scale(2))
+			self.showActionSheet = true
+		}, label: {
+			Image(systemName: "list.bullet")
+				.frame(width: 40, height: 40, alignment: .center)
+				.contentShape(Rectangle())
+				.background(
+					Circle().fill(Color.white)
+				)
+		})
+		.padding([.bottom, .trailing], 40)
+		.actionSheet(isPresented: $showActionSheet) {
+			ActionSheet(
+				title: Text("Тестовые кейсы"),
+				message: Text("Выберите необходимый"),
+				buttons: [
+					.default(Text("Тест перелетов")) {
+						self.viewModel.testCamera()
+					},
+					// TODO
+					// .default(Text("Тест добавления маркеров")) {
+					// },
+					.cancel(Text("Отмена"))
+				])
 		}
 	}
 }
