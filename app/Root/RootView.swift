@@ -23,7 +23,7 @@ struct RootView: View {
 					.navigationBarTitle("2GIS", displayMode: .inline)
 				self.mapTestButton()
 			}
-		}
+		}.navigationViewStyle(StackNavigationViewStyle())
 	}
 
 	private func navigationBarLeadingItem() -> some View {
