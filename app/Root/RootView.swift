@@ -48,20 +48,24 @@ struct RootView: View {
 					Circle().fill(Color.white)
 				)
 		})
-		.padding([.bottom, .trailing], 40)
+		.padding([.bottom, .trailing], 40.0)
 		.actionSheet(isPresented: $showActionSheet) {
 			ActionSheet(
 				title: Text("Тестовые кейсы"),
 				message: Text("Выберите необходимый"),
 				buttons: [
-					.default(Text("Тест перелетов")) {
+					.default(Text("Тест перелетов по Москве")) {
 						self.viewModel.testCamera()
 					},
-					// TODO
-					// .default(Text("Тест добавления маркеров")) {
-					// },
+					.default(Text("Перелет в текущую геопозицию")) {
+						self.viewModel.showCurrentPosition()
+					},
+					.default(Text("Тест добавления маркеров")) {
+						// TODO
+					},
 					.cancel(Text("Отмена"))
 				])
 		}
+
 	}
 }
