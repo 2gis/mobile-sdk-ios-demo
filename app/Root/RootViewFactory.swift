@@ -3,12 +3,15 @@ import SwiftUI
 struct RootViewFactory {
 	private let mapUIViewFactory: () -> UIView
 	private let viewModel: RootViewModel
+	private let markerViewModel: MarkerViewModel
 
 	init(
 		viewModel: RootViewModel,
+		markerViewModel: MarkerViewModel,
 		mapUIViewFactory: @escaping () -> UIView
 	) {
 		self.viewModel = viewModel
+		self.markerViewModel = markerViewModel
 		self.mapUIViewFactory = mapUIViewFactory
 	}
 
@@ -19,5 +22,9 @@ struct RootViewFactory {
 	func makeSearchView() -> some View {
 		let store = self.viewModel.searchStore
 		return SearchView(store: store)
+	}
+
+	func makeMarkeView(show: Binding<Bool>) -> some View {
+		return MarkerView(viewModel: self.markerViewModel, show: show)
 	}
 }
