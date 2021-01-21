@@ -85,7 +85,7 @@ final class MarkerViewModel: ObservableObject {
 			do {
 				let mapObject = try MarkerBuilder()
 					.setIcon(svg: NSDataAsset(name: self.type.assetName)!.data)
-					.setPosition(latitude: position.point.latitude.value, longitude: position.point.longitude.value)
+					.setPosition(point: position.point)
 					.setText(text: text)
 					.setSize(self.size.size)
 					.build()
