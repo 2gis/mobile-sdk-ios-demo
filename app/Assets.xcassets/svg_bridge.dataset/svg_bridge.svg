@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="60px" height="60px" viewBox="0 0 60 60" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>poi_bridge_7_i</title>
+    <g id="poi_bridge_7_i" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Group-12" transform="translate(3.000000, 13.000000)" stroke="#FFFFFF" stroke-width="5">
+            <path d="M0,14 C6.07485876,14 11,19.8196667 11,27 L11,14 L0,14 Z" id="Fill-4"></path>
+            <path d="M27,14 C20.9251412,14 16,19.8196667 16,27 L16,14 L27,14 Z" id="Fill-6"></path>
+            <polygon id="Fill-8" points="38 35 43 35 43 14 38 14"></polygon>
+            <path d="M28,14 C34.0748588,14 39,19.8196667 39,27 L39,14 L28,14 Z" id="Fill-10"></path>
+            <path d="M54,14 C47.9251412,14 43,19.8196667 43,27 L43,14 L54,14 Z" id="Fill-11"></path>
+            <polygon id="Fill-1" points="0 14 54 14 54 8 0 8"></polygon>
+            <polygon id="Fill-2" points="0 5 54 5 54 0 0 0"></polygon>
+            <polygon id="Fill-3" points="11 35 16 35 16 14 11 14"></polygon>
+        </g>
+        <g id="Group-12" transform="translate(3.000000, 13.000000)" fill="#D91928">
+            <path d="M0,14 C6.07485876,14 11,19.8196667 11,27 L11,14 L0,14 Z" id="Fill-4"></path>
+            <path d="M27,14 C20.9251412,14 16,19.8196667 16,27 L16,14 L27,14 Z" id="Fill-6"></path>
+            <polygon id="Fill-8" points="38 35 43 35 43 14 38 14"></polygon>
+            <path d="M28,14 C34.0748588,14 39,19.8196667 39,27 L39,14 L28,14 Z" id="Fill-10"></path>
+            <path d="M54,14 C47.9251412,14 43,19.8196667 43,27 L43,14 L54,14 Z" id="Fill-11"></path>
+            <polygon id="Fill-1" points="0 14 54 14 54 8 0 8"></polygon>
+            <polygon id="Fill-2" points="0 5 54 5 54 0 0 0"></polygon>
+            <polygon id="Fill-3" points="11 35 16 35 16 14 11 14"></polygon>
+        </g>
+    </g>
+</svg>

@@ -27,6 +27,9 @@ final class Container {
 	private func makeViewFactory(viewModel: RootViewModel) -> RootViewFactory {
 		let viewFactory = RootViewFactory(
 			viewModel: viewModel,
+			markerViewModel: MarkerViewModel(sourceFactory: { [sdk = self.sdk] in
+				return sdk.sourceFactory
+			}, map: self.sdk.map),
 			mapUIViewFactory: {
 				[sdk = self.sdk] in
 				sdk.mapView
@@ -36,16 +39,14 @@ final class Container {
 	}
 
 	private func makeRootViewModel() -> RootViewModel {
-		let rootViewModel = RootViewModel(
-			searchManagerFactory: { [sdk = self.sdk] in
-				sdk.searchManagerFactory.makeOnlineManager()!
-			},
-			locationManagerFactory: { [weak self] in
-				guard let self = self else { return nil }
-				return self.locationManager
-			},
-			map: self.sdk.map
-		)
+		let rootViewModel = RootViewModel(searchManagerFactory: { [sdk = self.sdk] in
+			return sdk.searchManagerFactory.makeOnlineManager()!
+		}, sourceFactory: { [sdk = self.sdk] in
+			return sdk.sourceFactory
+		}, locationManagerFactory: { [weak self] in
+			guard let self = self else { return nil }
+			return self.locationManager
+		}, map: self.sdk.map)
 		return rootViewModel
 	}
 }

@@ -6,6 +6,7 @@ final class RootViewModel {
 	let searchStore: SearchStore
 
 	private let searchManagerFactory: () -> ISearchManager
+	private let sourceFactory: () -> ISourceFactory
 	private let locationManagerFactory: () -> LocationService?
 	private let map: Map
 	private var locationService: LocationService?
@@ -48,10 +49,12 @@ final class RootViewModel {
 
 	init(
 		searchManagerFactory: @escaping () -> ISearchManager,
+		sourceFactory: @escaping () -> ISourceFactory,
 		locationManagerFactory: @escaping () -> LocationService?,
 		map: Map
 	) {
 		self.searchManagerFactory = searchManagerFactory
+		self.sourceFactory = sourceFactory
 		self.locationManagerFactory = locationManagerFactory
 		self.map = map
 

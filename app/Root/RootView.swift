@@ -5,6 +5,8 @@ struct RootView: View {
 	private let viewModel: RootViewModel
 	private let viewFactory: RootViewFactory
 
+	@State private var showMarkers: Bool = false
+
 	init(
 		viewModel: RootViewModel,
 		viewFactory: RootViewFactory
@@ -13,11 +15,23 @@ struct RootView: View {
 		self.viewFactory = viewFactory
 	}
 
+	@State private var keyboardOffset: CGFloat = 0
+
 	var body: some View {
 		NavigationView  {
-			ZStack(alignment: .bottomTrailing) {
-				self.viewFactory.makeMapView()
-				self.settingsButton()
+			ZStack() {
+				ZStack(alignment: .bottomTrailing) {
+					self.viewFactory.makeMapView()
+					if !self.showMarkers {
+						self.settingsButton().frame(width: 100, height: 100, alignment: .bottomTrailing)
+					}
+					if self.showMarkers {
+						self.viewFactory.makeMarkerView(show: $showMarkers).followKeyboard($keyboardOffset)
+					}
+				}
+				if self.showMarkers {
+					Image(systemName: "multiply").frame(width: 40, height: 40, alignment: .center).foregroundColor(.red).opacity(0.4)
+				}
 			}
 			.navigationBarItems(
 				leading: self.navigationBarLeadingItem()
@@ -61,11 +75,11 @@ struct RootView: View {
 						self.viewModel.showCurrentPosition()
 					},
 					.default(Text("Тест добавления маркеров")) {
-						// TODO
+						self.showMarkers = true
 					},
 					.cancel(Text("Отмена"))
 				])
 		}
-
 	}
 }
+
