@@ -26,7 +26,7 @@ struct RootView: View {
 						self.settingsButton().frame(width: 100, height: 100, alignment: .bottomTrailing)
 					}
 					if self.showMarkers {
-						self.viewFactory.makeMarkeView(show: $showMarkers).followKeyboard($keyboardOffset)
+						self.viewFactory.makeMarkerView(show: $showMarkers).followKeyboard($keyboardOffset)
 					}
 				}
 				if self.showMarkers {

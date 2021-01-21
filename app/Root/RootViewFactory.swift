@@ -24,7 +24,7 @@ struct RootViewFactory {
 		return SearchView(store: store)
 	}
 
-	func makeMarkeView(show: Binding<Bool>) -> some View {
+	func makeMarkerView(show: Binding<Bool>) -> some View {
 		return MarkerView(viewModel: self.markerViewModel, show: show)
 	}
 }

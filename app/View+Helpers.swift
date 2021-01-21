@@ -3,11 +3,10 @@ import SwiftUI
 extension UIApplication {
 	var keyWindow: UIWindow? {
 		let keyWindow = UIApplication.shared.connectedScenes
-			.filter({$0.activationState == .foregroundActive})
-			.map({$0 as? UIWindowScene})
-			.compactMap({$0})
-			.first?.windows
-			.filter({$0.isKeyWindow}).first
+			.compactMap { $0 as? UIWindowScene }
+			.first(where: { $0.activationState == .foregroundActive })?
+			.windows
+			.first(where: { $0.isKeyWindow })
 		return keyWindow
 	}
 }

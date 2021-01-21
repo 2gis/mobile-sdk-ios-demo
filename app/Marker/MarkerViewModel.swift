@@ -80,8 +80,7 @@ final class MarkerViewModel: ObservableObject {
 			self.hasSource = true
 		}
 
-		_ = self.map.camera().position().sink { position in
-
+		_ = self.map.camera().position().sinkOnMainThread { position in
 			do {
 				let mapObject = try MarkerBuilder()
 					.setIcon(svg: NSDataAsset(name: self.type.assetName)!.data)
@@ -94,8 +93,8 @@ final class MarkerViewModel: ObservableObject {
 			} catch {
 				print("Failed to build text marker. Error: \(error).")
 			}
-
 		}
+
 	}
 
 	func removeLast() {
