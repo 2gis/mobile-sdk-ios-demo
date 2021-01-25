@@ -24,7 +24,7 @@ struct RootViewFactory {
 	}
 
 	func makeZoomControl() -> some View {
-		ZoomControl(controlFactory: self.mapControlFactory.makeZoomControl)
+		MapControl(controlFactory: self.mapControlFactory.makeZoomControl)
 	}
 
 	func makeSearchView() -> some View {

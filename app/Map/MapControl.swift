@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct ZoomControl: UIViewRepresentable {
+struct MapControl: UIViewRepresentable {
 	typealias UIViewType = UIView
 	typealias Context = UIViewRepresentableContext<Self>
 	private let controlFactory: () -> UIView
