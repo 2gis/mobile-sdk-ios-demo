@@ -13,6 +13,7 @@
 		095BE97825B80EC800D09D75 /* View+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 095BE97725B80EC800D09D75 /* View+Helpers.swift */; };
 		095BE97A25B813A000D09D75 /* DetailsActionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 095BE97925B813A000D09D75 /* DetailsActionView.swift */; };
 		0965342725B575C800FB3FD1 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 0965342625B575C800FB3FD1 /* README.md */; };
+		0991909625B96E1C00F4235B /* MapControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0991909525B96E1C00F4235B /* MapControl.swift */; };
 		0991909825B977CD00F4235B /* Channel+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0991909725B977CD00F4235B /* Channel+Helpers.swift */; };
 		09EEF7F725B1754F00838065 /* NativeSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 09EEF7F625B1754F00838065 /* NativeSDK */; };
 		4B27063524A3F24C00F12B48 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B27063424A3F24C00F12B48 /* AppDelegate.swift */; };
@@ -67,6 +68,7 @@
 		095BE97725B80EC800D09D75 /* View+Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+Helpers.swift"; sourceTree = "<group>"; };
 		095BE97925B813A000D09D75 /* DetailsActionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailsActionView.swift; sourceTree = "<group>"; };
 		0965342625B575C800FB3FD1 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		0991909525B96E1C00F4235B /* MapControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapControl.swift; sourceTree = "<group>"; };
 		0991909725B977CD00F4235B /* Channel+Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Channel+Helpers.swift"; sourceTree = "<group>"; };
 		4B1354DB24BCCDC7004E8158 /* NativeApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = NativeApp.entitlements; sourceTree = "<group>"; };
 		4B27063124A3F24C00F12B48 /* NativeApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NativeApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -214,6 +216,7 @@
 			isa = PBXGroup;
 			children = (
 				4BBE7E1F25264F2B00D7EBDB /* MapView.swift */,
+				0991909525B96E1C00F4235B /* MapControl.swift */,
 			);
 			path = Map;
 			sourceTree = "<group>";
@@ -330,6 +333,7 @@
 				4BADDFD8252866B300FBF589 /* SearchStore.swift in Sources */,
 				095BE97A25B813A000D09D75 /* DetailsActionView.swift in Sources */,
 				4BADDFD2252802A500FBF589 /* SearchResultView.swift in Sources */,
+				0991909625B96E1C00F4235B /* MapControl.swift in Sources */,
 				4B4291652527A49C006E74BE /* SuggestView.swift in Sources */,
 				095BE97825B80EC800D09D75 /* View+Helpers.swift in Sources */,
 				4BBE80302526FB0D00D7EBDB /* Container.swift in Sources */,
