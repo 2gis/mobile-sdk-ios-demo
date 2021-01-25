@@ -33,7 +33,8 @@ final class Container {
 			mapUIViewFactory: {
 				[sdk = self.sdk] in
 				sdk.mapView
-			}
+			},
+			mapControlFactory: self.sdk.mapControlFactory
 		)
 		return viewFactory
 	}

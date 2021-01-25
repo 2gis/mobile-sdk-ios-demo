@@ -32,6 +32,7 @@ struct RootView: View {
 				if self.showMarkers {
 					Image(systemName: "multiply").frame(width: 40, height: 40, alignment: .center).foregroundColor(.red).opacity(0.4)
 				}
+				self.zoomControls()
 			}
 			.navigationBarItems(
 				leading: self.navigationBarLeadingItem()
@@ -50,6 +51,17 @@ struct RootView: View {
 		}
 	}
 
+	private func zoomControls() -> some View {
+		HStack {
+			Spacer()
+			self.viewFactory.makeZoomControl()
+				.frame(width: 60, height: 128)
+				.fixedSize()
+				.transformEffect(.init(scaleX: 0.8, y: 0.8))
+				.padding(10)
+		}
+	}
+
 	@State private var showActionSheet = false
 	private func settingsButton() -> some View {
 		Button(action: {
@@ -62,7 +74,8 @@ struct RootView: View {
 					Circle().fill(Color.white)
 				)
 		})
-		.padding([.bottom, .trailing], 40.0)
+		.padding(.bottom, 40)
+		.padding(.trailing, 20)
 		.actionSheet(isPresented: $showActionSheet) {
 			ActionSheet(
 				title: Text("Тестовые кейсы"),
