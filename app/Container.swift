@@ -30,6 +30,11 @@ final class Container {
 			markerViewModel: MarkerViewModel(sourceFactory: { [sdk = self.sdk] in
 				return sdk.sourceFactory
 			}, map: self.sdk.map),
+			routeViewModel: RouteViewModel(sourceFactory: { [sdk = self.sdk] in
+				return sdk.sourceFactory
+			}, routeEditorFactory: { [sdk = self.sdk] in
+				return sdk.routeEditorFactory
+			}, map: self.sdk.map),
 			mapUIViewFactory: {
 				[sdk = self.sdk] in
 				sdk.mapView

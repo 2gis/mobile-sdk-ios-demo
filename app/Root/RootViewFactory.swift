@@ -2,19 +2,22 @@ import SwiftUI
 import PlatformSDK
 
 struct RootViewFactory {
-	private let mapUIViewFactory: () -> UIView
-	private let mapControlFactory: IMapControlFactory
 	private let viewModel: RootViewModel
 	private let markerViewModel: MarkerViewModel
+	private let routeViewModel: RouteViewModel
+	private let mapUIViewFactory: () -> UIView
+	private let mapControlFactory: IMapControlFactory
 
 	init(
 		viewModel: RootViewModel,
 		markerViewModel: MarkerViewModel,
+		routeViewModel: RouteViewModel,
 		mapUIViewFactory: @escaping () -> UIView,
 		mapControlFactory: IMapControlFactory
 	) {
 		self.viewModel = viewModel
 		self.markerViewModel = markerViewModel
+		self.routeViewModel = routeViewModel
 		self.mapUIViewFactory = mapUIViewFactory
 		self.mapControlFactory = mapControlFactory
 	}
@@ -34,5 +37,9 @@ struct RootViewFactory {
 
 	func makeMarkerView(show: Binding<Bool>) -> some View {
 		return MarkerView(viewModel: self.markerViewModel, show: show)
+	}
+
+	func makeRouteView(show: Binding<Bool>) -> some View {
+		return RouteView(viewModel: self.routeViewModel, show: show)
 	}
 }
