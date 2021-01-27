@@ -94,7 +94,6 @@ final class MarkerViewModel: ObservableObject {
 				print("Failed to build text marker. Error: \(error).")
 			}
 		}
-
 	}
 
 	func removeLast() {

@@ -6,6 +6,7 @@ struct RootView: View {
 	private let viewFactory: RootViewFactory
 
 	@State private var showMarkers: Bool = false
+	@State private var showRoutes: Bool = false
 
 	init(
 		viewModel: RootViewModel,
@@ -28,8 +29,11 @@ struct RootView: View {
 					if self.showMarkers {
 						self.viewFactory.makeMarkerView(show: $showMarkers).followKeyboard($keyboardOffset)
 					}
+					if self.showRoutes {
+						self.viewFactory.makeRouteView(show: $showRoutes).followKeyboard($keyboardOffset)
+					}
 				}
-				if self.showMarkers {
+				if self.showMarkers || self.showRoutes {
 					Image(systemName: "multiply").frame(width: 40, height: 40, alignment: .center).foregroundColor(.red).opacity(0.4)
 				}
 				self.zoomControls()
@@ -89,6 +93,9 @@ struct RootView: View {
 					},
 					.default(Text("Тест добавления маркеров")) {
 						self.showMarkers = true
+					},
+					.default(Text("Тест поиска маршрута")) {
+						self.showRoutes = true
 					},
 					.cancel(Text("Отмена"))
 				])
