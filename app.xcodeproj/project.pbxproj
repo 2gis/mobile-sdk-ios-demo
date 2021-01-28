@@ -7,7 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0938CAA125B5BBA300100316 /* LocationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0938CAA025B5BBA300100316 /* LocationService.swift */; };
+		095BE97425B6FF4900D09D75 /* MarkerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 095BE97325B6FF4900D09D75 /* MarkerView.swift */; };
+		095BE97625B7042500D09D75 /* MarkerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 095BE97525B7042500D09D75 /* MarkerViewModel.swift */; };
+		095BE97825B80EC800D09D75 /* View+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 095BE97725B80EC800D09D75 /* View+Helpers.swift */; };
+		095BE97A25B813A000D09D75 /* DetailsActionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 095BE97925B813A000D09D75 /* DetailsActionView.swift */; };
 		0965342725B575C800FB3FD1 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 0965342625B575C800FB3FD1 /* README.md */; };
+		0991909625B96E1C00F4235B /* MapControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0991909525B96E1C00F4235B /* MapControl.swift */; };
+		0991909825B977CD00F4235B /* Channel+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0991909725B977CD00F4235B /* Channel+Helpers.swift */; };
+		09C834FB25BFCD5800D347F4 /* RouteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09C834FA25BFCD5800D347F4 /* RouteView.swift */; };
+		09C834FD25BFCD8500D347F4 /* RouteViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09C834FC25BFCD8500D347F4 /* RouteViewModel.swift */; };
 		09EEF7F725B1754F00838065 /* NativeSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 09EEF7F625B1754F00838065 /* NativeSDK */; };
 		4B27063524A3F24C00F12B48 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B27063424A3F24C00F12B48 /* AppDelegate.swift */; };
 		4B27063724A3F24C00F12B48 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B27063624A3F24C00F12B48 /* SceneDelegate.swift */; };
@@ -55,7 +64,16 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		0938CAA025B5BBA300100316 /* LocationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationService.swift; sourceTree = "<group>"; };
+		095BE97325B6FF4900D09D75 /* MarkerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkerView.swift; sourceTree = "<group>"; };
+		095BE97525B7042500D09D75 /* MarkerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkerViewModel.swift; sourceTree = "<group>"; };
+		095BE97725B80EC800D09D75 /* View+Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+Helpers.swift"; sourceTree = "<group>"; };
+		095BE97925B813A000D09D75 /* DetailsActionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailsActionView.swift; sourceTree = "<group>"; };
 		0965342625B575C800FB3FD1 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		0991909525B96E1C00F4235B /* MapControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapControl.swift; sourceTree = "<group>"; };
+		0991909725B977CD00F4235B /* Channel+Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Channel+Helpers.swift"; sourceTree = "<group>"; };
+		09C834FA25BFCD5800D347F4 /* RouteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteView.swift; sourceTree = "<group>"; };
+		09C834FC25BFCD8500D347F4 /* RouteViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteViewModel.swift; sourceTree = "<group>"; };
 		4B1354DB24BCCDC7004E8158 /* NativeApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = NativeApp.entitlements; sourceTree = "<group>"; };
 		4B27063124A3F24C00F12B48 /* NativeApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NativeApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B27063424A3F24C00F12B48 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -103,6 +121,33 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0938CA9F25B5BB8A00100316 /* LocationService */ = {
+			isa = PBXGroup;
+			children = (
+				0938CAA025B5BBA300100316 /* LocationService.swift */,
+			);
+			path = LocationService;
+			sourceTree = "<group>";
+		};
+		095BE97225B6FF3700D09D75 /* Marker */ = {
+			isa = PBXGroup;
+			children = (
+				095BE97325B6FF4900D09D75 /* MarkerView.swift */,
+				095BE97525B7042500D09D75 /* MarkerViewModel.swift */,
+				095BE97925B813A000D09D75 /* DetailsActionView.swift */,
+			);
+			path = Marker;
+			sourceTree = "<group>";
+		};
+		09C834F925BFCD4800D347F4 /* Route */ = {
+			isa = PBXGroup;
+			children = (
+				09C834FA25BFCD5800D347F4 /* RouteView.swift */,
+				09C834FC25BFCD8500D347F4 /* RouteViewModel.swift */,
+			);
+			path = Route;
+			sourceTree = "<group>";
+		};
 		4B27062824A3F24C00F12B48 = {
 			isa = PBXGroup;
 			children = (
@@ -127,10 +172,15 @@
 				4B27063424A3F24C00F12B48 /* AppDelegate.swift */,
 				4B1354DB24BCCDC7004E8158 /* NativeApp.entitlements */,
 				4B27063624A3F24C00F12B48 /* SceneDelegate.swift */,
+				095BE97725B80EC800D09D75 /* View+Helpers.swift */,
+				0991909725B977CD00F4235B /* Channel+Helpers.swift */,
 				4BBE822A252741EE00D7EBDB /* Root */,
 				4BBE822B2527420900D7EBDB /* Search */,
 				4BBE822C2527422000D7EBDB /* Map */,
 				4BBE802F2526FB0D00D7EBDB /* Container.swift */,
+				09C834F925BFCD4800D347F4 /* Route */,
+				095BE97225B6FF3700D09D75 /* Marker */,
+				0938CA9F25B5BB8A00100316 /* LocationService */,
 				4B27063D24A3F25000F12B48 /* Assets.xcassets */,
 				4B27063F24A3F25000F12B48 /* LaunchScreen.storyboard */,
 				4B27064224A3F25000F12B48 /* Info.plist */,
@@ -180,6 +230,7 @@
 			isa = PBXGroup;
 			children = (
 				4BBE7E1F25264F2B00D7EBDB /* MapView.swift */,
+				0991909525B96E1C00F4235B /* MapControl.swift */,
 			);
 			path = Map;
 			sourceTree = "<group>";
@@ -272,18 +323,23 @@
 				4BBE80262526DFB100D7EBDB /* RootViewModel.swift in Sources */,
 				4BADDFF7252A33CD00FBF589 /* SearchReducer.swift in Sources */,
 				4BADDFCC2528016600FBF589 /* SuggestResultView.swift in Sources */,
+				0991909825B977CD00F4235B /* Channel+Helpers.swift in Sources */,
 				4BADDFEB2529AD9C00FBF589 /* SearchNavigation.swift in Sources */,
 				4B4291682527A4DB006E74BE /* SuggestViewModel.swift in Sources */,
 				4BBE80292526E22F00D7EBDB /* SearchResultViewModel.swift in Sources */,
+				0938CAA125B5BBA300100316 /* LocationService.swift in Sources */,
 				4BADDFD525282A2400FBF589 /* MarkedUpTextView.swift in Sources */,
+				095BE97625B7042500D09D75 /* MarkerViewModel.swift in Sources */,
 				4BADDFCF252801BD00FBF589 /* SuggestResultViewModel.swift in Sources */,
 				4B27063524A3F24C00F12B48 /* AppDelegate.swift in Sources */,
 				4BADDFE12528941E00FBF589 /* DirectoryObjectViewModel.swift in Sources */,
 				4BBE801B2526D98600D7EBDB /* SearchResultItemViewModel.swift in Sources */,
 				4BBE7E2025264F2B00D7EBDB /* MapView.swift in Sources */,
 				4BADDFE7252894A100FBF589 /* FormattedAddressViewModel.swift in Sources */,
+				09C834FB25BFCD5800D347F4 /* RouteView.swift in Sources */,
 				4BADDFF4252A32AD00FBF589 /* SeachState.swift in Sources */,
 				4BBE7E1E25264DA200D7EBDB /* RootView.swift in Sources */,
+				09C834FD25BFCD8500D347F4 /* RouteViewModel.swift in Sources */,
 				4BBE802D2526F8A600D7EBDB /* RootViewFactory.swift in Sources */,
 				4BBE80222526DCA200D7EBDB /* SearchResultItemView.swift in Sources */,
 				4BADDFFC252AD63800FBF589 /* SearchAction.swift in Sources */,
@@ -291,11 +347,15 @@
 				4BADDFDE25288F9D00FBF589 /* DirectoryObjectView.swift in Sources */,
 				4BBE80152526D8FE00D7EBDB /* SearchView.swift in Sources */,
 				4BADDFD8252866B300FBF589 /* SearchStore.swift in Sources */,
+				095BE97A25B813A000D09D75 /* DetailsActionView.swift in Sources */,
 				4BADDFD2252802A500FBF589 /* SearchResultView.swift in Sources */,
+				0991909625B96E1C00F4235B /* MapControl.swift in Sources */,
 				4B4291652527A49C006E74BE /* SuggestView.swift in Sources */,
+				095BE97825B80EC800D09D75 /* View+Helpers.swift in Sources */,
 				4BBE80302526FB0D00D7EBDB /* Container.swift in Sources */,
 				4BADDFDB252866F700FBF589 /* SearchService.swift in Sources */,
 				4B27063724A3F24C00F12B48 /* SceneDelegate.swift in Sources */,
+				095BE97425B6FF4900D09D75 /* MarkerView.swift in Sources */,
 				4BBE80182526D92C00D7EBDB /* SearchViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

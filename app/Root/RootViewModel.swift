@@ -6,7 +6,10 @@ final class RootViewModel {
 	let searchStore: SearchStore
 
 	private let searchManagerFactory: () -> ISearchManager
+	private let sourceFactory: () -> ISourceFactory
+	private let locationManagerFactory: () -> LocationService?
 	private let map: Map
+	private var locationService: LocationService?
 
 	private var moveCameraCancellable: Cancellable?
 	private let testPoints: [(position: CameraPosition, time: TimeInterval, type: CameraAnimationType)] = {
@@ -46,9 +49,13 @@ final class RootViewModel {
 
 	init(
 		searchManagerFactory: @escaping () -> ISearchManager,
+		sourceFactory: @escaping () -> ISourceFactory,
+		locationManagerFactory: @escaping () -> LocationService?,
 		map: Map
 	) {
 		self.searchManagerFactory = searchManagerFactory
+		self.sourceFactory = sourceFactory
+		self.locationManagerFactory = locationManagerFactory
 		self.map = map
 
 		let service = SearchService(
@@ -73,6 +80,33 @@ final class RootViewModel {
 
 	func testCamera() {
 		self.move(at: 0)
+	}
+
+	func showCurrentPosition() {
+		if self.locationService == nil {
+			self.locationService = self.locationManagerFactory()
+		}
+		self.locationService?.getCurrentPosition { (coordinates) in
+			DispatchQueue.main.async {
+				self.moveCameraCancellable?.cancel()
+				self.moveCameraCancellable = self.map
+					.camera()
+					.move(
+						position: CameraPosition(
+							point: GeoPoint(latitude: .init(value: coordinates.latitude), longitude: .init(value: coordinates.longitude)),
+							zoom: .init(value: 14),
+							tilt: .init(value: 15),
+							bearing: .init(value: 0)
+						),
+						time: 1.0,
+						animationType: .linear
+					).sink { _ in
+						print("Move to current location")
+					} failure: { error in
+						print("Something went wrong: \(error.localizedDescription)")
+					}
+			}
+		}
 	}
 
 	private func move(at index: Int) {

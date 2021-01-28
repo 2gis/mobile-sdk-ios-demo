@@ -5,6 +5,9 @@ struct RootView: View {
 	private let viewModel: RootViewModel
 	private let viewFactory: RootViewFactory
 
+	@State private var showMarkers: Bool = false
+	@State private var showRoutes: Bool = false
+
 	init(
 		viewModel: RootViewModel,
 		viewFactory: RootViewFactory
@@ -13,11 +16,27 @@ struct RootView: View {
 		self.viewFactory = viewFactory
 	}
 
+	@State private var keyboardOffset: CGFloat = 0
+
 	var body: some View {
 		NavigationView  {
-			ZStack(alignment: .bottomTrailing) {
-				self.viewFactory.makeMapView()
-				self.settingsButton()
+			ZStack() {
+				ZStack(alignment: .bottomTrailing) {
+					self.viewFactory.makeMapView()
+					if !self.showMarkers {
+						self.settingsButton().frame(width: 100, height: 100, alignment: .bottomTrailing)
+					}
+					if self.showMarkers {
+						self.viewFactory.makeMarkerView(show: $showMarkers).followKeyboard($keyboardOffset)
+					}
+					if self.showRoutes {
+						self.viewFactory.makeRouteView(show: $showRoutes).followKeyboard($keyboardOffset)
+					}
+				}
+				if self.showMarkers || self.showRoutes {
+					Image(systemName: "multiply").frame(width: 40, height: 40, alignment: .center).foregroundColor(.red).opacity(0.4)
+				}
+				self.zoomControls()
 			}
 			.navigationBarItems(
 				leading: self.navigationBarLeadingItem()
@@ -36,6 +55,17 @@ struct RootView: View {
 		}
 	}
 
+	private func zoomControls() -> some View {
+		HStack {
+			Spacer()
+			self.viewFactory.makeZoomControl()
+				.frame(width: 60, height: 128)
+				.fixedSize()
+				.transformEffect(.init(scaleX: 0.8, y: 0.8))
+				.padding(10)
+		}
+	}
+
 	@State private var showActionSheet = false
 	private func settingsButton() -> some View {
 		Button(action: {
@@ -48,20 +78,28 @@ struct RootView: View {
 					Circle().fill(Color.white)
 				)
 		})
-		.padding([.bottom, .trailing], 40)
+		.padding(.bottom, 40)
+		.padding(.trailing, 20)
 		.actionSheet(isPresented: $showActionSheet) {
 			ActionSheet(
 				title: Text("Тестовые кейсы"),
 				message: Text("Выберите необходимый"),
 				buttons: [
-					.default(Text("Тест перелетов")) {
+					.default(Text("Тест перелетов по Москве")) {
 						self.viewModel.testCamera()
 					},
-					// TODO
-					// .default(Text("Тест добавления маркеров")) {
-					// },
+					.default(Text("Перелет в текущую геопозицию")) {
+						self.viewModel.showCurrentPosition()
+					},
+					.default(Text("Тест добавления маркеров")) {
+						self.showMarkers = true
+					},
+					.default(Text("Тест поиска маршрута")) {
+						self.showRoutes = true
+					},
 					.cancel(Text("Отмена"))
 				])
 		}
 	}
 }
+

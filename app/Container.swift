@@ -16,6 +16,8 @@ final class Container {
 
 	private lazy var sdk = PlatformSDK.Container(apiKeys: self.apiKeys)
 
+	private lazy var locationManager = LocationService()
+
 	func makeRootView() -> some View {
 		let viewModel = self.makeRootViewModel()
 		let viewFactory = self.makeViewFactory(viewModel: viewModel)
@@ -25,21 +27,32 @@ final class Container {
 	private func makeViewFactory(viewModel: RootViewModel) -> RootViewFactory {
 		let viewFactory = RootViewFactory(
 			viewModel: viewModel,
+			markerViewModel: MarkerViewModel(sourceFactory: { [sdk = self.sdk] in
+				return sdk.sourceFactory
+			}, map: self.sdk.map),
+			routeViewModel: RouteViewModel(sourceFactory: { [sdk = self.sdk] in
+				return sdk.sourceFactory
+			}, routeEditorFactory: { [sdk = self.sdk] in
+				return sdk.routeEditorFactory
+			}, map: self.sdk.map),
 			mapUIViewFactory: {
 				[sdk = self.sdk] in
 				sdk.mapView
-			}
+			},
+			mapControlFactory: self.sdk.mapControlFactory
 		)
 		return viewFactory
 	}
 
 	private func makeRootViewModel() -> RootViewModel {
-		let rootViewModel = RootViewModel(
-			searchManagerFactory: { [sdk = self.sdk] in
-				sdk.searchManagerFactory.makeOnlineManager()!
-			},
-			map: self.sdk.map
-		)
+		let rootViewModel = RootViewModel(searchManagerFactory: { [sdk = self.sdk] in
+			return sdk.searchManagerFactory.makeOnlineManager()!
+		}, sourceFactory: { [sdk = self.sdk] in
+			return sdk.sourceFactory
+		}, locationManagerFactory: { [weak self] in
+			guard let self = self else { return nil }
+			return self.locationManager
+		}, map: self.sdk.map)
 		return rootViewModel
 	}
 }

@@ -1,0 +1,13 @@
+{
+  "data" : [
+    {
+      "filename" : "poi_photo.svg",
+      "idiom" : "universal",
+      "universal-type-identifier" : "svg"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

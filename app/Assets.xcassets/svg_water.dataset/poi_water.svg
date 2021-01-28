@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="60px" height="60px" viewBox="0 0 60 60" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>poi_water_7</title>
+    <g id="poi_water_7" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d="M30,48 C23.3824378,48 18,42.6159132 18,36 L22.8,36 C22.9470936,39.8884156 26.1115844,43.0529064 30,43.2 L30,48 Z M30,6 C30,6 12,23.1419755 12,36 C12,46.1043235 20.0604,54 30,54 C39.9396,54 48,46.1043235 48,36 C48,23.1419755 30,6 30,6 L30,6 Z" id="Fill-1" stroke="#FFFFFF" stroke-width="5"></path>
+        <path d="M30,48 C23.3824378,48 18,42.6159132 18,36 L22.8,36 C22.9470936,39.8884156 26.1115844,43.0529064 30,43.2 L30,48 Z M30,6 C30,6 12,23.1419755 12,36 C12,46.1043235 20.0604,54 30,54 C39.9396,54 48,46.1043235 48,36 C48,23.1419755 30,6 30,6 L30,6 Z" id="Fill-1" fill="#646464"></path>
+    </g>
+</svg>
