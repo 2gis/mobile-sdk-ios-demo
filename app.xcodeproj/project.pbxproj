@@ -561,7 +561,7 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/2gis/native-sdk-ios-swift-package.git";
 			requirement = {
-				branch = develop;
+				branch = master;
 				kind = branch;
 			};
 		};
