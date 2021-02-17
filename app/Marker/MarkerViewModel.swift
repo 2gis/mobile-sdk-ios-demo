@@ -64,7 +64,7 @@ final class MarkerViewModel: ObservableObject {
 	private let map: Map
 
 	private var hasSource : Bool = false
-	private lazy var source = self.sourceFactory().createGeometryMapObjectSource()
+	private lazy var source = self.sourceFactory().createGeometryMapObjectSourceBuilder().createSource()!
 
 	init(
 		sourceFactory: @escaping () -> ISourceFactory,
@@ -80,7 +80,7 @@ final class MarkerViewModel: ObservableObject {
 			self.hasSource = true
 		}
 
-		_ = self.map.camera().position().sinkOnMainThread { position in
+		_ = self.map.camera.position().sinkOnMainThread { position in
 			do {
 				let mapObject = try MarkerBuilder()
 					.setIcon(svg: NSDataAsset(name: self.type.assetName)!.data)
