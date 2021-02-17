@@ -32,8 +32,10 @@ final class Container {
 			}, map: self.sdk.map),
 			routeViewModel: RouteViewModel(sourceFactory: { [sdk = self.sdk] in
 				return sdk.sourceFactory
+			}, routeEditorSourceFactory: { [sdk = self.sdk] routeEditor in
+				return createRouteEditorSource(context: sdk.context, routeEditor: routeEditor)!
 			}, routeEditorFactory: { [sdk = self.sdk] in
-				return sdk.routeEditorFactory
+				return RouteEditor(context: sdk.context)
 			}, map: self.sdk.map),
 			mapUIViewFactory: {
 				[sdk = self.sdk] in
