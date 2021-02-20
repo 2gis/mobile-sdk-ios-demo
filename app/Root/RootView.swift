@@ -1,6 +1,8 @@
 import SwiftUI
 
 struct RootView: View {
+	private static let mapCoordinateSpace = "map"
+
 	private let viewModel: RootViewModel
 	private let viewFactory: RootViewFactory
 
@@ -22,6 +24,8 @@ struct RootView: View {
 			ZStack() {
 				ZStack(alignment: .bottomTrailing) {
 					self.viewFactory.makeMapView()
+					.coordinateSpace(name: Self.mapCoordinateSpace)
+					.simultaneousGesture(self.drag)
 					if !self.showMarkers {
 						self.settingsButton().frame(width: 100, height: 100, alignment: .bottomTrailing)
 					}
@@ -98,6 +102,16 @@ struct RootView: View {
 					},
 					.cancel(Text("Отмена"))
 				])
+		}
+	}
+
+	private var drag: some Gesture {
+		DragGesture(
+			minimumDistance: 0,
+			coordinateSpace: .named(Self.mapCoordinateSpace)
+		)
+		.onEnded { info in
+			self.viewModel.tap(info.location)
 		}
 	}
 }

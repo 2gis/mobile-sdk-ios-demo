@@ -2,6 +2,7 @@ import SwiftUI
 import PlatformSDK
 
 final class RootViewModel {
+	private static let tapRadius: CGFloat = 5
 
 	let searchStore: SearchStore
 
@@ -9,9 +10,12 @@ final class RootViewModel {
 	private let sourceFactory: () -> ISourceFactory
 	private let locationManagerFactory: () -> LocationService?
 	private let map: Map
+	private let toMap: CGAffineTransform
 	private var locationService: LocationService?
 
 	private var moveCameraCancellable: Cancellable?
+	private var getRenderedObjectsCancellable: Cancellable?
+
 	private let testPoints: [(position: CameraPosition, time: TimeInterval, type: CameraAnimationType)] = {
 		return [
 			(.init(
@@ -57,6 +61,9 @@ final class RootViewModel {
 		self.sourceFactory = sourceFactory
 		self.locationManagerFactory = locationManagerFactory
 		self.map = map
+
+		let scale = UIScreen.main.nativeScale
+		self.toMap = CGAffineTransform(scaleX: scale, y: scale)
 
 		let service = SearchService(
 			searchManagerFactory: self.searchManagerFactory,
@@ -127,5 +134,25 @@ final class RootViewModel {
 					print("Something went wrong: \(error.localizedDescription)")
 				}
 		}
+	}
+
+	func tap(_ location: CGPoint) {
+		let mapLocation = location.applying(self.toMap)
+		let tapPoint = ScreenPoint(x: Float(mapLocation.x), y: Float(mapLocation.y))
+		let tapRadius = ScreenDistance(value: Float(Self.tapRadius))
+		let cancel = self.map.getRenderedObjects(centerPoint: tapPoint, radius: tapRadius)
+			.sink(receiveValue: { infos in
+				// Достаточно взять первый маркер. В данном примере перечислим все
+				// маркера в окрестности.
+				for info in infos {
+					if let object = info.item.item {
+						print("Tapped object: \(object).")
+					}
+				}
+			},
+			failure: { error in
+				print("Failed to fetch objects: \(error)")
+			})
+		self.getRenderedObjectsCancellable = cancel
 	}
 }
