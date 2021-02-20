@@ -90,7 +90,7 @@ final class RootViewModel {
 			DispatchQueue.main.async {
 				self.moveCameraCancellable?.cancel()
 				self.moveCameraCancellable = self.map
-					.camera()
+					.camera
 					.move(
 						position: CameraPosition(
 							point: GeoPoint(latitude: .init(value: coordinates.latitude), longitude: .init(value: coordinates.longitude)),
@@ -116,7 +116,7 @@ final class RootViewModel {
 		DispatchQueue.main.async {
 			self.moveCameraCancellable?.cancel()
 			self.moveCameraCancellable = self.map
-				.camera()
+				.camera
 				.move(
 					position: tuple.position,
 					time: tuple.time,

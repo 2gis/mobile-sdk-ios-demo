@@ -1,5 +1,4 @@
 import SwiftUI
-import PlatformSDK
 
 struct RootView: View {
 	private let viewModel: RootViewModel

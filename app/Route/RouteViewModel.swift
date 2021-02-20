@@ -12,18 +12,21 @@ final class RouteViewModel: ObservableObject {
 	private var pointB: GeoPoint? = nil
 
 	private let sourceFactory: () -> ISourceFactory
-	private let routeEditorFactory: () -> IRouteEditorFactory
+	private let routeEditorSourceFactory: (RouteEditor) -> RouteEditorSource
+	private let routeEditorFactory: () -> RouteEditor
 	private let map: Map
 
-	private lazy var routeEditor = self.routeEditorFactory().createRouteEditorSource()
-	private lazy var source = self.sourceFactory().createRouteEditorSource(routeEditor: self.routeEditor)
+	private lazy var routeEditor = self.routeEditorFactory()
+	private lazy var source = self.routeEditorSourceFactory(self.routeEditor)
 
 	init(
 		sourceFactory: @escaping () -> ISourceFactory,
-		routeEditorFactory: @escaping () -> IRouteEditorFactory,
+		routeEditorSourceFactory: @escaping (RouteEditor) -> RouteEditorSource,
+		routeEditorFactory: @escaping () -> RouteEditor,
 		map: Map
 	) {
 		self.sourceFactory = sourceFactory
+		self.routeEditorSourceFactory = routeEditorSourceFactory
 		self.routeEditorFactory = routeEditorFactory
 		self.map = map
 
@@ -32,13 +35,13 @@ final class RouteViewModel: ObservableObject {
 	}
 
 	func setupPointA() {
-		_ = self.map.camera().position().sinkOnMainThread { [weak self] position in
+		_ = self.map.camera.position().sinkOnMainThread { [weak self] position in
 			self?.updatePointA(position.point)
 		}
 	}
 
 	func setupPointB() {
-		_ = self.map.camera().position().sinkOnMainThread { [weak self] position in
+		_ = self.map.camera.position().sinkOnMainThread { [weak self] position in
 			self?.updatePointB(position.point)
 		}
 	}
