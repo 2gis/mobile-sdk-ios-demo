@@ -6,7 +6,7 @@ final class MarkerViewModel: ObservableObject {
 	enum MarkerType: UInt {
 		case camera
 		case water
-		case bridge
+		case shelter
 
 		mutating func next() {
 			self = MarkerType(rawValue: self.rawValue + 1) ?? .camera
@@ -16,15 +16,21 @@ final class MarkerViewModel: ObservableObject {
 			switch self {
 				case .camera: return "Камера"
 				case .water: return "Вода"
-				case .bridge: return "Мост"
+				case .shelter: return "Укрытие"
 			}
 		}
 
-		var assetName: String {
+		var image: UIImage? {
 			switch self {
-				case .camera: return "svg_photo"
-				case .water: return "svg_water"
-				case .bridge: return "svg_bridge"
+				case .camera:
+					return UIImage(systemName: "camera.fill")?
+						.withTintColor(.systemGray)
+				case .water:
+					return UIImage(systemName: "drop.fill")?
+						.withTintColor(.systemTeal)
+				case .shelter:
+					return UIImage(systemName: "umbrella.fill")?
+						.withTintColor(.systemRed)
 			}
 		}
 	}
@@ -46,62 +52,74 @@ final class MarkerViewModel: ObservableObject {
 			}
 		}
 
-		var size: CGFloat {
+		var scale: UIImage.SymbolScale {
 			switch self {
-				case .small: return 8
-				case .medium: return 16
-				case .big: return 32
+				case .small: return .small
+				case .medium: return .medium
+				case .big: return .large
 			}
 		}
 
+	}
+
+	private struct TypeSize: Hashable {
+		let type: MarkerType
+		let size: MarkerSize
 	}
 
 	@Published var type: MarkerType = .camera
 	@Published var size: MarkerSize = .small
 	@Published private(set) var hasMarkers = false
 	
-	private let sourceFactory: () -> ISourceFactory
+	private let imageFactory: IImageFactory
 	private let map: Map
+	private lazy var objectManager: MapObjectManager =
+		createMapObjectManager(map: self.map)
 
-	private var hasSource : Bool = false
-	private lazy var source = self.sourceFactory().createGeometryMapObjectSourceBuilder().createSource()!
+	private var icons: [TypeSize: PlatformSDK.Image] = [:]
 
 	init(
-		sourceFactory: @escaping () -> ISourceFactory,
+		imageFactory: IImageFactory,
 		map: Map
 	) {
-		self.sourceFactory = sourceFactory
+		self.imageFactory = imageFactory
 		self.map = map
 	}
 
 	func addMarkers(text: String) {
-		if !self.hasSource {
-			self.map.addSource(source: source)
-			self.hasSource = true
-		}
+		let flatPoint = self.map.camera.position().value.point
+		let point = GeoPointWithElevation(
+			latitude: flatPoint.latitude,
+			longitude: flatPoint.longitude
+		)
+		let icon = self.makeIcon(type: self.type, size: self.size)
 
-		_ = self.map.camera.position().sinkOnMainThread { position in
-			do {
-				let mapObject = try MarkerBuilder()
-					.setIcon(svg: NSDataAsset(name: self.type.assetName)!.data)
-					.setPosition(point: position.point)
-					.setText(text: text)
-					.setSize(self.size.size)
-					.build()
-				self.source.addObject(item: mapObject)
-				self.hasMarkers = true
-			} catch {
-				print("Failed to build text marker. Error: \(error).")
-			}
-		}
+		let options = MarkerOptions(
+			position: point,
+			icon: icon,
+			text: text
+		)
+
+		_ = self.objectManager.addMarker(options: options)
+
+		self.hasMarkers = true
 	}
 
-	func removeLast() {
-		if let lastAddedMarker = self.source.objects().first {
-			self.source.removeObject(item: lastAddedMarker)
-		}
-		if self.source.objects().count == 0 {
-			self.hasMarkers = false
+	func removeAll() {
+		self.objectManager.removeAll()
+	}
+
+	private func makeIcon(type: MarkerType, size: MarkerSize) -> PlatformSDK.Image? {
+		let typeSize = TypeSize(type: type, size: size)
+		if let icon = self.icons[typeSize] {
+			return icon
+		} else if let image = type.image,
+			let scaledImage = image.applyingSymbolConfiguration(.init(scale: size.scale)) {
+			let icon = self.imageFactory.make(image: scaledImage)
+			self.icons[typeSize] = icon
+			return icon
+		} else {
+			return nil
 		}
 	}
 }

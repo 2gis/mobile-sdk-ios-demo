@@ -31,8 +31,8 @@ struct MarkerView: View {
 			}, primaryText: "Установить")
 			if self.viewModel.hasMarkers {
 				DetailsActionView(action: {
-					self.viewModel.removeLast()
-				}, primaryText: "Удалить последний")
+					self.viewModel.removeAll()
+				}, primaryText: "Удалить все")
 			}
 			DetailsActionView(action: {
 				self.show = false

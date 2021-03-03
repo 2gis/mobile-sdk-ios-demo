@@ -7,7 +7,7 @@ struct SuggestViewModel: Identifiable, Hashable {
 	let title: MarkedUpText
 	let subtitle: MarkedUpText
 	let applyHandler: SuggestHandler
-	let icon: Image
+	let icon: SwiftUI.Image
 	let object: DirectoryObjectViewModel?
 
 	init(suggest: Suggest) {
@@ -27,8 +27,8 @@ struct SuggestViewModel: Identifiable, Hashable {
 	}
 }
 
-private func makeIcon(for handler: SuggestHandler) -> Image {
-	let icon: Image
+private func makeIcon(for handler: SuggestHandler) -> SwiftUI.Image {
+	let icon: SwiftUI.Image
 	switch handler {
 		case .objectHandler:
 			icon = Image(systemName: "map")

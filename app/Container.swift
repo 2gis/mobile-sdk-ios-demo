@@ -27,16 +27,21 @@ final class Container {
 	private func makeViewFactory(viewModel: RootViewModel) -> RootViewFactory {
 		let viewFactory = RootViewFactory(
 			viewModel: viewModel,
-			markerViewModel: MarkerViewModel(sourceFactory: { [sdk = self.sdk] in
-				return sdk.sourceFactory
-			}, map: self.sdk.map),
+			markerViewModel: MarkerViewModel(
+				imageFactory: self.sdk.imageFactory,
+				map: self.sdk.map
+			),
 			routeViewModel: RouteViewModel(sourceFactory: { [sdk = self.sdk] in
-				return sdk.sourceFactory
-			}, routeEditorSourceFactory: { [sdk = self.sdk] routeEditor in
-				return createRouteEditorSource(context: sdk.context, routeEditor: routeEditor)!
-			}, routeEditorFactory: { [sdk = self.sdk] in
-				return RouteEditor(context: sdk.context)
-			}, map: self.sdk.map),
+					return sdk.sourceFactory
+				},
+				routeEditorSourceFactory: { [sdk = self.sdk] routeEditor in
+					return createRouteEditorSource(context: sdk.context, routeEditor: routeEditor)
+				},
+				routeEditorFactory: { [sdk = self.sdk] in
+					return RouteEditor(context: sdk.context)
+				},
+				map: self.sdk.map
+			),
 			mapUIViewFactory: {
 				[sdk = self.sdk] in
 				sdk.mapView
