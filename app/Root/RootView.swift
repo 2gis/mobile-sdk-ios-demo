@@ -3,11 +3,8 @@ import SwiftUI
 struct RootView: View {
 	private static let mapCoordinateSpace = "map"
 
-	private let viewModel: RootViewModel
+	@ObservedObject private var viewModel: RootViewModel
 	private let viewFactory: RootViewFactory
-
-	@State private var showMarkers: Bool = false
-	@State private var showRoutes: Bool = false
 
 	init(
 		viewModel: RootViewModel,
@@ -21,31 +18,37 @@ struct RootView: View {
 
 	var body: some View {
 		NavigationView  {
-			ZStack() {
-				ZStack(alignment: .bottomTrailing) {
-					self.viewFactory.makeMapView()
-					.coordinateSpace(name: Self.mapCoordinateSpace)
-					.simultaneousGesture(self.drag)
-					if !self.showMarkers {
-						self.settingsButton().frame(width: 100, height: 100, alignment: .bottomTrailing)
+			GeometryReader { geometry in
+				ZStack {
+					ZStack(alignment: .bottomTrailing) {
+						self.viewFactory.makeMapView()
+							.coordinateSpace(name: Self.mapCoordinateSpace)
+							.simultaneousGesture(self.drag)
+						if !self.viewModel.showMarkers {
+							self.settingsButton().frame(width: 100, height: 100, alignment: .bottomTrailing)
+						}
+						if self.viewModel.showMarkers {
+							self.viewFactory.makeMarkerView(show: self.$viewModel.showMarkers).followKeyboard($keyboardOffset)
+						}
+						if self.viewModel.showRoutes {
+							self.viewFactory.makeRouteView(show: self.$viewModel.showRoutes).followKeyboard($keyboardOffset)
+						}
+						if let cardViewModel = self.viewModel.selectedObjectCardViewModel {
+							self.viewFactory.makeMapObjectCardView(cardViewModel)
+								.transition(.move(edge: .bottom))
+						}
 					}
-					if self.showMarkers {
-						self.viewFactory.makeMarkerView(show: $showMarkers).followKeyboard($keyboardOffset)
+					if self.viewModel.showMarkers || self.viewModel.showRoutes {
+						Image(systemName: "multiply").frame(width: 40, height: 40, alignment: .center).foregroundColor(.red).opacity(0.4)
 					}
-					if self.showRoutes {
-						self.viewFactory.makeRouteView(show: $showRoutes).followKeyboard($keyboardOffset)
-					}
+					self.zoomControls()
 				}
-				if self.showMarkers || self.showRoutes {
-					Image(systemName: "multiply").frame(width: 40, height: 40, alignment: .center).foregroundColor(.red).opacity(0.4)
-				}
-				self.zoomControls()
+				.navigationBarItems(
+					leading: self.navigationBarLeadingItem()
+				)
+				.navigationBarTitle("2GIS", displayMode: .inline)
+				.edgesIgnoringSafeArea(.all)
 			}
-			.navigationBarItems(
-				leading: self.navigationBarLeadingItem()
-			)
-			.navigationBarTitle("2GIS", displayMode: .inline)
-			.edgesIgnoringSafeArea(.all)
 		}.navigationViewStyle(StackNavigationViewStyle())
 	}
 
@@ -95,10 +98,10 @@ struct RootView: View {
 						self.viewModel.showCurrentPosition()
 					},
 					.default(Text("Тест добавления маркеров")) {
-						self.showMarkers = true
+						self.viewModel.showMarkers = true
 					},
 					.default(Text("Тест поиска маршрута")) {
-						self.showRoutes = true
+						self.viewModel.showRoutes = true
 					},
 					.cancel(Text("Отмена"))
 				])
@@ -111,7 +114,9 @@ struct RootView: View {
 			coordinateSpace: .named(Self.mapCoordinateSpace)
 		)
 		.onEnded { info in
-			self.viewModel.tap(info.location)
+			if abs(info.translation.width) < 10, abs(info.translation.height) < 10 {
+				self.viewModel.tap(info.startLocation)
+			}
 		}
 	}
 }
