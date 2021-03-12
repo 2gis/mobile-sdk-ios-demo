@@ -1,10 +1,18 @@
 import SwiftUI
 import PlatformSDK
 
-final class RootViewModel {
-	private static let tapRadius: CGFloat = 5
+final class RootViewModel: ObservableObject {
+
+	private enum Constants {
+		static let tapRadius: CGFloat = 5
+		static let markerSize: CGFloat = 16
+	}
 
 	let searchStore: SearchStore
+
+	@Published var showMarkers: Bool = false
+	@Published var showRoutes: Bool = false
+	@Published var selectedObjectCardViewModel: MapObjectCardViewModel?
 
 	private let searchManagerFactory: () -> ISearchManager
 	private let sourceFactory: () -> ISourceFactory
@@ -15,6 +23,15 @@ final class RootViewModel {
 
 	private var moveCameraCancellable: Cancellable?
 	private var getRenderedObjectsCancellable: Cancellable?
+	private var getDirectoryObjectCancellable: Cancellable?
+	private var selectedObjectMarker: GeometryMapObject?
+	private lazy var mapObjectSource: GeometryMapObjectSource? = {
+		guard let source = self.sourceFactory().createGeometryMapObjectSourceBuilder().createSource() else {
+			return nil
+		}
+		self.map.addSource(source: source)
+		return source
+	}()
 
 	private let testPoints: [(position: CameraPosition, time: TimeInterval, type: CameraAnimationType)] = {
 		return [
@@ -116,6 +133,28 @@ final class RootViewModel {
 		}
 	}
 
+	func tap(_ location: CGPoint) {
+
+		self.hideSelectedMarker()
+		self.getRenderedObjectsCancellable?.cancel()
+
+		let mapLocation = location.applying(self.toMap)
+		let tapPoint = ScreenPoint(x: Float(mapLocation.x), y: Float(mapLocation.y))
+		let tapRadius = ScreenDistance(value: Float(Constants.tapRadius))
+		let cancel = self.map.getRenderedObjects(centerPoint: tapPoint, radius: tapRadius).sinkOnMainThread(
+			receiveValue: {
+				[weak self] infos in
+				guard let info = infos.first else { return }
+
+				self?.handle(selectedObject: info)
+			},
+			failure: { error in
+				print("Failed to fetch objects: \(error)")
+			}
+		)
+		self.getRenderedObjectsCancellable = cancel
+	}
+
 	private func move(at index: Int) {
 
 		guard index < self.testPoints.count else { return }
@@ -136,23 +175,36 @@ final class RootViewModel {
 		}
 	}
 
-	func tap(_ location: CGPoint) {
-		let mapLocation = location.applying(self.toMap)
-		let tapPoint = ScreenPoint(x: Float(mapLocation.x), y: Float(mapLocation.y))
-		let tapRadius = ScreenDistance(value: Float(Self.tapRadius))
-		let cancel = self.map.getRenderedObjects(centerPoint: tapPoint, radius: tapRadius)
-			.sink(receiveValue: { infos in
-				// Достаточно взять первый маркер. В данном примере перечислим все
-				// маркера в окрестности.
-				for info in infos {
-					if let object = info.item.item {
-						print("Tapped object: \(object).")
-					}
+	private func hideSelectedMarker() {
+		if let marker = self.selectedObjectMarker {
+			self.mapObjectSource?.removeObject(item: marker)
+		}
+		self.selectedObjectCardViewModel = nil
+	}
+
+	private func handle(selectedObject: RenderedObjectInfo) {
+		do {
+			let point = GeoPoint(
+				latitude: selectedObject.closestMapPoint.longitude,
+				longitude: selectedObject.closestMapPoint.latitude
+			)
+
+			let mapObject = try MarkerBuilder()
+				.setIcon(image: UIImage(systemName: "mappin.and.ellipse")!.withTintColor(#colorLiteral(red: 0.2470588235, green: 0.6, blue: 0.1607843137, alpha: 1)))
+				.setPosition(point: point)
+				.setSize(Constants.markerSize)
+				.build()
+			self.selectedObjectMarker = mapObject
+			self.selectedObjectCardViewModel = MapObjectCardViewModel(
+				objectInfo: selectedObject,
+				closeCallback: {
+					[weak self] in
+					self?.hideSelectedMarker()
 				}
-			},
-			failure: { error in
-				print("Failed to fetch objects: \(error)")
-			})
-		self.getRenderedObjectsCancellable = cancel
+			)
+			self.mapObjectSource?.addObject(item: mapObject)
+		} catch {
+			print("Failed to build marker. Error: \(error).")
+		}
 	}
 }

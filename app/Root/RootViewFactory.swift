@@ -42,4 +42,8 @@ struct RootViewFactory {
 	func makeRouteView(show: Binding<Bool>) -> some View {
 		return RouteView(viewModel: self.routeViewModel, show: show)
 	}
+
+	func makeMapObjectCardView(_ viewModel: MapObjectCardViewModel) -> some View {
+		return MapObjectCardView(viewModel: viewModel)
+	}
 }
