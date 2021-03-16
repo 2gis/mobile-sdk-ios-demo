@@ -171,9 +171,6 @@ let polyline = objectsManager.addPolyline(options: options)
 /// - Parameter tapRadius: Radius around tap point in which objects will
 ///   be detected.
 private func tap(point: ScreenPoint, tapRadius: ScreenDistance) {
-	self.hideSelectedMarker()
-	self.getRenderedObjectsCancellable?.cancel()
-
 	let cancel = self.map.getRenderedObjects(centerPoint: point, radius: tapRadius).sink(
 		receiveValue: {
 			infos in
