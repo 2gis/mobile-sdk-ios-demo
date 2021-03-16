@@ -5,11 +5,7 @@ final class MapObjectCardViewModel: ObservableObject {
 
 	typealias CloseCallback = () -> Void
 
-	var title: String {
-		let mapObject = self.objectInfo.item.item
-		return String(describing: type(of: mapObject))
-	}
-
+	@Published var title: String = "Some place"
 	@Published var description: String
 
 	private let objectInfo: RenderedObjectInfo
@@ -31,17 +27,39 @@ final class MapObjectCardViewModel: ObservableObject {
 	}
 
 	private func fetchObjectInfo() {
-		guard let dgisMapObject = self.objectInfo.item.item as? DgisMapObject else { return }
-		self.getDirectoryObjectCancellable = dgisMapObject.directoryObject().sinkOnMainThread(
+		let mapObject = self.objectInfo.item.item
+		switch mapObject {
+			case let object as DgisMapObject:
+				self.fetchInfo(dgisMapObject: object)
+			case let marker as Marker:
+				self.fetchInfo(marker: marker)
+			default:
+				self.fetchInfo(genericMapObject: mapObject)
+		}
+	}
+
+	private func fetchInfo(dgisMapObject object: DgisMapObject) {
+		self.getDirectoryObjectCancellable = object.directoryObject().sinkOnMainThread(
 			receiveValue: {
 				[weak self] directoryObject in
 				guard let directoryObject = directoryObject else { return }
 
-				self?.description = "Id: \(dgisMapObject.id().value)\nTitle: \(directoryObject.title())"
+				self?.title = directoryObject.title()
+				self?.description = "ID: \(object.id().value)"
 			},
 			failure: { error in
-				print("Unable to fetch directoryObject. Error: \(error).")
+				print("Unable to fetch a directory object. Error: \(error).")
 			}
 		)
+	}
+
+	private func fetchInfo(marker: Marker) {
+		let text = marker.text
+		self.title = text.isEmpty ? "Marker" : text
+		self.description = "\(marker.position)"
+	}
+
+	private func fetchInfo(genericMapObject object: MapObject) {
+		self.title = String(describing: object)
 	}
 }
