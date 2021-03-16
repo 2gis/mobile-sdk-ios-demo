@@ -4,8 +4,7 @@ import PlatformSDK
 final class RootViewModel: ObservableObject {
 
 	private enum Constants {
-		static let tapRadius: CGFloat = 5
-		static let markerSize: CGFloat = 16
+		static let tapRadius: CGFloat = 1
 	}
 
 	let searchStore: SearchStore
@@ -16,6 +15,7 @@ final class RootViewModel: ObservableObject {
 
 	private let searchManagerFactory: () -> ISearchManager
 	private let sourceFactory: () -> ISourceFactory
+	private let imageFactory: () -> IImageFactory
 	private let locationManagerFactory: () -> LocationService?
 	private let map: Map
 	private let toMap: CGAffineTransform
@@ -24,11 +24,14 @@ final class RootViewModel: ObservableObject {
 	private var moveCameraCancellable: Cancellable?
 	private var getRenderedObjectsCancellable: Cancellable?
 	private var getDirectoryObjectCancellable: Cancellable?
-	private var selectedObjectMarker: GeometryMapObject?
-	private lazy var mapObjectSource: GeometryMapObjectSource = {
-		let source = self.sourceFactory().createGeometryMapObjectSourceBuilder().createSource()
-		self.map.addSource(source: source)
-		return source
+	private var selectedMarker: Marker?
+	private lazy var mapObjectManager: MapObjectManager = createMapObjectManager(map: self.map)
+	private lazy var selectedMarkerIcon: PlatformSDK.Image = {
+		let factory = self.imageFactory()
+		let icon = UIImage(systemName: "mappin.and.ellipse")!
+			.withTintColor(#colorLiteral(red: 0.2470588235, green: 0.6, blue: 0.1607843137, alpha: 1))
+			.withConfiguration(UIImage.SymbolConfiguration(scale: .large))
+		return factory.make(image: icon)
 	}()
 
 	private let testPoints: [(position: CameraPosition, time: TimeInterval, type: CameraAnimationType)] = {
@@ -69,11 +72,13 @@ final class RootViewModel: ObservableObject {
 	init(
 		searchManagerFactory: @escaping () -> ISearchManager,
 		sourceFactory: @escaping () -> ISourceFactory,
+		imageFactory: @escaping () -> IImageFactory,
 		locationManagerFactory: @escaping () -> LocationService?,
 		map: Map
 	) {
 		self.searchManagerFactory = searchManagerFactory
 		self.sourceFactory = sourceFactory
+		self.imageFactory = imageFactory
 		self.locationManagerFactory = locationManagerFactory
 		self.map = map
 
@@ -174,35 +179,29 @@ final class RootViewModel: ObservableObject {
 	}
 
 	private func hideSelectedMarker() {
-		if let marker = self.selectedObjectMarker {
-			self.mapObjectSource.removeObject(item: marker)
+		if let marker = self.selectedMarker {
+			marker.remove()
 		}
 		self.selectedObjectCardViewModel = nil
 	}
 
 	private func handle(selectedObject: RenderedObjectInfo) {
-		do {
-			let point = GeoPoint(
-				latitude: selectedObject.closestMapPoint.longitude,
-				longitude: selectedObject.closestMapPoint.latitude
-			)
-
-			let mapObject = try MarkerBuilder()
-				.setIcon(image: UIImage(systemName: "mappin.and.ellipse")!.withTintColor(#colorLiteral(red: 0.2470588235, green: 0.6, blue: 0.1607843137, alpha: 1)))
-				.setPosition(point: point)
-				.setSize(Constants.markerSize)
-				.build()
-			self.selectedObjectMarker = mapObject
-			self.selectedObjectCardViewModel = MapObjectCardViewModel(
-				objectInfo: selectedObject,
-				onClose: {
-					[weak self] in
-					self?.hideSelectedMarker()
-				}
-			)
-			self.mapObjectSource.addObject(item: mapObject)
-		} catch {
-			print("Failed to build marker. Error: \(error).")
-		}
+		let mapPoint = selectedObject.closestMapPoint
+		let markerPoint = GeoPointWithElevation(
+			latitude: mapPoint.latitude,
+			longitude: mapPoint.longitude
+		)
+		let markerOptions = MarkerOptions(
+			position: markerPoint,
+			icon: self.selectedMarkerIcon
+		)
+		self.selectedMarker = self.mapObjectManager.addMarker(options: markerOptions)
+		self.selectedObjectCardViewModel = MapObjectCardViewModel(
+			objectInfo: selectedObject,
+			onClose: {
+				[weak self] in
+				self?.hideSelectedMarker()
+			}
+		)
 	}
 }
