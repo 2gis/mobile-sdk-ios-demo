@@ -5,31 +5,29 @@ final class MapObjectCardViewModel: ObservableObject {
 
 	typealias CloseCallback = () -> Void
 
-	private let objectInfo: RenderedObjectInfo
-	private let closeCallback: CloseCallback
-	private var getDirectoryObjectCancellable: Cancellable?
-
 	var title: String {
-		guard let mapObject = self.objectInfo.item.item else {
-			return String(describing: type(of: self.objectInfo.item))
-		}
+		let mapObject = self.objectInfo.item.item
 		return String(describing: type(of: mapObject))
 	}
 
 	@Published var description: String
 
+	private let objectInfo: RenderedObjectInfo
+	private let onClose: CloseCallback
+	private var getDirectoryObjectCancellable: Cancellable?
+
 	init(
 		objectInfo: RenderedObjectInfo,
-		closeCallback: @escaping CloseCallback
+		onClose: @escaping CloseCallback
 	) {
 		self.objectInfo = objectInfo
 		self.description = objectInfo.description
-		self.closeCallback = closeCallback
+		self.onClose = onClose
 		self.fetchObjectInfo()
 	}
 
 	func close() {
-		self.closeCallback()
+		self.onClose()
 	}
 
 	private func fetchObjectInfo() {
