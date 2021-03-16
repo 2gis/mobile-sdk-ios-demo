@@ -4,7 +4,7 @@ import PlatformSDK
 final class RootViewModel: ObservableObject {
 
 	private enum Constants {
-		static let tapRadius: CGFloat = 1
+		static let tapRadius = ScreenDistance(value: 1)
 	}
 
 	let searchStore: SearchStore
@@ -137,18 +137,27 @@ final class RootViewModel: ObservableObject {
 	}
 
 	func tap(_ location: CGPoint) {
+		let mapLocation = location.applying(self.toMap)
+		let tapPoint = ScreenPoint(x: Float(mapLocation.x), y: Float(mapLocation.y))
+		self.tap(point: tapPoint, tapRadius: Constants.tapRadius)
+	}
+
+	/// - Parameter point: A tap point in *pixel* (native scale) cooordinates.
+	/// - Parameter tapRadius: Radius around tap point in which objects will
+	///   be detected.
+	private func tap(point: ScreenPoint, tapRadius: ScreenDistance) {
 		self.hideSelectedMarker()
 		self.getRenderedObjectsCancellable?.cancel()
 
-		let mapLocation = location.applying(self.toMap)
-		let tapPoint = ScreenPoint(x: Float(mapLocation.x), y: Float(mapLocation.y))
-		let tapRadius = ScreenDistance(value: Float(Constants.tapRadius))
-		let cancel = self.map.getRenderedObjects(centerPoint: tapPoint, radius: tapRadius).sinkOnMainThread(
+		let cancel = self.map.getRenderedObjects(centerPoint: point, radius: tapRadius).sink(
 			receiveValue: {
-				[weak self] infos in
+				infos in
 				// The first object is the closest one to the tapped point.
 				guard let info = infos.first else { return }
-				self?.handle(selectedObject: info)
+				DispatchQueue.main.async {
+					[weak self] in
+					self?.handle(selectedObject: info)
+				}
 			},
 			failure: { error in
 				print("Failed to fetch objects: \(error)")
