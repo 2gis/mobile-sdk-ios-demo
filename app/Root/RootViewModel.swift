@@ -137,7 +137,6 @@ final class RootViewModel: ObservableObject {
 	}
 
 	func tap(_ location: CGPoint) {
-
 		self.hideSelectedMarker()
 		self.getRenderedObjectsCancellable?.cancel()
 
@@ -147,8 +146,8 @@ final class RootViewModel: ObservableObject {
 		let cancel = self.map.getRenderedObjects(centerPoint: tapPoint, radius: tapRadius).sinkOnMainThread(
 			receiveValue: {
 				[weak self] infos in
+				// The first object is the closest one to the tapped point.
 				guard let info = infos.first else { return }
-
 				self?.handle(selectedObject: info)
 			},
 			failure: { error in
