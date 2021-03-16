@@ -25,10 +25,8 @@ final class RootViewModel: ObservableObject {
 	private var getRenderedObjectsCancellable: Cancellable?
 	private var getDirectoryObjectCancellable: Cancellable?
 	private var selectedObjectMarker: GeometryMapObject?
-	private lazy var mapObjectSource: GeometryMapObjectSource? = {
-		guard let source = self.sourceFactory().createGeometryMapObjectSourceBuilder().createSource() else {
-			return nil
-		}
+	private lazy var mapObjectSource: GeometryMapObjectSource = {
+		let source = self.sourceFactory().createGeometryMapObjectSourceBuilder().createSource()
 		self.map.addSource(source: source)
 		return source
 	}()
@@ -177,7 +175,7 @@ final class RootViewModel: ObservableObject {
 
 	private func hideSelectedMarker() {
 		if let marker = self.selectedObjectMarker {
-			self.mapObjectSource?.removeObject(item: marker)
+			self.mapObjectSource.removeObject(item: marker)
 		}
 		self.selectedObjectCardViewModel = nil
 	}
@@ -197,12 +195,12 @@ final class RootViewModel: ObservableObject {
 			self.selectedObjectMarker = mapObject
 			self.selectedObjectCardViewModel = MapObjectCardViewModel(
 				objectInfo: selectedObject,
-				closeCallback: {
+				onClose: {
 					[weak self] in
 					self?.hideSelectedMarker()
 				}
 			)
-			self.mapObjectSource?.addObject(item: mapObject)
+			self.mapObjectSource.addObject(item: mapObject)
 		} catch {
 			print("Failed to build marker. Error: \(error).")
 		}
