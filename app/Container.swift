@@ -51,6 +51,10 @@ final class Container {
 				[mapFactory = self.mapFactory] in
 				mapFactory.mapView
 			},
+			customZoomControlFactory: {
+				[sdk = self.sdk] in
+				CustomZoomControl(map: sdk.map)
+			},
 			mapControlFactory: self.mapFactory.mapControlFactory
 		)
 		return viewFactory

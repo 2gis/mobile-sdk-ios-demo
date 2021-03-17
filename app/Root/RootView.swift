@@ -84,9 +84,7 @@ struct RootView: View {
 		HStack {
 			Spacer()
 			self.viewFactory.makeZoomControl()
-				.frame(width: 60, height: 128)
-				.fixedSize()
-				.transformEffect(.init(scaleX: 0.8, y: 0.8))
+				.frame(width: 60, height: 120)
 				.padding(10)
 		}
 	}

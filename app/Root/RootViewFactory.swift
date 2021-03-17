@@ -6,6 +6,7 @@ struct RootViewFactory {
 	private let markerViewModel: MarkerViewModel
 	private let routeViewModel: RouteViewModel
 	private let mapUIViewFactory: () -> UIView & IMapView
+	private let customZoomControlFactory: () -> UIView
 	private let mapControlFactory: IMapControlFactory
 
 	init(
@@ -13,12 +14,14 @@ struct RootViewFactory {
 		markerViewModel: MarkerViewModel,
 		routeViewModel: RouteViewModel,
 		mapUIViewFactory: @escaping () -> UIView & IMapView,
+		customZoomControlFactory: @escaping () -> UIView,
 		mapControlFactory: IMapControlFactory
 	) {
 		self.viewModel = viewModel
 		self.markerViewModel = markerViewModel
 		self.routeViewModel = routeViewModel
 		self.mapUIViewFactory = mapUIViewFactory
+		self.customZoomControlFactory = customZoomControlFactory
 		self.mapControlFactory = mapControlFactory
 	}
 
@@ -27,7 +30,7 @@ struct RootViewFactory {
 	}
 
 	func makeZoomControl() -> some View {
-		MapControl(controlFactory: self.mapControlFactory.makeZoomControl)
+		MapControl(controlFactory: self.customZoomControlFactory)
 	}
 
 	func makeSearchView() -> some View {
