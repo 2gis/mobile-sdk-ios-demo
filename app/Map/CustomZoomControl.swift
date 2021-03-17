@@ -7,7 +7,7 @@ public final class CustomZoomControl: UIControl {
 	private let stack: UIStackView
 
 	init(map: Map) {
-		let model = createZoomControlModel(map: map)
+		let model = ZoomControlModel(map: map)
 
 		let zoomIn = ZoomButton(model: model, direction: .zoomIn)
 		let zoomInImage = UIImage(systemName: "plus.magnifyingglass")

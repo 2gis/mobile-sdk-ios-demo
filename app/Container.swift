@@ -40,7 +40,7 @@ final class Container {
 					return sdk.sourceFactory
 				},
 				routeEditorSourceFactory: { [sdk = self.sdk] routeEditor in
-					return RouteEditorSource(context: sdk.context, routeEditor: routeEditor)
+					return sdk.sourceFactory.createRouteEditorSource(routeEditor: routeEditor)
 				},
 				routeEditorFactory: { [sdk = self.sdk] in
 					return RouteEditor(context: sdk.context)
@@ -52,8 +52,8 @@ final class Container {
 				mapFactory.mapView
 			},
 			customZoomControlFactory: {
-				[sdk = self.sdk] in
-				CustomZoomControl(map: sdk.map)
+				[mapFactory = self.mapFactory] in
+				CustomZoomControl(map: mapFactory.map)
 			},
 			mapControlFactory: self.mapFactory.mapControlFactory
 		)
