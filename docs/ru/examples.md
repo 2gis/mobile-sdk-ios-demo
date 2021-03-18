@@ -17,14 +17,14 @@ let newCameraPosition = CameraPosition(
 )
 
 // запуск перелета
-let cancellable = map.camera.move(
+let future = map.camera.move(
 	position: newCameraPosition,
 	time: 0.4,
 	animationType: .linear
 )
 
 // так же можно получить уведомление когда перелет закончен
-cancellable.sink { _ in
+let cancellable = future.sink { _ in
 	print("Camera position is changed successfully")
 } failure: { error in
 	print("Something went wrong: \(error.localizedDescription)")
@@ -50,6 +50,16 @@ let connection = positionChannel.sink { position in
 connection.cancel()
 ```
 ### Отслеживание состояния камеры
+Карта может находится в нескольких состояниях перечисленных в [CameraState](/ru/ios/native/maps/reference/CameraState). 
+```swift
+// получить текущее состояние
+let currentState = map.camera.state().value
+
+// подписаться на изменение
+let cancellable = map.camera.state().sink { state in
+	print("new state is \(state)")
+}
+```
 
 
 ## Мое местоположение
@@ -64,6 +74,16 @@ let source = createMyLocationMapObjectSource(
 // добавляем источник в карту
 map.addSource(source: source)
 ```
+
+## Динамические объекты на карте
+### Marker
+// TBD
+
+### Polyline
+// TBD
+
+### Polygon
+// TBD
 
 
 ## Получение информации о точке прикосновения к карте
