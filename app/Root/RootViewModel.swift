@@ -23,10 +23,11 @@ final class RootViewModel: ObservableObject {
 	@Published var visibleAreaIndicatorState: VisibleAreaState?
 	@Published var styleFileURL: URL?
 
+	var stylePickerViewModel: StylePickerViewModel
+
 	private let searchManagerFactory: () -> ISearchManager
 	private let sourceFactory: () -> ISourceFactory
 	private let imageFactory: () -> IImageFactory
-	private let styleFactory: () -> IStyleFactory
 	private let locationManagerFactory: () -> LocationService?
 	private let map: Map
 	private let toMap: CGAffineTransform
@@ -94,7 +95,6 @@ final class RootViewModel: ObservableObject {
 	) {
 		self.searchManagerFactory = searchManagerFactory
 		self.sourceFactory = sourceFactory
-		self.styleFactory = styleFactory
 		self.imageFactory = imageFactory
 		self.locationManagerFactory = locationManagerFactory
 		self.map = map
@@ -109,21 +109,10 @@ final class RootViewModel: ObservableObject {
 		let reducer = SearchReducer(service: service)
 		self.searchStore = SearchStore(initialState: .init(), reducer: reducer)
 
-		self.$styleFileURL.sink(receiveValue: {
-				[weak self, map = self.map] fileURL in
-				guard let fileURL = fileURL else { return }
-				let factory = styleFactory()
-				let styleFuture = factory.loadFile(url: fileURL)
-				let cancel = styleFuture.sink(receiveValue: {
-						style in
-						map.setStyle(style: style)
-					},failure: {
-						error in
-						print("Failed to load style from <\(fileURL)>. Error: \(error)")
-					})
-				self?.loadStyleCancellable = cancel
-			})
-			.store(in: &self.cancellables)
+		self.stylePickerViewModel = StylePickerViewModel(
+			styleFactory: styleFactory,
+			map: self.map
+		)
 	}
 
 	func makeSearchViewModel() -> SearchViewModel {

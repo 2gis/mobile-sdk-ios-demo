@@ -52,8 +52,8 @@ struct RootView: View {
 			}
 		}
 		.navigationViewStyle(StackNavigationViewStyle())
-		.sheet(isPresented: self.$viewModel.showStylePicker) {
-			StylePickerView(fileURL: self.$viewModel.styleFileURL)
+		.sheet(isPresented: self.$viewModel.stylePickerViewModel.showsStylePicker) {
+			StylePickerView(fileURL: self.$viewModel.stylePickerViewModel.styleFileURL)
 		}
 	}
 
@@ -125,7 +125,7 @@ struct RootView: View {
 						self.viewModel.detectExtendedVisibleRectChange()
 					},
 					.default(Text("Загрузка стиля из файла")) {
-						self.viewModel.showStylePicker = true
+						self.viewModel.stylePickerViewModel.showsStylePicker = true
 					},
 					.cancel(Text("Отмена"))
 				])

@@ -23,6 +23,7 @@
 		4B4291652527A49C006E74BE /* SuggestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B4291642527A49C006E74BE /* SuggestView.swift */; };
 		4B4291682527A4DB006E74BE /* SuggestViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B4291672527A4DB006E74BE /* SuggestViewModel.swift */; };
 		4B96D18E260348C10057C366 /* StylePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B96D18D260348C10057C366 /* StylePickerView.swift */; };
+		4B96D1902603682B0057C366 /* StylePickerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B96D18F2603682B0057C366 /* StylePickerViewModel.swift */; };
 		4BADDFCC2528016600FBF589 /* SuggestResultView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BADDFCB2528016600FBF589 /* SuggestResultView.swift */; };
 		4BADDFCF252801BD00FBF589 /* SuggestResultViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BADDFCE252801BC00FBF589 /* SuggestResultViewModel.swift */; };
 		4BADDFD2252802A500FBF589 /* SearchResultView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BADDFD1252802A500FBF589 /* SearchResultView.swift */; };
@@ -87,6 +88,7 @@
 		4B4291642527A49C006E74BE /* SuggestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestView.swift; sourceTree = "<group>"; };
 		4B4291672527A4DB006E74BE /* SuggestViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestViewModel.swift; sourceTree = "<group>"; };
 		4B96D18D260348C10057C366 /* StylePickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StylePickerView.swift; sourceTree = "<group>"; };
+		4B96D18F2603682B0057C366 /* StylePickerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StylePickerViewModel.swift; sourceTree = "<group>"; };
 		4BADDFCB2528016600FBF589 /* SuggestResultView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestResultView.swift; sourceTree = "<group>"; };
 		4BADDFCE252801BC00FBF589 /* SuggestResultViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestResultViewModel.swift; sourceTree = "<group>"; };
 		4BADDFD1252802A500FBF589 /* SearchResultView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultView.swift; sourceTree = "<group>"; };
@@ -214,6 +216,7 @@
 			isa = PBXGroup;
 			children = (
 				4B96D18D260348C10057C366 /* StylePickerView.swift */,
+				4B96D18F2603682B0057C366 /* StylePickerViewModel.swift */,
 			);
 			path = Style;
 			sourceTree = "<group>";
@@ -408,6 +411,7 @@
 				4BADDFD8252866B300FBF589 /* SearchStore.swift in Sources */,
 				095BE97A25B813A000D09D75 /* DetailsActionView.swift in Sources */,
 				4BADDFD2252802A500FBF589 /* SearchResultView.swift in Sources */,
+				4B96D1902603682B0057C366 /* StylePickerViewModel.swift in Sources */,
 				0991909625B96E1C00F4235B /* MapControl.swift in Sources */,
 				4B4291652527A49C006E74BE /* SuggestView.swift in Sources */,
 				B709914F25FA6B6F00B2F1A5 /* RenderedObjectInfo+Helpers.swift in Sources */,
