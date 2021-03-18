@@ -76,8 +76,22 @@ map.addSource(source: source)
 ```
 
 ## Динамические объекты на карте
+Для работы с динамическими объектами используется [MapObjectManager](/ru/ios/native/maps/reference/MapObjectManager)
 ### Marker
-// TBD
+добавление маркера на карту
+```swift
+let objectsManager = createMapObjectManager(map: map)
+
+let options = MarkerOptions(
+	position: GeoPointWithElevation(
+		latitude: Arcdegree(value: 55.752425),
+		longitude: Arcdegree(value: 37.613983)
+	),
+	icon: imageFactory.make(image: icon)
+)
+
+let marker = objectsManager.addMarker(options: options)
+```
 
 ### Polyline
 // TBD
