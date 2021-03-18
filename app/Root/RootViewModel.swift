@@ -1,4 +1,5 @@
 import SwiftUI
+import Combine
 import PlatformSDK
 
 final class RootViewModel: ObservableObject {
@@ -17,22 +18,27 @@ final class RootViewModel: ObservableObject {
 
 	@Published var showMarkers: Bool = false
 	@Published var showRoutes: Bool = false
+	@Published var showStylePicker: Bool = false
 	@Published var selectedObjectCardViewModel: MapObjectCardViewModel?
 	@Published var visibleAreaIndicatorState: VisibleAreaState?
+	@Published var styleFileURL: URL?
 
 	private let searchManagerFactory: () -> ISearchManager
 	private let sourceFactory: () -> ISourceFactory
 	private let imageFactory: () -> IImageFactory
+	private let styleFactory: () -> IStyleFactory
 	private let locationManagerFactory: () -> LocationService?
 	private let map: Map
 	private let toMap: CGAffineTransform
 	private var locationService: LocationService?
 	private var initialRect: GeoRect?
 	private var initialRectCancellable: Cancellable?
+	private var cancellables: [AnyCancellable] = []
 
-	private var moveCameraCancellable: Cancellable?
-	private var getRenderedObjectsCancellable: Cancellable?
-	private var getDirectoryObjectCancellable: Cancellable?
+	private var moveCameraCancellable: PlatformSDK.Cancellable?
+	private var getRenderedObjectsCancellable: PlatformSDK.Cancellable?
+	private var getDirectoryObjectCancellable: PlatformSDK.Cancellable?
+	private var loadStyleCancellable: PlatformSDK.Cancellable?
 	private var selectedMarker: Marker?
 	private lazy var mapObjectManager: MapObjectManager = createMapObjectManager(map: self.map)
 	private lazy var selectedMarkerIcon: PlatformSDK.Image = {
@@ -81,12 +87,14 @@ final class RootViewModel: ObservableObject {
 	init(
 		searchManagerFactory: @escaping () -> ISearchManager,
 		sourceFactory: @escaping () -> ISourceFactory,
+		styleFactory: @escaping () -> IStyleFactory,
 		imageFactory: @escaping () -> IImageFactory,
 		locationManagerFactory: @escaping () -> LocationService?,
 		map: Map
 	) {
 		self.searchManagerFactory = searchManagerFactory
 		self.sourceFactory = sourceFactory
+		self.styleFactory = styleFactory
 		self.imageFactory = imageFactory
 		self.locationManagerFactory = locationManagerFactory
 		self.map = map
@@ -100,6 +108,22 @@ final class RootViewModel: ObservableObject {
 		)
 		let reducer = SearchReducer(service: service)
 		self.searchStore = SearchStore(initialState: .init(), reducer: reducer)
+
+		self.$styleFileURL.sink(receiveValue: {
+				[weak self, map = self.map] fileURL in
+				guard let fileURL = fileURL else { return }
+				let factory = styleFactory()
+				let styleFuture = factory.loadFile(url: fileURL)
+				let cancel = styleFuture.sink(receiveValue: {
+						style in
+						map.setStyle(style: style)
+					},failure: {
+						error in
+						print("Failed to load style from <\(fileURL)>. Error: \(error)")
+					})
+				self?.loadStyleCancellable = cancel
+			})
+			.store(in: &self.cancellables)
 	}
 
 	func makeSearchViewModel() -> SearchViewModel {
