@@ -1,3 +1,57 @@
+## Общая информация
+### Future
+// todo oписать как использовать что угодно в качестве future
+// + то что они стреляют из произвольных потоков
+
+### Channel
+// todo описать как подсунуть свой вариант channel 
+// + что они стреляют из разных потоков
+
+## Камера
+### Перелет
+```swift
+// новое положение камеры
+let newCameraPosition = CameraPosition(
+	point: GeoPoint(latitude: Arcdegree(value: 55.752425), longitude: Arcdegree(value: 37.613983)),
+	zoom: Zoom(value: 16)
+)
+
+// запуск перелета
+let cancellable = map.camera.move(
+	position: newCameraPosition,
+	time: 0.4,
+	animationType: .linear
+)
+
+// так же можно получить уведомление когда перелет закончен
+cancellable.sink { _ in
+	print("Camera position is changed successfully")
+} failure: { error in
+	print("Something went wrong: \(error.localizedDescription)")
+}
+```
+### Отслеживание позиции камеры
+```swift
+let positionChannel = map.camera.position()
+
+// получить текущее значение позиции камеры
+let currentPosition = positionChannel.value
+
+// подписаться на изменения
+let connection = positionChannel.sink { position in
+	print("Geo coordinate \(position.point)")
+	print("Zoom level \(position.zoom)")
+	print("Tilt \(position.tilt)")
+	print("Bearing \(position.bearing)")
+}
+
+// соединение необходимо сохранять до тех пор пока необходимо получать уведомления
+// когда эта информация больше не нужна подписку стоит разорвать
+connection.cancel()
+```
+### Отслеживание состояния камеры
+
+
 ## Мое местоположение
 
 ### Маркер местоположения на карте
