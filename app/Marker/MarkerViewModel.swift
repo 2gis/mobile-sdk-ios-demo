@@ -87,7 +87,7 @@ final class MarkerViewModel: ObservableObject {
 	}
 
 	func addMarkers(text: String) {
-		let flatPoint = self.map.camera.position().value.point
+		let flatPoint = self.map.camera.position.value.point
 		let point = GeoPointWithElevation(
 			latitude: flatPoint.latitude,
 			longitude: flatPoint.longitude

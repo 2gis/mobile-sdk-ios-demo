@@ -11,11 +11,11 @@ struct SuggestViewModel: Identifiable, Hashable {
 	let object: DirectoryObjectViewModel?
 
 	init(suggest: Suggest) {
-		self.title = suggest.title()
-		self.subtitle = suggest.subtitle()
-		self.applyHandler = suggest.handler()
-		self.icon = makeIcon(for: suggest.handler())
-		self.object = suggest.handler().object.map(DirectoryObjectViewModel.init)
+		self.title = suggest.title
+		self.subtitle = suggest.subtitle
+		self.applyHandler = suggest.handler
+		self.icon = makeIcon(for: suggest.handler)
+		self.object = suggest.handler.object.map(DirectoryObjectViewModel.init)
 	}
 
 	static func ==(_ lhs: Self, rhs: Self) -> Bool {
@@ -46,7 +46,7 @@ private extension SuggestHandler {
 	var object: DirectoryObject? {
 		switch self {
 			case .objectHandler(let handler):
-				return handler!.item()
+				return handler?.item
 			default:
 				return nil
 		}

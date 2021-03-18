@@ -8,8 +8,7 @@ struct SearchResultViewModel {
 	}
 
 	init(_ result: SearchResult? = nil) {
-		self.items = result?.firstPage()?.items().compactMap({ $0 }).map(SearchResultItemViewModel.init)
-			?? []
+		self.items = result?.firstPage?.items.compactMap({ $0 }).map(SearchResultItemViewModel.init) ?? []
 	}
 }
 

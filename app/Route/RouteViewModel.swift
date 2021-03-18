@@ -35,13 +35,13 @@ final class RouteViewModel: ObservableObject {
 	}
 
 	func setupPointA() {
-		_ = self.map.camera.position().sinkOnMainThread { [weak self] position in
+		_ = self.map.camera.position.sinkOnMainThread { [weak self] position in
 			self?.updatePointA(position.point)
 		}
 	}
 
 	func setupPointB() {
-		_ = self.map.camera.position().sinkOnMainThread { [weak self] position in
+		_ = self.map.camera.position.sinkOnMainThread { [weak self] position in
 			self?.updatePointB(position.point)
 		}
 	}

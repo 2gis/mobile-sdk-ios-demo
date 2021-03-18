@@ -34,18 +34,23 @@ final class MapObjectCardViewModel: ObservableObject {
 			case let marker as Marker:
 				self.fetchInfo(marker: marker)
 			default:
-				self.fetchInfo(genericMapObject: mapObject)
+				self.fetchInfo(objectInfo: self.objectInfo)
 		}
 	}
 
 	private func fetchInfo(dgisMapObject object: DgisMapObject) {
-		self.getDirectoryObjectCancellable = object.directoryObject().sinkOnMainThread(
+		self.getDirectoryObjectCancellable = object.directoryObject.sinkOnMainThread(
 			receiveValue: {
 				[weak self] directoryObject in
 				guard let directoryObject = directoryObject else { return }
 
-				self?.title = directoryObject.title()
-				self?.description = "ID: \(object.id().value)"
+				self?.title = directoryObject.title
+				self?.description = """
+					\(directoryObject.subtitle)
+					\(directoryObject.formattedAddress(type: .short)?.streetAddress ?? "(no address)")
+					\(directoryObject.markerPosition?.description ?? "(no location)")
+					ID: \(object.id.value)
+					"""
 			},
 			failure: { error in
 				print("Unable to fetch a directory object. Error: \(error).")
@@ -59,7 +64,8 @@ final class MapObjectCardViewModel: ObservableObject {
 		self.description = "\(marker.position)"
 	}
 
-	private func fetchInfo(genericMapObject object: MapObject) {
-		self.title = String(describing: object)
+	private func fetchInfo(objectInfo: RenderedObjectInfo) {
+		self.title = String(describing: type(of: objectInfo))
+		self.description = String(describing: objectInfo)
 	}
 }
