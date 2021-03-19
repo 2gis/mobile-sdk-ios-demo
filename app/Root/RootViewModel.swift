@@ -20,6 +20,7 @@ final class RootViewModel: ObservableObject {
 	private let map: Map
 	private let toMap: CGAffineTransform
 	private var locationService: LocationService?
+	private var visibleRect: GeoRect?
 
 	private var moveCameraCancellable: Cancellable?
 	private var getRenderedObjectsCancellable: Cancellable?
@@ -166,6 +167,14 @@ final class RootViewModel: ObservableObject {
 		self.getRenderedObjectsCancellable = cancel
 	}
 
+	
+	func visibleRectChanging() {
+		let visibleRectChannel = self.map.camera.visibleRect()
+		self.visibleRectCancellable = visibleRectChannel.sinkOnMainThread{ [weak self] rect in
+			self?.updateVisibleRect(geoRect: rect)
+		}
+	}
+	
 	private func move(at index: Int) {
 
 		guard index < self.testPoints.count else { return }
@@ -211,5 +220,40 @@ final class RootViewModel: ObservableObject {
 				self?.hideSelectedMarker()
 			}
 		)
+	}
+	
+	private func updateVisibleRect(geoRect: GeoRect)
+	{
+		func getExtendedGeoRect(inputRect: GeoRect) -> GeoRect {
+			return GeoRect(
+				latitudeNorth: Arcdegree(value: inputRect.latitudeNorth.value * rectExtensionValue),
+				latitudeSouth: Arcdegree(value: inputRect.latitudeSouth.value / rectExtensionValue),
+				longitudeWest: Arcdegree(value: inputRect.longitudeWest.value / rectExtensionValue),
+				longitudeEast: Arcdegree(value: inputRect.longitudeEast.value * rectExtensionValue)
+			)
+		}
+		
+		func containRect(inputRect: GeoRect) -> Bool {
+			let currentRect = self.visibleRect.unsafelyUnwrapped
+			return currentRect.latitudeNorth.value >= inputRect.latitudeNorth.value &&
+				currentRect.latitudeSouth.value <= inputRect.latitudeSouth.value &&
+				currentRect.longitudeEast.value >= inputRect.longitudeEast.value &&
+				currentRect.longitudeWest.value <= inputRect.longitudeWest.value
+		}
+		
+		if (self.visibleRect == nil)
+		{
+			self.visibleRect = getExtendedGeoRect(inputRect: geoRect)
+			return
+		}
+		
+		if (containRect(inputRect: geoRect))
+		{
+			print("Currect visible rect withing initial rect")
+		}
+		else {
+			print("Need recalculate visible rect")
+			self.visibleRectCancellable?.cancel()
+		}
 	}
 }

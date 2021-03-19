@@ -103,6 +103,9 @@ struct RootView: View {
 					.default(Text("Тест поиска маршрута")) {
 						self.viewModel.showRoutes = true
 					},
+					.default(Text("Тест определения видимой области")) {
+						self.viewModel.visibleRectChanging()
+					},
 					.cancel(Text("Отмена"))
 				])
 		}
