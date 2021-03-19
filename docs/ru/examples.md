@@ -1,11 +1,19 @@
+## Инициализации
+
+*// TODO: инициализация SDK, работа с ключами*
+
 ## Общая информация
 ### Future
-// todo oписать как использовать что угодно в качестве future
-// + то что они стреляют из произвольных потоков
+*// TODO: в каких потоках срабатывают*
+
+*// TODO: как сшить с кастомными Future*
+
 
 ### Channel
-// todo описать как подсунуть свой вариант channel 
-// + что они стреляют из разных потоков
+*// TODO: в каких потоках срабатывают*
+
+*// TODO: как сшить с кастомными Future*
+
 
 ## Камера
 ### Перелет
@@ -76,8 +84,10 @@ map.addSource(source: source)
 ```
 
 ## Динамические объекты на карте
-Для работы с динамическими объектами используется [MapObjectManager](/ru/ios/native/maps/reference/MapObjectManager)
+В большенстве случаев для добавления объектов следует использовать [MapObjectManager](/ru/ios/native/maps/reference/MapObjectManager). Он предоствляет простой интерфейс для работы с высокоуровневыми примитивами
 ### Marker
+*// TODO: создание Image*
+
 добавление маркера на карту
 ```swift
 let objectsManager = createMapObjectManager(map: map)
@@ -94,7 +104,22 @@ let marker = objectsManager.addMarker(options: options)
 ```
 
 ### Polyline
-// TBD
+```swift
+let points = [
+	GeoPoint(latitude: Arcdegree(value: 55.7513), longitude: Arcdegree(value: 37.6236)),
+	GeoPoint(latitude: Arcdegree(value: 55.7405), longitude: Arcdegree(value: 37.6235)),
+	GeoPoint(latitude: Arcdegree(value: 55.7439), longitude: Arcdegree(value: 37.6506))
+]
+
+let options = PolylineOptions(
+	points: points,
+	width: LogicalPixel(value: 2),
+	color: PlatformSDK.Color.init(),
+	userData: "Any user data object"
+)
+
+let polyline = objectsManager.addPolyline(options: options)
+```
 
 ### Polygon
 // TBD
