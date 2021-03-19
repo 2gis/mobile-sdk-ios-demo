@@ -88,8 +88,15 @@ map.addSource(source: source)
 ## Динамические объекты на карте
 В большинстве случаев для добавления объектов следует использовать [MapObjectManager](/ru/ios/native/maps/reference/MapObjectManager). Он предоставляет высокоуровневый интерфейс для работы с объектами карты.
 ### Marker
-*// TODO: создание Image*
+Создание иконки
+```swift
+// На основе UIImage.
+let uiImage = UIImage(systemName: "umbrella.fill")!.withTintColor(.systemRed)
+let icon = sdk.imageFactory(image: uiImage)
 
+// На основе PNG-данных (быстрее).
+let icon = sdk.imageFactory(pngData: imageData, size: imageSize)
+```
 добавление маркера на карту
 ```swift
 // Записываем объект в свойство, так как во время удаления `objectsManager`
