@@ -53,12 +53,13 @@ let connection = positionChannel.sink { position in
 	print("Bearing \(position.bearing)")
 }
 
-// соединение необходимо сохранять до тех пор пока необходимо получать уведомления
-// когда эта информация больше не нужна подписку стоит разорвать
+// Соединение необходимо сохранять, пока необходимо получать уведомления.
+// Когда эта информация больше не нужна, подписку стоит разорвать,
+// уничтожив объект подписки или вызвав у него cancel().
 connection.cancel()
 ```
 ### Отслеживание состояния камеры
-Карта может находится в нескольких состояниях перечисленных в [CameraState](/ru/ios/native/maps/reference/CameraState). 
+Карта может находится в состояниях, перечисленных в [CameraState](/ru/ios/native/maps/reference/CameraState).
 ```swift
 // получить текущее состояние
 let currentState = map.camera.state().value
@@ -77,30 +78,34 @@ let cancellable = map.camera.state().sink { state in
 // создаем источник для отображения маркера на карте
 let source = createMyLocationMapObjectSource(
 	context: sdkContext,
-	directionBehaviour: MyLocationDirectionBehaviour.followMagneticHeading)
+	directionBehaviour: MyLocationDirectionBehaviour.followMagneticHeading
+)
 
 // добавляем источник в карту
 map.addSource(source: source)
 ```
 
 ## Динамические объекты на карте
-В большенстве случаев для добавления объектов следует использовать [MapObjectManager](/ru/ios/native/maps/reference/MapObjectManager). Он предоствляет простой интерфейс для работы с высокоуровневыми примитивами
+В большинстве случаев для добавления объектов следует использовать [MapObjectManager](/ru/ios/native/maps/reference/MapObjectManager). Он предоставляет высокоуровневый интерфейс для работы с объектами карты.
 ### Marker
 *// TODO: создание Image*
 
 добавление маркера на карту
 ```swift
-let objectsManager = createMapObjectManager(map: map)
+// Записываем объект в свойство, так как во время удаления `objectsManager`
+// исчезают все связанные с ним объекты на карте.
+self.objectsManager = createMapObjectManager(map: sdk.map)
 
 let options = MarkerOptions(
 	position: GeoPointWithElevation(
 		latitude: Arcdegree(value: 55.752425),
 		longitude: Arcdegree(value: 37.613983)
 	),
-	icon: imageFactory.make(image: icon)
+	icon: sdk.imageFactory.make(image: uiImage)
 )
 
 let marker = objectsManager.addMarker(options: options)
+// Можем донастроить только что созданый `marker`, если необходимо.
 ```
 
 ### Polyline
