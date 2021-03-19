@@ -13,5 +13,4 @@ To obtain the key, [contact us](https://dev.2gis.ru/order/).
 
 ### Минимальные требования:
 - XCode 12;
-- Для того чтобы запусить проект через XCode достаточно использовать любой симулятор или девайс с операционными системами iOS 13.0+ или iPadOS 13.0+ (это обусловлено использованием в проекте [SwiftUI](https://developer.apple.com/documentation/swiftui)).
-
+- Чтобы запустить демо-проект через XCode, необходимо использовать любой симулятор или устройство с iOS (iPadOS) 13.0+. Это обусловлено использованием в проекте [SwiftUI](https://developer.apple.com/documentation/swiftui).
