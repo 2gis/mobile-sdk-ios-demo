@@ -31,9 +31,9 @@ final class SearchService {
 					debugPrint(handler!)
 					dispatcher(.applyObjectSuggest(suggest))
 				case .performSearchHandler(let handler):
-					dispatcher(.searchQuery(handler!.searchQuery()!))
+					dispatcher(.searchQuery(handler!.searchQuery))
 				case .incompleteTextHandler(let handler):
-					dispatcher(.setQueryText(handler!.queryText()))
+					dispatcher(.setQueryText(handler!.queryText))
 				@unknown default:
 					fatalError()
 			}
@@ -63,7 +63,7 @@ final class SearchService {
 			let queryText = queryText
 			let builder = SearchQueryBuilder.fromQueryText(queryText: queryText)
 			let query = builder.build()
-			self.search(query: query!)(dispatcher)
+			self.search(query: query)(dispatcher)
 		}
 	}
 
@@ -98,7 +98,7 @@ final class SearchService {
 			guard !queryText.isEmpty else { return }
 
 			let builder = SuggestQueryBuilder.fromQueryText(queryText: queryText)
-			let query = builder.build()!
+			let query = builder.build()
 			self.suggest(query: query)(dispatcher)
 		}
 	}
@@ -113,7 +113,7 @@ final class SearchService {
 			let cancel = future.sink(receiveValue: {
 				[schedule = self.schedule] result in
 				schedule {
-					let suggestResultViewModel = self.makeSuggestResultViewModel(result: result!)
+					let suggestResultViewModel = self.makeSuggestResultViewModel(result: result)
 					dispatcher(.setSuggestResult(suggestResultViewModel))
 				}
 			}, failure: {

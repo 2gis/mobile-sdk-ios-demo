@@ -12,7 +12,7 @@ struct SuggestResultViewModel {
 	init(
 		result: SuggestResult? = nil
 	) {
-		self.suggests = result?.suggests().compactMap({ $0 }).map(SuggestViewModel.init) ?? []
+		self.suggests = result?.suggests.compactMap({ $0 }).map(SuggestViewModel.init) ?? []
 	}
 }
 
