@@ -5,6 +5,12 @@ final class RootViewModel: ObservableObject {
 
 	private enum Constants {
 		static let tapRadius = ScreenDistance(value: 1)
+		static let initialRectExpansionRatio = 1.5
+	}
+
+	enum VisibleAreaState {
+		case inside
+		case outside
 	}
 
 	let searchStore: SearchStore
@@ -12,6 +18,7 @@ final class RootViewModel: ObservableObject {
 	@Published var showMarkers: Bool = false
 	@Published var showRoutes: Bool = false
 	@Published var selectedObjectCardViewModel: MapObjectCardViewModel?
+	@Published var visibleAreaIndicatorState: VisibleAreaState?
 
 	private let searchManagerFactory: () -> ISearchManager
 	private let sourceFactory: () -> ISourceFactory
@@ -20,7 +27,8 @@ final class RootViewModel: ObservableObject {
 	private let map: Map
 	private let toMap: CGAffineTransform
 	private var locationService: LocationService?
-	private var visibleRect: GeoRect?
+	private var initialRect: GeoRect?
+	private var initialRectCancellable: Cancellable?
 
 	private var moveCameraCancellable: Cancellable?
 	private var getRenderedObjectsCancellable: Cancellable?
@@ -168,10 +176,11 @@ final class RootViewModel: ObservableObject {
 	}
 
 	
-	func visibleRectChanging() {
-		let visibleRectChannel = self.map.camera.visibleRect()
-		self.visibleRectCancellable = visibleRectChannel.sinkOnMainThread{ [weak self] rect in
-			self?.updateVisibleRect(geoRect: rect)
+	func detectExtendedVisibleRectChange() {
+		let visibleRectChannel = self.map.camera.visibleRect
+		self.formInitialVisibleRect(from: visibleRectChannel.value)
+		self.initialRectCancellable = visibleRectChannel.sinkOnMainThread{ [weak self] rect in
+			self?.updateVisibleRect(rect)
 		}
 	}
 	
@@ -221,39 +230,19 @@ final class RootViewModel: ObservableObject {
 			}
 		)
 	}
-	
-	private func updateVisibleRect(geoRect: GeoRect)
-	{
-		func getExtendedGeoRect(inputRect: GeoRect) -> GeoRect {
-			return GeoRect(
-				latitudeNorth: Arcdegree(value: inputRect.latitudeNorth.value * rectExtensionValue),
-				latitudeSouth: Arcdegree(value: inputRect.latitudeSouth.value / rectExtensionValue),
-				longitudeWest: Arcdegree(value: inputRect.longitudeWest.value / rectExtensionValue),
-				longitudeEast: Arcdegree(value: inputRect.longitudeEast.value * rectExtensionValue)
-			)
-		}
-		
-		func containRect(inputRect: GeoRect) -> Bool {
-			let currentRect = self.visibleRect.unsafelyUnwrapped
-			return currentRect.latitudeNorth.value >= inputRect.latitudeNorth.value &&
-				currentRect.latitudeSouth.value <= inputRect.latitudeSouth.value &&
-				currentRect.longitudeEast.value >= inputRect.longitudeEast.value &&
-				currentRect.longitudeWest.value <= inputRect.longitudeWest.value
-		}
-		
-		if (self.visibleRect == nil)
-		{
-			self.visibleRect = getExtendedGeoRect(inputRect: geoRect)
-			return
-		}
-		
-		if (containRect(inputRect: geoRect))
-		{
-			print("Currect visible rect withing initial rect")
-		}
-		else {
-			print("Need recalculate visible rect")
-			self.visibleRectCancellable?.cancel()
+
+	private func formInitialVisibleRect(from rect: GeoRect) {
+		self.initialRect = rect.expanded(by: Constants.initialRectExpansionRatio)
+	}
+
+	private func updateVisibleRect(_ rect: GeoRect) {
+		if let initialRect = self.initialRect,
+			initialRect.contains(rect) {
+			// Current visible rect is within the initial expanded rect.
+			self.visibleAreaIndicatorState = .inside
+		} else {
+			// Current visible rect is outside the initial expanded rect.
+			self.visibleAreaIndicatorState = .outside
 		}
 	}
 }
