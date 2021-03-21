@@ -166,7 +166,7 @@ let polyline = objectsManager.addPolyline(options: options)
 потому что уничтожение `Cancellable`-объекта приводит к немедленной отмене
 подписки на `Future<T>`.
 
-```
+```swift
 /// - Parameter point: A tap point in *pixel* (native scale) cooordinates.
 /// - Parameter tapRadius: Radius around tap point in which objects will
 ///   be detected.
