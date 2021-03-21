@@ -1,16 +1,27 @@
-# Overview
+# 2GIS iOS Native SDK
 
-## Introduction
-2GIS iOS NativeSDK is an SDK that allows you to add a 2GIS map to your iOS application. It can be used to display the map in your layout, add custom markers to it, and highlight various objects on the map, such as buildings, roads, and others.
+iOS Native SDK от 2GIS позволяет добавить [карту 2GIS](https://2gis.ru/) в ваше приложение под iOS. С его помощью вы можете отображать карту на экране, добавлять на карту пользовательские маркеры, а также выделять на карте различные объекты, такие как здания, дороги и т. д.
 
-## Getting an access key
-Usage of this SDK requires an API key to connect to 2GIS servers and retrieve the geographical data. This API key is unique to the SDK and cannot be used with other 2GIS SDKs.
+> :warning: **2GIS iOS Native SDK в процессе разработки.** Не подготовлено к использованию в боевых приложениях.
 
-To obtain the key, [contact us](https://dev.2gis.ru/order/).
+## Получение ключа доступа
 
-## Installation
-*// TBD*
+Чтобы использовать этот SDK, необходим ключ API для подключения к серверам 2GIS и получения географических данных. Этот ключ доступа API уникален для конкретного SDK и не может быть использован с другими SDK от 2GIS.
 
-### Минимальные требования:
+Кроме того, если вы планируете использовать справочник или прокладывать маршруты на карте, то вам понадобится отдельный ключ API.
+
+Чтобы получить любой из этих ключей API, заполните форму на [dev.2gis.ru](https://dev.2gis.ru/order).
+
+## Установка
+
+...
+
+Минимальные требования:
 - XCode 12;
-- Чтобы запустить демо-проект через XCode, необходимо использовать любой симулятор или устройство с iOS (iPadOS) 13.0+. Это обусловлено использованием в проекте [SwiftUI](https://developer.apple.com/documentation/swiftui).
+- Симулятор или устройство с операционными системами iOS 13.0+ или iPadOS 13.0+ (это обусловлено использованием в проекте [SwiftUI](https://developer.apple.com/documentation/swiftui)).
+
+При необходимости можно использовать [xcframework](https://github.com/2gis/native-sdk-ios-swift-package/blob/master/Package.swift) для сборки собственного проекта под iOS 12.
+
+После этого всё должно быть готово к работе. В разделе [Примеры](/ru/ios/native/maps/examples) вы можете посмотреть, как добавить карту к вашему приложению. Или загляните в [описание API](/en/ios/native/maps/reference/Container), чтобы узнать больше о конкретных классах и методах.
+
+Также доступен [GitHub-репозиторий](https://github.com/2gis/native-sdk-ios-demo/), в котором можно познакомиться с SDK и демонстрационным проектом.

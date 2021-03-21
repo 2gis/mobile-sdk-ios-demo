@@ -1,5 +1,21 @@
-## Инициализации
+## Начало работы
 
+Для запуска примера:
+1. Склонируйте [GitHub-репозиторий 2GIS](https://github.com/2gis/native-sdk-ios-demo).
+2. Откройте проект `app.xcodeproj` и задайте ваши ключи API в файле `Info.plist` проекта:
+
+   ```
+   dgisMapApiKey=YOUR_MAP_KEY
+   dgisDirectoryApiKey=YOUR_DIRECTIONS_KEY
+   ```
+
+3. Дождитесь загрузки зависимостей Swift. Эта операция может занять длительное время.
+
+   Вы не сможете собрать и запустить проект, пока не будут загружены зависимости.
+ 
+4. Соберите и запустите проект (⌘+R).
+
+## Инициализация
 *// TODO: инициализация SDK, работа с ключами*
 
 ## Общая информация
@@ -150,7 +166,7 @@ let polyline = objectsManager.addPolyline(options: options)
 потому что уничтожение `Cancellable`-объекта приводит к немедленной отмене
 подписки на `Future<T>`.
 
-```
+```swift
 /// - Parameter point: A tap point in *pixel* (native scale) cooordinates.
 /// - Parameter tapRadius: Radius around tap point in which objects will
 ///   be detected.
