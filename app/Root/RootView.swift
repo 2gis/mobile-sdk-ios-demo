@@ -22,8 +22,9 @@ struct RootView: View {
 				ZStack {
 					ZStack(alignment: .bottomTrailing) {
 						self.viewFactory.makeMapView()
-							.coordinateSpace(name: Self.mapCoordinateSpace)
-							.simultaneousGesture(self.drag)
+						.coordinateSpace(name: Self.mapCoordinateSpace)
+						.simultaneousGesture(self.drag)
+						.overlay(self.visibleAreaStateIndicator(), alignment: .bottom)
 						if !self.viewModel.showMarkers {
 							self.settingsButton().frame(width: 100, height: 100, alignment: .bottomTrailing)
 						}
@@ -61,6 +62,19 @@ struct RootView: View {
 		}
 	}
 
+	private func visibleAreaStateIndicator() -> some View {
+		HStack {
+			if let state = self.viewModel.visibleAreaIndicatorState {
+				Circle()
+				.foregroundColor(.from(state))
+				.frame(width: 24, height: 24)
+				.shadow(color: .gray, radius: 0.2, x: 1, y: 1)
+				Text(state == .inside ? "Внутри" : "Снаружи")
+			}
+		}
+		.padding()
+	}
+
 	private func zoomControls() -> some View {
 		HStack {
 			Spacer()
@@ -86,7 +100,7 @@ struct RootView: View {
 		})
 		.padding(.bottom, 40)
 		.padding(.trailing, 20)
-		.actionSheet(isPresented: $showActionSheet) {
+		.actionSheet(isPresented: self.$showActionSheet) {
 			ActionSheet(
 				title: Text("Тестовые кейсы"),
 				message: Text("Выберите необходимый"),
@@ -102,6 +116,9 @@ struct RootView: View {
 					},
 					.default(Text("Тест поиска маршрута")) {
 						self.viewModel.showRoutes = true
+					},
+					.default(Text("Тест определения видимой области")) {
+						self.viewModel.detectExtendedVisibleRectChange()
 					},
 					.cancel(Text("Отмена"))
 				])
@@ -121,3 +138,13 @@ struct RootView: View {
 	}
 }
 
+private extension Color {
+	static func from(_ state: RootViewModel.VisibleAreaState) -> Color {
+		let color: Color
+		switch state {
+			case .inside: color = .green
+			case .outside: color = .red
+		}
+		return color
+	}
+}
