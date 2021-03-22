@@ -22,18 +22,14 @@ extension PlatformSDK.Future {
 		Combine.Future { [self] promise in
 			// Keep cancellable reference until either handler is called.
 			// Combine.Future does not directly handle cancellation.
-			let cancelHolder = Holder()
-			cancelHolder.cancellable = self.sink {
+			var cancellable: PlatformSDK.Cancellable?
+			cancellable = self.sink {
 				promise(.success($0))
-				_ = cancelHolder
+				_ = cancellable
 			} failure: {
 				promise(.failure($0))
-				_ = cancelHolder
+				_ = cancellable
 			}
 		}
-	}
-
-	private final class Holder {
-		var cancellable: PlatformSDK.Cancellable?
 	}
 }

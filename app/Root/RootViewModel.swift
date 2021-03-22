@@ -33,7 +33,7 @@ final class RootViewModel: ObservableObject {
 	private let toMap: CGAffineTransform
 	private var locationService: LocationService?
 	private var initialRect: GeoRect?
-	private var initialRectCancellable: Cancellable?
+	private var initialRectCancellable: PlatformSDK.Cancellable?
 	private var cancellables: [AnyCancellable] = []
 
 	private var moveCameraCancellable: PlatformSDK.Cancellable?
