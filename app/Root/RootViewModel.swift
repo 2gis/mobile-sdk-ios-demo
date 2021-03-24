@@ -20,7 +20,7 @@ final class RootViewModel: ObservableObject {
 	@Published var selectedObjectCardViewModel: MapObjectCardViewModel?
 	@Published var visibleAreaIndicatorState: VisibleAreaState?
 
-	private let searchManagerFactory: () -> ISearchManager
+	private let searchManagerFactory: () -> SearchManager
 	private let sourceFactory: () -> ISourceFactory
 	private let imageFactory: () -> IImageFactory
 	private let locationManagerFactory: () -> LocationService?
@@ -79,7 +79,7 @@ final class RootViewModel: ObservableObject {
 	}()
 
 	init(
-		searchManagerFactory: @escaping () -> ISearchManager,
+		searchManagerFactory: @escaping () -> SearchManager,
 		sourceFactory: @escaping () -> ISourceFactory,
 		imageFactory: @escaping () -> IImageFactory,
 		locationManagerFactory: @escaping () -> LocationService?,
@@ -224,6 +224,7 @@ final class RootViewModel: ObservableObject {
 		self.selectedMarker = self.mapObjectManager.addMarker(options: markerOptions)
 		self.selectedObjectCardViewModel = MapObjectCardViewModel(
 			objectInfo: selectedObject,
+            searchManagerFactory: searchManagerFactory,
 			onClose: {
 				[weak self] in
 				self?.hideSelectedMarker()
