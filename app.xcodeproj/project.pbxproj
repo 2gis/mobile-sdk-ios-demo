@@ -618,7 +618,7 @@
 			repositoryURL = "https://github.com/2gis/native-sdk-ios-swift-package.git";
 			requirement = {
 				kind = exactVersion;
-				version = 0.8.0;
+				version = "0.9.0-rc.1";
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
