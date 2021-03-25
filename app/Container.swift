@@ -1,4 +1,5 @@
 import SwiftUI
+import CoreLocation
 import PlatformSDK
 
 final class Container {
@@ -16,10 +17,16 @@ final class Container {
 
 	private lazy var sdk = PlatformSDK.Container(
 		apiKeys: self.apiKeys,
-		httpOptinos: HTTPOptions(timeout: 5, cacheOptions: nil)
+		httpOptinos: HTTPOptions(timeout: 5, cacheOptions: nil),
+		positioningServices: self.locationSimulator
 	)
 
 	private lazy var locationManager = LocationService()
+	private lazy var sourceFactory = SDKSourceFactory(context: self.sdk.context)
+	private lazy var locationSimulator = LocationServicesSimulator(
+		location: CLLocation(latitude: 55.745626, longitude: 37.584907),
+		magneticHeading: 45
+	)
 
 	func makeRootView() -> some View {
 		let viewModel = self.makeRootViewModel()
@@ -34,9 +41,7 @@ final class Container {
 				imageFactory: self.sdk.imageFactory,
 				map: self.sdk.map
 			),
-			routeViewModel: RouteViewModel(sourceFactory: { [sdk = self.sdk] in
-					return sdk.sourceFactory
-				},
+			routeViewModel: RouteViewModel(
 				routeEditorSourceFactory: { [sdk = self.sdk] routeEditor in
 					return createRouteEditorSource(context: sdk.context, routeEditor: routeEditor)
 				},
@@ -59,9 +64,7 @@ final class Container {
 			searchManagerFactory: { [sdk = self.sdk] in
 				SearchManager.createOnlineManager(context: sdk.context)
 			},
-			sourceFactory: { [sdk = self.sdk] in
-				sdk.sourceFactory
-			},
+			sourceFactory: self.sourceFactory,
 			imageFactory: { [sdk = self.sdk] in
 				sdk.imageFactory
 			},

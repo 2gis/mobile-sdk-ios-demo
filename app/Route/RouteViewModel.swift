@@ -11,7 +11,6 @@ final class RouteViewModel: ObservableObject {
 	private var pointA: GeoPoint? = nil
 	private var pointB: GeoPoint? = nil
 
-	private let sourceFactory: () -> ISourceFactory
 	private let routeEditorSourceFactory: (RouteEditor) -> RouteEditorSource
 	private let routeEditorFactory: () -> RouteEditor
 	private let map: Map
@@ -20,12 +19,10 @@ final class RouteViewModel: ObservableObject {
 	private lazy var source = self.routeEditorSourceFactory(self.routeEditor)
 
 	init(
-		sourceFactory: @escaping () -> ISourceFactory,
 		routeEditorSourceFactory: @escaping (RouteEditor) -> RouteEditorSource,
 		routeEditorFactory: @escaping () -> RouteEditor,
 		map: Map
 	) {
-		self.sourceFactory = sourceFactory
 		self.routeEditorSourceFactory = routeEditorSourceFactory
 		self.routeEditorFactory = routeEditorFactory
 		self.map = map

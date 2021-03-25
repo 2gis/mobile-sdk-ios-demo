@@ -22,6 +22,10 @@
 		4B27064124A3F25000F12B48 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4B27063F24A3F25000F12B48 /* LaunchScreen.storyboard */; };
 		4B4291652527A49C006E74BE /* SuggestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B4291642527A49C006E74BE /* SuggestView.swift */; };
 		4B4291682527A4DB006E74BE /* SuggestViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B4291672527A4DB006E74BE /* SuggestViewModel.swift */; };
+		4B9641F1260C8FCC0057C366 /* SourceFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B9641F0260C8FCC0057C366 /* SourceFactory.swift */; };
+		4B9641F3260C92050057C366 /* MagneticHeadingSimulator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B9641F2260C92050057C366 /* MagneticHeadingSimulator.swift */; };
+		4B9641F5260C93C70057C366 /* LocationSimulator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B9641F4260C93C70057C366 /* LocationSimulator.swift */; };
+		4B9641F7260C94B50057C366 /* LocationServicesSimulator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B9641F6260C94B50057C366 /* LocationServicesSimulator.swift */; };
 		4B96D5F32607BAB90057C366 /* GeoRect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B96D5F22607BAB90057C366 /* GeoRect.swift */; };
 		4B96D5F52607BB260057C366 /* Arcdegree.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B96D5F42607BB260057C366 /* Arcdegree.swift */; };
 		4B96D5F72607C0310057C366 /* Channel+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B96D5F62607C0310057C366 /* Channel+Helpers.swift */; };
@@ -89,6 +93,10 @@
 		4B27064224A3F25000F12B48 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4B4291642527A49C006E74BE /* SuggestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestView.swift; sourceTree = "<group>"; };
 		4B4291672527A4DB006E74BE /* SuggestViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestViewModel.swift; sourceTree = "<group>"; };
+		4B9641F0260C8FCC0057C366 /* SourceFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SourceFactory.swift; path = app/Sources/SourceFactory.swift; sourceTree = SOURCE_ROOT; };
+		4B9641F2260C92050057C366 /* MagneticHeadingSimulator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MagneticHeadingSimulator.swift; sourceTree = "<group>"; };
+		4B9641F4260C93C70057C366 /* LocationSimulator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationSimulator.swift; sourceTree = "<group>"; };
+		4B9641F6260C94B50057C366 /* LocationServicesSimulator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationServicesSimulator.swift; sourceTree = "<group>"; };
 		4B96D5F22607BAB90057C366 /* GeoRect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoRect.swift; sourceTree = "<group>"; };
 		4B96D5F42607BB260057C366 /* Arcdegree.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Arcdegree.swift; sourceTree = "<group>"; };
 		4B96D5F62607C0310057C366 /* Channel+Helpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Channel+Helpers.swift"; sourceTree = "<group>"; };
@@ -141,6 +149,9 @@
 			isa = PBXGroup;
 			children = (
 				0938CAA025B5BBA300100316 /* LocationService.swift */,
+				4B9641F2260C92050057C366 /* MagneticHeadingSimulator.swift */,
+				4B9641F4260C93C70057C366 /* LocationSimulator.swift */,
+				4B9641F6260C94B50057C366 /* LocationServicesSimulator.swift */,
 			);
 			path = LocationService;
 			sourceTree = "<group>";
@@ -221,6 +232,7 @@
 				4BBE7E1D25264DA200D7EBDB /* RootView.swift */,
 				4BBE802C2526F8A600D7EBDB /* RootViewFactory.swift */,
 				4BBE80252526DFB100D7EBDB /* RootViewModel.swift */,
+				4B9641F0260C8FCC0057C366 /* SourceFactory.swift */,
 			);
 			path = Root;
 			sourceTree = "<group>";
@@ -373,6 +385,7 @@
 				4BADDFF7252A33CD00FBF589 /* SearchReducer.swift in Sources */,
 				4BADDFCC2528016600FBF589 /* SuggestResultView.swift in Sources */,
 				4BADDFEB2529AD9C00FBF589 /* SearchNavigation.swift in Sources */,
+				4B9641F1260C8FCC0057C366 /* SourceFactory.swift in Sources */,
 				B709913925F9CBCF00B2F1A5 /* MapObjectCardView.swift in Sources */,
 				4B4291682527A4DB006E74BE /* SuggestViewModel.swift in Sources */,
 				4BBE80292526E22F00D7EBDB /* SearchResultViewModel.swift in Sources */,
@@ -394,6 +407,7 @@
 				4B96D5F52607BB260057C366 /* Arcdegree.swift in Sources */,
 				4BADDFF4252A32AD00FBF589 /* SeachState.swift in Sources */,
 				4BBE7E1E25264DA200D7EBDB /* RootView.swift in Sources */,
+				4B9641F5260C93C70057C366 /* LocationSimulator.swift in Sources */,
 				09C834FD25BFCD8500D347F4 /* RouteViewModel.swift in Sources */,
 				4BBE802D2526F8A600D7EBDB /* RootViewFactory.swift in Sources */,
 				4BBE80222526DCA200D7EBDB /* SearchResultItemView.swift in Sources */,
@@ -405,6 +419,8 @@
 				4BADDFD8252866B300FBF589 /* SearchStore.swift in Sources */,
 				095BE97A25B813A000D09D75 /* DetailsActionView.swift in Sources */,
 				4BADDFD2252802A500FBF589 /* SearchResultView.swift in Sources */,
+				4B9641F7260C94B50057C366 /* LocationServicesSimulator.swift in Sources */,
+				4B9641F3260C92050057C366 /* MagneticHeadingSimulator.swift in Sources */,
 				0991909625B96E1C00F4235B /* MapControl.swift in Sources */,
 				4B4291652527A49C006E74BE /* SuggestView.swift in Sources */,
 				B709914F25FA6B6F00B2F1A5 /* RenderedObjectInfo+Helpers.swift in Sources */,
@@ -618,7 +634,7 @@
 			repositoryURL = "https://github.com/2gis/native-sdk-ios-swift-package.git";
 			requirement = {
 				kind = exactVersion;
-				version = "0.9.0-rc.1";
+				version = 0.9.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */

@@ -21,7 +21,7 @@ final class RootViewModel: ObservableObject {
 	@Published var visibleAreaIndicatorState: VisibleAreaState?
 
 	private let searchManagerFactory: () -> SearchManager
-	private let sourceFactory: () -> ISourceFactory
+	private let sourceFactory: SourceFactory
 	private let imageFactory: () -> IImageFactory
 	private let locationManagerFactory: () -> LocationService?
 	private let map: Map
@@ -80,7 +80,7 @@ final class RootViewModel: ObservableObject {
 
 	init(
 		searchManagerFactory: @escaping () -> SearchManager,
-		sourceFactory: @escaping () -> ISourceFactory,
+		sourceFactory: SourceFactory,
 		imageFactory: @escaping () -> IImageFactory,
 		locationManagerFactory: @escaping () -> LocationService?,
 		map: Map
@@ -100,6 +100,8 @@ final class RootViewModel: ObservableObject {
 		)
 		let reducer = SearchReducer(service: service)
 		self.searchStore = SearchStore(initialState: .init(), reducer: reducer)
+
+		self.addUserLocationSource()
 	}
 
 	func makeSearchViewModel() -> SearchViewModel {
@@ -245,5 +247,12 @@ final class RootViewModel: ObservableObject {
 			// Current visible rect is outside the initial expanded rect.
 			self.visibleAreaIndicatorState = .outside
 		}
+	}
+
+	private func addUserLocationSource() {
+		let source = self.sourceFactory.makeMyLocationMapObjectSource(
+			behaviour: .followMagneticHeading
+		)
+		self.map.addSource(source: source)
 	}
 }
