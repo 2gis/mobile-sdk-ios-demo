@@ -153,6 +153,20 @@ let polyline = objectsManager.addPolyline(options: options)
 // TBD
 
 
+## Мое местоположение
+
+### Маркер местоположения на карте
+```swift
+// создаем источник для отображения маркера на карте
+let source = createMyLocationMapObjectSource(
+	context: sdkContext,
+	directionBehaviour: MyLocationDirectionBehaviour.followMagneticHeading)
+
+// добавляем источник в карту
+map.addSource(source: source)
+```
+
+
 ## Получение информации о точке прикосновения к карте
 
 Передаём точку нажатия в пиксельных координатах. Для наиболее подходящего

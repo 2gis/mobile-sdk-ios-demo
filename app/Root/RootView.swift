@@ -1,11 +1,10 @@
 import SwiftUI
 
 struct RootView: View {
-	private let viewModel: RootViewModel
-	private let viewFactory: RootViewFactory
+	private static let mapCoordinateSpace = "map"
 
-	@State private var showMarkers: Bool = false
-	@State private var showRoutes: Bool = false
+	@ObservedObject private var viewModel: RootViewModel
+	private let viewFactory: RootViewFactory
 
 	init(
 		viewModel: RootViewModel,
@@ -19,29 +18,38 @@ struct RootView: View {
 
 	var body: some View {
 		NavigationView  {
-			ZStack() {
-				ZStack(alignment: .bottomTrailing) {
-					self.viewFactory.makeMapView()
-					if !self.showMarkers {
-						self.settingsButton().frame(width: 100, height: 100, alignment: .bottomTrailing)
+			GeometryReader { geometry in
+				ZStack {
+					ZStack(alignment: .bottomTrailing) {
+						self.viewFactory.makeMapView()
+						.coordinateSpace(name: Self.mapCoordinateSpace)
+						.simultaneousGesture(self.drag)
+						.overlay(self.visibleAreaStateIndicator(), alignment: .bottom)
+						if !self.viewModel.showMarkers {
+							self.settingsButton().frame(width: 100, height: 100, alignment: .bottomTrailing)
+						}
+						if self.viewModel.showMarkers {
+							self.viewFactory.makeMarkerView(show: self.$viewModel.showMarkers).followKeyboard($keyboardOffset)
+						}
+						if self.viewModel.showRoutes {
+							self.viewFactory.makeRouteView(show: self.$viewModel.showRoutes).followKeyboard($keyboardOffset)
+						}
+						if let cardViewModel = self.viewModel.selectedObjectCardViewModel {
+							self.viewFactory.makeMapObjectCardView(cardViewModel)
+								.transition(.move(edge: .bottom))
+						}
 					}
-					if self.showMarkers {
-						self.viewFactory.makeMarkerView(show: $showMarkers).followKeyboard($keyboardOffset)
+					if self.viewModel.showMarkers || self.viewModel.showRoutes {
+						Image(systemName: "multiply").frame(width: 40, height: 40, alignment: .center).foregroundColor(.red).opacity(0.4)
 					}
-					if self.showRoutes {
-						self.viewFactory.makeRouteView(show: $showRoutes).followKeyboard($keyboardOffset)
-					}
+					self.zoomControls()
 				}
-				if self.showMarkers || self.showRoutes {
-					Image(systemName: "multiply").frame(width: 40, height: 40, alignment: .center).foregroundColor(.red).opacity(0.4)
-				}
-				self.zoomControls()
+				.navigationBarItems(
+					leading: self.navigationBarLeadingItem()
+				)
+				.navigationBarTitle("2GIS", displayMode: .inline)
+				.edgesIgnoringSafeArea(.all)
 			}
-			.navigationBarItems(
-				leading: self.navigationBarLeadingItem()
-			)
-			.navigationBarTitle("2GIS", displayMode: .inline)
-			.edgesIgnoringSafeArea(.all)
 		}.navigationViewStyle(StackNavigationViewStyle())
 	}
 
@@ -52,6 +60,19 @@ struct RootView: View {
 				.aspectRatio(contentMode: .fit)
 				.frame(minWidth: 32, minHeight: 32)
 		}
+	}
+
+	private func visibleAreaStateIndicator() -> some View {
+		HStack {
+			if let state = self.viewModel.visibleAreaIndicatorState {
+				Circle()
+				.foregroundColor(.from(state))
+				.frame(width: 24, height: 24)
+				.shadow(color: .gray, radius: 0.2, x: 1, y: 1)
+				Text(state == .inside ? "Внутри" : "Снаружи")
+			}
+		}
+		.padding()
 	}
 
 	private func zoomControls() -> some View {
@@ -79,7 +100,7 @@ struct RootView: View {
 		})
 		.padding(.bottom, 40)
 		.padding(.trailing, 20)
-		.actionSheet(isPresented: $showActionSheet) {
+		.actionSheet(isPresented: self.$showActionSheet) {
 			ActionSheet(
 				title: Text("Тестовые кейсы"),
 				message: Text("Выберите необходимый"),
@@ -91,14 +112,39 @@ struct RootView: View {
 						self.viewModel.showCurrentPosition()
 					},
 					.default(Text("Тест добавления маркеров")) {
-						self.showMarkers = true
+						self.viewModel.showMarkers = true
 					},
 					.default(Text("Тест поиска маршрута")) {
-						self.showRoutes = true
+						self.viewModel.showRoutes = true
+					},
+					.default(Text("Тест определения видимой области")) {
+						self.viewModel.detectExtendedVisibleRectChange()
 					},
 					.cancel(Text("Отмена"))
 				])
 		}
 	}
+
+	private var drag: some Gesture {
+		DragGesture(
+			minimumDistance: 0,
+			coordinateSpace: .named(Self.mapCoordinateSpace)
+		)
+		.onEnded { info in
+			if abs(info.translation.width) < 10, abs(info.translation.height) < 10 {
+				self.viewModel.tap(info.startLocation)
+			}
+		}
+	}
 }
 
+private extension Color {
+	static func from(_ state: RootViewModel.VisibleAreaState) -> Color {
+		let color: Color
+		switch state {
+			case .inside: color = .green
+			case .outside: color = .red
+		}
+		return color
+	}
+}

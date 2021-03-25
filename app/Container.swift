@@ -14,7 +14,10 @@ final class Container {
 		return apiKeys
 	}()
 
-	private lazy var sdk = PlatformSDK.Container(apiKeys: self.apiKeys)
+	private lazy var sdk = PlatformSDK.Container(
+		apiKeys: self.apiKeys,
+		httpOptinos: HTTPOptions(timeout: 5, cacheOptions: nil)
+	)
 
 	private lazy var locationManager = LocationService()
 
@@ -52,14 +55,21 @@ final class Container {
 	}
 
 	private func makeRootViewModel() -> RootViewModel {
-		let rootViewModel = RootViewModel(searchManagerFactory: { [sdk = self.sdk] in
-			return sdk.searchManagerFactory.makeOnlineManager()!
-		}, sourceFactory: { [sdk = self.sdk] in
-			return sdk.sourceFactory
-		}, locationManagerFactory: { [weak self] in
-			guard let self = self else { return nil }
-			return self.locationManager
-		}, map: self.sdk.map)
+		let rootViewModel = RootViewModel(
+			searchManagerFactory: { [sdk = self.sdk] in
+				SearchManager.createOnlineManager(context: sdk.context)
+			},
+			sourceFactory: { [sdk = self.sdk] in
+				sdk.sourceFactory
+			},
+			imageFactory: { [sdk = self.sdk] in
+				sdk.imageFactory
+			},
+			locationManagerFactory: { [weak self] in
+				self?.locationManager
+			},
+			map: self.sdk.map
+		)
 		return rootViewModel
 	}
 }

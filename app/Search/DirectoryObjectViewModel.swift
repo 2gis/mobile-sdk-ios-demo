@@ -7,9 +7,9 @@ struct DirectoryObjectViewModel {
 	let address: FormattedAddressViewModel?
 
 	init(object: DirectoryObject) {
-		self.navigationTitle = object.title()
-		self.title = object.title()
-		self.subtitle = object.subtitle()
+		self.navigationTitle = object.title
+		self.title = object.title
+		self.subtitle = object.subtitle
 
 		let formattedAddress = object.formattedAddress(type: .full)
 		self.address = formattedAddress.map(FormattedAddressViewModel.init)
