@@ -11,10 +11,8 @@ final class MapObjectCardViewModel: ObservableObject {
 	private let objectInfo: RenderedObjectInfo
 	private let onClose: CloseCallback
 	private var getDirectoryObjectCancellable: Cancellable?
-    private let searchManagerFactory: () -> SearchManager
-    private lazy var searchManager: SearchManager = {
-        return searchManagerFactory() as SearchManager
-    }()
+	private let searchManagerFactory: () -> SearchManager
+	private lazy var searchManager: SearchManager = self.searchManagerFactory()
 
 	init(
 		objectInfo: RenderedObjectInfo,
@@ -22,7 +20,7 @@ final class MapObjectCardViewModel: ObservableObject {
 		onClose: @escaping CloseCallback
 	) {
 		self.objectInfo = objectInfo
-        self.searchManagerFactory = searchManagerFactory
+		self.searchManagerFactory = searchManagerFactory
 		self.description = objectInfo.description
 		self.onClose = onClose
 		self.fetchObjectInfo()
@@ -45,9 +43,9 @@ final class MapObjectCardViewModel: ObservableObject {
 	}
 
 	private func fetchInfo(dgisMapObject object: DgisMapObject) {
-        let future = searchManager.searchByDirectoryObjectId(objectId: object.id)
-
-        self.getDirectoryObjectCancellable = future.sinkOnMainThread(
+		let future = searchManager.searchByDirectoryObjectId(objectId: object.id)
+		
+		self.getDirectoryObjectCancellable = future.sinkOnMainThread(
 			receiveValue: {
 				[weak self] directoryObject in
 				guard let directoryObject = directoryObject else { return }
