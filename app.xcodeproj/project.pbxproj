@@ -80,6 +80,7 @@
 		0991909525B96E1C00F4235B /* MapControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapControl.swift; sourceTree = "<group>"; };
 		09C834FA25BFCD5800D347F4 /* RouteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteView.swift; sourceTree = "<group>"; };
 		09C834FC25BFCD8500D347F4 /* RouteViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteViewModel.swift; sourceTree = "<group>"; };
+		4B0E899D260DEC6B00491C71 /* DGIS.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = DGIS.xcconfig; sourceTree = "<group>"; };
 		4B1354DB24BCCDC7004E8158 /* NativeApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = NativeApp.entitlements; sourceTree = "<group>"; };
 		4B27063124A3F24C00F12B48 /* NativeApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NativeApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B27063424A3F24C00F12B48 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -202,6 +203,7 @@
 				4B27063D24A3F25000F12B48 /* Assets.xcassets */,
 				4B27063F24A3F25000F12B48 /* LaunchScreen.storyboard */,
 				4B27064224A3F25000F12B48 /* Info.plist */,
+				4B0E899D260DEC6B00491C71 /* DGIS.xcconfig */,
 			);
 			path = app;
 			sourceTree = "<group>";
@@ -548,6 +550,7 @@
 		};
 		4B27064624A3F25000F12B48 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4B0E899D260DEC6B00491C71 /* DGIS.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = app/NativeApp.entitlements;
@@ -569,6 +572,7 @@
 		};
 		4B27064724A3F25000F12B48 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4B0E899D260DEC6B00491C71 /* DGIS.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = app/NativeApp.entitlements;

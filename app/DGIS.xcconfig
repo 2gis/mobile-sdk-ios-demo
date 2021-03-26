@@ -1,0 +1,6 @@
+// Configuration settings file format documentation can be found at:
+// https://help.apple.com/xcode/#/dev745c5c974
+
+// Enter your 2GIS API keys below (without quotes).
+DGIS_MAP_API_KEY =
+DGIS_DIRECTORY_API_KEY =
