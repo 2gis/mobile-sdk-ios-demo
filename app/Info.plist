@@ -21,9 +21,9 @@
 	<key>CFBundleVersion</key>
 	<string>1</string>
 	<key>DGISDirectoryAPIKey</key>
-	<string></string>
+	<string>$(DGIS_DIRECTORY_API_KEY)</string>
 	<key>DGISMapAPIKey</key>
-	<string></string>
+	<string>$(DGIS_MAP_API_KEY)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>UIApplicationSceneManifest</key>
