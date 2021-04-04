@@ -1,4 +1,5 @@
 import SwiftUI
+import Combine
 import PlatformSDK
 
 final class RootViewModel: ObservableObject {
@@ -17,8 +18,12 @@ final class RootViewModel: ObservableObject {
 
 	@Published var showMarkers: Bool = false
 	@Published var showRoutes: Bool = false
+	@Published var showStylePicker: Bool = false
 	@Published var selectedObjectCardViewModel: MapObjectCardViewModel?
 	@Published var visibleAreaIndicatorState: VisibleAreaState?
+	@Published var styleFileURL: URL?
+
+	var stylePickerViewModel: StylePickerViewModel
 
 	private let searchManagerFactory: () -> SearchManager
 	private let sourceFactory: () -> ISourceFactory
@@ -28,11 +33,13 @@ final class RootViewModel: ObservableObject {
 	private let toMap: CGAffineTransform
 	private var locationService: LocationService?
 	private var initialRect: GeoRect?
-	private var initialRectCancellable: Cancellable?
+	private var initialRectCancellable: PlatformSDK.Cancellable?
+	private var cancellables: [AnyCancellable] = []
 
-	private var moveCameraCancellable: Cancellable?
-	private var getRenderedObjectsCancellable: Cancellable?
-	private var getDirectoryObjectCancellable: Cancellable?
+	private var moveCameraCancellable: PlatformSDK.Cancellable?
+	private var getRenderedObjectsCancellable: PlatformSDK.Cancellable?
+	private var getDirectoryObjectCancellable: PlatformSDK.Cancellable?
+	private var loadStyleCancellable: PlatformSDK.Cancellable?
 	private var selectedMarker: Marker?
 	private lazy var mapObjectManager: MapObjectManager = createMapObjectManager(map: self.map)
 	private lazy var selectedMarkerIcon: PlatformSDK.Image = {
@@ -81,6 +88,7 @@ final class RootViewModel: ObservableObject {
 	init(
 		searchManagerFactory: @escaping () -> SearchManager,
 		sourceFactory: @escaping () -> ISourceFactory,
+		styleFactory: @escaping () -> IStyleFactory,
 		imageFactory: @escaping () -> IImageFactory,
 		locationManagerFactory: @escaping () -> LocationService?,
 		map: Map
@@ -100,6 +108,11 @@ final class RootViewModel: ObservableObject {
 		)
 		let reducer = SearchReducer(service: service)
 		self.searchStore = SearchStore(initialState: .init(), reducer: reducer)
+
+		self.stylePickerViewModel = StylePickerViewModel(
+			styleFactory: styleFactory,
+			map: self.map
+		)
 	}
 
 	func makeSearchViewModel() -> SearchViewModel {

@@ -62,6 +62,7 @@ final class Container {
 			sourceFactory: { [sdk = self.sdk] in
 				sdk.sourceFactory
 			},
+			styleFactory: sdk.makeStyleFactory,
 			imageFactory: { [sdk = self.sdk] in
 				sdk.imageFactory
 			},
