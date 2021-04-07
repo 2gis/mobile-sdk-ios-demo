@@ -19,7 +19,12 @@ final class Container {
 		httpOptions: HTTPOptions(timeout: 5, cacheOptions: nil)
 	)
 
-	private lazy var mapFactory: IMapFactory = self.sdk.makeMapFactory(options: .default)
+	private lazy var mapFactory: IMapFactory = {
+		var options = MapOptions.default
+		options.devicePPI = 300
+
+		return self.sdk.makeMapFactory(options: options)
+	}()
 
 	private lazy var locationManager = LocationService()
 
