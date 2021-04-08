@@ -10,7 +10,7 @@ extension PlatformSDK.GeoRect {
 		return GeoRect(
 			southWestPoint: GeoPoint(
 				latitude: self.southWestPoint.latitude - heightExpansion,
-				longitude: self.northEastPoint.longitude - widthExpansion
+				longitude: self.southWestPoint.longitude - widthExpansion
 			),
 			northEastPoint: GeoPoint(
 				latitude: self.northEastPoint.latitude + heightExpansion,
