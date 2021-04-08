@@ -16,19 +16,164 @@
 4. Соберите и запустите проект (⌘+R).
 
 ## Инициализация
-*// TODO: инициализация SDK, работа с ключами*
+```swift
+// создание набора ключей для доступа к сервисам
+let apiKeys = APIKeys(directory: directoryAPIKey, map: mapAPIKey)
+// создание контейнера для доступа к возможностям SDK в конфигурации по умолчанию
+let sdk = PlatformSDK.Container(apiKeys: self.apiKeys)
+
+// конфигурирование контейнера SDK
+
+// настройки журналирования
+let logOptions = LogOptions(osLogLevel: .info)
+// настройки HTTP-клиента 
+let httpOptions = HTTPOptions(timeout: 5, cacheOptions: nil)
+// cервисы геопозиционирования
+let positioningServices: IPositioningServicesFactory = CustomPositioningServicesFactory()
+// создание контейнера
+let sdk = PlatformSDK.Container(
+	apiKeys: self.apiKeys,
+	logOptions: logOptions,
+	httpOptions: httpOptions,
+	positioningServices: positioningServices
+)
+```
+
 
 ## Общая информация
-### Future
-*// TODO: в каких потоках срабатывают*
+### [Future](ru/ios/native/maps/reference/Future)
+#### Работа с потоками
+```swift
+// получение объект справочника по идентификатору
+let future = searchManager.searchByDirectoryObjectId(objectId: object.id)
 
-*// TODO: как сшить с кастомными Future*
+// обработка результа поиска на главном потоке
+let searchDirectoryObjectCancellable = future.sink(
+	receiveValue: {
+		[weak self] directoryObject in
+		guard let directoryObject = directoryObject else { return }
+		DispatchQueue.main.async {
+			self.handle(directoryObject)
+		}
+	},
+	failure: { error in
+		DispatchQueue.main.async {
+			self.handle(error)
+		}
+	}
+)
 
+// с помощью расширения можно упростить работу с очередью обратного вызова
+extension PlatformSDK.Future {
+	func sinkOnMainThread(
+		receiveValue: @escaping (Value) -> Void,
+		failure: @escaping (Error) -> Void
+	) -> PlatformSDK.Cancellable {
+		self.sink(on: .main, receiveValue: receiveValue, failure: failure)
+	}
 
-### Channel
-*// TODO: в каких потоках срабатывают*
+	func sink(
+		on queue: DispatchQueue,
+		receiveValue: @escaping (Value) -> Void,
+		failure: @escaping (Error) -> Void
+	) -> PlatformSDK.Cancellable {
+		self.sink { value in
+			queue.async {
+				receiveValue(value)
+			}
+		} failure: { error in
+			queue.async {
+				failure(error)
+			}
+		}
+	}
+}
 
-*// TODO: как сшить с кастомными Future*
+// упрощенный вариант получения результатов на главном потоке 
+let searchDirectoryObjectCancellable = future.sinkOnMainThread(
+	receiveValue: {
+		[weak self] directoryObject in
+		guard let directoryObject = directoryObject else { return }
+		self.handle(directoryObject)
+	},
+	failure: { error in
+		self.handle(error)
+	}
+)
+```
+#### Работа с Combine
+```swift
+// создание Combine.Future из PlatformSDK.Future
+extension PlatformSDK.Future {
+	func asCombineFuture() -> Combine.Future<Value, Error> {
+		Combine.Future { [self] promise in
+			// Keep cancellable reference until either handler is called.
+			// Combine.Future does not directly handle cancellation.
+			var cancellable: PlatformSDK.Cancellable?
+			cancellable = self.sink {
+				promise(.success($0))
+				_ = cancellable
+			} failure: {
+				promise(.failure($0))
+				_ = cancellable
+			}
+		}
+	}
+}
+
+// получение объект справочника по идентификатору
+let future = searchManager.searchByDirectoryObjectId(objectId: object.id)
+
+// создаем Combine.Future
+let combineFuture = future.asCombineFuture()
+// обработка результа поиска на главном потоке
+combineFuture.receive(on: DispatchQueue.main).sink {
+	[weak self] completion in
+
+	switch completion {
+		case .failure(let error):
+			self?.handle(error)
+		case .finished:
+			break
+	}
+} receiveValue: {
+	[weak self] directoryObject in
+	
+	self?.handle(directoryObject)
+}.store(in: &self.subscriptions)
+```
+### [Channel](ru/ios/native/maps/reference/Channel)
+#### Работа с потоками
+```swift
+// канал получения информации о прямоугольнике области просмотра
+let visibleRectChannel = self.map.camera.visibleRectChannel
+// подписываемся и обрабатываем результаты на главном потоке
+self.cancellable = visibleRectChannel.sink { [weak self] visibleRect in
+	DispatchQueue.main.async {
+		self?.handle(visibleRect)
+	}
+}
+
+// с помощью расширения так же можно упростить работу с очередями
+extension Channel {
+	func sinkOnMainThread(receiveValue: @escaping (Value) -> Void) -> PlatformSDK.Cancellable {
+		self.sink(on: .main, receiveValue: receiveValue)
+	}
+
+	func sink(on queue: DispatchQueue, receiveValue: @escaping (Value) -> Void) -> PlatformSDK.Cancellable {
+		self.sink { value in
+			queue.async {
+				receiveValue(value)
+			}
+		}
+	}
+}
+
+// подписываемся и обрабатываем результаты на главном потоке
+self.cancellable = visibleRectChannel.sinkOnMainThread { [weak self] visibleRect in
+	self?.handle(visibleRect)
+}
+```
 
 
 ## Камера
