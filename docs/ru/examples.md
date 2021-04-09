@@ -5,31 +5,46 @@
 2. Откройте проект `app.xcodeproj` и задайте ваши ключи API в файле `Info.plist` проекта:
 
    ```
-   dgisMapApiKey=YOUR_MAP_KEY
-   dgisDirectoryApiKey=YOUR_DIRECTIONS_KEY
+   DGISMapAPIKey = YOUR_MAP_KEY
+   DGISDirectoryAPIKey = YOUR_DIRECTORY_KEY
    ```
 
-3. Дождитесь загрузки зависимостей Swift. Эта операция может занять длительное время.
+   Или создайте в корне репозитория файл Local.xcconfig с вашими ключами (файл включён в .gitignore):
+   ```
+   DGIS_MAP_API_KEY = xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+   DGIS_DIRECTORY_API_KEY = xxxxxxxxxx
+   ```
+
+   Если соответствующая функциональность не нужна, можно оставить эти значения.
+
+3. Дождитесь загрузки зависимостей через SwiftPM. Эта операция может занять длительное время.
 
    Вы не сможете собрать и запустить проект, пока не будут загружены зависимости.
  
 4. Соберите и запустите проект (⌘+R).
 
 ## Инициализация
+### Создание контейнера SDK
 ```swift
 // создание набора ключей для доступа к сервисам
-let apiKeys = APIKeys(directory: directoryAPIKey, map: mapAPIKey)
+guard let apiKeys = APIKeys(directory: directoryAPIKey, map: mapAPIKey) else { 
+	fatalError("API keys are empty or have incorrect format") 
+}
+
 // создание контейнера для доступа к возможностям SDK в конфигурации по умолчанию
 let sdk = PlatformSDK.Container(apiKeys: self.apiKeys)
-
-// конфигурирование контейнера SDK
-
+```
+### Создание контейнера SDK с пользовательскими настройками.
+```swift
 // настройки журналирования
 let logOptions = LogOptions(osLogLevel: .info)
+
 // настройки HTTP-клиента 
 let httpOptions = HTTPOptions(timeout: 5, cacheOptions: nil)
+
 // cервисы геопозиционирования
 let positioningServices: IPositioningServicesFactory = CustomPositioningServicesFactory()
+
 // создание контейнера
 let sdk = PlatformSDK.Container(
 	apiKeys: self.apiKeys,
@@ -40,15 +55,40 @@ let sdk = PlatformSDK.Container(
 ```
 
 
+## Создание карты
+```swift
+// создание набора ключей для доступа к сервисам
+guard let apiKeys = APIKeys(directory: directoryAPIKey, map: mapAPIKey) else { 
+	fatalError("API keys are empty or have incorrect format") 
+}
+
+// создание контейнера для доступа к возможностям SDK
+let sdk = PlatformMapSDK.Container(apiKeys: apiKeys)
+
+// свойства карты
+var mapOptions = MapOptions.default
+
+// важно установить корректное для устройства значение PPI
+// значение PPI можно найти в [спецификации устройства](https://www.apple.com/iphone-11/specs/)
+mapOptions.devicePPI = devicePPI
+
+// получаем фабрику объектов карты
+let mapFactory: PlatformMapSDK.IMapFactory = sdk.makeMapFactory(options: mapOptions)
+
+// получаем слой карты
+let mapView: UIView & IMapView = mapFactory.mapView
+```
+
+
 ## Общая информация
 ### [Future](ru/ios/native/maps/reference/Future)
 #### Работа с потоками
 ```swift
-// получение объект справочника по идентификатору
+// получение объекта справочника по идентификатору
 let future = searchManager.searchByDirectoryObjectId(objectId: object.id)
 
 // обработка результа поиска на главном потоке
-let searchDirectoryObjectCancellable = future.sink(
+self.searchDirectoryObjectCancellable = future.sink(
 	receiveValue: {
 		[weak self] directoryObject in
 		guard let directoryObject = directoryObject else { return }
@@ -62,8 +102,9 @@ let searchDirectoryObjectCancellable = future.sink(
 		}
 	}
 )
-
-// с помощью расширения можно упростить работу с очередью обратного вызова
+```
+```swift
+// с помощью расширения улучшаем интеграцию с `DispatchQueue`
 extension PlatformSDK.Future {
 	func sinkOnMainThread(
 		receiveValue: @escaping (Value) -> Void,
@@ -90,7 +131,7 @@ extension PlatformSDK.Future {
 }
 
 // упрощенный вариант получения результатов на главном потоке 
-let searchDirectoryObjectCancellable = future.sinkOnMainThread(
+self.searchDirectoryObjectCancellable = future.sinkOnMainThread(
 	receiveValue: {
 		[weak self] directoryObject in
 		guard let directoryObject = directoryObject else { return }
@@ -107,8 +148,8 @@ let searchDirectoryObjectCancellable = future.sinkOnMainThread(
 extension PlatformSDK.Future {
 	func asCombineFuture() -> Combine.Future<Value, Error> {
 		Combine.Future { [self] promise in
-			// Keep cancellable reference until either handler is called.
-			// Combine.Future does not directly handle cancellation.
+			// Удерживаем ссылку на Cancellable, пока не будет вызван какой-либо обработчик.
+			// Combine.Future напрямую не позволяет конфигурировать отмену напрямую.
 			var cancellable: PlatformSDK.Cancellable?
 			cancellable = self.sink {
 				promise(.success($0))
@@ -121,11 +162,12 @@ extension PlatformSDK.Future {
 	}
 }
 
-// получение объект справочника по идентификатору
+// получение объекта справочника по идентификатору
 let future = searchManager.searchByDirectoryObjectId(objectId: object.id)
 
 // создаем Combine.Future
 let combineFuture = future.asCombineFuture()
+
 // обработка результа поиска на главном потоке
 combineFuture.receive(on: DispatchQueue.main).sink {
 	[weak self] completion in
@@ -145,16 +187,20 @@ combineFuture.receive(on: DispatchQueue.main).sink {
 ### [Channel](ru/ios/native/maps/reference/Channel)
 #### Работа с потоками
 ```swift
-// канал получения информации о прямоугольнике области просмотра
+// Поток значений — прямоугольников видимой области карты.
+// Значения будут присылаться при любом изменении видимой области до момента отписки.
 let visibleRectChannel = self.map.camera.visibleRectChannel
+
 // подписываемся и обрабатываем результаты на главном потоке
+// важно сохранить Cancellable, иначе подписка будет уничтожена
 self.cancellable = visibleRectChannel.sink { [weak self] visibleRect in
 	DispatchQueue.main.async {
 		self?.handle(visibleRect)
 	}
 }
-
-// с помощью расширения так же можно упростить работу с очередями
+```
+```swift
+// с помощью расширения улучшаем интеграцию с `DispatchQueue`
 extension Channel {
 	func sinkOnMainThread(receiveValue: @escaping (Value) -> Void) -> PlatformSDK.Cancellable {
 		self.sink(on: .main, receiveValue: receiveValue)
