@@ -1,27 +1,4 @@
-## Начало работы
-
-Для запуска примера:
-1. Склонируйте [GitHub-репозиторий 2GIS](https://github.com/2gis/native-sdk-ios-demo).
-2. Откройте проект `app.xcodeproj` и задайте ваши ключи API в файле `Info.plist` проекта:
-
-   ```
-   dgisMapApiKey=YOUR_MAP_KEY
-   dgisDirectoryApiKey=YOUR_DIRECTIONS_KEY
-   ```
-
-Или создайте в корне репозитория файл Local.xcconfig с вашими ключами (файл включён в .gitignore):
-```
-DGIS_MAP_API_KEY = xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
-DGIS_DIRECTORY_API_KEY = xxxxxxxxxx
-```
-
-3. Дождитесь загрузки зависимостей  через SwiftPM. Эта операция может занять длительное время.
-
-   Вы не сможете собрать и запустить проект, пока не будут загружены зависимости.
- 
-4. Соберите и запустите проект (⌘+R).
-
-## Инициализации
+## Инициализация
 ### Создание контейнера SDK
 ```swift
 // Создание набора ключей для доступа к сервисам.
