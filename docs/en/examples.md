@@ -24,26 +24,26 @@ DGIS_DIRECTORY_API_KEY = xxxxxxxxxx
 ## Инициализации
 ### Создание контейнера SDK
 ```swift
-// создание набора ключей для доступа к сервисам
+// Создание набора ключей для доступа к сервисам.
 guard let apiKeys = APIKeys(directory: directoryAPIKey, map: mapAPIKey) else { 
 	fatalError("API keys are empty or have incorrect format") 
 }
 
-// создание контейнера для доступа к возможностям SDK в конфигурации по умолчанию
+// Создание контейнера для доступа к возможностям SDK в конфигурации по умолчанию.
 let sdk = PlatformSDK.Container(apiKeys: self.apiKeys)
 ```
 ### Создание контейнера SDK с пользовательскими настройками.
 ```swift
-// настройки журналирования
+// Настройки журналирования.
 let logOptions = LogOptions(osLogLevel: .info)
 
-// настройки HTTP-клиента 
+// Настройки HTTP-клиента.
 let httpOptions = HTTPOptions(timeout: 5, cacheOptions: nil)
 
-// cервисы геопозиционирования
+// Сервисы геопозиционирования.
 let positioningServices: IPositioningServicesFactory = CustomPositioningServicesFactory()
 
-// создание контейнера
+// Создание контейнера.
 let sdk = PlatformSDK.Container(
 	apiKeys: self.apiKeys,
 	logOptions: logOptions,
@@ -55,37 +55,42 @@ let sdk = PlatformSDK.Container(
 
 ## Создание карты
 ```swift
-// создание набора ключей для доступа к сервисам
+// Создание набора ключей для доступа к сервисам.
 guard let apiKeys = APIKeys(directory: directoryAPIKey, map: mapAPIKey) else { 
 	fatalError("API keys are empty or have incorrect format") 
 }
 
-// создание контейнера для доступа к возможностям SDK
+// Создание контейнера для доступа к возможностям SDK.
 let sdk = PlatformMapSDK.Container(apiKeys: apiKeys)
 
-// свойства карты
+// Свойства карты.
 var mapOptions = MapOptions.default
 
-// важно установить корректное для устройства значение PPI
-// значение PPI можно найти в [спецификации устройства](https://www.apple.com/iphone-11/specs/)
+// Важно установить корректное для устройства значение PPI.
+// Значение PPI можно найти в [спецификации устройства](https://www.apple.com/iphone-11/specs/).
 mapOptions.devicePPI = devicePPI
 
-// получаем фабрику объектов карты
+// Получаем фабрику объектов карты.
 let mapFactory: PlatformMapSDK.IMapFactory = sdk.makeMapFactory(options: mapOptions)
 
-// получаем слой карты
+// Получаем слой карты.
 let mapView: UIView & IMapView = mapFactory.mapView
 ```
 
 
 ## Общая информация
-### [Future](en/ios/native/maps/reference/Future)
-#### Работа с потоками
+### Работа с отложенными результатами ([Future](en/ios/native/maps/reference/Future))
+#### Работа с очередями (`DispatchQueue`)
+**Обработчики Future вызываются на произвольной очереди, если документация не заявляет обратного.**
 ```swift
-// получение объекта справочника по идентификатору
+// Создание онлайн поисковика.
+let searchManager = SearchManager.createOnlineManager(context: self.sdk.context)
+
+// Получение объекта справочника по идентификатору.
 let future = searchManager.searchByDirectoryObjectId(objectId: object.id)
 
-// обработка результа поиска на главном потоке
+// Обработка результата поиска в главной очереди.
+// Сохраняем результат вызова `sink`, так как его уничтожение обрывает подписку.
 self.searchDirectoryObjectCancellable = future.sink(
 	receiveValue: {
 		[weak self] directoryObject in
@@ -102,7 +107,7 @@ self.searchDirectoryObjectCancellable = future.sink(
 )
 ```
 ```swift
-// с помощью расширения улучшаем интеграцию с `DispatchQueue`
+// С помощью расширения улучшаем интеграцию с `DispatchQueue`.
 extension PlatformSDK.Future {
 	func sinkOnMainThread(
 		receiveValue: @escaping (Value) -> Void,
@@ -128,7 +133,7 @@ extension PlatformSDK.Future {
 	}
 }
 
-// упрощенный вариант получения результатов на главном потоке 
+// Упрощенный вариант получения результатов на главной очереди.
 self.searchDirectoryObjectCancellable = future.sinkOnMainThread(
 	receiveValue: {
 		[weak self] directoryObject in
@@ -142,7 +147,7 @@ self.searchDirectoryObjectCancellable = future.sinkOnMainThread(
 ```
 #### Работа с Combine
 ```swift
-// создание Combine.Future из PlatformSDK.Future
+// Создание Combine.Future из PlatformSDK.Future.
 extension PlatformSDK.Future {
 	func asCombineFuture() -> Combine.Future<Value, Error> {
 		Combine.Future { [self] promise in
@@ -160,12 +165,13 @@ extension PlatformSDK.Future {
 	}
 }
 
-// получение объекта справочника по идентификатору
+// Получение объекта справочника по идентификатору.
 let future = searchManager.searchByDirectoryObjectId(objectId: object.id)
 
-// создаем Combine.Future
+// Создаем Combine.Future.
 let combineFuture = future.asCombineFuture()
-// обработка результа поиска на главном потоке
+
+// Обработка результа поиска на главной очереди.
 combineFuture.receive(on: DispatchQueue.main).sink {
 	[weak self] completion in
 
@@ -181,15 +187,16 @@ combineFuture.receive(on: DispatchQueue.main).sink {
 	self?.handle(directoryObject)
 }.store(in: &self.subscriptions)
 ```
-### [Channel](en/ios/native/maps/reference/Channel)
-#### Работа с потоками
+### Работа с потоками значений ([Channel](en/ios/native/maps/reference/Channel))
+#### Работа с очередями (`DispatchQueue`)
+**Обработчик Channel по умолчанию вызываются на произвольной очереди, если документация не заявляет обратного.**
 ```swift
 // Поток значений — прямоугольников видимой области карты.
 // Значения будут присылаться при любом изменении видимой области до момента отписки.
 let visibleRectChannel = self.map.camera.visibleRectChannel
 
-// подписываемся и обрабатываем результаты на главном потоке
-// важно сохранить Cancellable, иначе подписка будет уничтожена
+// Подписываемся и обрабатываем результаты на главной очереди.
+// Важно сохранить Cancellable, иначе подписка будет уничтожена.
 self.cancellable = visibleRectChannel.sink { [weak self] visibleRect in
 	DispatchQueue.main.async {
 		self?.handle(visibleRect)
@@ -197,7 +204,7 @@ self.cancellable = visibleRectChannel.sink { [weak self] visibleRect in
 }
 ```
 ```swift
-// с помощью расширения улучшаем интеграцию с `DispatchQueue`
+// С помощью расширения улучшаем интеграцию с `DispatchQueue`.
 extension Channel {
 	func sinkOnMainThread(receiveValue: @escaping (Value) -> Void) -> PlatformSDK.Cancellable {
 		self.sink(on: .main, receiveValue: receiveValue)
@@ -212,7 +219,7 @@ extension Channel {
 	}
 }
 
-// подписываемся и обрабатываем результаты на главном потоке
+// Подписываемся и обрабатываем результаты на главной очереди.
 self.cancellable = visibleRectChannel.sinkOnMainThread { [weak self] visibleRect in
 	self?.handle(visibleRect)
 }
@@ -222,20 +229,20 @@ self.cancellable = visibleRectChannel.sinkOnMainThread { [weak self] visibleRect
 ## Камера
 ### Перелет
 ```swift
-// новое положение камеры
+// Новое положение камеры.
 let newCameraPosition = CameraPosition(
 	point: GeoPoint(latitude: Arcdegree(value: 55.752425), longitude: Arcdegree(value: 37.613983)),
 	zoom: Zoom(value: 16)
 )
 
-// запуск перелета
+// Запуск перелета.
 let future = map.camera.move(
 	position: newCameraPosition,
 	time: 0.4,
 	animationType: .linear
 )
 
-// так же можно получить уведомление когда перелет закончен
+// Так же можно получить уведомление когда перелет закончен.
 let cancellable = future.sink { _ in
 	print("Camera position is changed successfully")
 } failure: { error in
@@ -246,10 +253,10 @@ let cancellable = future.sink { _ in
 ```swift
 let positionChannel = map.camera.position()
 
-// получить текущее значение позиции камеры
+// Получить текущее значение позиции камеры.
 let currentPosition = positionChannel.value
 
-// подписаться на изменения
+// Подписаться на изменения.
 let connection = positionChannel.sink { position in
 	print("Geo coordinate \(position.point)")
 	print("Zoom level \(position.zoom)")
@@ -265,10 +272,10 @@ connection.cancel()
 ### Отслеживание состояния камеры
 Карта может находится в состояниях, перечисленных в [CameraState](/ru/ios/native/maps/reference/CameraState).
 ```swift
-// получить текущее состояние
+// Получить текущее состояние.
 let currentState = map.camera.state().value
 
-// подписаться на изменение
+// Подписаться на изменение.
 let cancellable = map.camera.state().sink { state in
 	print("new state is \(state)")
 }
@@ -279,13 +286,13 @@ let cancellable = map.camera.state().sink { state in
 
 ### Маркер местоположения на карте
 ```swift
-// создаем источник для отображения маркера на карте
+// Создаем источник для отображения маркера на карте.
 let source = createMyLocationMapObjectSource(
 	context: sdkContext,
 	directionBehaviour: MyLocationDirectionBehaviour.followMagneticHeading
 )
 
-// добавляем источник в карту
+// Добавляем источник в карту.
 map.addSource(source: source)
 ```
 
