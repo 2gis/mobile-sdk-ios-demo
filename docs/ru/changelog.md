@@ -1,5 +1,13 @@
 # Release notes
 
+## v0.12
+**Release Date:** DD.MM.YYYY
+- Добавлено автоопределение PPI карты на основании модели головного устройства. См. `DevicePpi.autodetected`.
+  Настройки карты по умолчанию (`MapOptions.default`) используют этот PPI; а в случае неподдерживаемого устройства
+  проставлется `DevicePpi.defaultForFailedAutodetection`.
+- Тип `DevicePpi` теперь реализует протокол `ExpressibleByFloatLiteral`.
+- *Ломающее изменение*. Тип `MapOptions.devicePpi` изменился c `CGFloat?` на `DevicePpi?` в целях улучшения документации.
+
 ## v0.11
 **Release Date:** 15.04.2021
 - Управление и получение информации о HTTP-кеше — `HttpCacheManager`.
@@ -9,7 +17,7 @@
 - Типы `ScreenPoint`, `ScreenSize`, `ScreenShift` реализуют `Equatable` и `Hashable`.
 - Добавлены конструкторы `ScreenPoint(_: CGPoint)`, `ScreenSize(_: CGSize)`, `ScreenShift(_: CGVector)`.
 - *Ломающиее изменение:* `TextStyle.fontSize`, `TextStyle.strokeWidth` имеют тип `LogicalPixel`, а не `Float`.
-- *Ломающиее изменение:* В модели навигатора: вместо `Model.laneSign` теперь `Model.laneSignIndex`. 
+- *Ломающиее изменение:* В модели навигатора: вместо `Model.laneSign` теперь `Model.laneSignIndex`.
   `LaneSign` можно получить по этому индексу из `RouteInfo.laneSigns`.
 - *Ломающее изменение:* Метод для создания пользовательского слоя обработки жестов принимает меньшее число парамтеров: `IMapGestureViewFactory.makeGestureView(map:coordinateSpace:)`. Убран параметр `eventProcessor`: вместо него нужно использовать метод `Map.processEvent`.
 
