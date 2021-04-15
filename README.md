@@ -29,14 +29,22 @@ iOS Native SDK от 2GIS позволяет добавить [карту 2GIS](h
 2. Откройте проект `app.xcodeproj` и задайте ваши ключи API в файле `Info.plist` проекта:
 
    ```
-   dgisMapApiKey=YOUR_MAP_KEY
-   dgisDirectoryApiKey=YOUR_DIRECTIONS_KEY
+   DGISMapAPIKey = YOUR_MAP_KEY
+   DGISDirectoryAPIKey = YOUR_DIRECTORY_KEY
    ```
+
+   Или создайте в корне репозитория файл Local.xcconfig с вашими ключами (файл включён в .gitignore):
+   ```
+   DGIS_MAP_API_KEY = xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+   DGIS_DIRECTORY_API_KEY = xxxxxxxxxx
+   ```
+
+   Если соответствующая функциональность не нужна, можно оставить эти значения.
 
 3. Дождитесь загрузки зависимостей Swift. Эта операция может занять длительное время.
 
    Вы не сможете собрать и запустить проект, пока не будут загружены зависимости.
- 
+
 4. Соберите и запустите проект (⌘+R).
 
 

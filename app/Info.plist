@@ -21,9 +21,9 @@
 	<key>CFBundleVersion</key>
 	<string>1</string>
 	<key>DGISDirectoryAPIKey</key>
-	<string></string>
+	<string>$(DGIS_DIRECTORY_API_KEY)</string>
 	<key>DGISMapAPIKey</key>
-	<string></string>
+	<string>$(DGIS_MAP_API_KEY)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>UIApplicationSceneManifest</key>
@@ -56,6 +56,32 @@
 	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
+	</array>
+	<key>UTImportedTypeDeclarations</key>
+	<array>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.data</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>2GIS archive</string>
+			<key>UTTypeIconFiles</key>
+			<array/>
+			<key>UTTypeIdentifier</key>
+			<string>ru.2gis.style</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>2gis</string>
+				</array>
+				<key>public.mime-type</key>
+				<array>
+					<string>application/vnd.2gis.style</string>
+				</array>
+			</dict>
+		</dict>
 	</array>
 </dict>
 </plist>

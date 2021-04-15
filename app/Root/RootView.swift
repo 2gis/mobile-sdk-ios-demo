@@ -50,7 +50,11 @@ struct RootView: View {
 				.navigationBarTitle("2GIS", displayMode: .inline)
 				.edgesIgnoringSafeArea(.all)
 			}
-		}.navigationViewStyle(StackNavigationViewStyle())
+		}
+		.navigationViewStyle(StackNavigationViewStyle())
+		.sheet(isPresented: self.$viewModel.stylePickerViewModel.showsStylePicker) {
+			StylePickerView(fileURL: self.$viewModel.stylePickerViewModel.styleFileURL)
+		}
 	}
 
 	private func navigationBarLeadingItem() -> some View {
@@ -119,6 +123,9 @@ struct RootView: View {
 					},
 					.default(Text("Тест определения видимой области")) {
 						self.viewModel.detectExtendedVisibleRectChange()
+					},
+					.default(Text("Загрузка стиля из файла")) {
+						self.viewModel.stylePickerViewModel.showsStylePicker = true
 					},
 					.cancel(Text("Отмена"))
 				])

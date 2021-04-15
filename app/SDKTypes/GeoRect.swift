@@ -3,22 +3,27 @@ import PlatformSDK
 extension PlatformSDK.GeoRect {
 
 	func expanded(by ratio: Double) -> GeoRect {
-		let width = self.longitudeEast - self.longitudeWest
+		let width = self.northEastPoint.longitude - self.southWestPoint.longitude
 		let widthExpansion = width * (ratio - 1)
-		let height = self.latitudeNorth - self.latitudeSouth
+		let height = self.northEastPoint.latitude - self.southWestPoint.latitude
 		let heightExpansion = height * (ratio - 1)
 		return GeoRect(
-			latitudeNorth: self.latitudeNorth + heightExpansion,
-			latitudeSouth: self.latitudeSouth - heightExpansion,
-			longitudeWest: self.longitudeWest - widthExpansion,
-			longitudeEast: self.longitudeEast + widthExpansion
+			southWestPoint: GeoPoint(
+				latitude: self.southWestPoint.latitude - heightExpansion,
+				longitude: self.southWestPoint.longitude - widthExpansion
+			),
+			northEastPoint: GeoPoint(
+				latitude: self.northEastPoint.latitude + heightExpansion,
+				longitude: self.northEastPoint.longitude + widthExpansion
+			)
 		)
 	}
 
+	/// *This is a simplified example*.
 	func contains(_ rect: GeoRect) -> Bool {
-		self.latitudeNorth >= rect.latitudeNorth
-			&& self.latitudeSouth <= rect.latitudeSouth
-			&& self.longitudeEast >= rect.longitudeEast
-			&& self.longitudeWest <= rect.longitudeWest
+		self.northEastPoint.latitude >= rect.northEastPoint.latitude
+			&& self.northEastPoint.longitude >= rect.northEastPoint.longitude
+			&& self.southWestPoint.latitude <= rect.southWestPoint.latitude
+			&& self.southWestPoint.longitude <= rect.southWestPoint.longitude
 	}
 }
