@@ -1,5 +1,18 @@
 # Release notes
 
+## v0.11
+**Release Date:** 15.04.2021
+- Управление и получение информации о HTTP-кеше — `HttpCacheManager`.
+- Нестатические свойства большинства структур сделаны изменяемыми (т.е. `let` → `var`).
+- Информация о полосах движения маршрута - `RouteInfo.laneSigns`.
+- Убрана тонкая черная граница у объектов карты, когда она не задана.
+- Типы `ScreenPoint`, `ScreenSize`, `ScreenShift` реализуют `Equatable` и `Hashable`.
+- Добавлены конструкторы `ScreenPoint(_: CGPoint)`, `ScreenSize(_: CGSize)`, `ScreenShift(_: CGVector)`.
+- *Ломающиее изменение:* `TextStyle.fontSize`, `TextStyle.strokeWidth` имеют тип `LogicalPixel`, а не `Float`.
+- *Ломающиее изменение:* В модели навигатора: вместо `Model.laneSign` теперь `Model.laneSignIndex`. 
+  `LaneSign` можно получить по этому индексу из `RouteInfo.laneSigns`.
+- *Ломающее изменение:* Метод для создания пользовательского слоя обработки жестов принимает меньшее число парамтеров: `IMapGestureViewFactory.makeGestureView(map:coordinateSpace:)`. Убран параметр `eventProcessor`: вместо него нужно использовать метод `Map.processEvent`.
+
 ## v0.10
 **Release Date:** 07.04.2021
 - добавили инструмент для получения последнего отрисованного кадра карты в виде изображения — `IMapFactory.snapshotter.makeImage()`
