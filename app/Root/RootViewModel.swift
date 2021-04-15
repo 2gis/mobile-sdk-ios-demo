@@ -190,7 +190,7 @@ final class RootViewModel: ObservableObject {
 
 	
 	func detectExtendedVisibleRectChange() {
-		let visibleRectChannel = self.map.camera.visibleRect
+		let visibleRectChannel = self.map.camera.visibleRectChannel
 		self.formInitialVisibleRect(from: visibleRectChannel.value)
 		self.initialRectCancellable = visibleRectChannel.sinkOnMainThread{ [weak self] rect in
 			self?.updateVisibleRect(rect)

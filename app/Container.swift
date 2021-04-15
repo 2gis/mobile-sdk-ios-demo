@@ -16,8 +16,10 @@ final class Container {
 
 	private lazy var sdk = PlatformSDK.Container(
 		apiKeys: self.apiKeys,
-		httpOptinos: HTTPOptions(timeout: 5, cacheOptions: nil)
+		httpOptions: HTTPOptions(timeout: 5, cacheOptions: nil)
 	)
+
+	private lazy var mapFactory: IMapFactory = self.sdk.makeMapFactory(options: .default)
 
 	private lazy var locationManager = LocationService()
 
@@ -32,7 +34,7 @@ final class Container {
 			viewModel: viewModel,
 			markerViewModel: MarkerViewModel(
 				imageFactory: self.sdk.imageFactory,
-				map: self.sdk.map
+				map: self.mapFactory.map
 			),
 			routeViewModel: RouteViewModel(sourceFactory: { [sdk = self.sdk] in
 					return sdk.sourceFactory
@@ -43,13 +45,13 @@ final class Container {
 				routeEditorFactory: { [sdk = self.sdk] in
 					return RouteEditor(context: sdk.context)
 				},
-				map: self.sdk.map
+				map: self.mapFactory.map
 			),
 			mapUIViewFactory: {
-				[sdk = self.sdk] in
-				sdk.mapView
+				[mapFactory = self.mapFactory] in
+				mapFactory.mapView
 			},
-			mapControlFactory: self.sdk.mapControlFactory
+			mapControlFactory: self.mapFactory.mapControlFactory
 		)
 		return viewFactory
 	}
@@ -69,7 +71,7 @@ final class Container {
 			locationManagerFactory: { [weak self] in
 				self?.locationManager
 			},
-			map: self.sdk.map
+			map: self.mapFactory.map
 		)
 		return rootViewModel
 	}
