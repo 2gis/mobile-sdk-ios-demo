@@ -323,20 +323,32 @@ let polyline = objectsManager.addPolyline(options: options)
 ```
 
 ### Polygon
-// TBD
-
-
-## Мое местоположение
-
-### Маркер местоположения на карте
 ```swift
-// Создаем источник для отображения маркера на карте.
-let source = createMyLocationMapObjectSource(
-	context: sdkContext,
-	directionBehaviour: MyLocationDirectionBehaviour.followMagneticHeading)
+let latLon = { (lat: Double, lon: Double) -> GeoPoint in
+	return GeoPoint(latitude: Arcdegree(value: lat), longitude: Arcdegree(value: lon))
+}
 
-// Добавляем источник в карту.
-map.addSource(source: source)
+let polygon = self.objectManager.addPolygon(options: PolygonOptions(
+	contours: [
+		// контуры полигона
+		[
+			latLon(55.72014932919687, 37.562599182128906),
+			latLon(55.72014932919687, 37.67555236816406),
+			latLon(55.78004852149085, 37.67555236816406),
+			latLon(55.78004852149085, 37.562599182128906),
+			latLon(55.72014932919687, 37.562599182128906)
+		],
+		// контуры выреза
+		[
+			latLon(55.754167897761, 37.62422561645508),
+			latLon(55.74450654680055, 37.61238098144531),
+			latLon(55.74460317215391, 37.63435363769531),
+			latLon(55.754167897761, 37.62422561645508)
+		]
+	],
+	color: PlatformSDK.Color.init(),
+	strokeWidth: LogicalPixel(value: 2)
+))
 ```
 
 
