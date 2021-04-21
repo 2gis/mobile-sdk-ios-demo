@@ -4,6 +4,7 @@
 **Release Date:** DD.MM.YYYY
 - Исправлено потенциальное падение при передаче `MapOptions` с ненулевым `styleFuture`
   в `Container.makeMapFactory(options:)`.
+- Исправлено потенциальное падение при уничтожении объектов карты (`IMapFactory`).
 - Добавлено автоопределение PPI карты на основании модели головного устройства. См. `DevicePpi.autodetected`.
   Настройки карты по умолчанию (`MapOptions.default`) используют этот PPI; а в случае неподдерживаемого устройства
   проставлется `DevicePpi.defaultForFailedAutodetection`.
