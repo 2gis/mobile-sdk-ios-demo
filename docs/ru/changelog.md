@@ -9,7 +9,7 @@
 - Исправлено потенциальное падение при уничтожении объектов карты (`IMapFactory`).
 - Добавлено автоопределение PPI карты на основании модели головного устройства. См. `DevicePpi.autodetected`.
   Настройки карты по умолчанию (`MapOptions.default`) используют этот PPI; а в случае неподдерживаемого устройства
-  проставлется `DevicePpi.defaultForFailedAutodetection`.
+  проставляется `DevicePpi.defaultForFailedAutodetection`.
 - Тип `DevicePpi` теперь реализует протокол `ExpressibleByFloatLiteral`.
 - Добавлена возможность задавать тему карты и включать автопереключение темы на iOS 13.
 
