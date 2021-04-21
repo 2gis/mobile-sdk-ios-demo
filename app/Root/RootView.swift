@@ -22,6 +22,7 @@ struct RootView: View {
 				ZStack {
 					ZStack(alignment: .bottomTrailing) {
 						self.viewFactory.makeMapView()
+						.copyrightAlignment(.bottomLeft)
 						.coordinateSpace(name: Self.mapCoordinateSpace)
 						.simultaneousGesture(self.drag)
 						.overlay(self.visibleAreaStateIndicator(), alignment: .bottom)
