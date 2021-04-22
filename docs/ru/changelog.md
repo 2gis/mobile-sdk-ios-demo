@@ -1,9 +1,7 @@
 # Release notes
 
 ## v0.12
-
-**Release Date:** DD.MM.YYYY
-
+**Release Date:** 22.04.2021
 - Исправлено потенциальное падение при передаче `MapOptions` с ненулевым `styleFuture`
   в `Container.makeMapFactory(options:)`.
 - Исправлено потенциальное падение при уничтожении объектов карты (`IMapFactory`).
