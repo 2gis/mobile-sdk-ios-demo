@@ -1,53 +1,226 @@
-## Начало работы
-
-Для запуска примера:
-1. Склонируйте [GitHub-репозиторий 2GIS](https://github.com/2gis/native-sdk-ios-demo).
-2. Откройте проект `app.xcodeproj` и задайте ваши ключи API в файле `Info.plist` проекта:
-
-   ```
-   dgisMapApiKey=YOUR_MAP_KEY
-   dgisDirectoryApiKey=YOUR_DIRECTIONS_KEY
-   ```
-
-3. Дождитесь загрузки зависимостей Swift. Эта операция может занять длительное время.
-
-   Вы не сможете собрать и запустить проект, пока не будут загружены зависимости.
- 
-4. Соберите и запустите проект (⌘+R).
-
 ## Инициализация
-*// TODO: инициализация SDK, работа с ключами*
+### Создание контейнера SDK
+```swift
+// Создание набора ключей для доступа к сервисам.
+guard let apiKeys = APIKeys(directory: directoryAPIKey, map: mapAPIKey) else { 
+	fatalError("API keys are empty or have incorrect format") 
+}
+
+// Создание контейнера для доступа к возможностям SDK в конфигурации по умолчанию.
+let sdk = PlatformSDK.Container(apiKeys: self.apiKeys)
+```
+### Создание контейнера SDK с пользовательскими настройками.
+```swift
+// Настройки журналирования.
+let logOptions = LogOptions(osLogLevel: .info)
+
+// Настройки HTTP-клиента.
+let httpOptions = HTTPOptions(timeout: 5, cacheOptions: nil)
+
+// Сервисы геопозиционирования.
+let positioningServices: IPositioningServicesFactory = CustomPositioningServicesFactory()
+
+// Создание контейнера.
+let sdk = PlatformSDK.Container(
+	apiKeys: self.apiKeys,
+	logOptions: logOptions,
+	httpOptions: httpOptions,
+	positioningServices: positioningServices
+)
+```
+
+
+## Создание карты
+```swift
+// Создание набора ключей для доступа к сервисам.
+guard let apiKeys = APIKeys(directory: directoryAPIKey, map: mapAPIKey) else { 
+	fatalError("API keys are empty or have incorrect format") 
+}
+
+// Создание контейнера для доступа к возможностям SDK.
+let sdk = PlatformMapSDK.Container(apiKeys: apiKeys)
+
+// Свойства карты.
+var mapOptions = MapOptions.default
+
+// Важно установить корректное для устройства значение PPI.
+// Значение PPI можно найти в [спецификации устройства](https://www.apple.com/iphone-11/specs/).
+mapOptions.devicePPI = devicePPI
+
+// Получаем фабрику объектов карты.
+let mapFactory: PlatformMapSDK.IMapFactory = sdk.makeMapFactory(options: mapOptions)
+
+// Получаем слой карты.
+let mapView: UIView & IMapView = mapFactory.mapView
+```
+
 
 ## Общая информация
-### Future
-*// TODO: в каких потоках срабатывают*
+### Работа с отложенными результатами ([Future](ru/ios/native/maps/reference/Future))
+#### Работа с очередями (`DispatchQueue`)
+**Обработчики Future вызываются на произвольной очереди, если документация не заявляет обратного.**
 
-*// TODO: как сшить с кастомными Future*
+```swift
+// Создание онлайн поисковика.
+let searchManager = SearchManager.createOnlineManager(context: self.sdk.context)
 
+// Получение объекта справочника по идентификатору.
+let future = searchManager.searchByDirectoryObjectId(objectId: object.id)
 
-### Channel
-*// TODO: в каких потоках срабатывают*
+// Обработка результата поиска в главной очереди.
+// Сохраняем результат вызова `sink`, так как его уничтожение обрывает подписку.
+self.searchDirectoryObjectCancellable = future.sink(
+	receiveValue: {
+		[weak self] directoryObject in
+		guard let directoryObject = directoryObject else { return }
+		DispatchQueue.main.async {
+			self.handle(directoryObject)
+		}
+	},
+	failure: { error in
+		DispatchQueue.main.async {
+			self.handle(error)
+		}
+	}
+)
+```
+```swift
+// С помощью расширения улучшаем интеграцию с `DispatchQueue`.
+extension PlatformSDK.Future {
+	func sinkOnMainThread(
+		receiveValue: @escaping (Value) -> Void,
+		failure: @escaping (Error) -> Void
+	) -> PlatformSDK.Cancellable {
+		self.sink(on: .main, receiveValue: receiveValue, failure: failure)
+	}
 
-*// TODO: как сшить с кастомными Future*
+	func sink(
+		on queue: DispatchQueue,
+		receiveValue: @escaping (Value) -> Void,
+		failure: @escaping (Error) -> Void
+	) -> PlatformSDK.Cancellable {
+		self.sink { value in
+			queue.async {
+				receiveValue(value)
+			}
+		} failure: { error in
+			queue.async {
+				failure(error)
+			}
+		}
+	}
+}
+
+// Упрощенный вариант получения результатов на главной очереди.
+self.searchDirectoryObjectCancellable = future.sinkOnMainThread(
+	receiveValue: {
+		[weak self] directoryObject in
+		guard let directoryObject = directoryObject else { return }
+		self.handle(directoryObject)
+	},
+	failure: { error in
+		self.handle(error)
+	}
+)
+```
+#### Работа с Combine
+```swift
+// Создание Combine.Future из PlatformSDK.Future.
+extension PlatformSDK.Future {
+	func asCombineFuture() -> Combine.Future<Value, Error> {
+		Combine.Future { [self] promise in
+			// Удерживаем ссылку на Cancellable, пока не будет вызван какой-либо обработчик.
+			// Combine.Future напрямую не позволяет конфигурировать отмену напрямую.
+			var cancellable: PlatformSDK.Cancellable?
+			cancellable = self.sink {
+				promise(.success($0))
+				_ = cancellable
+			} failure: {
+				promise(.failure($0))
+				_ = cancellable
+			}
+		}
+	}
+}
+
+// Получение объекта справочника по идентификатору.
+let future = searchManager.searchByDirectoryObjectId(objectId: object.id)
+
+// Создаем Combine.Future.
+let combineFuture = future.asCombineFuture()
+
+// Обработка результа поиска на главной очереди.
+combineFuture.receive(on: DispatchQueue.main).sink {
+	[weak self] completion in
+
+	switch completion {
+		case .failure(let error):
+			self?.handle(error)
+		case .finished:
+			break
+	}
+} receiveValue: {
+	[weak self] directoryObject in
+	
+	self?.handle(directoryObject)
+}.store(in: &self.subscriptions)
+```
+### Работа с потоками значений ([Channel](ru/ios/native/maps/reference/Channel))
+#### Работа с очередями (`DispatchQueue`)
+**Обработчик Channel по умолчанию вызываются на произвольной очереди, если документация не заявляет обратного.**
+```swift
+// Поток значений — прямоугольников видимой области карты.
+// Значения будут присылаться при любом изменении видимой области до момента отписки.
+let visibleRectChannel = self.map.camera.visibleRectChannel
+
+// Подписываемся и обрабатываем результаты на главной очереди.
+// Важно сохранить Cancellable, иначе подписка будет уничтожена.
+self.cancellable = visibleRectChannel.sink { [weak self] visibleRect in
+	DispatchQueue.main.async {
+		self?.handle(visibleRect)
+	}
+}
+```
+```swift
+// С помощью расширения улучшаем интеграцию с `DispatchQueue`.
+extension Channel {
+	func sinkOnMainThread(receiveValue: @escaping (Value) -> Void) -> PlatformSDK.Cancellable {
+		self.sink(on: .main, receiveValue: receiveValue)
+	}
+
+	func sink(on queue: DispatchQueue, receiveValue: @escaping (Value) -> Void) -> PlatformSDK.Cancellable {
+		self.sink { value in
+			queue.async {
+				receiveValue(value)
+			}
+		}
+	}
+}
+
+// Подписываемся и обрабатываем результаты на главной очереди.
+self.cancellable = visibleRectChannel.sinkOnMainThread { [weak self] visibleRect in
+	self?.handle(visibleRect)
+}
+```
 
 
 ## Камера
 ### Перелет
 ```swift
-// новое положение камеры
+// Новое положение камеры.
 let newCameraPosition = CameraPosition(
 	point: GeoPoint(latitude: Arcdegree(value: 55.752425), longitude: Arcdegree(value: 37.613983)),
 	zoom: Zoom(value: 16)
 )
 
-// запуск перелета
+// Запуск перелета.
 let future = map.camera.move(
 	position: newCameraPosition,
 	time: 0.4,
 	animationType: .linear
 )
 
-// так же можно получить уведомление когда перелет закончен
+// Так же можно получить уведомление когда перелет закончен.
 let cancellable = future.sink { _ in
 	print("Camera position is changed successfully")
 } failure: { error in
@@ -58,10 +231,10 @@ let cancellable = future.sink { _ in
 ```swift
 let positionChannel = map.camera.position()
 
-// получить текущее значение позиции камеры
+// Получить текущее значение позиции камеры.
 let currentPosition = positionChannel.value
 
-// подписаться на изменения
+// Подписаться на изменения.
 let connection = positionChannel.sink { position in
 	print("Geo coordinate \(position.point)")
 	print("Zoom level \(position.zoom)")
@@ -77,10 +250,10 @@ connection.cancel()
 ### Отслеживание состояния камеры
 Карта может находится в состояниях, перечисленных в [CameraState](/ru/ios/native/maps/reference/CameraState).
 ```swift
-// получить текущее состояние
+// Получить текущее состояние.
 let currentState = map.camera.state().value
 
-// подписаться на изменение
+// Подписаться на изменение.
 let cancellable = map.camera.state().sink { state in
 	print("new state is \(state)")
 }
@@ -91,13 +264,13 @@ let cancellable = map.camera.state().sink { state in
 
 ### Маркер местоположения на карте
 ```swift
-// создаем источник для отображения маркера на карте
+// Создаем источник для отображения маркера на карте.
 let source = createMyLocationMapObjectSource(
 	context: sdkContext,
 	directionBehaviour: MyLocationDirectionBehaviour.followMagneticHeading
 )
 
-// добавляем источник в карту
+// Добавляем источник в карту.
 map.addSource(source: source)
 ```
 
@@ -150,20 +323,32 @@ let polyline = objectsManager.addPolyline(options: options)
 ```
 
 ### Polygon
-// TBD
-
-
-## Мое местоположение
-
-### Маркер местоположения на карте
 ```swift
-// создаем источник для отображения маркера на карте
-let source = createMyLocationMapObjectSource(
-	context: sdkContext,
-	directionBehaviour: MyLocationDirectionBehaviour.followMagneticHeading)
+let latLon = { (lat: Double, lon: Double) -> GeoPoint in
+	return GeoPoint(latitude: Arcdegree(value: lat), longitude: Arcdegree(value: lon))
+}
 
-// добавляем источник в карту
-map.addSource(source: source)
+let polygon = self.objectManager.addPolygon(options: PolygonOptions(
+	contours: [
+		// контуры полигона
+		[
+			latLon(55.72014932919687, 37.562599182128906),
+			latLon(55.72014932919687, 37.67555236816406),
+			latLon(55.78004852149085, 37.67555236816406),
+			latLon(55.78004852149085, 37.562599182128906),
+			latLon(55.72014932919687, 37.562599182128906)
+		],
+		// контуры выреза
+		[
+			latLon(55.754167897761, 37.62422561645508),
+			latLon(55.74450654680055, 37.61238098144531),
+			latLon(55.74460317215391, 37.63435363769531),
+			latLon(55.754167897761, 37.62422561645508)
+		]
+	],
+	color: PlatformSDK.Color.init(),
+	strokeWidth: LogicalPixel(value: 2)
+))
 ```
 
 
