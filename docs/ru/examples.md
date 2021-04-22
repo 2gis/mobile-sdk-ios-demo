@@ -20,12 +20,16 @@ let httpOptions = HTTPOptions(timeout: 5, cacheOptions: nil)
 // Сервисы геопозиционирования.
 let positioningServices: IPositioningServicesFactory = CustomPositioningServicesFactory()
 
+// Настройки сбора анонимной статистики использования.
+let dataCollectionOptions = DataCollectionOptions(dataCollectionStatus: .agree)
+
 // Создание контейнера.
 let sdk = PlatformSDK.Container(
 	apiKeys: self.apiKeys,
 	logOptions: logOptions,
 	httpOptions: httpOptions,
-	positioningServices: positioningServices
+	positioningServices: positioningServices,
+	dataCollectionOptions: dataCollectionOptions
 )
 ```
 
