@@ -1,5 +1,12 @@
 # Release notes
 
+## v0.12.1
+**Release Date:** 23.04.2021
+- Исправлено отображение карты на разных масштабах.
+- Исправлен механизм сбора статистики BSS.
+- Исправлена проблема с маркерами, при которой они группировались на разных масштабах.
+- Установлено минимальное значение zoom-левела равное 2.
+
 ## v0.12
 **Release Date:** 22.04.2021
 - Исправлено потенциальное падение при передаче `MapOptions` с ненулевым `styleFuture`
@@ -41,7 +48,7 @@
 - Типы `ScreenPoint`, `ScreenSize`, `ScreenShift` реализуют `Equatable` и `Hashable`.
 - Добавлены конструкторы `ScreenPoint(_: CGPoint)`, `ScreenSize(_: CGSize)`, `ScreenShift(_: CGVector)`.
 - *Ломающиее изменение:* `TextStyle.fontSize`, `TextStyle.strokeWidth` имеют тип `LogicalPixel`, а не `Float`.
-- *Ломающиее изменение:* В модели навигатора: вместо `Model.laneSign` теперь `Model.laneSignIndex`. 
+- *Ломающиее изменение:* В модели навигатора: вместо `Model.laneSign` теперь `Model.laneSignIndex`.
   `LaneSign` можно получить по этому индексу из `RouteInfo.laneSigns`.
 - *Ломающее изменение:* Метод для создания пользовательского слоя обработки жестов принимает меньшее число парамтеров: `IMapGestureViewFactory.makeGestureView(map:coordinateSpace:)`. Убран параметр `eventProcessor`: вместо него нужно использовать метод `Map.processEvent`.
 
