@@ -5,14 +5,14 @@ struct RootViewFactory {
 	private let viewModel: RootViewModel
 	private let markerViewModel: MarkerViewModel
 	private let routeViewModel: RouteViewModel
-	private let mapUIViewFactory: () -> UIView
+	private let mapUIViewFactory: () -> UIView & IMapView
 	private let mapControlFactory: IMapControlFactory
 
 	init(
 		viewModel: RootViewModel,
 		markerViewModel: MarkerViewModel,
 		routeViewModel: RouteViewModel,
-		mapUIViewFactory: @escaping () -> UIView,
+		mapUIViewFactory: @escaping () -> UIView & IMapView,
 		mapControlFactory: IMapControlFactory
 	) {
 		self.viewModel = viewModel
@@ -22,7 +22,7 @@ struct RootViewFactory {
 		self.mapControlFactory = mapControlFactory
 	}
 
-	func makeMapView() -> some View {
+	func makeMapView() -> MapView {
 		MapView(mapUIViewFactory: self.mapUIViewFactory)
 	}
 

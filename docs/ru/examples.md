@@ -23,11 +23,19 @@ let logOptions = LogOptions(osLogLevel: .info)
 // Настройки HTTP-клиента
 let httpOptions = HTTPOptions(timeout: 5, cacheOptions: nil)
 
-// Создание контейнера
+// Сервисы геопозиционирования.
+let positioningServices: IPositioningServicesFactory = CustomPositioningServicesFactory()
+
+// Настройки сбора анонимной статистики использования.
+let dataCollectionOptions = DataCollectionOptions(dataCollectionStatus: .agree)
+
+// Создание контейнера.
 let sdk = PlatformSDK.Container(
 	apiKeys: apiKeys,
 	logOptions: logOptions,
-	httpOptions: httpOptions
+	httpOptions: httpOptions,
+	positioningServices: positioningServices,
+	dataCollectionOptions: dataCollectionOptions
 )
 ```
 
