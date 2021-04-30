@@ -40,7 +40,7 @@ final class Container {
 					return sdk.sourceFactory
 				},
 				routeEditorSourceFactory: { [sdk = self.sdk] routeEditor in
-					return createRouteEditorSource(context: sdk.context, routeEditor: routeEditor)
+					return RouteEditorSource(context: sdk.context, routeEditor: routeEditor)
 				},
 				routeEditorFactory: { [sdk = self.sdk] in
 					return RouteEditor(context: sdk.context)

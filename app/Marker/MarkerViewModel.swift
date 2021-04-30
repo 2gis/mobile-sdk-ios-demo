@@ -74,7 +74,7 @@ final class MarkerViewModel: ObservableObject {
 	private let imageFactory: IImageFactory
 	private let map: Map
 	private lazy var objectManager: MapObjectManager =
-		createMapObjectManager(map: self.map)
+		MapObjectManager(map: self.map)
 
 	private var icons: [TypeSize: PlatformSDK.Image] = [:]
 
