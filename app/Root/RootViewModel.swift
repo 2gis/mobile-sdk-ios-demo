@@ -41,7 +41,7 @@ final class RootViewModel: ObservableObject {
 	private var getDirectoryObjectCancellable: PlatformSDK.Cancellable?
 	private var loadStyleCancellable: PlatformSDK.Cancellable?
 	private var selectedMarker: Marker?
-	private lazy var mapObjectManager: MapObjectManager = createMapObjectManager(map: self.map)
+	private lazy var mapObjectManager: MapObjectManager = MapObjectManager(map: self.map)
 	private lazy var selectedMarkerIcon: PlatformSDK.Image = {
 		let factory = self.imageFactory()
 		let icon = UIImage(systemName: "mappin.and.ellipse")!
