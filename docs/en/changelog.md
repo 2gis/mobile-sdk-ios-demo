@@ -2,7 +2,6 @@
 
 ## v0.13.0
 **Release Date:** 30.04.2021
-- Исправлено промаргивание карты черным цветом при ее создании.
 - Возможность задать поворот маркера `MarkerOptions.iconMapDirection`, `Marker.iconMapDirection`.
 - В копирайте на карте по умолчанию не отображается версия SDK, чтобы включить нужно задать `MapView.showsAPIVersion = true`.
 - Информация о положении камер в навигаторе - `Camera.geoPoint, Camera.bearing`.
