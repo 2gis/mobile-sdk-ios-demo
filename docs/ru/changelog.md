@@ -2,11 +2,12 @@
 
 ## v0.13.0
 **Release Date:** 30.04.2021
-- Возможность задать поворот маркера `MarkerOptions.iconMapDirection`, `Marker.iconMapDirection`.
-- В копирайте на карте по умолчанию не отображается версия SDK, чтобы включить нужно задать `MapView.showsAPIVersion = true`.
-- Информация о положении камер в навигаторе - `Camera.geoPoint, Camera.bearing`.
-- Возможность задать `positionPoint` в функциях `calcPosition` и `zoomOutToFit`.
-- Функции для создания объектов заменены на конструкторы `createMapObjectManager` -> `MapObjectManager`, `Geometry.createPoint` -> `PointGeometry` и т.д.
+- Добавлена возможность задать поворот маркера. Изначальный поворот — `MarkerOptions.iconMapDirection`; поворот существующего маркера — `Marker.iconMapDirection`.
+- В копирайте на карте по умолчанию не отображается версия SDK. Чтобы включить, нужно установить `MapView.showsAPIVersion` в `true`.
+- Добавлена возможность получения местоположения и направления камер в навигаторе: `Camera.geoPoint`, `Camera.bearing`.
+- Добавлена возможность задать точку местоположения (`positionPoint`) в функциях `calcPosition` и `zoomOutToFit`.
+- *Ломающее изменение*. Многие функции создания объектов заменены на инициализаторы соответствующего типа.
+  Например: `createMapObjectManager` → `MapObjectManager.init`; `Geometry.createPoint` → `PointGeometry.init` и т.д.
 
 ## v0.12.2
 **Release Date:** 24.04.2021
@@ -16,7 +17,7 @@
 **Release Date:** 23.04.2021
 - Исправлено отображение карты на разных масштабах.
 - Исправлен механизм сбора статистики.
-- Исправлена проблема с маркерами, при которой они группировались на разных масштабах.
+- Исправлена проблема с маркерами, при которой они вытесняли друг друга на разных масштабах.
 - Установлено минимальное значение zoom-левела равное 2.
 
 ## v0.12
