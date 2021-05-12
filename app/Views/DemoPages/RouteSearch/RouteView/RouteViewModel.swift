@@ -2,7 +2,6 @@ import SwiftUI
 import PlatformSDK
 
 final class RouteViewModel: ObservableObject {
-
 	@Published var pointADescription: String? = nil
 	@Published var pointBDescription: String? = nil
 	@Published private(set) var hasRoutes = false

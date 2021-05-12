@@ -3,8 +3,6 @@ import Combine
 import PlatformSDK
 
 final class StylePickerViewModel: ObservableObject {
-	/// Whether a style picker sheet is to be displayed.
-	@Published var showsStylePicker: Bool = false
 	/// URL to a selected style URL. Must be a file URL.
 	@Published var styleFileURL: URL?
 
