@@ -6,8 +6,8 @@
         "repositoryURL": "https://github.com/2gis/native-sdk-ios-swift-package.git",
         "state": {
           "branch": null,
-          "revision": "26bdf68367a117e3f56ae11f261d235ce97798ca",
-          "version": "0.14.0"
+          "revision": "21c684b8b095f10d1d880ff6e6a163f8e84e8057",
+          "version": "0.15.0"
         }
       }
     ]
