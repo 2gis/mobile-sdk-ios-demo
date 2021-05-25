@@ -100,7 +100,8 @@ final class MarkerViewModel: ObservableObject {
 			text: text
 		)
 
-		_ = self.objectManager.addMarker(options: options)
+		let marker = Marker(options: options)
+		self.objectManager.addObject(item: marker)
 
 		self.hasMarkers = true
 	}

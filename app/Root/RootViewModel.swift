@@ -219,7 +219,7 @@ final class RootViewModel: ObservableObject {
 
 	private func hideSelectedMarker() {
 		if let marker = self.selectedMarker {
-			marker.remove()
+			self.mapObjectManager.removeObject(item: marker)
 		}
 		self.selectedObjectCardViewModel = nil
 	}
@@ -234,7 +234,9 @@ final class RootViewModel: ObservableObject {
 			position: markerPoint,
 			icon: self.selectedMarkerIcon
 		)
-		self.selectedMarker = self.mapObjectManager.addMarker(options: markerOptions)
+		let marker = Marker(options: markerOptions)
+		self.mapObjectManager.addObject(item: marker)
+		self.selectedMarker = marker
 		self.selectedObjectCardViewModel = MapObjectCardViewModel(
 			objectInfo: selectedObject,
             searchManagerFactory: searchManagerFactory,

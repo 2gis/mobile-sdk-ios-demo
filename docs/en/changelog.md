@@ -1,5 +1,19 @@
 # Release notes
 
+## v0.15.0
+**Release Date:** 25.05.2021
+- Добавлена возможность проверки пересечения геометрий - `Geometry.hasIntersection`.
+- В `SearchResult` добавлен признак `autoUseFirstResult`, который обозначает, что первый элемент поисковой выдачи наиболее подходит для перелета или построения маршрута к нему.
+- Исправлена ошибка в механизме сетевого кеширования, приводящая к медленной записи сетевых ответов на файловую систему устройства.
+- *Ломающее изменение*. Изменение интерфейса `MapObjectManager`.
+
+  Теперь объекты карты создаются через конструкторы `Marker`, `Polygon` и т.д. вместо `MapObjectManager.addMarker` или `MapObjectManager.addPolygon`.
+
+  Для добавления или удаления объектов карты теперь нужно использовать методы `MapObjectManager.addObject/addObjects/removeObject` и т.д. При добавлении нескольких объектов эффективнее всего использовать `MapObjectManager.addObjects`.
+- *Ломающее изменение*. Изменён порядок параметров функций `calcPosition` и `zoomOutToFit`.
+- *Ломающее изменение*. Настройка сервиса сбора данных `DataCollectStatus` переименована в `PersonalDataCollectionConsent`.
+- *Ломающее изменение*. В конструкторе `Container` параметр `dataCollectStatus` также переименован в `personalDataCollectionConsent`.
+
 ## v0.14.0
 **Release Date:** 05.05.2021
 - Исправлена ошибка при добавлении маркера на карту через `MapObjectManager`.
