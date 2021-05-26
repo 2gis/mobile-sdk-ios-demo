@@ -463,3 +463,66 @@ private func tap(point: ScreenPoint, tapRadius: ScreenDistance) {
 	self.getRenderedObjectsCancellable = cancel
 }
 ```
+
+## Создание кнопки управления масштабом
+
+В SDK есть готовый к использованию блок управления масштабом, создаваемый
+с помощью метода `PlatformSDK.Container.mapControlFactory.makeZoomControl()`.
+
+Пример описывает создание собственной кнопки управления масштабом в фиксированном
+направлении: `direction` указывает, будет кнопка уменьшать или увеличивать.
+Ударживание кнопки в нажатом состоянии продолжает непрерывное изменение
+масштаба. Когда предел будет достигнут — кнопка визуально изменит состояние.
+
+Из двух таких кнопок можно собрать блок свободного управления масштабом.
+
+Экземпляр `ZoomControlModel` можно получить с помощью функции
+`PlatformSDK.createZoomControlModel(map:)`.
+
+```
+final class ZoomButton: UIButton {
+	private let model: ZoomControlModel
+	private let direction: ZoomControlButton
+	private var connection: ICancellable = NoopCancellable()
+
+	init(model: ZoomControlModel, direction: ZoomControlButton) {
+		self.model = model
+		self.direction = direction
+
+		super.init(frame: .zero)
+
+		self.addTarget(
+			self,
+			action: #selector(self.startZoom),
+			for: .touchDown
+		)
+		self.addTarget(
+			self,
+			action: #selector(self.stopZoom),
+			for: [.touchCancel, .touchUpInside, .touchUpOutside]
+		)
+
+		// Реагируем на отключение действия — выключаем кнопку.
+		// Такое возможно при достижении предела изменения масштаба.
+		self.connection = self.model.isEnabled(button: self.direction).sink {
+			[weak self] isEnabled in
+			DispatchQueue.main.async {
+				self?.isEnabled = isEnabled
+			}
+		}
+	}
+
+	@available(*, unavailable)
+	required init?(coder: NSCoder) {
+		fatalError("init(coder:) has not been implemented")
+	}
+
+	@objc private func startZoom() {
+		self.model.setPressed(button: self.direction, value: true)
+	}
+
+	@objc private func stopZoom() {
+		self.model.setPressed(button: self.direction, value: false)
+	}
+}
+```
