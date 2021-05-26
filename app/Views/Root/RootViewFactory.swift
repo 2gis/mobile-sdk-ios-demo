@@ -2,33 +2,15 @@ import SwiftUI
 import PlatformSDK
 
 struct RootViewFactory {
-	private let searchManagerFactory: () -> SearchManager
-	private let sourceFactory: () -> ISourceFactory
-	private let styleFactory: () -> IStyleFactory
-	private let imageFactory: () -> IImageFactory
+	private let sdk: PlatformSDK.Container
 	private let locationManagerFactory: () -> LocationService?
-	private let mapFactory: () -> IMapFactory
-	private let routeEditorFactory: () -> RouteEditor
-	private let routeEditorSourceFactory: (RouteEditor) -> RouteEditorSource
 
 	init(
-		searchManagerFactory: @escaping () -> SearchManager,
-		sourceFactory: @escaping () -> ISourceFactory,
-		styleFactory: @escaping () -> IStyleFactory,
-		imageFactory: @escaping () -> IImageFactory,
-		locationManagerFactory: @escaping () -> LocationService?,
-		mapFactory: @escaping () -> IMapFactory,
-		routeEditorFactory: @escaping () -> RouteEditor,
-		routeEditorSourceFactory: @escaping (RouteEditor) -> RouteEditorSource
+		sdk: PlatformSDK.Container,
+		locationManagerFactory: @escaping () -> LocationService?
 	) {
-		self.searchManagerFactory = searchManagerFactory
-		self.sourceFactory = sourceFactory
-		self.styleFactory = styleFactory
-		self.imageFactory = imageFactory
+		self.sdk = sdk
 		self.locationManagerFactory = locationManagerFactory
-		self.mapFactory = mapFactory
-		self.routeEditorFactory = routeEditorFactory
-		self.routeEditorSourceFactory = routeEditorSourceFactory
 	}
 
 	@ViewBuilder
@@ -54,23 +36,32 @@ struct RootViewFactory {
 	}
 
 	private func makeCustomStylesDemoPage() -> some View {
-		let mapFactory = self.mapFactory()
+		let mapFactory = self.makeMapFactory()
 		let viewModel = CustomMapStyleDemoViewModel(
-			styleFactory: self.styleFactory,
+			styleFactory: { [sdk = self.sdk] in
+				sdk.makeStyleFactory()
+			},
 			map: mapFactory.map
 		)
-		return CustomMapStyleDemoView(viewModel: viewModel, viewFactory: self.makeDemoPageComponentsFactory(mapFactory: mapFactory))
+		return CustomMapStyleDemoView(
+			viewModel: viewModel,
+			viewFactory: self.makeDemoPageComponentsFactory(mapFactory: mapFactory)
+		)
 	}
 
 	private func makeSearchStylesDemoPage() -> some View {
 		let viewModel = SearchDemoViewModel(
-			searchManagerFactory: self.searchManagerFactory
+			searchManagerFactory: { [sdk = self.sdk] in
+				SearchManager.createOnlineManager(context: sdk.context)
+			}
 		)
-		return SearchDemoView(viewModel: viewModel, viewFactory: self.makeDemoPageComponentsFactory(mapFactory: self.mapFactory()))
+		return SearchDemoView(
+			viewModel: viewModel,
+			viewFactory: self.makeDemoPageComponentsFactory(mapFactory: self.makeMapFactory()))
 	}
 
 	private func makeCameraDemoPage() -> some View {
-		let mapFactory = self.mapFactory()
+		let mapFactory = self.makeMapFactory()
 		let viewModel = CameraDemoViewModel(
 			locationManagerFactory: self.locationManagerFactory,
 			map: mapFactory.map
@@ -85,7 +76,7 @@ struct RootViewFactory {
 		let viewModel = RouteSearchDemoViewModel()
 		return RouteSearchDemoView(
 			viewModel: viewModel,
-			viewFactory: self.makeDemoPageComponentsFactory(mapFactory: self.mapFactory())
+			viewFactory: self.makeDemoPageComponentsFactory(mapFactory: self.makeMapFactory())
 		)
 	}
 
@@ -93,12 +84,12 @@ struct RootViewFactory {
 		let viewModel = MarkersDemoViewModel()
 		return MarkersDemoView(
 			viewModel: viewModel,
-			viewFactory: self.makeDemoPageComponentsFactory(mapFactory: self.mapFactory())
+			viewFactory: self.makeDemoPageComponentsFactory(mapFactory: self.makeMapFactory())
 		)
 	}
 
 	private func makeVisibleAreaDetectionDemoPage() -> some View {
-		let mapFactory = self.mapFactory()
+		let mapFactory = self.makeMapFactory()
 		let viewModel = VisibleAreaDetectionDemoViewModel(map: mapFactory.map)
 		return VisibleAreaDetectionDemoView(
 			viewModel: viewModel,
@@ -107,10 +98,14 @@ struct RootViewFactory {
 	}
 
 	private func makeMapObjectsIdentificationDemoPage() -> some View {
-		let mapFactory = self.mapFactory()
+		let mapFactory = self.makeMapFactory()
 		let viewModel = MapObjectsIdentificationDemoViewModel(
-			searchManagerFactory: searchManagerFactory,
-			imageFactory: imageFactory,
+			searchManagerFactory: { [sdk = self.sdk] in
+				SearchManager.createOnlineManager(context: sdk.context)
+			},
+			imageFactory: { [sdk = self.sdk] in
+				sdk.imageFactory
+			},
 			map: mapFactory.map
 		)
 		return MapObjectsIdentificationDemoView(
@@ -120,21 +115,21 @@ struct RootViewFactory {
 	}
 
 	private func makeCustomMapControlsDemoPage() -> some View {
-		let mapFactory = self.mapFactory()
 		let viewModel = CustomMapControlsDemoViewModel()
 		return CustomMapControlsDemoView(
 			viewModel: viewModel,
-			viewFactory: self.makeDemoPageComponentsFactory(mapFactory: mapFactory)
+			viewFactory: self.makeDemoPageComponentsFactory(mapFactory: self.makeMapFactory())
 		)
 	}
 
 	private func makeDemoPageComponentsFactory(mapFactory: IMapFactory) -> DemoPageComponentsFactory {
 		DemoPageComponentsFactory(
-			mapFactory: mapFactory,
-			imageFactory: self.imageFactory,
-			sourceFactory: self.sourceFactory,
-			routeEditorFactory: self.routeEditorFactory,
-			routeEditorSourceFactory: self.routeEditorSourceFactory
+			sdk: self.sdk,
+			mapFactory: mapFactory
 		)
+	}
+
+	private func makeMapFactory() -> IMapFactory {
+		self.sdk.makeMapFactory(options: .default)
 	}
 }
