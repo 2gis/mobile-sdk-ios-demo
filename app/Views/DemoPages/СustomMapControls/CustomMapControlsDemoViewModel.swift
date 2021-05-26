@@ -10,9 +10,9 @@ final class CustomMapControlsDemoViewModel: ObservableObject {
 		var title: String {
 			switch self {
 				case .default:
-					return "Контролы по умолчанию"
+					return "По умолчанию"
 				case .custom:
-					return "Кастомные контролы"
+					return "Пользовательские"
 			}
 		}
 	}

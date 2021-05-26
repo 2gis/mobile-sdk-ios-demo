@@ -83,7 +83,6 @@ final class CameraDemoViewModel: ObservableObject {
 	}
 
 	private func move(at index: Int) {
-
 		guard index < self.testPoints.count else { return }
 		let tuple = self.testPoints[index]
 		DispatchQueue.main.async {
