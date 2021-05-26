@@ -29,27 +29,9 @@ final class Container {
 
 	private func makeRootViewFactory() -> RootViewFactory {
 		let viewFactory = RootViewFactory(
-			searchManagerFactory: { [sdk = self.sdk] in
-				SearchManager.createOnlineManager(context: sdk.context)
-			},
-			sourceFactory: { [sdk = self.sdk] in
-				sdk.sourceFactory
-			},
-			styleFactory: sdk.makeStyleFactory,
-			imageFactory: { [sdk = self.sdk] in
-				sdk.imageFactory
-			},
+			sdk: self.sdk,
 			locationManagerFactory: { [weak self] in
 				self?.locationManager
-			},
-			mapFactory: { [sdk = self.sdk] in
-				sdk.makeMapFactory(options: .default)
-			},
-			routeEditorFactory: { [sdk = self.sdk] in
-				return RouteEditor(context: sdk.context)
-			},
-			routeEditorSourceFactory: { [sdk = self.sdk] routeEditor in
-				return RouteEditorSource(context: sdk.context, routeEditor: routeEditor)
 			}
 		)
 		return viewFactory

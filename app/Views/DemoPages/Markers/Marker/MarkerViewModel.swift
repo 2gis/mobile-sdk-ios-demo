@@ -70,20 +70,20 @@ final class MarkerViewModel: ObservableObject {
 	@Published var type: MarkerType = .camera
 	@Published var size: MarkerSize = .small
 	@Published private(set) var hasMarkers = false
-	
-	private let imageFactory: IImageFactory
+
 	private let map: Map
+	private let imageFactory: IImageFactory
 	private lazy var objectManager: MapObjectManager =
 		MapObjectManager(map: self.map)
 
 	private var icons: [TypeSize: PlatformSDK.Image] = [:]
 
 	init(
-		imageFactory: IImageFactory,
-		map: Map
+		map: Map,
+		imageFactory: IImageFactory
 	) {
-		self.imageFactory = imageFactory
 		self.map = map
+		self.imageFactory = imageFactory
 	}
 
 	func addMarkers(text: String) {
@@ -99,10 +99,7 @@ final class MarkerViewModel: ObservableObject {
 			icon: icon,
 			text: text
 		)
-
-		let marker = Marker(options: options)
-		self.objectManager.addObject(item: marker)
-
+		_ = self.objectManager.addMarker(options: options)
 		self.hasMarkers = true
 	}
 

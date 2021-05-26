@@ -3,23 +3,14 @@ import PlatformSDK
 
 struct DemoPageComponentsFactory {
 	private let mapFactory: IMapFactory
-	private let imageFactory: () -> IImageFactory
-	private let sourceFactory: () -> ISourceFactory
-	private let routeEditorFactory: () -> RouteEditor
-	private let routeEditorSourceFactory: (RouteEditor) -> RouteEditorSource
+	private let sdk: PlatformSDK.Container
 
 	internal init(
-		mapFactory: IMapFactory,
-		imageFactory: @escaping () -> IImageFactory,
-		sourceFactory: @escaping () -> ISourceFactory,
-		routeEditorFactory: @escaping () -> RouteEditor,
-		routeEditorSourceFactory: @escaping (RouteEditor) -> RouteEditorSource
+		sdk: PlatformSDK.Container,
+		mapFactory: IMapFactory
 	) {
+		self.sdk = sdk
 		self.mapFactory = mapFactory
-		self.imageFactory = imageFactory
-		self.sourceFactory = sourceFactory
-		self.routeEditorFactory = routeEditorFactory
-		self.routeEditorSourceFactory = routeEditorSourceFactory
 	}
 
 	func makeMapView() -> MapView {
@@ -66,16 +57,26 @@ struct DemoPageComponentsFactory {
 	}
 
 	func makeMarkerView(show: Binding<Bool>) -> some View {
-		let viewModel = MarkerViewModel(imageFactory: self.imageFactory(), map: self.mapFactory.map)
+		let viewModel = MarkerViewModel(
+			map: self.mapFactory.map,
+			imageFactory: self.sdk.imageFactory
+		)
 		return MarkerView(viewModel: viewModel, show: show)
 	}
 
 	func makeRouteView(show: Binding<Bool>) -> some View {
 		let viewModel = RouteViewModel(
-			sourceFactory: self.sourceFactory,
-			routeEditorSourceFactory: self.routeEditorSourceFactory,
-			routeEditorFactory: self.routeEditorFactory,
-			map: self.mapFactory.map)
+			sourceFactory: { [sdk = self.sdk] in
+				sdk.sourceFactory
+			},
+			routeEditorSourceFactory: { [sdk = self.sdk] routeEditor in
+				return RouteEditorSource(context: sdk.context, routeEditor: routeEditor)
+			},
+			routeEditorFactory: { [sdk = self.sdk] in
+				return RouteEditor(context: sdk.context)
+			},
+			map: self.mapFactory.map
+		)
 		return RouteView(viewModel: viewModel, show: show)
 	}
 
