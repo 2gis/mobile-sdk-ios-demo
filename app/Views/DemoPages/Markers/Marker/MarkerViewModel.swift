@@ -73,7 +73,7 @@ final class MarkerViewModel: ObservableObject {
 
 	private let map: Map
 	private let imageFactory: IImageFactory
-	private lazy var objectManager: MapObjectManager =
+	private lazy var mapObjectManager: MapObjectManager =
 		MapObjectManager(map: self.map)
 
 	private var icons: [TypeSize: PlatformSDK.Image] = [:]
@@ -99,12 +99,13 @@ final class MarkerViewModel: ObservableObject {
 			icon: icon,
 			text: text
 		)
-		_ = self.objectManager.addMarker(options: options)
+		let marker = Marker(options: options)
+		self.mapObjectManager.addObject(item: marker)
 		self.hasMarkers = true
 	}
 
 	func removeAll() {
-		self.objectManager.removeAll()
+		self.mapObjectManager.removeAll()
 	}
 
 	private func makeIcon(type: MarkerType, size: MarkerSize) -> PlatformSDK.Image? {

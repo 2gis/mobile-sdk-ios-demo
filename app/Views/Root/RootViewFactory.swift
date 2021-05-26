@@ -26,7 +26,7 @@ struct RootViewFactory {
 				self.makeMapObjectsIdentificationDemoPage()
 			case .markers:
 				self.makeMarkersDemoPage()
-			case .search:
+			case .dictionarySearch:
 				self.makeSearchStylesDemoPage()
 			case .mapStyles:
 				self.makeCustomStylesDemoPage()
