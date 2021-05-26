@@ -19,7 +19,7 @@ struct RootView: View {
 					DemoPageListRow(page: page)
 				}
 			}
-			.navigationBarTitle("2GIS NativeSDK examples", displayMode: .inline)
+			.navigationBarTitle("2GIS NativeSDK Examples", displayMode: .inline)
 		}
 	}
 }

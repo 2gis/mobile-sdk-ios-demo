@@ -13,19 +13,19 @@ enum DemoPage: String, CaseIterable {
 			case .camera:
 				return "Перелеты камеры"
 			case .customMapControls:
-				return "Кастомные контролы карты"
+				return "Пользовательские кнопки управления картой"
 			case .markers:
 				return "Добавление маркеров на карту"
 			case .mapStyles:
-				return "Кастомные стили карты"
+				return "Пользовательские стили карты"
 			case .mapObjectsIdentification:
-				return "Идентификация объектов на карте"
+				return "Определение объектов на карте"
 			case .routeSearch:
 				return "Поиск маршрута"
 			case .search:
 				return "Поиск в справочнике"
 			case .visibleAreaDetection:
-				return "Определение видимой области"
+				return "Определение выхода из области"
 		}
 	}
 }
