@@ -13,6 +13,7 @@
 - *Ломающее изменение*. Изменён порядок параметров функций `calcPosition` и `zoomOutToFit`.
 - *Ломающее изменение*. Настройка сервиса сбора данных `DataCollectStatus` переименована в `PersonalDataCollectionConsent`.
 - *Ломающее изменение*. В конструкторе `Container` параметр `dataCollectStatus` также переименован в `personalDataCollectionConsent`.
+-
 
 ## v0.14.0
 **Release Date:** 05.05.2021
