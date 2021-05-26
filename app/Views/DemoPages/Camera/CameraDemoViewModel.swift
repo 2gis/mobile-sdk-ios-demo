@@ -3,6 +3,8 @@ import Combine
 import PlatformSDK
 
 final class CameraDemoViewModel: ObservableObject {
+	@Published var showActionSheet = false
+
 	private let locationManagerFactory: () -> LocationService?
 	private let map: Map
 	private var locationService: LocationService?

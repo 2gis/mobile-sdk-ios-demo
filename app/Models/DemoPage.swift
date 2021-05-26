@@ -6,7 +6,7 @@ enum DemoPage: String, CaseIterable {
 	case customMapControls
 	case mapStyles
 	case routeSearch
-	case search
+	case dictionarySearch
 
 	var name: String {
 		switch self {
@@ -22,7 +22,7 @@ enum DemoPage: String, CaseIterable {
 				return "Определение объектов на карте"
 			case .routeSearch:
 				return "Поиск маршрута"
-			case .search:
+			case .dictionarySearch:
 				return "Поиск в справочнике"
 			case .visibleAreaDetection:
 				return "Определение выхода из области"

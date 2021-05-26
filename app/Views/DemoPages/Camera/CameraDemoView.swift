@@ -20,10 +20,9 @@ struct CameraDemoView: View {
 		.edgesIgnoringSafeArea(.all)
 	}
 
-	@State private var showActionSheet = false
 	private func settingsButton() -> some View {
 		Button(action: {
-			self.showActionSheet = true
+			self.viewModel.showActionSheet = true
 		}, label: {
 			Image(systemName: "list.bullet")
 				.frame(width: 40, height: 40, alignment: .center)
@@ -34,7 +33,7 @@ struct CameraDemoView: View {
 		})
 		.padding(.bottom, 40)
 		.padding(.trailing, 20)
-		.actionSheet(isPresented: self.$showActionSheet) {
+		.actionSheet(isPresented: self.$viewModel.showActionSheet) {
 			ActionSheet(
 				title: Text("Тестовые перелеты"),
 				buttons: [

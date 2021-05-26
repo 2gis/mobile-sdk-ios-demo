@@ -4,7 +4,7 @@ import PlatformSDK
 
 final class MapObjectsIdentificationDemoViewModel: ObservableObject {
 	private enum Constants {
-		static let tapRadius = ScreenDistance(value: 1)
+		static let tapRadius = ScreenDistance(value: 5)
 	}
 
 	@Published var selectedObjectCardViewModel: MapObjectCardViewModel?
@@ -69,7 +69,7 @@ final class MapObjectsIdentificationDemoViewModel: ObservableObject {
 
 	private func hideSelectedMarker() {
 		if let marker = self.selectedMarker {
-			marker.remove()
+			self.mapObjectManager.removeObject(item: marker)
 		}
 		self.selectedObjectCardViewModel = nil
 	}
@@ -84,7 +84,9 @@ final class MapObjectsIdentificationDemoViewModel: ObservableObject {
 			position: markerPoint,
 			icon: self.selectedMarkerIcon
 		)
-		self.selectedMarker = self.mapObjectManager.addMarker(options: markerOptions)
+		let marker = Marker(options: markerOptions)
+		self.mapObjectManager.addObject(item: marker)
+		self.selectedMarker = marker
 		self.selectedObjectCardViewModel = MapObjectCardViewModel(
 			objectInfo: selectedObject,
 			searchManagerFactory: searchManagerFactory,
