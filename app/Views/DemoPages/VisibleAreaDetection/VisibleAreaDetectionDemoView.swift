@@ -57,10 +57,10 @@ struct VisibleAreaDetectionDemoView: View {
 		Button(action: action,
 			   label: {
 			Image(systemName: imageSystemName)
-				.resizable()
-				.frame(width: 40, height: 40, alignment: .center)
-				.foregroundColor(.white)
-				.shadow(color: .gray, radius: 1)
+			.resizable()
+			.frame(width: 40, height: 40, alignment: .center)
+			.foregroundColor(.white)
+			.shadow(color: .gray, radius: 1)
 		})
 		.padding(.bottom, 40)
 		.padding(.trailing, 20)

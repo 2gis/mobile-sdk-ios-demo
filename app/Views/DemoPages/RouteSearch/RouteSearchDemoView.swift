@@ -30,16 +30,9 @@ struct RouteSearchDemoView: View {
 	}
 
 	private func settingsButton() -> some View {
-		Button(action: {
+		Button.makeCircleButton(iconName: "car.fill") {
 			self.viewModel.showRoutes = true
-		}, label: {
-			Image(systemName: "car.fill")
-				.frame(width: 40, height: 40, alignment: .center)
-				.contentShape(Rectangle())
-				.background(
-					Circle().fill(Color.white)
-				)
-		})
+		}
 		.padding(.bottom, 40)
 		.padding(.trailing, 20)
 	}

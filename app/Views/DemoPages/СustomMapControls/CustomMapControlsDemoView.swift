@@ -44,16 +44,16 @@ struct CustomMapControlsDemoView: View {
 			switch self.viewModel.controlsType {
 				case .default:
 					self.viewFactory.makeZoomControl()
-						.frame(width: 60, height: 128)
-						.fixedSize()
-						.transformEffect(.init(scaleX: 0.8, y: 0.8))
-						.padding(10)
+					.frame(width: 60, height: 128)
+					.fixedSize()
+					.transformEffect(.init(scaleX: 0.8, y: 0.8))
+					.padding(10)
 				case .custom:
 					self.viewFactory.makeCustomControl()
-						.frame(width: 60, height: 128)
-						.fixedSize()
-						.transformEffect(.init(scaleX: 0.8, y: 0.8))
-						.padding(10)
+					.frame(width: 60, height: 120)
+					.fixedSize()
+					.transformEffect(.init(scaleX: 0.8, y: 0.8))
+					.padding(10)
 			}
 		}
 	}

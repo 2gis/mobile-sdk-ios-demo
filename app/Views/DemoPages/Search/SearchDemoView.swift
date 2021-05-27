@@ -23,8 +23,8 @@ struct SearchDemoView: View {
 	private func navigationBarTrailingItem() -> some View {
 		NavigationLink(destination: self.viewFactory.makeSearchView(searchStore: self.viewModel.searchStore)) {
 			Image(systemName: "magnifyingglass.circle.fill")
-				.resizable()
-				.frame(minWidth: 32, minHeight: 32)
+			.resizable()
+			.frame(minWidth: 32, minHeight: 32)
 		}
 	}
 }

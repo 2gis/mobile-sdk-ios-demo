@@ -32,6 +32,8 @@ struct RootViewFactory {
 				self.makeCustomStylesDemoPage()
 			case .visibleAreaDetection:
 				self.makeVisibleAreaDetectionDemoPage()
+			case .mapTheme:
+				self.makeMapThemeDemoPage()
 		}
 	}
 
@@ -81,10 +83,14 @@ struct RootViewFactory {
 	}
 
 	private func makeMarkersDemoPage() -> some View {
-		let viewModel = MarkersDemoViewModel()
+		let mapFactory = self.makeMapFactory()
+		let viewModel = MarkersDemoViewModel(
+			map: mapFactory.map,
+			imageFactory: self.sdk.imageFactory
+		)
 		return MarkersDemoView(
 			viewModel: viewModel,
-			viewFactory: self.makeDemoPageComponentsFactory(mapFactory: self.makeMapFactory())
+			viewFactory: self.makeDemoPageComponentsFactory(mapFactory: mapFactory)
 		)
 	}
 
@@ -117,6 +123,14 @@ struct RootViewFactory {
 	private func makeCustomMapControlsDemoPage() -> some View {
 		let viewModel = CustomMapControlsDemoViewModel()
 		return CustomMapControlsDemoView(
+			viewModel: viewModel,
+			viewFactory: self.makeDemoPageComponentsFactory(mapFactory: self.makeMapFactory())
+		)
+	}
+
+	private func makeMapThemeDemoPage() -> some View {
+		let viewModel = MapThemeDemoViewModel()
+		return MapThemeDemoView(
 			viewModel: viewModel,
 			viewFactory: self.makeDemoPageComponentsFactory(mapFactory: self.makeMapFactory())
 		)

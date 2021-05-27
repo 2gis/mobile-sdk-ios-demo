@@ -5,22 +5,22 @@
 Чтобы его создать, нужно указать набор ключей доступа к SDK в виде структуры [APIKeys](/ru/ios/native/maps/reference/APIKeys).
 
 ```swift
-// Набор ключей для доступа к сервисам
+// Набор ключей для доступа к сервисам.
 guard let apiKeys = APIKeys(directory: "Directory API key", map: "SDK key") else { 
 	fatalError("Указанные API-ключи недействительны.") 
 }
 
-// Создание контейнера для доступа к возможностям SDK
+// Создание контейнера для доступа к возможностям SDK.
 let sdk = PlatformSDK.Container(apiKeys: apiKeys)
 ```
 
 Дополнительно можно указать настройки журналирования ([LogOptions](/ru/ios/native/maps/reference/LogOptions)) и настройки HTTP-клиента ([HTTPOptions](/ru/ios/native/maps/reference/HTTPOptions)), такие как время ожидания ответа и кеширование.
 
 ```swift
-// Настройки журналирования
+// Настройки журналирования.
 let logOptions = LogOptions(osLogLevel: .info)
 
-// Настройки HTTP-клиента
+// Настройки HTTP-клиента.
 let httpOptions = HTTPOptions(timeout: 5, cacheOptions: nil)
 
 // Сервисы геопозиционирования.
@@ -48,23 +48,23 @@ let sdk = PlatformSDK.Container(
 Кроме этого в настройках можно указать начальную позицию камеры, границы масштабирования и другие параметры.
 
 ```swift
-// Настройки карты
+// Настройки карты.
 var mapOptions = MapOptions.default
 
-// Значение PPI для устройства
+// Значение PPI для устройства.
 mapOptions.devicePPI = devicePPI
 
-// Создание фабрики объектов карты
+// Создание фабрики объектов карты.
 let mapFactory: PlatformMapSDK.IMapFactory = sdk.makeMapFactory(options: mapOptions)
 ```
 
 Получить слой карты можно через свойство `mapView`. Контроллер карты доступен через свойство `map` (см. класс [Map](/ru/ios/native/maps/reference/Map)).
 
 ```swift
-// Слой карты
+// Слой карты.
 let mapView: UIView & IMapView = mapFactory.mapView
 
-// Контроллер карты
+// Контроллер карты.
 let map = mapFactory.map
 ```
 
@@ -77,14 +77,14 @@ let map = mapFactory.map
 Пример получения объекта из справочника:
 
 ```swift
-// Создание объекта для поиска по справочнику
+// Создание объекта для поиска по справочнику.
 let searchManager = SearchManager.createOnlineManager(context: sdk.context)
 
-// Получение объекта из справочника по идентификатору
+// Получение объекта из справочника по идентификатору.
 let future = searchManager.searchByDirectoryObjectId(objectId: object.id)
 
-// Обработка результата поиска в главной очереди
-// Сохраняем результат вызова, так как его удаление отменяет обработку
+// Обработка результата поиска в главной очереди.
+// Сохраняем результат вызова, так как его удаление отменяет обработку.
 self.searchDirectoryObjectCancellable = future.sink(
 	receiveValue: {
 		[weak self] directoryObject in
@@ -144,7 +144,7 @@ self.searchDirectoryObjectCancellable = future.sinkOnMainThread(
 Можно также использовать [Combine](https://developer.apple.com/documentation/combine):
 
 ```swift
-// Создание Combine.Future из PlatformSDK.Future
+// Создание Combine.Future из PlatformSDK.Future.
 extension PlatformSDK.Future {
 	func asCombineFuture() -> Combine.Future<Value, Error> {
 		Combine.Future { [self] promise in
@@ -162,10 +162,10 @@ extension PlatformSDK.Future {
 	}
 }
 
-// Создание Combine.Future
+// Создание Combine.Future.
 let combineFuture = future.asCombineFuture()
 
-// Обработка результата поиска в главной очереди
+// Обработка результата поиска в главной очереди.
 combineFuture.receive(on: DispatchQueue.main).sink {
 	[weak self] completion in
 	switch completion {
@@ -187,7 +187,7 @@ combineFuture.receive(on: DispatchQueue.main).sink {
 Пример подписки на изменение видимой области карты (поток новых прямоугольных областей):
 
 ```swift
-// Выбираем канал (прямоугольники видимой области карты)
+// Выбираем канал (прямоугольники видимой области карты).
 let visibleRectChannel = map.camera.visibleRectChannel
 
 // Подписываемся и обрабатываем результаты в главной очереди. Значения будут присылаться при любом изменении видимой области до момента отписки.
@@ -232,7 +232,7 @@ self.cancellable = visibleRectChannel.sinkOnMainThread { [weak self] visibleRect
 Для добавления динамических объектов на карту (маркеров, линий, кругов, многоугольников) нужно создать менеджер объектов ([MapObjectManager](/ru/ios/native/maps/reference/MapObjectManager)), вызвав функцию [createMapObjectManager()](/ru/ios/native/maps/reference/createMapObjectManager(map%3A)) и указав инстанс карты.
 
 ```swift
-// Сохраняем объект в свойство, так как при удалении менеджера исчезают все связанные с ним объекты на карте
+// Сохраняем объект в свойство, так как при удалении менеджера исчезают все связанные с ним объекты на карте.
 self.objectsManager = createMapObjectManager(map: map)
 ```
 
@@ -247,17 +247,17 @@ self.objectsManager = createMapObjectManager(map: map)
 Иконку для маркера можно создать с помощью метода `make()` фабрики изображений ([IImageFactory](/ru/ios/native/maps/reference/IImageFactory)), используя [UIImage](https://developer.apple.com/documentation/uikit/uiimage), PNG-данные или SVG-разметку.
 
 ```swift
-// Иконка на основе UIImage
+// Иконка на основе UIImage.
 let uiImage = UIImage(systemName: "umbrella.fill")!.withTintColor(.systemRed)
 let icon = sdk.imageFactory.make(image: uiImage)
 
-// Иконка на основе SVG-данных
+// Иконка на основе SVG-данных.
 let icon = sdk.imageFactory.make(svgData: imageData, size: imageSize)
 
-// Иконка на основе PNG-данных (быстрее)
+// Иконка на основе PNG-данных (быстрее).
 let icon = sdk.imageFactory.make(pngData: imageData, size: imageSize)
 
-// Настройки маркера
+// Настройки маркера.
 let options = MarkerOptions(
 	position: GeoPointWithElevation(
 		latitude: Arcdegree(value: 55.752425),
@@ -266,7 +266,7 @@ let options = MarkerOptions(
 	icon: icon
 )
 
-// Создание маркера
+// Создание маркера.
 let marker = objectsManager.addMarker(options: options)
 ```
 
@@ -279,21 +279,21 @@ let marker = objectsManager.addMarker(options: options)
 Кроме массива координат для точек линии, в настройках можно указать ширину линии, цвет, параметры пунктира и обводки.
 
 ```swift
-// Координаты вершин ломаной линии
+// Координаты вершин ломаной линии.
 let points = [
 	GeoPoint(latitude: Arcdegree(value: 55.7513), longitude: Arcdegree(value: 37.6236)),
 	GeoPoint(latitude: Arcdegree(value: 55.7405), longitude: Arcdegree(value: 37.6235)),
 	GeoPoint(latitude: Arcdegree(value: 55.7439), longitude: Arcdegree(value: 37.6506))
 ]
 
-// Настройки линии
+// Настройки линии.
 let options = PolylineOptions(
 	points: points,
 	width: LogicalPixel(value: 2),
 	color: PlatformSDK.Color.init()
 )
 
-// Создание линии
+// Создание линии.
 let polyline = objectsManager.addPolyline(options: options)
 ```
 
@@ -314,7 +314,7 @@ let latLon = { (lat: Double, lon: Double) -> GeoPoint in
 
 let polygon = self.objectManager.addPolygon(options: PolygonOptions(
 	contours: [
-		// Вершины многоугольника
+		// Вершины многоугольника.
 		[
 			latLon(55.72014932919687, 37.562599182128906),
 			latLon(55.72014932919687, 37.67555236816406),
@@ -322,7 +322,7 @@ let polygon = self.objectManager.addPolygon(options: PolygonOptions(
 			latLon(55.78004852149085, 37.562599182128906),
 			latLon(55.72014932919687, 37.562599182128906)
 		],
-		// Координаты для выреза внутри многоугольника
+		// Координаты для выреза внутри многоугольника.
 		[
 			latLon(55.754167897761, 37.62422561645508),
 			latLon(55.74450654680055, 37.61238098144531),
@@ -350,20 +350,20 @@ let polygon = self.objectManager.addPolygon(options: PolygonOptions(
 Функция `move()` возвращает объект [Future](/ru/ios/native/maps/reference/Future), который можно использовать, чтобы обработать событие завершения перелета.
 
 ```swift
-// Новая позиция камеры
+// Новая позиция камеры.
 let newCameraPosition = CameraPosition(
 	point: GeoPoint(latitude: Arcdegree(value: 55.752425), longitude: Arcdegree(value: 37.613983)),
 	zoom: Zoom(value: 16)
 )
 
-// Запуск перелёта
+// Запуск перелёта.
 let future = map.camera.move(
 	position: newCameraPosition,
 	time: 0.4,
 	animationType: .linear
 )
 
-// Получение события завершения перелета
+// Получение события завершения перелета.
 let cancellable = future.sink { _ in
 	print("Перелет камеры завершён.")
 } failure: { error in
@@ -382,12 +382,12 @@ let currentState = map.camera.state().value
 Подписаться на изменения состояния камеры можно, используя `state().sink`.
 
 ```swift
-// Подписка
+// Подписка.
 let connection = map.camera.state().sink { state in
 	print("Состояние камеры изменилось на \(state)")
 }
 
-// Отписка
+// Отписка.
 connection.cancel()
 ```
 
@@ -406,12 +406,12 @@ print("Поворот: \(currentPosition.bearing)")
 Подписаться на изменения позиции камеры (и угла наклона/поворота) можно, используя `position().sink`.
 
 ```swift
-// Подписка
+// Подписка.
 let connection = positionChannel.sink { position in
 	print("Изменилась позиция камеры или угол наклона/поворота.")
 }
 
-// Отписка
+// Отписка.
 connection.cancel()
 ```
 
@@ -420,13 +420,13 @@ connection.cancel()
 На карту можно добавить специальный маркер, который будет отражать текущее местоположение устройства. Для этого нужно создать источник данных, вызвав [createMyLocationMapObjectSource()](/ru/ios/native/maps/reference/createMyLocationMapObjectSource(context%3AdirectionBehaviour%3A)) и указав контейнер объектов SDK (`sdk.context`). Созданный источник нужно передать в метод карты [addSource()](/ru/ios/native/maps/reference/Map#nav-lvl1--addSource).
 
 ```swift
-// Создание источника данных
+// Создание источника данных.
 let source = createMyLocationMapObjectSource(
 	context: sdk.context,
 	directionBehaviour: MyLocationDirectionBehaviour.followMagneticHeading
 )
 
-// Добавление маркера на карту
+// Добавление маркера на карту.
 map.addSource(source: source)
 ```
 
@@ -462,4 +462,92 @@ private func tap(point: ScreenPoint, tapRadius: ScreenDistance) {
 	// Сохраняем результат вызова, так как его удаление отменяет обработку
 	self.getRenderedObjectsCancellable = cancel
 }
+```
+
+## Пользовательские стили карты
+
+Для работы со стилями необходимо создать экземпляр [IStyleFactory](/ru/ios/native/maps/reference/IStyleFactory) (см. метод [makeStyleFactory()](/ru/ios/native/maps/reference/Container#nav-lvl1--makeStyleFactory)).
+Методы [loadFile](/ru/ios/native/maps/reference/IStyleFactory#nav-lvl1--loadFile) и [loadResource](/ru/ios/native/maps/reference/IStyleFactory#nav-lvl1--loadResource) получают ссылку на файл пакета стилей (см. [Экспорт стиля](/ru/mapgl/styles/overview/mobile-sdk#nav-lvl2--iOS_SDK)). Возвращают [Future](/ru/ios/native/maps/reference/Future) с отложенно загружаемым экземпляром стиля.
+### Создание карты с пользовательским стилем
+```swift
+// Настройки карты.
+var mapOptions = MapOptions.default
+
+// Создание фабрики стилей.
+let styleFactory = sdk.makeStyleFactory()
+
+// Устанавливаем начальный стиль карты с отложенной загрузкой.
+mapOptions.styleFuture = styleFactory.loadResource(name: "custom_style_file.2gis", bundle: .main)
+
+// Создание фабрики объектов карты.
+let mapFactory = sdk.makeMapFactory(options: mapOptions)
+
+// Объект карты, использующий пользовательский стиль.
+let map = mapFactory.map
+```
+
+Можно использовать уже загруженный стиль: 
+```swift
+// Настройки карты.
+var mapOptions = MapOptions.default
+
+// Устанавливаем начальный стиль, передав Future с заранее загруженным стилем.
+mapOptions.styleFuture = Future.makeReadyValue(style)
+```
+### Изменение стиля карты
+
+Для смены стиля карты используется метод `setStyle()` контроллера карты (см. [Map](/ru/ios/native/maps/reference/Map#nav-lvl1--setStyle)):
+```swift
+// Создание фабрики стилей.
+let styleFactory = sdk.makeStyleFactory()
+
+// Создание фабрики объектов карты.
+let mapFactory = sdk.makeMapFactory(options: mapOptions)
+
+// Загружаем новый стиль карты. Можно использовать только файловые URL (file://).
+self.cancellable = styleFactory.loadFile(url: styleFileURL).sink(
+	receiveValue: { [map = self.map] style in
+		// Меняем активный стиль карты.
+		map.setStyle(style: style)
+	},
+	failure: { error in
+		print("Failed to load style from <\(fileURL)>. Error: \(error)")
+	})
+```
+
+### Настройка темы
+
+Тему стиля карты можно указать при создании новой карты или в уже существующей.
+При создании карты тема указывается с помощью свойства appearance объекта [MapOptions](/ru/ios/native/maps/reference/MapOptions#nav-lvl1--appearance), передаваемого в [makeMapFactory](/ru/ios/native/maps/reference/Container#nav-lvl1--makeMapFactory).
+В уже существующей карте тема меняется с помощью свойства IMapView.appearance.
+
+Пример создания карты с заданной темой:
+```swift
+// Настройки карты.
+var mapOptions = MapOptions.default
+
+// Светлая тема в используемом стиле.
+let lightTheme: Theme = "day"
+
+// Темная тема в используемом стиле.
+let darkTheme: Theme = "night"
+
+if #available(iOS 13.0, *) {
+	// Устанавливаем внешний вид карты, автоматически переключающий тему в соответствии с изменением окружения.
+	options.appearance = .automatic(light: "night", dark: "day")
+} else {
+	// Устанавливаем внешний вид карты, использующий единую тему текущего стиля в любом окружении.
+	options.appearance = .universal(lightTheme)
+}
+
+// Создание фабрики объектов карты.
+let mapFactory = sdk.makeMapFactory(options: mapOptions)
+```
+Смена темы карты:
+```swift
+// Слой карты.
+let mapView = mapFactory.mapView
+
+// Изменяем внешний вид карты, устанавливая темную тему.
+mapView.appearance = .universal(darkTheme)
 ```
