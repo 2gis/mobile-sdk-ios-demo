@@ -29,21 +29,20 @@ final class RouteViewModel: ObservableObject {
 		self.routeEditorFactory = routeEditorFactory
 		self.map = map
 
-		self.updatePointA(nil)
-		self.updatePointB(nil)
+		/*self.updatePointA(nil)
+		self.updatePointB(nil)*/
 	}
 
 	func setupPointA() {
-		_ = self.map.camera.positionChannel.sinkOnMainThread { [weak self] position in
+		/*_ = self.map.camera.positionChannel.sinkOnMainThread { [weak self] position in
 			self?.updatePointA(position.point)
-		}
+		}*/
 	}
 
 	func setupPointB() {
-		_ = self.map.camera.positionChannel.sinkOnMainThread { [weak self] position in
+		/*_ = self.map.camera.positionChannel.sinkOnMainThread { [weak self] position in
 			self?.updatePointB(position.point)
-		}
-	}
+		}*/
 
 	func findRoute() {
 		guard let pointA = self.pointA, let pointB = self.pointB else { return }
@@ -84,7 +83,7 @@ final class RouteViewModel: ObservableObject {
 		self.hasBuiltRoute = false
 	}
 
-	private func updatePointA(_ point: GeoPoint?) {
+	/*private func updatePointA(_ point: GeoPoint?) {
 		self.pointA = point
 		self.pointADescription = "A: " + self.pointA.pointDescription
 		self.hasRoutes = self.pointA != nil && self.pointB != nil
@@ -94,12 +93,12 @@ final class RouteViewModel: ObservableObject {
 		self.pointB = point
 		self.pointBDescription = "B: " + self.pointB.pointDescription
 		self.hasRoutes = self.pointA != nil && self.pointB != nil
-	}
+	}*/
 }
 
-private extension Optional where Wrapped == GeoPoint {
+/*private extension Optional where Wrapped == GeoPoint {
 	var pointDescription: String {
 		guard let point = self else { return "Не установлено" }
 		return String(format: "lat: %.2f, lon: %.2f", point.latitude.value, point.longitude.value)
-	}
+	}*/
 }

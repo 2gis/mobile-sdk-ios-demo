@@ -1,5 +1,5 @@
 import SwiftUI
-import PlatformSDK
+import PlatformMapSDK
 
 struct MarkedUpTextView: View {
 	private let markup: MarkedUpText

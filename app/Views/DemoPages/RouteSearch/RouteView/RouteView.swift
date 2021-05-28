@@ -20,7 +20,7 @@ struct RouteView: View {
 			DetailsActionView(action: {
 				self.viewModel.setupPointB()
 			}, primaryText: "Установить", detailsText: self.viewModel.pointBDescription)
-			if self.viewModel.hasRoutes && !self.viewModel.hasBuiltRoute {
+			/*if self.viewModel.hasRoutes && !self.viewModel.hasBuiltRoute {
 				DetailsActionView(action: {
 					self.viewModel.findRoute()
 				}, primaryText: "Построить маршрут")
@@ -29,7 +29,7 @@ struct RouteView: View {
 				DetailsActionView(action: {
 					self.viewModel.removeRoute()
 				}, primaryText: "Снести маршрут")
-			}
+			}*/
 			DetailsActionView(action: {
 				self.show = false
 			}, primaryText: "Закрыть")

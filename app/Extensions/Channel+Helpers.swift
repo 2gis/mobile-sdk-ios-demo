@@ -1,8 +1,8 @@
 import SwiftUI
-import PlatformSDK
+import PlatformMapSDK
 
 extension Channel {
-	@inlinable public func sinkOnMainThread(receiveValue: @escaping (Value) -> Void) -> PlatformSDK.Cancellable {
+	@inlinable public func sinkOnMainThread(receiveValue: @escaping (Value) -> Void) -> PlatformMapSDK.Cancellable {
 		self.sink { value in
 			DispatchQueue.main.async {
 				receiveValue(value)

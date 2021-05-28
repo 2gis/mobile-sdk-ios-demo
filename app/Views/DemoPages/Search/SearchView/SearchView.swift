@@ -1,5 +1,5 @@
 import SwiftUI
-import PlatformSDK
+import PlatformMapSDK
 
 struct SearchView: View {
 	@ObservedObject var store: SearchStore

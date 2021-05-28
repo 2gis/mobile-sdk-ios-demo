@@ -1,4 +1,4 @@
-import PlatformSDK
+import PlatformMapSDK
 
 struct DirectoryObjectViewModel {
 	let navigationTitle: String

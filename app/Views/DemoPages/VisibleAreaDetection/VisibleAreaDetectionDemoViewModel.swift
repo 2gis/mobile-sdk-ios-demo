@@ -1,6 +1,6 @@
 import SwiftUI
 import Combine
-import PlatformSDK
+import PlatformMapSDK
 
 final class VisibleAreaDetectionDemoViewModel: ObservableObject {
 	private enum Constants {
@@ -27,7 +27,7 @@ final class VisibleAreaDetectionDemoViewModel: ObservableObject {
 	}
 	private let map: Map
 	private var initialRect: GeoRect?
-	private var initialRectCancellable: PlatformSDK.Cancellable?
+	private var initialRectCancellable: PlatformMapSDK.Cancellable?
 
 	init(map: Map) {
 		self.map = map

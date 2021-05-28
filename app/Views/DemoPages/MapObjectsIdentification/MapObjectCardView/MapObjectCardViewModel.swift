@@ -1,5 +1,5 @@
 import SwiftUI
-import PlatformSDK
+import PlatformMapSDK
 
 final class MapObjectCardViewModel: ObservableObject {
 
@@ -21,7 +21,7 @@ final class MapObjectCardViewModel: ObservableObject {
 	) {
 		self.objectInfo = objectInfo
 		self.searchManagerFactory = searchManagerFactory
-		self.description = objectInfo.description
+		self.description = "" //objectInfo.description
 		self.onClose = onClose
 		self.fetchObjectInfo()
 	}

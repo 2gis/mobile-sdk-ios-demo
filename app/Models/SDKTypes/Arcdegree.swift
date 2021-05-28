@@ -1,4 +1,4 @@
-import PlatformSDK
+import PlatformMapSDK
 
 extension Arcdegree {
 	static func + (lhs: Arcdegree, rhs: Arcdegree) -> Arcdegree {

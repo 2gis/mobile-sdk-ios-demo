@@ -1,4 +1,4 @@
-import PlatformSDK
+import PlatformMapSDK
 
 struct FormattedAddressViewModel {
 	let drilldown: String?

@@ -1,6 +1,6 @@
 import SwiftUI
 import Combine
-import PlatformSDK
+import PlatformMapSDK
 
 final class CustomMapStyleDemoViewModel: ObservableObject {
 	/// Whether a style picker sheet is to be displayed.
@@ -8,7 +8,7 @@ final class CustomMapStyleDemoViewModel: ObservableObject {
 	var stylePickerViewModel: StylePickerViewModel
 
 	private let map: Map
-	private var loadStyleCancellable: PlatformSDK.Cancellable?
+	private var loadStyleCancellable: PlatformMapSDK.Cancellable?
 
 	init(
 		styleFactory: @escaping () -> IStyleFactory,

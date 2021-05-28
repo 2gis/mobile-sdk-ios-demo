@@ -3,7 +3,7 @@ import PlatformSDK
 extension RenderedObjectInfo: CustomStringConvertible {
 
 	public var description: String {
-		let pointDescription = self.closestMapPoint.description
+		/*let pointDescription = self.closestMapPoint.description
 		switch self.item.item {
 			case let dgisMapObject as DgisMapObject:
 				return "Id: \(dgisMapObject.id.value)"
@@ -23,6 +23,7 @@ extension RenderedObjectInfo: CustomStringConvertible {
 				return pointDescription
 			default:
 				return pointDescription
-		}
+		}*/
+		return ""
 	}
 }
