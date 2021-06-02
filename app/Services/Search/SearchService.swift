@@ -4,6 +4,7 @@ import PlatformSDK
 
 final class SearchService {
 	private let searchManagerFactory: () -> ISearchManager
+	private let map: Map
 	private lazy var searchManager: ISearchManager = self.searchManagerFactory()
 	private let schedule: (@escaping () -> Void) -> Void
 	private var suggestDebouncer = PassthroughSubject<AppliedThunk, Never>()
@@ -12,9 +13,11 @@ final class SearchService {
 
 	init<S: Scheduler>(
 		searchManagerFactory: @escaping () -> ISearchManager,
+		map: Map,
 		scheduler: S
 	) {
 		self.searchManagerFactory = searchManagerFactory
+		self.map = map
 		self.schedule = scheduler.schedule
 
 		self.suggestDebouncer
@@ -61,8 +64,10 @@ final class SearchService {
 			guard !queryText.isEmpty else { return }
 
 			let queryText = queryText
-			let builder = SearchQueryBuilder.fromQueryText(queryText: queryText)
-			let query = builder.build()
+			let query = SearchQueryBuilder
+				.fromQueryText(queryText: queryText)
+				.setAreaOfInterest(rect: self.map.camera.visibleRect)
+				.build()
 			self.search(query: query)(dispatcher)
 		}
 	}
@@ -97,8 +102,10 @@ final class SearchService {
 			// Не подсказываем по пустому запросу.
 			guard !queryText.isEmpty else { return }
 
-			let builder = SuggestQueryBuilder.fromQueryText(queryText: queryText)
-			let query = builder.build()
+			let query = SuggestQueryBuilder
+				.fromQueryText(queryText: queryText)
+				.setAreaOfInterest(rect: self.map.camera.visibleRect)
+				.build()
 			self.suggest(query: query)(dispatcher)
 		}
 	}

@@ -6,11 +6,14 @@ final class SearchDemoViewModel: ObservableObject {
 	let searchStore: SearchStore
 
 	private let searchManagerFactory: () -> SearchManager
+	private let map: Map
 
-	init(searchManagerFactory: @escaping () -> SearchManager) {
+	init(searchManagerFactory: @escaping () -> SearchManager, map: Map) {
 		self.searchManagerFactory = searchManagerFactory
+		self.map = map
 		let service = SearchService(
 			searchManagerFactory: self.searchManagerFactory,
+			map: self.map,
 			scheduler: DispatchQueue.main
 		)
 		let reducer = SearchReducer(service: service)
@@ -20,6 +23,7 @@ final class SearchDemoViewModel: ObservableObject {
 	func makeSearchViewModel() -> SearchViewModel {
 		let service = SearchService(
 			searchManagerFactory: self.searchManagerFactory,
+			map: self.map,
 			scheduler: DispatchQueue.main
 		)
 		let viewModel = SearchViewModel(

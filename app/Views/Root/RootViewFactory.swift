@@ -50,10 +50,12 @@ struct RootViewFactory {
 	}
 
 	private func makeSearchStylesDemoPage() -> some View {
+		let mapFactory = self.makeMapFactory()
 		let viewModel = SearchDemoViewModel(
 			searchManagerFactory: { [sdk = self.sdk] in
 				SearchManager.createOnlineManager(context: sdk.context)
-			}
+			},
+			map: mapFactory.map
 		)
 		return SearchDemoView(
 			viewModel: viewModel,
