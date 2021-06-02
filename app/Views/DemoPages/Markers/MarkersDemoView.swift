@@ -15,16 +15,27 @@ struct MarkersDemoView: View {
 	var body: some View {
 		ZStack {
 			ZStack(alignment: .bottomTrailing) {
-				self.viewFactory.makeMapViewWithZoomControl(alignment: .bottomLeft)
+				self.viewFactory.makeMapViewWithZoomControl(alignment: .bottomLeft) { location in
+					self.viewModel.tap(location)
+				}
 				if !self.viewModel.showMarkers {
 					self.settingsButton().frame(width: 100, height: 100, alignment: .bottomTrailing)
 				}
 				if self.viewModel.showMarkers {
-					viewFactory.makeMarkerView(show: $viewModel.showMarkers).followKeyboard($keyboardOffset)
+					self.viewFactory
+					.makeMarkerView(viewModel: self.viewModel.markerViewModel, show: $viewModel.showMarkers)
+					.followKeyboard($keyboardOffset)
+				}
+				if let cardViewModel = self.viewModel.selectedObjectCardViewModel {
+					self.viewFactory
+					.makeMapObjectCardView(cardViewModel)
+					.transition(.move(edge: .bottom))
 				}
 			}
 			if self.viewModel.showMarkers {
-				Image(systemName: "multiply").frame(width: 40, height: 40, alignment: .center).foregroundColor(.red).opacity(0.4)
+				Image(systemName: "multiply")
+				.frame(width: 40, height: 40, alignment: .center)
+				.foregroundColor(.red).opacity(0.4)
 			}
 		}
 		.edgesIgnoringSafeArea(.all)
@@ -35,11 +46,11 @@ struct MarkersDemoView: View {
 			self.viewModel.showMarkers = true
 		}, label: {
 			Image(systemName: "pin.fill")
-				.frame(width: 40, height: 40, alignment: .center)
-				.contentShape(Rectangle())
-				.background(
-					Circle().fill(Color.white)
-				)
+			.frame(width: 40, height: 40, alignment: .center)
+			.contentShape(Rectangle())
+			.background(
+				Circle().fill(Color.white)
+			)
 		})
 		.padding(.bottom, 40)
 		.padding(.trailing, 20)

@@ -81,10 +81,17 @@ struct RootViewFactory {
 	}
 
 	private func makeMarkersDemoPage() -> some View {
-		let viewModel = MarkersDemoViewModel()
+		let mapFactory = self.makeMapFactory()
+		let viewModel = MarkersDemoViewModel(
+			map: mapFactory.map,
+			imageFactory: self.sdk.imageFactory,
+			searchManagerFactory: { [sdk = self.sdk] in
+				SearchManager.createOnlineManager(context: sdk.context)
+			}
+		)
 		return MarkersDemoView(
 			viewModel: viewModel,
-			viewFactory: self.makeDemoPageComponentsFactory(mapFactory: self.makeMapFactory())
+			viewFactory: self.makeDemoPageComponentsFactory(mapFactory: mapFactory)
 		)
 	}
 

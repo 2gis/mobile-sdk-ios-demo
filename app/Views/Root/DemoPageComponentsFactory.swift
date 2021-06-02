@@ -56,11 +56,7 @@ struct DemoPageComponentsFactory {
 		return SearchView(store: searchStore)
 	}
 
-	func makeMarkerView(show: Binding<Bool>) -> some View {
-		let viewModel = MarkerViewModel(
-			map: self.mapFactory.map,
-			imageFactory: self.sdk.imageFactory
-		)
+	func makeMarkerView(viewModel: MarkerViewModel, show: Binding<Bool>) -> some View {
 		return MarkerView(viewModel: viewModel, show: show)
 	}
 
