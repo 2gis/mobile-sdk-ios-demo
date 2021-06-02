@@ -1,5 +1,27 @@
 # Release notes
 
+## v0.16.0
+**Release Date:** 02.06.2021
+- При создании объектов карты появилась возможность задавать порядок их отрисовки через `MarkerOptions.zIndex`, `PolygonOptions.zIndex` и т.д. Значение индекса влияет на приоритет объекта при наложении элементов на карте.
+- Упрощение создания простых типов данных: `Arcdegree`, `Color`, `Elevation`, `GeoPoint`, `GeoPointWithElevation`, `LogicalPixel`, `Meter`, `Tilt` и `Zoom`.
+
+  Например, раньше при создании объекта типа `GeoPoint` необходимо было конструировать объекты типа `Arcdegree`.
+
+  `let geoPoint = GeoPoint(latitude: Arcdegree(value: 54.0), longitude: Arcdegree(value: 32.0))`
+
+  Теперь доступна инициализация `GeoPoint` из пары значений `CLLocationDegrees`.
+
+  `let geoPoint = GeoPoint(latitude: 54.0, longitude: 32.0)`.
+
+- Добавлена возможность задавать список локалей в обход системных настроек с помощью `LocaleManager.setOverridedLocales`. Для возврата к системным локалям необходимо передать пустой список в метод `LocaleManager.setOverridedLocales`.
+- Добавлена функция `toMapGeometry(trafficRoute:currentRoutePoint:)` для получения геометрии оставшейся части маршрута.
+- Исправлено отображение карты при нулевом z-уровне.
+- Добавлена возможность отключения анимации при появлении или исчезновении объектов на карте через `MarkerOptions.animatedAppearance` и `Marker.setAnimatedAppearance`.
+- Поддержана установка корректного DPI при создании карты. Теперь помимо установки DPI через `MapOptions.devicePPI` можно задать `MapOptions.deviceDensity` - множитель, равный числу физических пикселей устройства в одной логической точке экранной системы координат. Из-за того, что deviceDensity не устанавливался, объекты на карте на различных z-уровнях имели некорректные размеры.
+
+  Например, для заданного экрана (`UIScreen`) этот множитель равен значению `nativeScale`. По умолчанию берется `nativeScale` главного экрана.
+- *Ломающее изменение*. Удален устаревший класс `MarkerBuilder` для создания объектов карты. Вместо него нужно использовать класс `MapObjectManager` для добавления объектов; конструкторы `Marker`, `Polygon` и т.д. для их создания.
+
 ## v0.15.0
 **Release Date:** 25.05.2021
 - Добавлена возможность проверки пересечения геометрий - `Geometry.hasIntersection`.
