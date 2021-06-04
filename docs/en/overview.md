@@ -9,8 +9,9 @@ Usage of this SDK requires an API key to connect to 2GIS servers and retrieve th
 To obtain the key, [contact us](https://dev.2gis.ru/order/).
 
 ## Installation
-*// TBD*
+In order to use the iOS Mobile SDK, add a dependency to [Swift Package](https://github.com/2gis/native-sdk-ios-swift-package) to your project.
+Read [this article](https://developer.apple.com/documentation/swift_packages/adding_package_dependencies_to_your_app) to learn how one can add a package dependency.
 
-### Минимальные требования:
+### Minimum requirements:
 - XCode 12;
-- Чтобы запустить демо-проект через XCode, необходимо использовать любой симулятор или устройство с iOS (iPadOS) 13.0+. Это обусловлено использованием в проекте [SwiftUI](https://developer.apple.com/documentation/swiftui).
+- To run the demo project through Xcode, you need to use any simulator or iOS device (iPadOS) 13.0+. This is due to the use of the [SwiftUI](https://developer.apple.com/documentation/swiftui) in the project.
