@@ -24,16 +24,9 @@ struct CustomMapStyleDemoView: View {
 	}
 
 	private func settingsButton() -> some View {
-		Button(action: {
+		Button.makeCircleButton(iconName: "list.bullet") {
 			self.viewModel.showsStylePicker = true
-		}, label: {
-			Image(systemName: "list.bullet")
-				.frame(width: 40, height: 40, alignment: .center)
-				.contentShape(Rectangle())
-				.background(
-					Circle().fill(Color.white)
-				)
-		})
+		}
 		.padding(.bottom, 40)
 		.padding(.trailing, 20)
 	}
