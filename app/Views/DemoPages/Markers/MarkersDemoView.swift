@@ -20,7 +20,11 @@ struct MarkersDemoView: View {
 					self.settingsButton().frame(width: 100, height: 100, alignment: .bottomTrailing)
 				}
 				if self.viewModel.showMarkers {
-					viewFactory.makeMarkerView(show: $viewModel.showMarkers).followKeyboard($keyboardOffset)
+					viewFactory.makeMarkerView(
+						viewModel: self.viewModel.markerViewModel,
+						show: $viewModel.showMarkers
+					)
+					.followKeyboard($keyboardOffset)
 				}
 			}
 			if self.viewModel.showMarkers {
@@ -31,16 +35,9 @@ struct MarkersDemoView: View {
 	}
 
 	private func settingsButton() -> some View {
-		Button(action: {
+		Button.makeCircleButton(iconName: "pin.fill") {
 			self.viewModel.showMarkers = true
-		}, label: {
-			Image(systemName: "pin.fill")
-				.frame(width: 40, height: 40, alignment: .center)
-				.contentShape(Rectangle())
-				.background(
-					Circle().fill(Color.white)
-				)
-		})
+		}
 		.padding(.bottom, 40)
 		.padding(.trailing, 20)
 	}

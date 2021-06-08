@@ -5,6 +5,7 @@ enum DemoPage: String, CaseIterable {
 	case markers
 	case customMapControls
 	case mapStyles
+	case mapTheme
 	case routeSearch
 	case dictionarySearch
 
@@ -18,6 +19,8 @@ enum DemoPage: String, CaseIterable {
 				return "Добавление маркеров на карту"
 			case .mapStyles:
 				return "Пользовательские стили карты"
+			case .mapTheme:
+				return "Переключение темы стиля карты"
 			case .mapObjectsIdentification:
 				return "Определение объектов на карте"
 			case .routeSearch:
