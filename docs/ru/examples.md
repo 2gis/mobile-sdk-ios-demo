@@ -254,7 +254,7 @@ let icon = sdk.imageFactory.make(image: uiImage)
 // Иконка на основе SVG-данных.
 let icon = sdk.imageFactory.make(svgData: imageData, size: imageSize)
 
-// Иконка на основе PNG-данных (быстрее).
+// Иконка на основе PNG-данных (быстрее, чем из UIImage).
 let icon = sdk.imageFactory.make(pngData: imageData, size: imageSize)
 
 // Настройки маркера.
@@ -322,7 +322,7 @@ let polygon = self.objectManager.addPolygon(options: PolygonOptions(
 			latLon(55.78004852149085, 37.562599182128906),
 			latLon(55.72014932919687, 37.562599182128906)
 		],
-		// Координаты для выреза внутри многоугольника.
+		// Координаты выреза внутри многоугольника.
 		[
 			latLon(55.754167897761, 37.62422561645508),
 			latLon(55.74450654680055, 37.61238098144531),
@@ -447,7 +447,7 @@ private func tap(point: ScreenPoint, tapRadius: ScreenDistance) {
 	let cancel = map.getRenderedObjects(centerPoint: point, radius: tapRadius).sink(
 		receiveValue: {
 			infos in
-			// Первый объект в массиве - самый близкий к координатам
+			// Первый объект в массиве - самый близкий к координатам.
 			guard let info = infos.first else { return }
 			// Обработка результата в главной очереди
 			DispatchQueue.main.async {
@@ -459,7 +459,7 @@ private func tap(point: ScreenPoint, tapRadius: ScreenDistance) {
 			print("Ошибка получения информации об объектах: \(error)")
 		}
 	)
-	// Сохраняем результат вызова, так как его удаление отменяет обработку
+	// Сохраняем результат вызова, так как его удаление отменяет обработку.
 	self.getRenderedObjectsCancellable = cancel
 }
 ```
@@ -518,8 +518,8 @@ self.cancellable = styleFactory.loadFile(url: styleFileURL).sink(
 ### Настройка темы
 
 Тему стиля карты можно указать при создании новой карты или в уже существующей.
-При создании карты тема указывается с помощью свойства appearance объекта [MapOptions](/ru/ios/native/maps/reference/MapOptions#nav-lvl1--appearance), передаваемого в [makeMapFactory](/ru/ios/native/maps/reference/Container#nav-lvl1--makeMapFactory).
-В уже существующей карте тема меняется с помощью свойства IMapView.appearance.
+При создании карты тема указывается с помощью свойства `appearance` объекта [MapOptions](/ru/ios/native/maps/reference/MapOptions#nav-lvl1--appearance), передаваемого в [makeMapFactory](/ru/ios/native/maps/reference/Container#nav-lvl1--makeMapFactory).
+В уже существующей карте тема меняется с помощью свойства `IMapView.appearance`.
 
 Пример создания карты с заданной темой:
 ```swift
@@ -534,7 +534,7 @@ let darkTheme: Theme = "night"
 
 if #available(iOS 13.0, *) {
 	// Устанавливаем внешний вид карты, автоматически переключающий тему в соответствии с изменением окружения.
-	options.appearance = .automatic(light: "night", dark: "day")
+	options.appearance = .automatic(light: lightTheme, dark: darkTheme)
 } else {
 	// Устанавливаем внешний вид карты, использующий единую тему текущего стиля в любом окружении.
 	options.appearance = .universal(lightTheme)
