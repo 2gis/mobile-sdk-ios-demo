@@ -5,16 +5,19 @@ struct MapView: UIViewRepresentable {
 	typealias UIViewType = UIView
 	typealias Context = UIViewRepresentableContext<Self>
 	private let mapUIViewFactory: () -> UIView & IMapView
+	private let appearance: MapAppearance?
 	private var showsAPIVersion: Bool
 	private var copyrightInsets: UIEdgeInsets
 	private var copyrightAlignment: PlatformSDK.CopyrightAlignment
 
 	init(
+		appearance: MapAppearance?,
 		copyrightInsets: UIEdgeInsets = .zero,
 		copyrightAlignment: PlatformSDK.CopyrightAlignment = .bottomRight,
 		showsAPIVersion: Bool = true,
 		mapUIViewFactory: @escaping () -> UIView & IMapView
 	) {
+		self.appearance = appearance
 		self.copyrightInsets = copyrightInsets
 		self.copyrightAlignment = copyrightAlignment
 		self.showsAPIVersion = showsAPIVersion
@@ -23,16 +26,21 @@ struct MapView: UIViewRepresentable {
 
 	func makeUIView(context: Context) -> UIView {
 		let mapView = self.mapUIViewFactory()
-		mapView.copyrightInsets = self.copyrightInsets
-		mapView.showsAPIVersion = self.showsAPIVersion
-		mapView.copyrightAlignment = self.copyrightAlignment
+		self.updateMapView(mapView)
 		return mapView
 	}
 
 	func updateUIView(_ uiView: UIView, context: Context) {
 		guard let mapView = uiView as? IMapView else { return }
-		mapView.showsAPIVersion = self.showsAPIVersion
+		self.updateMapView(mapView)
+	}
+
+	private func updateMapView(_ mapView: UIView & IMapView) {
+		if let appearance = self.appearance, appearance != mapView.appearance {
+			mapView.appearance = appearance
+		}
 		mapView.copyrightInsets = self.copyrightInsets
+		mapView.showsAPIVersion = self.showsAPIVersion
 		mapView.copyrightAlignment = self.copyrightAlignment
 	}
 }

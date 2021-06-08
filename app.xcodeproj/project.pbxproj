@@ -58,6 +58,9 @@
 		B709915125FA6B9D00B2F1A5 /* GeoPoint+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = B709915025FA6B9D00B2F1A5 /* GeoPoint+Helpers.swift */; };
 		B709915325FA6BD300B2F1A5 /* TrafficRoute+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = B709915225FA6BD300B2F1A5 /* TrafficRoute+Helpers.swift */; };
 		B709915525FA72A600B2F1A5 /* Future+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = B709915425FA72A600B2F1A5 /* Future+Helpers.swift */; };
+		B710FF03265FC8FA004659E8 /* MapThemeDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B710FF02265FC8FA004659E8 /* MapThemeDemoView.swift */; };
+		B710FF05265FC908004659E8 /* MapThemeDemoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B710FF04265FC908004659E8 /* MapThemeDemoViewModel.swift */; };
+		B7370710266D04D30043C0FA /* Button+Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = B737070F266D04D30043C0FA /* Button+Factory.swift */; };
 		B7D236C42643E16F00CC835A /* CustomMapStyleDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7D236C32643E16F00CC835A /* CustomMapStyleDemoView.swift */; };
 		B7D236C62643E1D100CC835A /* CustomMapStyleDemoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7D236C52643E1D100CC835A /* CustomMapStyleDemoViewModel.swift */; };
 		B7D24AE92646D15C00CC835A /* TouchUpRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7D24AE82646D15C00CC835A /* TouchUpRecognizer.swift */; };
@@ -149,6 +152,9 @@
 		B709915025FA6B9D00B2F1A5 /* GeoPoint+Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GeoPoint+Helpers.swift"; sourceTree = "<group>"; };
 		B709915225FA6BD300B2F1A5 /* TrafficRoute+Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TrafficRoute+Helpers.swift"; sourceTree = "<group>"; };
 		B709915425FA72A600B2F1A5 /* Future+Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Future+Helpers.swift"; sourceTree = "<group>"; };
+		B710FF02265FC8FA004659E8 /* MapThemeDemoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapThemeDemoView.swift; sourceTree = "<group>"; };
+		B710FF04265FC908004659E8 /* MapThemeDemoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapThemeDemoViewModel.swift; sourceTree = "<group>"; };
+		B737070F266D04D30043C0FA /* Button+Factory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Button+Factory.swift"; sourceTree = "<group>"; };
 		B7D236C32643E16F00CC835A /* CustomMapStyleDemoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomMapStyleDemoView.swift; sourceTree = "<group>"; };
 		B7D236C52643E1D100CC835A /* CustomMapStyleDemoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomMapStyleDemoViewModel.swift; sourceTree = "<group>"; };
 		B7D24AE82646D15C00CC835A /* TouchUpRecognizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TouchUpRecognizer.swift; sourceTree = "<group>"; };
@@ -338,9 +344,27 @@
 			path = Extensions;
 			sourceTree = "<group>";
 		};
+		B710FF01265FC8C7004659E8 /* MapTheme */ = {
+			isa = PBXGroup;
+			children = (
+				B710FF02265FC8FA004659E8 /* MapThemeDemoView.swift */,
+				B710FF04265FC908004659E8 /* MapThemeDemoViewModel.swift */,
+			);
+			path = MapTheme;
+			sourceTree = "<group>";
+		};
+		B737070E266D04970043C0FA /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				B737070F266D04D30043C0FA /* Button+Factory.swift */,
+			);
+			path = Common;
+			sourceTree = "<group>";
+		};
 		B7D236C12643E13400CC835A /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				B737070E266D04970043C0FA /* Common */,
 				B7D236C22643E14700CC835A /* DemoPages */,
 				4BBE822C2527422000D7EBDB /* Map */,
 				4BBE822A252741EE00D7EBDB /* Root */,
@@ -356,6 +380,7 @@
 				B7D25AD1264BDD1100CC835A /* СustomMapControls */,
 				B7D24AEA2646D1BF00CC835A /* CustomMapStyle */,
 				B7D25ACA264B96E500CC835A /* MapObjectsIdentification */,
+				B710FF01265FC8C7004659E8 /* MapTheme */,
 				B7D251CC264A6AC800CC835A /* Markers */,
 				B7D251C6264A5D6000CC835A /* RouteSearch */,
 				B7D24AED2646D45400CC835A /* Search */,
@@ -594,6 +619,7 @@
 				4BBE7E2025264F2B00D7EBDB /* MapView.swift in Sources */,
 				B7D251D5264A77D100CC835A /* VisibleAreaDetectionDemoViewModel.swift in Sources */,
 				B7D251D3264A77C100CC835A /* VisibleAreaDetectionDemoView.swift in Sources */,
+				B7370710266D04D30043C0FA /* Button+Factory.swift in Sources */,
 				B7D24AF32646D55700CC835A /* DemoPage.swift in Sources */,
 				4BADDFE7252894A100FBF589 /* FormattedAddressViewModel.swift in Sources */,
 				09C834FB25BFCD5800D347F4 /* RouteView.swift in Sources */,
@@ -612,6 +638,7 @@
 				B7D24AF12646D47A00CC835A /* SearchDemoViewModel.swift in Sources */,
 				4BADDFE42528947F00FBF589 /* FormattedAddressView.swift in Sources */,
 				4BADDFDE25288F9D00FBF589 /* DirectoryObjectView.swift in Sources */,
+				B710FF03265FC8FA004659E8 /* MapThemeDemoView.swift in Sources */,
 				4BBE80152526D8FE00D7EBDB /* SearchView.swift in Sources */,
 				4BADDFD8252866B300FBF589 /* SearchStore.swift in Sources */,
 				095BE97A25B813A000D09D75 /* DetailsActionView.swift in Sources */,
@@ -630,6 +657,7 @@
 				4B96D18E260348C10057C366 /* StylePickerView.swift in Sources */,
 				B7D25AD0264BD2DE00CC835A /* DemoPageComponentsFactory.swift in Sources */,
 				B7D25ADD264BF4B600CC835A /* DemoPageListRow.swift in Sources */,
+				B710FF05265FC908004659E8 /* MapThemeDemoViewModel.swift in Sources */,
 				4BBE80302526FB0D00D7EBDB /* Container.swift in Sources */,
 				4BADDFDB252866F700FBF589 /* SearchService.swift in Sources */,
 				4B27063724A3F24C00F12B48 /* SceneDelegate.swift in Sources */,
@@ -842,7 +870,7 @@
 			repositoryURL = "https://github.com/2gis/native-sdk-ios-swift-package.git";
 			requirement = {
 				kind = exactVersion;
-				version = 0.16.0;
+				version = 0.16.1;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
