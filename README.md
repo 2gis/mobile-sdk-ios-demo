@@ -23,8 +23,8 @@ iOS Mobile SDK позволяет добавить [карту 2GIS](https://2gi
 
 ## Установка
 
-Чтобы использовать iOS Mobile SDK, добавьте в свой проект зависимость от [Swift пакета](https://github.com/2gis/native-sdk-ios-swift-package).
-Подробнее про то, как это сделать корректно, можно прочитать в [статье](https://developer.apple.com/documentation/swift_packages/adding_package_dependencies_to_your_app).
+Чтобы использовать iOS Mobile SDK, добавьте в свой проект зависимость от [Swift-пакета](https://github.com/2gis/native-sdk-ios-swift-package).
+Подробнее об установке можно прочитать в [статье](https://developer.apple.com/documentation/swift_packages/adding_package_dependencies_to_your_app).
 
 ## Запуск демо-приложения
 
