@@ -9,7 +9,7 @@ Usage of this SDK requires an API key to connect to 2GIS servers and retrieve th
 To obtain the key, [contact us](https://dev.2gis.ru/order/).
 
 ## Installation
-In order to use the iOS Mobile SDK, add a dependency to [Swift Package](https://github.com/2gis/native-sdk-ios-swift-package) to your project.
+In order to use the iOS Mobile SDK, add a dependency to the [Swift Package](https://github.com/2gis/native-sdk-ios-swift-package) to your project.
 Read [this article](https://developer.apple.com/documentation/swift_packages/adding_package_dependencies_to_your_app) to learn how one can add a package dependency.
 
 ### Minimum requirements:
