@@ -1,6 +1,6 @@
-import PlatformSDK
+import PlatformMapSDK
 
-extension PlatformSDK.GeoRect {
+extension PlatformMapSDK.GeoRect {
 
 	func expanded(by ratio: Double) -> GeoRect {
 		let width = self.northEastPoint.longitude - self.southWestPoint.longitude

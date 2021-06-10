@@ -1,6 +1,6 @@
 import Foundation
 import SwiftUI
-import PlatformSDK
+import PlatformMapSDK
 
 struct SuggestResultViewModel {
 	let suggests: [SuggestViewModel]

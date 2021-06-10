@@ -1,6 +1,6 @@
 import Combine
 import SwiftUI
-import PlatformSDK
+import PlatformMapSDK
 
 final class SearchService {
 	private let searchManagerFactory: () -> ISearchManager

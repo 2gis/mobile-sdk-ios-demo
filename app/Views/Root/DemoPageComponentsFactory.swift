@@ -1,12 +1,12 @@
 import SwiftUI
-import PlatformSDK
+import PlatformMapSDK
 
 struct DemoPageComponentsFactory {
 	private let mapFactory: IMapFactory
-	private let sdk: PlatformSDK.Container
+	private let sdk: PlatformMapSDK.Container
 
 	internal init(
-		sdk: PlatformSDK.Container,
+		sdk: PlatformMapSDK.Container,
 		mapFactory: IMapFactory
 	) {
 		self.sdk = sdk
@@ -58,22 +58,6 @@ struct DemoPageComponentsFactory {
 
 	func makeMarkerView(viewModel: MarkerViewModel, show: Binding<Bool>) -> some View {
 		return MarkerView(viewModel: viewModel, show: show)
-	}
-
-	func makeRouteView(show: Binding<Bool>) -> some View {
-		let viewModel = RouteViewModel(
-			sourceFactory: { [sdk = self.sdk] in
-				sdk.sourceFactory
-			},
-			routeEditorSourceFactory: { [sdk = self.sdk] routeEditor in
-				return RouteEditorSource(context: sdk.context, routeEditor: routeEditor)
-			},
-			routeEditorFactory: { [sdk = self.sdk] in
-				return RouteEditor(context: sdk.context)
-			},
-			map: self.mapFactory.map
-		)
-		return RouteView(viewModel: viewModel, show: show)
 	}
 
 	func makeMapObjectCardView(_ viewModel: MapObjectCardViewModel) -> some View {

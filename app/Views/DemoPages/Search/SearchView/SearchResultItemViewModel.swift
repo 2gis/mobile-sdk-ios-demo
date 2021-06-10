@@ -1,5 +1,5 @@
 import Foundation
-import PlatformSDK
+import PlatformMapSDK
 
 struct SearchResultItemViewModel: Identifiable {
 	let id = UUID()

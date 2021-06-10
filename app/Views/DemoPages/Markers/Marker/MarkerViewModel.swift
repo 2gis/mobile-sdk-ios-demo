@@ -1,5 +1,5 @@
 import SwiftUI
-import PlatformSDK
+import PlatformMapSDK
 
 final class MarkerViewModel: ObservableObject {
 
@@ -74,9 +74,9 @@ final class MarkerViewModel: ObservableObject {
 	private let map: Map
 	private let imageFactory: IImageFactory
 	private lazy var mapObjectManager: MapObjectManager =
-		MapObjectManager(map: self.map)
+		createMapObjectManager(map: self.map)
 
-	private var icons: [TypeSize: PlatformSDK.Image] = [:]
+	private var icons: [TypeSize: PlatformMapSDK.Image] = [:]
 
 	init(
 		map: Map,
@@ -99,8 +99,7 @@ final class MarkerViewModel: ObservableObject {
 			icon: icon,
 			text: text
 		)
-		let marker = Marker(options: options)
-		self.mapObjectManager.addObject(item: marker)
+		_ = self.mapObjectManager.addMarker(options: options)
 		self.hasMarkers = true
 	}
 
@@ -108,7 +107,7 @@ final class MarkerViewModel: ObservableObject {
 		self.mapObjectManager.removeAll()
 	}
 
-	private func makeIcon(type: MarkerType, size: MarkerSize) -> PlatformSDK.Image? {
+	private func makeIcon(type: MarkerType, size: MarkerSize) -> PlatformMapSDK.Image? {
 		let typeSize = TypeSize(type: type, size: size)
 		if let icon = self.icons[typeSize] {
 			return icon

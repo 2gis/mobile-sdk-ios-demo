@@ -1,5 +1,5 @@
 import SwiftUI
-import PlatformSDK
+import PlatformMapSDK
 
 final class MapObjectCardViewModel: ObservableObject {
 

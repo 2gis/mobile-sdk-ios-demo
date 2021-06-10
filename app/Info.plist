@@ -2,8 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Нам нужно ваше местоположение для перелета в текущую позицию</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleExecutable</key>
@@ -21,11 +19,13 @@
 	<key>CFBundleVersion</key>
 	<string>1</string>
 	<key>DGISDirectoryAPIKey</key>
-	<string>$(DGIS_DIRECTORY_API_KEY)</string>
+	<string>rutazn2571</string>
 	<key>DGISMapAPIKey</key>
-	<string>$(DGIS_MAP_API_KEY)</string>
+	<string>8103d3a4-8d85-4aec-97c6-ef32f3d88746</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Нам нужно ваше местоположение для перелета в текущую позицию</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

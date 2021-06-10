@@ -1,12 +1,12 @@
 import SwiftUI
 import Combine
-import PlatformSDK
+import PlatformMapSDK
 
-extension PlatformSDK.Future {
+extension PlatformMapSDK.Future {
 	public func sinkOnMainThread(
 		receiveValue: @escaping (Value) -> Void,
 		failure: @escaping (Error) -> Void
-	) -> PlatformSDK.Cancellable {
+	) -> PlatformMapSDK.Cancellable {
 		self.sink { value in
 			DispatchQueue.main.async {
 				receiveValue(value)
@@ -22,7 +22,7 @@ extension PlatformSDK.Future {
 		Combine.Future { [self] promise in
 			// Keep cancellable reference until either handler is called.
 			// Combine.Future does not directly handle cancellation.
-			var cancellable: PlatformSDK.Cancellable?
+			var cancellable: PlatformMapSDK.Cancellable?
 			cancellable = self.sink {
 				promise(.success($0))
 				_ = cancellable

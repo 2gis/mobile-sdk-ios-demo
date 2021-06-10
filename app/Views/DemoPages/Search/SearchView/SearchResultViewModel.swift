@@ -1,4 +1,4 @@
-import PlatformSDK
+import PlatformMapSDK
 
 struct SearchResultViewModel {
 	let items: [SearchResultItemViewModel]

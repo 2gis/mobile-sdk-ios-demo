@@ -1,6 +1,6 @@
 import SwiftUI
 import Combine
-import PlatformSDK
+import PlatformMapSDK
 
 final class StylePickerViewModel: ObservableObject {
 	/// URL to a selected style URL. Must be a file URL.
@@ -9,7 +9,7 @@ final class StylePickerViewModel: ObservableObject {
 	private let styleFactory: () -> IStyleFactory
 	private let map: Map
 	private var cancellables: [Combine.AnyCancellable] = []
-	private var loadStyleCancellable: PlatformSDK.Cancellable?
+	private var loadStyleCancellable: PlatformMapSDK.Cancellable?
 
 	init(
 		styleFactory: @escaping () -> IStyleFactory,
