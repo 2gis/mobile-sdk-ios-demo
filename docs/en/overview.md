@@ -1,6 +1,6 @@
-# 2GIS iOS SDK
+# iOS SDK
 
-2GIS iOS SDK is an SDK that allows you to add a 2GIS map to your iOS application. It can be used to display the map in your layout, add custom markers to it, and highlight various objects on the map, such as buildings, roads, and others.
+iOS SDK is an SDK that allows you to add a 2GIS map to your iOS application. It can be used to display the map in your layout, add custom markers to it, and highlight various objects on the map, such as buildings, roads, and others.
 
 ## Getting an access key
 
