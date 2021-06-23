@@ -17,7 +17,7 @@ struct RouteSearchDemoView: View {
 			ZStack(alignment: .bottomTrailing) {
 				self.viewFactory.makeMapViewWithZoomControl(alignment: .bottomLeft)
 				if self.viewModel.showRoutes {
-					viewFactory.makeRouteView(show: $viewModel.showRoutes)
+//					viewFactory.makeRouteView(show: $viewModel.showRoutes)
 				} else {
 					self.settingsButton().frame(width: 100, height: 100, alignment: .bottomTrailing)
 				}

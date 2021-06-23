@@ -6,7 +6,6 @@ final class LocationService: NSObject {
 	private var locationClosure: ((CLLocationCoordinate2D) -> Void)?
 
 	func getCurrentPosition(_ position: @escaping (CLLocationCoordinate2D) -> Void) {
-
 		self.locationManager.requestWhenInUseAuthorization()
 		if CLLocationManager.locationServicesEnabled() {
 			self.locationManager.delegate = self
@@ -15,6 +14,13 @@ final class LocationService: NSObject {
 		}
 	}
 
+	func startBackgroundLocationMonitoring() {
+		if !CLLocationManager.locationServicesEnabled() {
+			self.locationManager.requestWhenInUseAuthorization()
+		}
+		self.locationManager.allowsBackgroundLocationUpdates = true
+		self.locationManager.startUpdatingLocation()
+	}
 }
 
 extension LocationService: CLLocationManagerDelegate {

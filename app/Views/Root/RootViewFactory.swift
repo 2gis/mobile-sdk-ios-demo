@@ -1,12 +1,12 @@
 import SwiftUI
-import PlatformSDK
+import PlatformMapSDK
 
 struct RootViewFactory {
-	private let sdk: PlatformSDK.Container
+	private let sdk: PlatformMapSDK.Container
 	private let locationManagerFactory: () -> LocationService?
 
 	init(
-		sdk: PlatformSDK.Container,
+		sdk: PlatformMapSDK.Container,
 		locationManagerFactory: @escaping () -> LocationService?
 	) {
 		self.sdk = sdk

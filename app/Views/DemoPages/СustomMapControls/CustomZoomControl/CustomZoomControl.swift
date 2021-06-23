@@ -1,5 +1,5 @@
 import UIKit
-import PlatformSDK
+import PlatformMapSDK
 
 /// Блок управления масштабом карты.
 public final class CustomZoomControl: UIControl {
@@ -7,7 +7,7 @@ public final class CustomZoomControl: UIControl {
 	private let stack: UIStackView
 
 	init(map: Map) {
-		let model = ZoomControlModel(map: map)
+		let model = createZoomControlModel(map: map)//ZoomControlModel(map: map)
 
 		let zoomIn = ZoomButton(model: model, direction: .zoomIn)
 		let zoomInImage = UIImage(systemName: "plus.magnifyingglass")

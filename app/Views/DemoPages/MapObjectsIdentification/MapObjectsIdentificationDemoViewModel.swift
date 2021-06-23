@@ -1,6 +1,6 @@
 import SwiftUI
 import Combine
-import PlatformSDK
+import PlatformMapSDK
 
 final class MapObjectsIdentificationDemoViewModel: ObservableObject {
 	private enum Constants {
@@ -13,10 +13,10 @@ final class MapObjectsIdentificationDemoViewModel: ObservableObject {
 	private let imageFactory: () -> IImageFactory
 	private let map: Map
 	private let toMap: CGAffineTransform
-	private var getRenderedObjectsCancellable: PlatformSDK.Cancellable?
+	private var getRenderedObjectsCancellable: PlatformMapSDK.Cancellable?
 	private var selectedMarker: Marker?
-	private lazy var mapObjectManager: MapObjectManager = MapObjectManager(map: self.map)
-	private lazy var selectedMarkerIcon: PlatformSDK.Image = {
+	private lazy var mapObjectManager: MapObjectManager = createMapObjectManager(map: self.map)
+	private lazy var selectedMarkerIcon: PlatformMapSDK.Image = {
 		let factory = self.imageFactory()
 		let icon = UIImage(systemName: "mappin.and.ellipse")!
 			.withTintColor(#colorLiteral(red: 0.2470588235, green: 0.6, blue: 0.1607843137, alpha: 1))
@@ -69,7 +69,7 @@ final class MapObjectsIdentificationDemoViewModel: ObservableObject {
 
 	private func hideSelectedMarker() {
 		if let marker = self.selectedMarker {
-			self.mapObjectManager.removeObject(item: marker)
+			marker.remove()
 		}
 		self.selectedObjectCardViewModel = nil
 	}
@@ -84,8 +84,8 @@ final class MapObjectsIdentificationDemoViewModel: ObservableObject {
 			position: markerPoint,
 			icon: self.selectedMarkerIcon
 		)
-		let marker = Marker(options: markerOptions)
-		self.mapObjectManager.addObject(item: marker)
+//		let marker = Marker(options: markerOptions)
+		let marker = self.mapObjectManager.addMarker(options: markerOptions)//addObject(item: marker)
 		self.selectedMarker = marker
 		self.selectedObjectCardViewModel = MapObjectCardViewModel(
 			objectInfo: selectedObject,

@@ -1,5 +1,5 @@
 import SwiftUI
-import PlatformSDK
+import PlatformMapSDK
 
 final class Container {
 
@@ -14,7 +14,7 @@ final class Container {
 		return apiKeys
 	}()
 
-	private lazy var sdk = PlatformSDK.Container(
+	private lazy var sdk = PlatformMapSDK.Container(
 		apiKeys: self.apiKeys,
 		httpOptions: HTTPOptions(timeout: 5, cacheOptions: nil)
 	)

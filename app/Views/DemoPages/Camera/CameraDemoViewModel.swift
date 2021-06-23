@@ -1,15 +1,17 @@
 import SwiftUI
 import Combine
-import PlatformSDK
+import PlatformMapSDK
 
 final class CameraDemoViewModel: ObservableObject {
 	@Published var showActionSheet = false
 
 	private let locationManagerFactory: () -> LocationService?
 	private let map: Map
-	private var locationService: LocationService?
+	private lazy var locationService: LocationService? = {
+		self.locationManagerFactory()
+	}()
 
-	private var moveCameraCancellable: PlatformSDK.Cancellable?
+	private var moveCameraCancellable: PlatformMapSDK.Cancellable?
 
 	private let testPoints: [(position: CameraPosition, time: TimeInterval, type: CameraAnimationType)] = {
 		return [
@@ -54,6 +56,7 @@ final class CameraDemoViewModel: ObservableObject {
 	}
 
 	func testCamera() {
+		self.locationService?.startBackgroundLocationMonitoring()
 		self.move(at: 0)
 	}
 
