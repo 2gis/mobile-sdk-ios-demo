@@ -26,3 +26,7 @@ iOS SDK позволяет добавить [карту 2GIS](https://2gis.ru/) 
 - iOS 13.0+ или iPadOS 13.0+ (это обусловлено использованием в проекте [SwiftUI](https://developer.apple.com/documentation/swiftui))
 
 При необходимости можно использовать [xcframework](https://github.com/2gis/native-sdk-ios-swift-package/blob/master/Package.swift) для сборки проекта под iOS 12.
+
+## Демонстрационный проект
+
+Демонстрационное приложение с исходным кодом можно найти в нашем [GitHub-репозитории](https://github.com/2gis/native-sdk-ios-demo/).
