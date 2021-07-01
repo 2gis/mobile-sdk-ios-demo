@@ -1,22 +1,32 @@
 # iOS SDK
 
-iOS SDK is an SDK that allows you to add a 2GIS map to your iOS application. It can be used to display the map in your layout, add custom markers to it, and highlight various objects on the map, such as buildings, roads, and others.
+> **Warning**  
+> **iOS SDK is under development.** It is not ready for production usage.
 
-## Getting an access key
+iOS SDK allows you to add a [2GIS map](https://2gis.ae/) to your iOS application. It can be used to display the map in your layout, add custom markers to it, draw geometric shapes, calculate and display routes, get information about map objects, control the camera movement, and so on.
+
+You can find usage examples in the [Examples](/en/ios/sdk/examples) section. For a detailed description of all classes and methods, see [API Reference](/en/ios/sdk/reference).
+
+## Getting API keys
 
 Usage of this SDK requires an API key to connect to 2GIS servers and retrieve the geographical data. This API key is unique to the SDK and cannot be used with other 2GIS SDKs.
 
-To obtain the key, [contact us](https://dev.2gis.ru/order/).
+Additionally, if you plan to draw routes on the map or get extra information about map objects, you will need a separate key - a Directory API key.
+
+To obtain either of these API keys, fill in the form at [dev.2gis.com](https://dev.2gis.com/order/).
+
+## System requirements
+
+- Xcode 12+
+- iOS 13.0+ / iPadOS 13.0+ (this SDK uses [SwiftUI](https://developer.apple.com/documentation/swiftui))
+
+You can also use [xcframework](https://github.com/2gis/native-sdk-ios-swift-package/blob/master/Package.swift) to build your project for iOS 12.
 
 ## Installation
 
-In order to use the iOS SDK, add a dependency to the [Swift Package](https://github.com/2gis/native-sdk-ios-swift-package) to your project.
-Read [this article](https://developer.apple.com/documentation/swift_packages/adding_package_dependencies_to_your_app) to learn how one can add a package dependency.
+To install this SDK, add a package dependency to your project, specifying `https://github.com/2gis/native-sdk-ios-swift-package` as the URL.
 
-### Minimum requirements:
-
-- XCode 12;
-- To run the demo project through Xcode, you need to use any simulator or iOS device (iPadOS) 13.0+. This is due to the use of the [SwiftUI](https://developer.apple.com/documentation/swiftui) in the project.
+You can find more information about using Swift packages in the [official documentation]((https://developer.apple.com/documentation/swift_packages/adding_package_dependencies_to_your_app)).
 
 ## Demo project
 
