@@ -242,7 +242,7 @@ self.objectsManager = createMapObjectManager(map: map)
 
 ### Маркер
 
-Чтобы добавить маркер на карту, нужно вызвать метод [addMarker()](/ru/ios/sdk/reference/MapObjectManager#nav-lvl1--addCircle) менеджера объектов и указать настройки маркера в виде структуры [MarkerOptions](/ru/ios/sdk/reference/MarkerOptions). В настройках важно указать координаты маркера и его иконку.
+Чтобы добавить маркер на карту, нужно вызвать метод [addMarker()](/ru/ios/sdk/reference/MapObjectManager#nav-lvl1--addMarker) менеджера объектов и указать настройки маркера в виде структуры [MarkerOptions](/ru/ios/sdk/reference/MarkerOptions). В настройках важно указать координаты маркера и его иконку.
 
 Иконку для маркера можно создать с помощью метода `make()` фабрики изображений ([IImageFactory](/ru/ios/sdk/reference/IImageFactory)), используя [UIImage](https://developer.apple.com/documentation/uikit/uiimage), PNG-данные или SVG-разметку.
 
@@ -464,90 +464,94 @@ private func tap(point: ScreenPoint, tapRadius: ScreenDistance) {
 }
 ```
 
-## Пользовательские стили карты
+## Стили карты
 
-Для работы со стилями необходимо создать экземпляр [IStyleFactory](/ru/ios/sdk/reference/IStyleFactory) (см. метод [makeStyleFactory()](/ru/ios/sdk/reference/Container#nav-lvl1--makeStyleFactory)).
-Методы [loadFile](/ru/ios/sdk/reference/IStyleFactory#nav-lvl1--loadFile) и [loadResource](/ru/ios/sdk/reference/IStyleFactory#nav-lvl1--loadResource) получают ссылку на файл пакета стилей (см. [Экспорт стиля](/ru/mapgl/styles/overview/mobile-sdk#nav-lvl2--iOS_SDK)). Возвращают [Future](/ru/ios/sdk/reference/Future) с отложенно загружаемым экземпляром стиля.
-### Создание карты с пользовательским стилем
+Для работы со стилями нужно создать объект [IStyleFactory](/ru/ios/sdk/reference/IStyleFactory) с помощью метода [makeStyleFactory()](/ru/ios/sdk/reference/Container#nav-lvl1--makeStyleFactory).
+
 ```swift
-// Настройки карты.
-var mapOptions = MapOptions.default
+let styleFactory = sdk.makeStyleFactory()
+```
 
-// Создание фабрики стилей.
+Чтобы создать стиль карты, совместимый с SDK, воспользуйтесь функцией «Экспорт» в [редакторе стилей](https://styles.2gis.com/) и добавьте скачанный файл в ваш проект.
+
+### Создание карты с пользовательским стилем
+
+Чтобы создать карту с произвольным стилем, нужно загрузить нужный стиль с помощью метода [loadResource()](/ru/ios/sdk/reference/IStyleFactory#nav-lvl1--loadResource) или [loadFile()](/ru/ios/sdk/reference/IStyleFactory#nav-lvl1--loadFile) фабрики стилей и указать получившийся объект в качестве параметра `styleFuture` в настройках карты.
+
+```swift
+// Создаём фабрику стилей.
 let styleFactory = sdk.makeStyleFactory()
 
-// Устанавливаем начальный стиль карты с отложенной загрузкой.
+// Устанавливаем начальный стиль карты в настройках.
+var mapOptions = MapOptions.default
 mapOptions.styleFuture = styleFactory.loadResource(name: "custom_style_file.2gis", bundle: .main)
 
-// Создание фабрики объектов карты.
+// Создаём карту с указанными настройками.
 let mapFactory = sdk.makeMapFactory(options: mapOptions)
-
-// Объект карты, использующий пользовательский стиль.
-let map = mapFactory.map
 ```
 
-Можно использовать уже загруженный стиль: 
-```swift
-// Настройки карты.
-var mapOptions = MapOptions.default
+Методы [loadResource()](/ru/ios/sdk/reference/IStyleFactory#nav-lvl1--loadResource) и [loadFile()](/ru/ios/sdk/reference/IStyleFactory#nav-lvl1--loadFile) возвращают отложенное значение ([Future](/ru/ios/sdk/reference/Future)), чтобы не задерживать загрузку карты. Если стиль уже был загружен (см. следующий раздел), его можно превратить в объект [Future](/ru/ios/sdk/reference/Future) с помощью метода [makeReadyValue()](/ru/ios/sdk/reference/Future#nav-lvl1--makeReadyValue).
 
-// Устанавливаем начальный стиль, передав Future с заранее загруженным стилем.
+```swift
+var mapOptions = MapOptions.default
 mapOptions.styleFuture = Future.makeReadyValue(style)
 ```
+
 ### Изменение стиля карты
 
-Для смены стиля карты используется метод `setStyle()` контроллера карты (см. [Map](/ru/ios/sdk/reference/Map#nav-lvl1--setStyle)):
+Изменить стиль существующей карты можно при помощи метода [setStyle()](/ru/ios/sdk/reference/Map#nav-lvl1--setStyle).
+
+В отличие от указания стиля при создании карты, [setStyle()](/ru/ios/sdk/reference/Map#nav-lvl1--setStyle) принимает не [Future](/ru/ios/sdk/reference/Future), а загруженный стиль карты ([Style](/ru/ios/sdk/reference/Style)). Поэтому [setStyle()](/ru/ios/sdk/reference/Map#nav-lvl1--setStyle) следует вызывать после завершения загрузки [Future](/ru/ios/sdk/reference/Future).
+
 ```swift
-// Создание фабрики стилей.
+// Создаём фабрику стилей.
 let styleFactory = sdk.makeStyleFactory()
 
-// Создание фабрики объектов карты.
-let mapFactory = sdk.makeMapFactory(options: mapOptions)
-
-// Загружаем новый стиль карты. Можно использовать только файловые URL (file://).
+// Загружаем новый стиль карты. Метод loadFile() принимает только локальные URL (file://).
 self.cancellable = styleFactory.loadFile(url: styleFileURL).sink(
 	receiveValue: { [map = self.map] style in
-		// Меняем активный стиль карты.
+		// Меняем стиль карты после загрузки.
 		map.setStyle(style: style)
 	},
 	failure: { error in
-		print("Failed to load style from <\(fileURL)>. Error: \(error)")
+		print("Не удалось загрузить стиль из файла <\(fileURL)>. Ошибка: \(error)")
 	})
 ```
 
-### Настройка темы
+### Светлые и тёмные темы
 
-Тему стиля карты можно указать при создании новой карты или в уже существующей.
-При создании карты тема указывается с помощью свойства `appearance` объекта [MapOptions](/ru/ios/sdk/reference/MapOptions#nav-lvl1--appearance), передаваемого в [makeMapFactory](/ru/ios/sdk/reference/Container#nav-lvl1--makeMapFactory).
-В уже существующей карте тема меняется с помощью свойства `IMapView.appearance`.
+Стили карты могут содержать несколько тем (например, дневную и ночную), между которыми можно переключаться без необходимости загрузки дополнительного стиля. Название используемой темы можно указать при создании карты с помощью параметра [appearance](/ru/ios/sdk/reference/MapOptions#nav-lvl1--appearance).
 
-Пример создания карты с заданной темой:
+В iOS 13.0 и выше можно использовать автоматическое переключение между светлой и тёмной темами (см. [Dark Mode](https://developer.apple.com/design/human-interface-guidelines/ios/visual-design/dark-mode)).
+
 ```swift
 // Настройки карты.
 var mapOptions = MapOptions.default
 
-// Светлая тема в используемом стиле.
+// Название светлой темы в используемом стиле.
 let lightTheme: Theme = "day"
 
-// Темная тема в используемом стиле.
+// Название тёмной темы в используемом стиле.
 let darkTheme: Theme = "night"
 
 if #available(iOS 13.0, *) {
-	// Устанавливаем внешний вид карты, автоматически переключающий тему в соответствии с изменением окружения.
-	options.appearance = .automatic(light: lightTheme, dark: darkTheme)
+	// Автоматически переключаемся между темами в iOS 13.0.
+	mapOptions.appearance = .automatic(light: lightTheme, dark: darkTheme)
 } else {
-	// Устанавливаем внешний вид карты, использующий единую тему текущего стиля в любом окружении.
-	options.appearance = .universal(lightTheme)
+	// Используем светлую тему в остальных случаях.
+	mapOptions.appearance = .universal(lightTheme)
 }
 
-// Создание фабрики объектов карты.
+// Создаём карту с указанными настройками.
 let mapFactory = sdk.makeMapFactory(options: mapOptions)
 ```
-Смена темы карты:
+
+Изменить тему после создания карты можно с помощью свойства [appearance](/ru/ios/sdk/reference/IMapView#nav-lvl1--appearance) слоя карты:
+
 ```swift
 // Слой карты.
 let mapView = mapFactory.mapView
 
-// Изменяем внешний вид карты, устанавливая темную тему.
+// Меняем тему на тёмную.
 mapView.appearance = .universal(darkTheme)
 ```

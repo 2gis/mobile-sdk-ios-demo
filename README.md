@@ -1,56 +1,61 @@
 # 2GIS iOS SDK
 
-> :warning: &nbsp;**iOS SDK находится в процессе разработки**. Не подготовлен к использованию в реальных приложениях.
+> :warning: &nbsp;**iOS SDK is under development**. It is not ready for production usage.
 
-2GIS iOS SDK позволяет добавить [карту 2GIS](https://2gis.ru/) в ваше iOS-приложение. С помощью этого SDK можно отобразить карту на экране, добавить на неё маркеры, рисовать геометрические фигуры, получать информацию об объектах, управлять камерой и так далее.
+2GIS iOS SDK allows you to add a [2GIS map](https://2gis.ae/) to your iOS application. It can be used to display the map in your layout, add custom markers to it, draw geometric shapes, calculate and display routes, get information about map objects, control the camera movement, and so on.
 
-Полную документацию к SDK, включающую примеры использования и описание всех классов и методов, можно найти на сайте [docs.2gis.com](https://docs.2gis.com/ru/ios/sdk/examples).
+## Getting API keys
 
-## Получение ключей доступа
+Usage of this SDK requires an API key to connect to 2GIS servers and retrieve the geographical data. This API key is unique to the SDK and cannot be used with other 2GIS SDKs.
 
-Для работы с SDK нужно получить ключ API, который будет использоваться для подключения к серверам 2GIS и получения географических данных. Этот ключ уникален для этого типа SDK и не может быть использован с другими SDK от 2GIS.
+Additionally, if you plan to draw routes on the map or get extra information about map objects, you will need a separate key - a Directory API key.
 
-Кроме этого, если вы планируете прокладывать маршруты на карте или использовать справочник для получения информации об объектах, то вам нужно получить дополнительные ключи.
+To obtain either of these API keys, fill in the form at [dev.2gis.com](https://dev.2gis.com/order/).
 
-Чтобы получить любой из этих ключей, заполните форму на [dev.2gis.ru](https://dev.2gis.ru/order/).
+## System requirements
 
-## Требования к устройствам
+- Xcode 12+
+- iOS 13.0+ / iPadOS 13.0+ (this SDK uses [SwiftUI](https://developer.apple.com/documentation/swiftui))
 
-- Xcode 12
-- iOS 13.0+ или iPadOS 13.0+ (это обусловлено использованием в проекте [SwiftUI](https://developer.apple.com/documentation/swiftui))
+You can also use [xcframework](https://github.com/2gis/native-sdk-ios-swift-package/blob/master/Package.swift) to build your project for iOS 12.
 
-При необходимости можно использовать [xcframework](https://github.com/2gis/native-sdk-ios-swift-package/blob/master/Package.swift) для сборки проекта под iOS 12.
+## Installation
 
-## Установка
+To install this SDK, add a package dependency to your project, specifying `https://github.com/2gis/native-sdk-ios-swift-package` as the URL.
 
-Чтобы использовать iOS SDK, добавьте в свой проект зависимость от [Swift-пакета](https://github.com/2gis/native-sdk-ios-swift-package).
-Подробнее об установке можно прочитать в [статье](https://developer.apple.com/documentation/swift_packages/adding_package_dependencies_to_your_app).
+You can find more information about using Swift packages in the [official documentation]((https://developer.apple.com/documentation/swift_packages/adding_package_dependencies_to_your_app)).
 
-## Запуск демо-приложения
+## Running the demo app
 
-Чтобы запустить демонстрационное приложение:
-1. Склонируйте этот репозиторий.
-2. Откройте проект `app.xcodeproj` и задайте ваши ключи API в файле `Info.plist` проекта:
+To run the demo app, do the following:
+
+1. Clone this repository.
+2. Open the `app.xcodeproj` project and set your API keys in `Info.plist`:
 
    ```
    DGISMapAPIKey = YOUR_MAP_KEY
    DGISDirectoryAPIKey = YOUR_DIRECTORY_KEY
    ```
 
-   Или создайте в корне репозитория файл Local.xcconfig с вашими ключами (файл включён в .gitignore):
+   Alternatively, create a file named `Local.xcconfig` in the repository root (this file is included in .gitignore):
+
    ```
    DGIS_MAP_API_KEY = xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
    DGIS_DIRECTORY_API_KEY = xxxxxxxxxx
    ```
 
-   Если соответствующая функциональность не нужна, можно оставить эти значения.
+   API keys are not mandatory. You can keep the placeholder values if you don't need the corresponding functionality.
 
-3. Дождитесь загрузки зависимостей через SwiftPM. Эта операция может занять длительное время.
+3. Wait for Swift Package Manager to finish installing all dependencies (this could take a while).
 
-   Вы не сможете собрать и запустить проект, пока не будут загружены зависимости.
+   You won't be able to build the project until the dependencies are installed.
 
-4. Соберите и запустите проект (⌘+R).
+4. Build and run the project (⌘+R).
 
-## Лицензия
+## Documentation
 
-Демонстрационное приложение распространяется под упрощённой лицензией BSD 2-Clause. Дополнительную информацию можно найти в файле [LICENSE](https://github.com/2gis/native-sdk-ios-demo/blob/master/LICENSE).
+Full documentation, including [usage examples](https://docs.2gis.com/en/ios/sdk/examples) and [API reference](https://docs.2gis.com/en/ios/sdk/reference/Container) with detailed descriptions of all classes and methods, can be found at [docs.2gis.com](https://docs.2gis.com/en/ios/sdk/overview).
+
+## License
+
+The demo application is licensed under the BSD 2-Clause "Simplified" License. See the [LICENSE](https://github.com/2gis/native-sdk-ios-demo/blob/master/LICENSE) file for more information.
