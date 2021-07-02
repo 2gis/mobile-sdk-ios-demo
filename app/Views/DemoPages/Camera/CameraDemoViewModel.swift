@@ -1,6 +1,6 @@
 import SwiftUI
 import Combine
-import PlatformSDK
+import DGis
 
 final class CameraDemoViewModel: ObservableObject {
 	@Published var showActionSheet = false
@@ -9,7 +9,7 @@ final class CameraDemoViewModel: ObservableObject {
 	private let map: Map
 	private var locationService: LocationService?
 
-	private var moveCameraCancellable: PlatformSDK.Cancellable?
+	private var moveCameraCancellable: DGis.Cancellable?
 
 	private let testPoints: [(position: CameraPosition, time: TimeInterval, type: CameraAnimationType)] = {
 		return [

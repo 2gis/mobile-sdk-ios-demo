@@ -1,6 +1,6 @@
 import SwiftUI
 import Combine
-import PlatformSDK
+import DGis
 
 final class RootViewModel: ObservableObject {
 
@@ -33,16 +33,16 @@ final class RootViewModel: ObservableObject {
 	private let toMap: CGAffineTransform
 	private var locationService: LocationService?
 	private var initialRect: GeoRect?
-	private var initialRectCancellable: PlatformSDK.Cancellable?
+	private var initialRectCancellable: DGis.Cancellable?
 	private var cancellables: [AnyCancellable] = []
 
-	private var moveCameraCancellable: PlatformSDK.Cancellable?
-	private var getRenderedObjectsCancellable: PlatformSDK.Cancellable?
-	private var getDirectoryObjectCancellable: PlatformSDK.Cancellable?
-	private var loadStyleCancellable: PlatformSDK.Cancellable?
+	private var moveCameraCancellable: DGis.Cancellable?
+	private var getRenderedObjectsCancellable: DGis.Cancellable?
+	private var getDirectoryObjectCancellable: DGis.Cancellable?
+	private var loadStyleCancellable: DGis.Cancellable?
 	private var selectedMarker: Marker?
 	private lazy var mapObjectManager: MapObjectManager = MapObjectManager(map: self.map)
-	private lazy var selectedMarkerIcon: PlatformSDK.Image = {
+	private lazy var selectedMarkerIcon: DGis.Image = {
 		let factory = self.imageFactory()
 		let icon = UIImage(systemName: "mappin.and.ellipse")!
 			.withTintColor(#colorLiteral(red: 0.2470588235, green: 0.6, blue: 0.1607843137, alpha: 1))

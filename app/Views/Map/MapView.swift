@@ -1,5 +1,5 @@
 import SwiftUI
-import PlatformSDK
+import DGis
 
 struct MapView: UIViewRepresentable {
 	typealias UIViewType = UIView
@@ -8,12 +8,12 @@ struct MapView: UIViewRepresentable {
 	private let appearance: MapAppearance?
 	private var showsAPIVersion: Bool
 	private var copyrightInsets: UIEdgeInsets
-	private var copyrightAlignment: PlatformSDK.CopyrightAlignment
+	private var copyrightAlignment: DGis.CopyrightAlignment
 
 	init(
 		appearance: MapAppearance?,
 		copyrightInsets: UIEdgeInsets = .zero,
-		copyrightAlignment: PlatformSDK.CopyrightAlignment = .bottomRight,
+		copyrightAlignment: DGis.CopyrightAlignment = .bottomRight,
 		showsAPIVersion: Bool = true,
 		mapUIViewFactory: @escaping () -> UIView & IMapView
 	) {
@@ -54,7 +54,7 @@ extension MapView {
 		return self.modified { $0.copyrightInsets = insets }
 	}
 
-	func copyrightAlignment(_ alignment: PlatformSDK.CopyrightAlignment) -> MapView {
+	func copyrightAlignment(_ alignment: DGis.CopyrightAlignment) -> MapView {
 		return self.modified { $0.copyrightAlignment = alignment }
 	}
 }

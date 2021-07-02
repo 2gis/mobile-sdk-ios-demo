@@ -1,4 +1,4 @@
-import PlatformSDK
+import DGis
 
 struct SearchResultViewModel {
 	let items: [SearchResultItemViewModel]

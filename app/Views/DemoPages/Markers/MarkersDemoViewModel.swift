@@ -1,6 +1,6 @@
 import SwiftUI
 import Combine
-import PlatformSDK
+import DGis
 
 final class MarkersDemoViewModel: ObservableObject {
 	@Published var showMarkers: Bool = false

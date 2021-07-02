@@ -1,6 +1,6 @@
 import SwiftUI
 import Combine
-import PlatformSDK
+import DGis
 
 final class MapThemeDemoViewModel: ObservableObject {
 	enum Theme: CaseIterable {

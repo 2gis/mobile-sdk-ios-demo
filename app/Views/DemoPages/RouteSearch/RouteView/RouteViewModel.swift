@@ -1,5 +1,5 @@
 import SwiftUI
-import PlatformSDK
+import DGis
 
 final class RouteViewModel: ObservableObject {
 	@Published var pointADescription: String? = nil
