@@ -9,7 +9,7 @@ guard let apiKeys = APIKeys(directory: "Directory API key", map: "SDK key") else
 }
 
 // Create a Container object
-let sdk = PlatformSDK.Container(apiKeys: apiKeys)
+let sdk = DGis.Container(apiKeys: apiKeys)
 ```
 
 Additionally, you can specify logging settings ([LogOptions](/en/ios/sdk/reference/LogOptions)) and HTTP client settings ([HTTPOptions](/en/ios/sdk/reference/HTTPOptions)) such as timeout and caching.
@@ -28,7 +28,7 @@ let positioningServices: IPositioningServicesFactory = CustomPositioningServices
 let dataCollectionOptions = DataCollectionOptions(dataCollectionStatus: .agree)
 
 // Creating the Container
-let sdk = PlatformSDK.Container(
+let sdk = DGis.Container(
 	apiKeys: apiKeys,
 	logOptions: logOptions,
 	httpOptions: httpOptions,
@@ -102,11 +102,11 @@ self.searchDirectoryObjectCancellable = future.sink(
 To simplify working with deferred results, you can create an extension:
 
 ```swift
-extension PlatformSDK.Future {
+extension DGis.Future {
 	func sinkOnMainThread(
 		receiveValue: @escaping (Value) -> Void,
 		failure: @escaping (Error) -> Void
-	) -> PlatformSDK.Cancellable {
+	) -> DGis.Cancellable {
 		self.sink(on: .main, receiveValue: receiveValue, failure: failure)
 	}
 
@@ -114,7 +114,7 @@ extension PlatformSDK.Future {
 		on queue: DispatchQueue,
 		receiveValue: @escaping (Value) -> Void,
 		failure: @escaping (Error) -> Void
-	) -> PlatformSDK.Cancellable {
+	) -> DGis.Cancellable {
 		self.sink { value in
 			queue.async {
 				receiveValue(value)
@@ -142,13 +142,13 @@ self.searchDirectoryObjectCancellable = future.sinkOnMainThread(
 Or use the [Combine](https://developer.apple.com/documentation/combine) framework:
 
 ```swift
-// Extension to convert PlatformSDK.Future to Combine.Future
-extension PlatformSDK.Future {
+// Extension to convert DGis.Future to Combine.Future
+extension DGis.Future {
 	func asCombineFuture() -> Combine.Future<Value, Error> {
 		Combine.Future { [self] promise in
 			// Save the Cancellable object until the callback function is called.
 			// Combine does not support cancelling Future directly.
-			var cancellable: PlatformSDK.Cancellable?
+			var cancellable: DGis.Cancellable?
 			cancellable = self.sink {
 				promise(.success($0))
 				_ = cancellable
@@ -207,11 +207,11 @@ You can create an extension to simplify working with data channels:
 
 ```swift
 extension Channel {
-	func sinkOnMainThread(receiveValue: @escaping (Value) -> Void) -> PlatformSDK.Cancellable {
+	func sinkOnMainThread(receiveValue: @escaping (Value) -> Void) -> DGis.Cancellable {
 		self.sink(on: .main, receiveValue: receiveValue)
 	}
 
-	func sink(on queue: DispatchQueue, receiveValue: @escaping (Value) -> Void) -> PlatformSDK.Cancellable {
+	func sink(on queue: DispatchQueue, receiveValue: @escaping (Value) -> Void) -> DGis.Cancellable {
 		self.sink { value in
 			queue.async {
 				receiveValue(value)
@@ -285,7 +285,7 @@ let points = [
 let options = PolylineOptions(
 	points: points,
 	width: LogicalPixel(value: 2),
-	color: PlatformSDK.Color.init()
+	color: DGis.Color.init()
 )
 
 // Add the line to the map
@@ -323,7 +323,7 @@ let polygon = self.objectManager.addPolygon(options: PolygonOptions(
 			latLon(55.754167897761, 37.62422561645508)
 		]
 	],
-	color: PlatformSDK.Color.init(),
+	color: DGis.Color.init(),
 	strokeWidth: LogicalPixel(value: 2)
 ))
 ```
