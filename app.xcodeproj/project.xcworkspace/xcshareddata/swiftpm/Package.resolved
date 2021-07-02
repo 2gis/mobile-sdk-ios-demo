@@ -2,12 +2,12 @@
   "object": {
     "pins": [
       {
-        "package": "NativeSDK",
-        "repositoryURL": "https://github.com/2gis/native-sdk-ios-swift-package.git",
+        "package": "DGisMobileSDK",
+        "repositoryURL": "https://github.com/2gis/mobile-sdk-full-swift-package.git",
         "state": {
           "branch": null,
-          "revision": "c021b71cd399795443039665609aa65e2286e7a4",
-          "version": "0.16.1"
+          "revision": "a18654e189e787ca41c1c56f6f3770d2a73e1ea9",
+          "version": "1.0.0-rc.6"
         }
       }
     ]

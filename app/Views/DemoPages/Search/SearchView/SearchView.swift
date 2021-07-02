@@ -1,5 +1,5 @@
 import SwiftUI
-import PlatformSDK
+import DGis
 
 struct SearchView: View {
 	@ObservedObject var store: SearchStore

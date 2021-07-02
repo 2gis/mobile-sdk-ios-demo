@@ -11,7 +11,7 @@ guard let apiKeys = APIKeys(directory: "Directory API key", map: "SDK key") else
 }
 
 // Создание контейнера для доступа к возможностям SDK.
-let sdk = PlatformSDK.Container(apiKeys: apiKeys)
+let sdk = DGis.Container(apiKeys: apiKeys)
 ```
 
 Дополнительно можно указать настройки журналирования ([LogOptions](/ru/ios/sdk/reference/LogOptions)) и настройки HTTP-клиента ([HTTPOptions](/ru/ios/sdk/reference/HTTPOptions)), такие как время ожидания ответа и кеширование.
@@ -30,7 +30,7 @@ let positioningServices: IPositioningServicesFactory = CustomPositioningServices
 let dataCollectionOptions = DataCollectionOptions(dataCollectionStatus: .agree)
 
 // Создание контейнера.
-let sdk = PlatformSDK.Container(
+let sdk = DGis.Container(
 	apiKeys: apiKeys,
 	logOptions: logOptions,
 	httpOptions: httpOptions,
@@ -104,11 +104,11 @@ self.searchDirectoryObjectCancellable = future.sink(
 Для упрощения работы можно создать расширение:
 
 ```swift
-extension PlatformSDK.Future {
+extension DGis.Future {
 	func sinkOnMainThread(
 		receiveValue: @escaping (Value) -> Void,
 		failure: @escaping (Error) -> Void
-	) -> PlatformSDK.Cancellable {
+	) -> DGis.Cancellable {
 		self.sink(on: .main, receiveValue: receiveValue, failure: failure)
 	}
 
@@ -116,7 +116,7 @@ extension PlatformSDK.Future {
 		on queue: DispatchQueue,
 		receiveValue: @escaping (Value) -> Void,
 		failure: @escaping (Error) -> Void
-	) -> PlatformSDK.Cancellable {
+	) -> DGis.Cancellable {
 		self.sink { value in
 			queue.async {
 				receiveValue(value)
@@ -144,13 +144,13 @@ self.searchDirectoryObjectCancellable = future.sinkOnMainThread(
 Можно также использовать [Combine](https://developer.apple.com/documentation/combine):
 
 ```swift
-// Создание Combine.Future из PlatformSDK.Future.
-extension PlatformSDK.Future {
+// Создание Combine.Future из DGis.Future.
+extension DGis.Future {
 	func asCombineFuture() -> Combine.Future<Value, Error> {
 		Combine.Future { [self] promise in
 			// Удерживаем ссылку на Cancellable, пока не будет вызван обработчик
 			// Combine.Future не позволяет конфигурировать отмену напрямую
-			var cancellable: PlatformSDK.Cancellable?
+			var cancellable: DGis.Cancellable?
 			cancellable = self.sink {
 				promise(.success($0))
 				_ = cancellable
@@ -209,11 +209,11 @@ self.cancellable.cancel()
 
 ```swift
 extension Channel {
-	func sinkOnMainThread(receiveValue: @escaping (Value) -> Void) -> PlatformSDK.Cancellable {
+	func sinkOnMainThread(receiveValue: @escaping (Value) -> Void) -> DGis.Cancellable {
 		self.sink(on: .main, receiveValue: receiveValue)
 	}
 
-	func sink(on queue: DispatchQueue, receiveValue: @escaping (Value) -> Void) -> PlatformSDK.Cancellable {
+	func sink(on queue: DispatchQueue, receiveValue: @escaping (Value) -> Void) -> DGis.Cancellable {
 		self.sink { value in
 			queue.async {
 				receiveValue(value)
@@ -290,7 +290,7 @@ let points = [
 let options = PolylineOptions(
 	points: points,
 	width: LogicalPixel(value: 2),
-	color: PlatformSDK.Color.init()
+	color: DGis.Color.init()
 )
 
 // Создание линии.
@@ -330,7 +330,7 @@ let polygon = self.objectManager.addPolygon(options: PolygonOptions(
 			latLon(55.754167897761, 37.62422561645508)
 		]
 	],
-	color: PlatformSDK.Color.init(),
+	color: DGis.Color.init(),
 	strokeWidth: LogicalPixel(value: 2)
 ))
 ```

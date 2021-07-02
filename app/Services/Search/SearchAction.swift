@@ -1,4 +1,4 @@
-import class PlatformSDK.SearchQuery
+import class DGis.SearchQuery
 
 enum SearchAction {
 	case idle

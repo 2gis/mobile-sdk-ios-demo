@@ -1,12 +1,12 @@
 import SwiftUI
-import PlatformSDK
+import DGis
 
 struct RootViewFactory {
-	private let sdk: PlatformSDK.Container
+	private let sdk: DGis.Container
 	private let locationManagerFactory: () -> LocationService?
 
 	init(
-		sdk: PlatformSDK.Container,
+		sdk: DGis.Container,
 		locationManagerFactory: @escaping () -> LocationService?
 	) {
 		self.sdk = sdk

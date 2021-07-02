@@ -1,5 +1,5 @@
 import UIKit
-import PlatformSDK
+import DGis
 
 /// Блок управления масштабом карты.
 public final class CustomZoomControl: UIControl {

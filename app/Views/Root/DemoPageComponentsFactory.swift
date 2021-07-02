@@ -1,12 +1,12 @@
 import SwiftUI
-import PlatformSDK
+import DGis
 
 struct DemoPageComponentsFactory {
 	private let mapFactory: IMapFactory
-	private let sdk: PlatformSDK.Container
+	private let sdk: DGis.Container
 
 	internal init(
-		sdk: PlatformSDK.Container,
+		sdk: DGis.Container,
 		mapFactory: IMapFactory
 	) {
 		self.sdk = sdk

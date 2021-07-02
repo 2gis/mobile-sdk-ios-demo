@@ -1,5 +1,5 @@
 import SwiftUI
-import PlatformSDK
+import DGis
 
 final class MarkerViewModel: ObservableObject {
 
@@ -76,7 +76,7 @@ final class MarkerViewModel: ObservableObject {
 	private lazy var mapObjectManager: MapObjectManager =
 		MapObjectManager(map: self.map)
 
-	private var icons: [TypeSize: PlatformSDK.Image] = [:]
+	private var icons: [TypeSize: DGis.Image] = [:]
 
 	init(
 		map: Map,
@@ -108,7 +108,7 @@ final class MarkerViewModel: ObservableObject {
 		self.mapObjectManager.removeAll()
 	}
 
-	private func makeIcon(type: MarkerType, size: MarkerSize) -> PlatformSDK.Image? {
+	private func makeIcon(type: MarkerType, size: MarkerSize) -> DGis.Image? {
 		let typeSize = TypeSize(type: type, size: size)
 		if let icon = self.icons[typeSize] {
 			return icon
