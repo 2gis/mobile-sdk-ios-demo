@@ -1,7 +1,5 @@
 # 2GIS iOS SDK
 
-> :warning: &nbsp;**iOS SDK is under development**. It is not ready for production usage.
-
 2GIS iOS SDK allows you to add a [2GIS map](https://2gis.ae/) to your iOS application. It can be used to display the map in your layout, add custom markers to it, draw geometric shapes, calculate and display routes, get information about map objects, control the camera movement, and so on.
 
 ## Getting API keys
