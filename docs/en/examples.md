@@ -227,17 +227,19 @@ self.cancellable = visibleRectChannel.sinkOnMainThread { [weak self] visibleRect
 
 ## Adding objects
 
-To add dynamic objects to the map (such as markers, lines, circles, and polygons), you must first create a [MapObjectManager](/en/ios/sdk/reference/MapObjectManager) object by calling the [createMapObjectManager()](/en/ios/sdk/reference/createMapObjectManager(map%3A)) function and specifying the map instance. Deleting an object manager removes all associated objects from the map, so do not forget to save it to a property.
+To add dynamic objects to the map (such as markers, lines, circles, and polygons), you must first create a [MapObjectManager](/en/ios/sdk/reference/MapObjectManager) object, specifying the map instance. Deleting an object manager removes all associated objects from the map, so do not forget to save it to a property.
 
 ```swift
 self.objectsManager = createMapObjectManager(map: map)
 ```
 
-For each dynamic object, you can specify a `userData` field to store arbitrary data. Object settings can be changed after their creation.
+After you have created an object manager, you can add objects to the map using the [addObject()](/en/ios/sdk/reference/MapObjectManager#nav-lvl1--addObject) and [addObjects()](/en/ios/sdk/reference/MapObjectManager#nav-lvl1--addObjects) methods. For each dynamic object, you can specify a `userData` field to store arbitrary data. Object settings can be changed after their creation.
+
+To remove objects from the map, use [removeObject()](/en/ios/sdk/reference/MapObjectManager#nav-lvl1--removeObject) and [removeObjects()](/en/ios/sdk/reference/MapObjectManager#nav-lvl1--removeObjects). To remove all objects, call the [removeAll()](/en/ios/sdk/reference/MapObjectManager#nav-lvl1--removeAll) method.
 
 ### Marker
 
-To add a marker to the map, call the [addMarker()](/en/ios/sdk/reference/MapObjectManager#nav-lvl1--addMarker) method and specify the required settings as a [MarkerOptions](/en/ios/sdk/reference/MarkerOptions) structure. The most important settings are the coordinates of the marker and its icon.
+To add a marker to the map, create a [Marker](/en/ios/sdk/reference/Marker) object, specifying the required options ([MarkerOptions](/en/ios/sdk/reference/MarkerOptions)), and pass it to the `addObject()` method of the object manager. The most important settings are the coordinates of the marker and its icon.
 
 You can create an icon for the marker by calling the `make()` method and using [UIImage](https://developer.apple.com/documentation/uikit/uiimage), PNG data, or SVG markup as input.
 
@@ -255,30 +257,31 @@ let icon = sdk.imageFactory.make(pngData: imageData, size: imageSize)
 // Marker settings
 let options = MarkerOptions(
 	position: GeoPointWithElevation(
-		latitude: Arcdegree(value: 55.752425),
-		longitude: Arcdegree(value: 37.613983)
+		latitude: 55.752425,
+		longitude: 37.613983
 	),
 	icon: icon
 )
 
-// Add the marker to the map
-let marker = objectsManager.addMarker(options: options)
+// Create and add the marker to the map
+let marker = Marker(options: options)
+objectManager.addObject(object: marker)
 ```
 
 To change the hotspot of the icon, use the [anchor](/en/ios/sdk/reference/Anchor) parameter.
 
 ### Line
 
-To draw a line on the map, call the [addPolyline()](/en/ios/sdk/reference/MapObjectManager#nav-lvl1--addPolyline) method and specify the required settings as a [PolylineOptions](/en/ios/sdk/reference/PolylineOptions) structure.
+To draw a line on the map, create a [Polyline](/en/ios/sdk/reference/Polyline) object, specifying the required options, and pass it to the `addObject()` method of the object manager.
 
-In addition to the coordinates of the line points, you can set the line width, color, stroke type, and other options.
+In addition to the coordinates of the line points, you can set the line width, color, stroke type, and other options (see [PolylineOptions](/en/ios/sdk/reference/PolylineOptions)).
 
 ```swift
 // Coordinates of the vertices of the polyline
 let points = [
-	GeoPoint(latitude: Arcdegree(value: 55.7513), longitude: Arcdegree(value: 37.6236)),
-	GeoPoint(latitude: Arcdegree(value: 55.7405), longitude: Arcdegree(value: 37.6235)),
-	GeoPoint(latitude: Arcdegree(value: 55.7439), longitude: Arcdegree(value: 37.6506))
+	GeoPoint(latitude: 55.7513, longitude: value: 37.6236),
+	GeoPoint(latitude: 55.7405, longitude: value: 37.6235),
+	GeoPoint(latitude: 55.7439, longitude: value: 37.6506)
 ]
 
 // Line settings
@@ -288,44 +291,46 @@ let options = PolylineOptions(
 	color: DGis.Color.init()
 )
 
-// Add the line to the map
-let polyline = objectsManager.addPolyline(options: options)
+// Create and add the line to the map
+let polyline = Polyline(options: options)
+objectManager.addObject(object: polyline)
 ```
 
 ### Polygon
 
-To draw a polygon on the map, call the [addPolygon()](/en/ios/sdk/reference/MapObjectManager#nav-lvl1--addPolygon) method and specify the required settings as a [PolygonOptions](/en/ios/sdk/reference/PolygonOptions) structure.
+To draw a polygon on the map, create a [Polygon](/en/ios/sdk/reference/Polygon) object, specifying the required options, and pass it to the `addObject()` method of the object manager.
 
 Coordinates for the polygon are specified as a two-dimensional array. The first subarray must contain the coordinates of the vertices of the polygon itself. The other subarrays are optional and can be specified to create a cutout (a hole) inside the polygon (one subarray - one polygonal cutout).
 
-Additionally, you can specify the polygon color and stroke options.
+Additionally, you can specify the polygon color and stroke options (see [PolygonOptions](/en/ios/sdk/reference/PolygonOptions)).
 
 ```swift
-let latLon = { (lat: Double, lon: Double) -> GeoPoint in
-	return GeoPoint(latitude: Arcdegree(value: lat), longitude: Arcdegree(value: lon))
-}
-
-let polygon = self.objectManager.addPolygon(options: PolygonOptions(
+// Polygon settings
+let options = PolygonOptions(
 	contours: [
 		// Vertices of the polygon
 		[
-			latLon(55.72014932919687, 37.562599182128906),
-			latLon(55.72014932919687, 37.67555236816406),
-			latLon(55.78004852149085, 37.67555236816406),
-			latLon(55.78004852149085, 37.562599182128906),
-			latLon(55.72014932919687, 37.562599182128906)
+			GeoPoint(latitude: 55.72014932919687, longitude: 37.562599182128906),
+			GeoPoint(latitude: 55.72014932919687, longitude: 37.67555236816406),
+			GeoPoint(latitude: 55.78004852149085, longitude: 37.67555236816406),
+			GeoPoint(latitude: 55.78004852149085, longitude: 37.562599182128906),
+			GeoPoint(latitude: 55.72014932919687, longitude: 37.562599182128906)
 		],
 		// Cutout inside the polygon
 		[
-			latLon(55.754167897761, 37.62422561645508),
-			latLon(55.74450654680055, 37.61238098144531),
-			latLon(55.74460317215391, 37.63435363769531),
-			latLon(55.754167897761, 37.62422561645508)
+			GeoPoint(latitude: 55.754167897761, longitude: 37.62422561645508),
+			GeoPoint(latitude: 55.74450654680055, longitude: 37.61238098144531),
+			GeoPoint(latitude: 55.74460317215391, longitude: 37.63435363769531),
+			GeoPoint(latitude: 55.754167897761, longitude: 37.62422561645508)
 		]
 	],
 	color: DGis.Color.init(),
 	strokeWidth: LogicalPixel(value: 2)
-))
+)
+
+// Create and add the polygon to the map
+let polygon = Polygon(options: options)
+objectManager.addObject(object: polygon)
 ```
 
 ## Controlling the camera
@@ -345,7 +350,7 @@ The call will return a [Future](/en/ios/sdk/reference/Future) object, which can 
 ```swift
 // New position for camera
 let newCameraPosition = CameraPosition(
-	point: GeoPoint(latitude: Arcdegree(value: 55.752425), longitude: Arcdegree(value: 37.613983)),
+	point: GeoPoint(latitude: 55.752425, longitude: 37.613983),
 	zoom: Zoom(value: 16)
 )
 
@@ -366,17 +371,17 @@ let cancellable = future.sink { _ in
 
 ### Getting camera state
 
-The current state of the camera (i.e., whether the camera is currently in flight) can be obtained using the `state().value` property. See [CameraState](/en/ios/sdk/reference/CameraState) for a list of possible camera states.
+The current state of the camera (i.e., whether the camera is currently in flight) can be obtained using the `state` property. See [CameraState](/en/ios/sdk/reference/CameraState) for a list of possible camera states.
 
 ```swift
-let currentState = map.camera.state().value
+let currentState = map.camera.state
 ```
 
-You can subscribe to changes of camera state using the `state().sink` property.
+You can subscribe to changes of camera state using the `stateChannel.sink` property.
 
 ```swift
 // Subscribe to camera state changes
-let connection = map.camera.state().sink { state in
+let connection = map.camera.stateChannel.sink { state in
 	print("Camera state has changed to \(state)")
 }
 
@@ -386,21 +391,21 @@ connection.cancel()
 
 ### Getting camera position
 
-The current position of the camera can be obtained using the `position().value` property (see the [CameraPosition](/en/ios/sdk/reference/CameraPosition) structure).
+The current position of the camera can be obtained using the `position` property (see the [CameraPosition](/en/ios/sdk/reference/CameraPosition) structure).
 
 ```swift
-let currentPosition = map.camera.position().value
+let currentPosition = map.camera.position
 print("Coordinates: \(currentPosition.point)")
 print("Zoom level: \(currentPosition.zoom)")
 print("Tilt: \(currentPosition.tilt)")
 print("Rotation: \(currentPosition.bearing)")
 ```
 
-You can subscribe to changes of camera position using the `position().sink` property.
+You can subscribe to changes of camera position using the `positionChannel.sink` property.
 
 ```swift
 // Subscribe to camera position changes
-let connection = positionChannel.sink { position in
+let connection = map.camera.positionChannel.sink { position in
 	print("Camera position has changed (coordinates, zoom level, tilt, or rotation).")
 }
 
