@@ -19,7 +19,7 @@ You can also use [xcframework](https://github.com/2gis/mobile-sdk-map-swift-pack
 
 ## Installation
 
-To install this SDK, add a package dependency to your project, specifying `https://github.com/2gis/mobile-sdk-map-swift-package` or `https://github.com/2gis/mobile-sdk-full-swift-package` as the URL.
+To install this SDK, add a package dependency to your project, specifying `https://github.com/2gis/mobile-sdk-map-swift-package` as the URL.
 
 You can find more information about using Swift packages in the [official documentation]((https://developer.apple.com/documentation/swift_packages/adding_package_dependencies_to_your_app)).
 
