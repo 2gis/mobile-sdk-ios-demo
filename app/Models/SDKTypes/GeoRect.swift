@@ -1,6 +1,6 @@
-import PlatformSDK
+import DGis
 
-extension PlatformSDK.GeoRect {
+extension DGis.GeoRect {
 
 	func expanded(by ratio: Double) -> GeoRect {
 		let width = self.northEastPoint.longitude - self.southWestPoint.longitude

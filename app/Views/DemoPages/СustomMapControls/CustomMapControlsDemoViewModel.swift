@@ -1,6 +1,6 @@
 import SwiftUI
 import Combine
-import PlatformSDK
+import DGis
 
 final class CustomMapControlsDemoViewModel: ObservableObject {
 	enum MapControlsType: CaseIterable, Identifiable {

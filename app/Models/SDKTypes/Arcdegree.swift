@@ -1,4 +1,4 @@
-import PlatformSDK
+import DGis
 
 extension Arcdegree {
 	static func + (lhs: Arcdegree, rhs: Arcdegree) -> Arcdegree {

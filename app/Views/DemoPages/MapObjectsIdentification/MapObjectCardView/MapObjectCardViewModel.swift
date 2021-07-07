@@ -1,5 +1,5 @@
 import SwiftUI
-import PlatformSDK
+import DGis
 
 final class MapObjectCardViewModel: ObservableObject {
 

@@ -1,4 +1,4 @@
-import PlatformSDK
+import DGis
 
 struct FormattedAddressViewModel {
 	let drilldown: String?

@@ -1,6 +1,6 @@
 import SwiftUI
 import Combine
-import PlatformSDK
+import DGis
 
 final class SearchViewModel: ObservableObject {
 	/*var queryText: Binding<String> {

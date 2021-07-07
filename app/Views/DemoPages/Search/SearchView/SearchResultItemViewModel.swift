@@ -1,5 +1,5 @@
 import Foundation
-import PlatformSDK
+import DGis
 
 struct SearchResultItemViewModel: Identifiable {
 	let id = UUID()

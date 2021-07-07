@@ -11,7 +11,7 @@ guard let apiKeys = APIKeys(directory: "Directory API key", map: "SDK key") else
 }
 
 // Создание контейнера для доступа к возможностям SDK.
-let sdk = PlatformSDK.Container(apiKeys: apiKeys)
+let sdk = DGis.Container(apiKeys: apiKeys)
 ```
 
 Дополнительно можно указать настройки журналирования ([LogOptions](/ru/ios/sdk/reference/LogOptions)) и настройки HTTP-клиента ([HTTPOptions](/ru/ios/sdk/reference/HTTPOptions)), такие как время ожидания ответа и кеширование.
@@ -30,7 +30,7 @@ let positioningServices: IPositioningServicesFactory = CustomPositioningServices
 let dataCollectionOptions = DataCollectionOptions(dataCollectionStatus: .agree)
 
 // Создание контейнера.
-let sdk = PlatformSDK.Container(
+let sdk = DGis.Container(
 	apiKeys: apiKeys,
 	logOptions: logOptions,
 	httpOptions: httpOptions,
@@ -104,11 +104,11 @@ self.searchDirectoryObjectCancellable = future.sink(
 Для упрощения работы можно создать расширение:
 
 ```swift
-extension PlatformSDK.Future {
+extension DGis.Future {
 	func sinkOnMainThread(
 		receiveValue: @escaping (Value) -> Void,
 		failure: @escaping (Error) -> Void
-	) -> PlatformSDK.Cancellable {
+	) -> DGis.Cancellable {
 		self.sink(on: .main, receiveValue: receiveValue, failure: failure)
 	}
 
@@ -116,7 +116,7 @@ extension PlatformSDK.Future {
 		on queue: DispatchQueue,
 		receiveValue: @escaping (Value) -> Void,
 		failure: @escaping (Error) -> Void
-	) -> PlatformSDK.Cancellable {
+	) -> DGis.Cancellable {
 		self.sink { value in
 			queue.async {
 				receiveValue(value)
@@ -144,13 +144,13 @@ self.searchDirectoryObjectCancellable = future.sinkOnMainThread(
 Можно также использовать [Combine](https://developer.apple.com/documentation/combine):
 
 ```swift
-// Создание Combine.Future из PlatformSDK.Future.
-extension PlatformSDK.Future {
+// Создание Combine.Future из DGis.Future.
+extension DGis.Future {
 	func asCombineFuture() -> Combine.Future<Value, Error> {
 		Combine.Future { [self] promise in
 			// Удерживаем ссылку на Cancellable, пока не будет вызван обработчик
 			// Combine.Future не позволяет конфигурировать отмену напрямую
-			var cancellable: PlatformSDK.Cancellable?
+			var cancellable: DGis.Cancellable?
 			cancellable = self.sink {
 				promise(.success($0))
 				_ = cancellable
@@ -209,11 +209,11 @@ self.cancellable.cancel()
 
 ```swift
 extension Channel {
-	func sinkOnMainThread(receiveValue: @escaping (Value) -> Void) -> PlatformSDK.Cancellable {
+	func sinkOnMainThread(receiveValue: @escaping (Value) -> Void) -> DGis.Cancellable {
 		self.sink(on: .main, receiveValue: receiveValue)
 	}
 
-	func sink(on queue: DispatchQueue, receiveValue: @escaping (Value) -> Void) -> PlatformSDK.Cancellable {
+	func sink(on queue: DispatchQueue, receiveValue: @escaping (Value) -> Void) -> DGis.Cancellable {
 		self.sink { value in
 			queue.async {
 				receiveValue(value)
@@ -229,20 +229,20 @@ self.cancellable = visibleRectChannel.sinkOnMainThread { [weak self] visibleRect
 
 ## Добавление объектов
 
-Для добавления динамических объектов на карту (маркеров, линий, кругов, многоугольников) нужно создать менеджер объектов ([MapObjectManager](/ru/ios/sdk/reference/MapObjectManager)), вызвав функцию [createMapObjectManager()](/ru/ios/sdk/reference/createMapObjectManager(map%3A)) и указав инстанс карты.
+Для добавления динамических объектов на карту (маркеров, линий, кругов, многоугольников) нужно создать менеджер объектов ([MapObjectManager](/ru/ios/sdk/reference/MapObjectManager)), указав инстанс карты.
 
 ```swift
 // Сохраняем объект в свойство, так как при удалении менеджера исчезают все связанные с ним объекты на карте.
-self.objectsManager = createMapObjectManager(map: map)
+self.objectManager = MapObjectManager(map: map)
 ```
 
-Для каждого динамического объекта можно указать поле `userData`, которое будет хранить произвольные данные, связанные с объектом.
+Для добавления объектов используются методы [addObject()](/ru/ios/sdk/reference/MapObjectManager#nav-lvl1--addObject) и [addObjects()](/ru/ios/sdk/reference/MapObjectManager#nav-lvl1--addObjects). Для каждого динамического объекта можно указать поле `userData`, которое будет хранить произвольные данные, связанные с объектом. Настройки объектов можно менять после их создания.
 
-Настройки объектов можно менять после их создания.
+Для удаления объектов используются методы [removeObject()](/ru/ios/sdk/reference/MapObjectManager#nav-lvl1--removeObject) и [removeObjects()](/ru/ios/sdk/reference/MapObjectManager#nav-lvl1--removeObjects). Чтобы удалить все объекты, можно использовать метод [removeAll()](/ru/ios/sdk/reference/MapObjectManager#nav-lvl1--removeAll).
 
 ### Маркер
 
-Чтобы добавить маркер на карту, нужно вызвать метод [addMarker()](/ru/ios/sdk/reference/MapObjectManager#nav-lvl1--addMarker) менеджера объектов и указать настройки маркера в виде структуры [MarkerOptions](/ru/ios/sdk/reference/MarkerOptions). В настройках важно указать координаты маркера и его иконку.
+Чтобы добавить маркер на карту, нужно создать объект [Marker](/ru/ios/sdk/reference/Marker), указав нужные настройки ([MarkerOptions](/ru/ios/sdk/reference/MarkerOptions)), и передать его в вызов `addObject()` менеджера объектов.
 
 Иконку для маркера можно создать с помощью метода `make()` фабрики изображений ([IImageFactory](/ru/ios/sdk/reference/IImageFactory)), используя [UIImage](https://developer.apple.com/documentation/uikit/uiimage), PNG-данные или SVG-разметку.
 
@@ -260,79 +260,80 @@ let icon = sdk.imageFactory.make(pngData: imageData, size: imageSize)
 // Настройки маркера.
 let options = MarkerOptions(
 	position: GeoPointWithElevation(
-		latitude: Arcdegree(value: 55.752425),
-		longitude: Arcdegree(value: 37.613983)
+		latitude: 55.752425,
+		longitude: 37.613983
 	),
 	icon: icon
 )
 
-// Создание маркера.
-let marker = objectsManager.addMarker(options: options)
+// Создание и добавление маркера.
+let marker = Marker(options: options)
+objectManager.addObject(object: marker)
 ```
 
 Чтобы изменить точку привязки иконки (выравнивание иконки относительно координат на карте), нужно указать параметр [anchor](/ru/ios/sdk/reference/Anchor).
 
 ### Линия
 
-Чтобы нарисовать на карте линию, нужно вызвать метод [addPolyline()](/ru/ios/sdk/reference/MapObjectManager#nav-lvl1--addPolyline) и указать настройки линии в виде структуры [PolylineOptions](/ru/ios/sdk/reference/PolylineOptions).
+Чтобы нарисовать на карте линию, нужно создать объект [Polyline](/ru/ios/sdk/reference/Polyline), указав нужные настройки, и передать его в вызов `addObject()` менеджера объектов.
 
-Кроме массива координат для точек линии, в настройках можно указать ширину линии, цвет, параметры пунктира и обводки.
+Кроме массива координат для точек линии, в настройках можно указать ширину линии, цвет, пунктир, обводку и другие параметры (см. [PolylineOptions](/ru/ios/sdk/reference/PolylineOptions)).
 
 ```swift
 // Координаты вершин ломаной линии.
 let points = [
-	GeoPoint(latitude: Arcdegree(value: 55.7513), longitude: Arcdegree(value: 37.6236)),
-	GeoPoint(latitude: Arcdegree(value: 55.7405), longitude: Arcdegree(value: 37.6235)),
-	GeoPoint(latitude: Arcdegree(value: 55.7439), longitude: Arcdegree(value: 37.6506))
+	GeoPoint(latitude: 55.7513, longitude: value: 37.6236),
+	GeoPoint(latitude: 55.7405, longitude: value: 37.6235),
+	GeoPoint(latitude: 55.7439, longitude: value: 37.6506)
 ]
 
 // Настройки линии.
 let options = PolylineOptions(
 	points: points,
 	width: LogicalPixel(value: 2),
-	color: PlatformSDK.Color.init()
+	color: DGis.Color.init()
 )
 
-// Создание линии.
-let polyline = objectsManager.addPolyline(options: options)
+// Создание и добавление линии.
+let polyline = Polyline(options: options)
+objectManager.addObject(object: polyline)
 ```
 
 ### Многоугольник
 
-Чтобы нарисовать на карте многоугольник, нужно вызвать метод [addPolygon()](/ru/ios/sdk/reference/MapObjectManager#nav-lvl1--addPolygon) и указать настройки многоугольника в виде структуры [PolygonOptions](/ru/ios/sdk/reference/PolygonOptions).
+Чтобы нарисовать на карте многоугольник, нужно создать объект [Polygon](/ru/sdk/reference/Polygon), указав нужные настройки, и передать его в вызов `addObject()` менеджера объектов.
 
 Координаты для многоугольника указываются в виде двумерного массива. Первый вложенный массив должен содержать координаты основных вершин многоугольника. Остальные вложенные массивы не обязательны и могут быть заданы для того, чтобы создать вырез внутри многоугольника (один дополнительный массив - один вырез в виде многоугольника).
 
-Важно указать координаты таким образом, чтобы первое и последнее значение в каждом массиве совпадало. Иными словами, ломаная должна быть замкнутой.
-
-Дополнительно можно указать цвет полигона и параметры обводки.
+Дополнительно можно указать цвет полигона и параметры обводки (см. [PolygonOptions](/ru/sdk/reference/PolygonOptions)).
 
 ```swift
-let latLon = { (lat: Double, lon: Double) -> GeoPoint in
-	return GeoPoint(latitude: Arcdegree(value: lat), longitude: Arcdegree(value: lon))
-}
-
-let polygon = self.objectManager.addPolygon(options: PolygonOptions(
+// Настройки многоугольника.
+let options = PolygonOptions(
 	contours: [
 		// Вершины многоугольника.
 		[
-			latLon(55.72014932919687, 37.562599182128906),
-			latLon(55.72014932919687, 37.67555236816406),
-			latLon(55.78004852149085, 37.67555236816406),
-			latLon(55.78004852149085, 37.562599182128906),
-			latLon(55.72014932919687, 37.562599182128906)
+			GeoPoint(latitude: 55.72014932919687, longitude: 37.562599182128906),
+			GeoPoint(latitude: 55.72014932919687, longitude: 37.67555236816406),
+			GeoPoint(latitude: 55.78004852149085, longitude: 37.67555236816406),
+			GeoPoint(latitude: 55.78004852149085, longitude: 37.562599182128906),
+			GeoPoint(latitude: 55.72014932919687, longitude: 37.562599182128906)
 		],
 		// Координаты выреза внутри многоугольника.
 		[
-			latLon(55.754167897761, 37.62422561645508),
-			latLon(55.74450654680055, 37.61238098144531),
-			latLon(55.74460317215391, 37.63435363769531),
-			latLon(55.754167897761, 37.62422561645508)
+			GeoPoint(latitude: 55.754167897761, longitude: 37.62422561645508),
+			GeoPoint(latitude: 55.74450654680055, longitude: 37.61238098144531),
+			GeoPoint(latitude: 55.74460317215391, longitude: 37.63435363769531),
+			GeoPoint(latitude: 55.754167897761, longitude: 37.62422561645508)
 		]
 	],
-	color: PlatformSDK.Color.init(),
+	color: DGis.Color.init(),
 	strokeWidth: LogicalPixel(value: 2)
-))
+)
+
+// Создание и добавление многоугольника.
+let polygon = Polygon(options: options)
+objectManager.addObject(object: polygon)
 ```
 
 ## Управление камерой
@@ -352,7 +353,7 @@ let polygon = self.objectManager.addPolygon(options: PolygonOptions(
 ```swift
 // Новая позиция камеры.
 let newCameraPosition = CameraPosition(
-	point: GeoPoint(latitude: Arcdegree(value: 55.752425), longitude: Arcdegree(value: 37.613983)),
+	point: GeoPoint(latitude: 55.752425, longitude: 37.613983),
 	zoom: Zoom(value: 16)
 )
 
@@ -373,17 +374,17 @@ let cancellable = future.sink { _ in
 
 ### Получение состояния камеры
 
-Текущее состояние камеры (находится ли камера в полёте) можно получить, используя свойство `state().value`. См. [CameraState](/ru/ios/sdk/reference/CameraState) для списка возможных состояний камеры.
+Текущее состояние камеры (находится ли камера в полёте) можно получить, используя свойство `state`. См. [CameraState](/ru/ios/sdk/reference/CameraState) для списка возможных состояний камеры.
 
 ```swift
-let currentState = map.camera.state().value
+let currentState = map.camera.state
 ```
 
-Подписаться на изменения состояния камеры можно, используя `state().sink`.
+Подписаться на изменения состояния камеры можно, используя `stateChannel.sink`.
 
 ```swift
 // Подписка.
-let connection = map.camera.state().sink { state in
+let connection = map.camera.stateChannel.sink { state in
 	print("Состояние камеры изменилось на \(state)")
 }
 
@@ -393,21 +394,21 @@ connection.cancel()
 
 ### Получение позиции камеры
 
-Текущую позицию камеры можно получить, используя свойство `position().value` (см. структуру [CameraPosition](/ru/ios/sdk/reference/CameraPosition)).
+Текущую позицию камеры можно получить, используя свойство `position` (см. структуру [CameraPosition](/ru/ios/sdk/reference/CameraPosition)).
 
 ```swift
-let currentPosition = map.camera.position().value
+let currentPosition = map.camera.position
 print("Координаты: \(currentPosition.point)")
 print("Приближение: \(currentPosition.zoom)")
 print("Наклон: \(currentPosition.tilt)")
 print("Поворот: \(currentPosition.bearing)")
 ```
 
-Подписаться на изменения позиции камеры (и угла наклона/поворота) можно, используя `position().sink`.
+Подписаться на изменения позиции камеры (и угла наклона/поворота) можно, используя `positionChannel.sink`.
 
 ```swift
 // Подписка.
-let connection = positionChannel.sink { position in
+let connection = map.camera.positionChannel.sink { position in
 	print("Изменилась позиция камеры или угол наклона/поворота.")
 }
 
