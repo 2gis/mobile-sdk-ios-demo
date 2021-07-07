@@ -15,7 +15,7 @@
 		0991909625B96E1C00F4235B /* MapControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0991909525B96E1C00F4235B /* MapControl.swift */; };
 		09C834FB25BFCD5800D347F4 /* RouteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09C834FA25BFCD5800D347F4 /* RouteView.swift */; };
 		09C834FD25BFCD8500D347F4 /* RouteViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09C834FC25BFCD8500D347F4 /* RouteViewModel.swift */; };
-		09EEF7F725B1754F00838065 /* NativeSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 09EEF7F625B1754F00838065 /* NativeSDK */; };
+		2E1DA752268F1B2900D48362 /* FullSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 2E1DA751268F1B2900D48362 /* FullSDK */; };
 		4B27063524A3F24C00F12B48 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B27063424A3F24C00F12B48 /* AppDelegate.swift */; };
 		4B27063724A3F24C00F12B48 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B27063624A3F24C00F12B48 /* SceneDelegate.swift */; };
 		4B27063E24A3F25000F12B48 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4B27063D24A3F25000F12B48 /* Assets.xcassets */; };
@@ -183,7 +183,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				09EEF7F725B1754F00838065 /* NativeSDK in Frameworks */,
+				2E1DA752268F1B2900D48362 /* FullSDK in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -532,7 +532,7 @@
 			);
 			name = app;
 			packageProductDependencies = (
-				09EEF7F625B1754F00838065 /* NativeSDK */,
+				2E1DA751268F1B2900D48362 /* FullSDK */,
 			);
 			productName = app;
 			productReference = 4B27063124A3F24C00F12B48 /* NativeApp.app */;
@@ -563,7 +563,7 @@
 			);
 			mainGroup = 4B27062824A3F24C00F12B48;
 			packageReferences = (
-				09EEF7F525B1754F00838065 /* XCRemoteSwiftPackageReference "native-sdk-ios-swift-package" */,
+				2E1DA750268F1B2900D48362 /* XCRemoteSwiftPackageReference "mobile-sdk-full-swift-package" */,
 			);
 			productRefGroup = 4B27063224A3F24C00F12B48 /* Products */;
 			projectDirPath = "";
@@ -865,21 +865,21 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		09EEF7F525B1754F00838065 /* XCRemoteSwiftPackageReference "native-sdk-ios-swift-package" */ = {
+		2E1DA750268F1B2900D48362 /* XCRemoteSwiftPackageReference "mobile-sdk-full-swift-package" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/2gis/native-sdk-ios-swift-package.git";
+			repositoryURL = "https://github.com/2gis/mobile-sdk-full-swift-package.git";
 			requirement = {
 				kind = exactVersion;
-				version = 0.16.1;
+				version = "1.0.0-rc.6";
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		09EEF7F625B1754F00838065 /* NativeSDK */ = {
+		2E1DA751268F1B2900D48362 /* FullSDK */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 09EEF7F525B1754F00838065 /* XCRemoteSwiftPackageReference "native-sdk-ios-swift-package" */;
-			productName = NativeSDK;
+			package = 2E1DA750268F1B2900D48362 /* XCRemoteSwiftPackageReference "mobile-sdk-full-swift-package" */;
+			productName = FullSDK;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

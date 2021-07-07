@@ -1,7 +1,5 @@
 # 2GIS iOS SDK
 
-> :warning: &nbsp;**iOS SDK is under development**. It is not ready for production usage.
-
 2GIS iOS SDK allows you to add a [2GIS map](https://2gis.ae/) to your iOS application. It can be used to display the map in your layout, add custom markers to it, draw geometric shapes, calculate and display routes, get information about map objects, control the camera movement, and so on.
 
 ## Getting API keys
@@ -17,11 +15,11 @@ To obtain either of these API keys, fill in the form at [dev.2gis.com](https://d
 - Xcode 12+
 - iOS 13.0+ / iPadOS 13.0+ (this SDK uses [SwiftUI](https://developer.apple.com/documentation/swiftui))
 
-You can also use [xcframework](https://github.com/2gis/native-sdk-ios-swift-package/blob/master/Package.swift) to build your project for iOS 12.
+You can also use [xcframework](https://github.com/2gis/mobile-sdk-map-swift-package/blob/master/Package.swift) to build your project for iOS 12.
 
 ## Installation
 
-To install this SDK, add a package dependency to your project, specifying `https://github.com/2gis/native-sdk-ios-swift-package` as the URL.
+To install this SDK, add a package dependency to your project, specifying `https://github.com/2gis/mobile-sdk-map-swift-package` or `https://github.com/2gis/mobile-sdk-full-swift-package` as the URL.
 
 You can find more information about using Swift packages in the [official documentation]((https://developer.apple.com/documentation/swift_packages/adding_package_dependencies_to_your_app)).
 

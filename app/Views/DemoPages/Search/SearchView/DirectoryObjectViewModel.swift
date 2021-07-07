@@ -1,4 +1,4 @@
-import PlatformSDK
+import DGis
 
 struct DirectoryObjectViewModel {
 	let navigationTitle: String

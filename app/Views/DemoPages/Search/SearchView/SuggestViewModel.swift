@@ -1,6 +1,6 @@
 import Foundation
 import SwiftUI
-import PlatformSDK
+import DGis
 
 struct SuggestViewModel: Identifiable, Hashable {
 	let id = UUID()

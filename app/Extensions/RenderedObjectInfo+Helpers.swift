@@ -1,4 +1,4 @@
-import PlatformSDK
+import DGis
 
 extension RenderedObjectInfo: CustomStringConvertible {
 
