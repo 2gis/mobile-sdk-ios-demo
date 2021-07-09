@@ -60,22 +60,6 @@ struct DemoPageComponentsFactory {
 		return MarkerView(viewModel: viewModel, show: show)
 	}
 
-	func makeRouteView(show: Binding<Bool>) -> some View {
-		let viewModel = RouteViewModel(
-			sourceFactory: { [sdk = self.sdk] in
-				sdk.sourceFactory
-			},
-			routeEditorSourceFactory: { [sdk = self.sdk] routeEditor in
-				return RouteEditorSource(context: sdk.context, routeEditor: routeEditor)
-			},
-			routeEditorFactory: { [sdk = self.sdk] in
-				return RouteEditor(context: sdk.context)
-			},
-			map: self.mapFactory.map
-		)
-		return RouteView(viewModel: viewModel, show: show)
-	}
-
 	func makeMapObjectCardView(_ viewModel: MapObjectCardViewModel) -> some View {
 		return MapObjectCardView(viewModel: viewModel)
 	}
