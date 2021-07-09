@@ -15,10 +15,6 @@ extension RenderedObjectInfo: CustomStringConvertible {
 				}
 			case let cluster as ClusterObject:
 				return "Objects count: \(cluster.objectCount)"
-			case let route as RouteMapObject:
-				return route.route.description
-			case let routePoint as RoutePointMapObject:
-				return routePoint.route.description
 			case is MyLocationMapObject, is GeometryMapObject:
 				return pointDescription
 			default:

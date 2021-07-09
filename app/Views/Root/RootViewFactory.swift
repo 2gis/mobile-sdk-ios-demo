@@ -20,8 +20,6 @@ struct RootViewFactory {
 				self.makeCameraDemoPage()
 			case .customMapControls:
 				self.makeCustomMapControlsDemoPage()
-			case .routeSearch:
-				self.makeRouteSearchDemoPage()
 			case .mapObjectsIdentification:
 				self.makeMapObjectsIdentificationDemoPage()
 			case .markers:
@@ -73,14 +71,6 @@ struct RootViewFactory {
 		return CameraDemoView(
 			viewModel: viewModel,
 			viewFactory: self.makeDemoPageComponentsFactory(mapFactory: mapFactory)
-		)
-	}
-
-	private func makeRouteSearchDemoPage() -> some View {
-		let viewModel = RouteSearchDemoViewModel()
-		return RouteSearchDemoView(
-			viewModel: viewModel,
-			viewFactory: self.makeDemoPageComponentsFactory(mapFactory: self.makeMapFactory())
 		)
 	}
 

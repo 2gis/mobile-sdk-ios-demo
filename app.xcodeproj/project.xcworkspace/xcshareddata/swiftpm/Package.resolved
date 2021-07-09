@@ -3,11 +3,11 @@
     "pins": [
       {
         "package": "DGisMobileSDK",
-        "repositoryURL": "https://github.com/2gis/mobile-sdk-full-swift-package.git",
+        "repositoryURL": "https://github.com/2gis/mobile-sdk-map-swift-package.git",
         "state": {
           "branch": null,
-          "revision": "df2ac2a9d6d22efce2fc018ee541415daa53a9e1",
-          "version": "1.0.1-rc.1"
+          "revision": "5580046033ff356bffc24691b736318afccc0922",
+          "version": "1.0.1"
         }
       }
     ]
