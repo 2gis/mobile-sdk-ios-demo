@@ -1,7 +1,7 @@
 # Release notes
 
 ## v2.0.0-alpha.2
-**Release Date:** 12.07.2021
+**Release Date:** 13.07.2021
 - Добавлена поддержка пешеходных маршрутов с типом `RoutingType.Pedestrian`. В классе `RouteInfo` есть массив с описанием всех препятствий на пешеходном маршруте `RouteInfo.pedestrianObstacles`.
 - Добавлена поддержка маршрутов на общественном транспорте с типом `RoutingType.Public`.
 - Реализован интерфейс `ITerritoryManager` для скачивания offline-территорий.
