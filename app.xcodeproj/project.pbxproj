@@ -64,6 +64,11 @@
 		B710FF03265FC8FA004659E8 /* MapThemeDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B710FF02265FC8FA004659E8 /* MapThemeDemoView.swift */; };
 		B710FF05265FC908004659E8 /* MapThemeDemoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B710FF04265FC908004659E8 /* MapThemeDemoViewModel.swift */; };
 		B7370710266D04D30043C0FA /* Button+Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = B737070F266D04D30043C0FA /* Button+Factory.swift */; };
+		B7B2E8DB26B2CBE0006DCE9E /* CustomMapGestureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7B2E8D726B2CBDF006DCE9E /* CustomMapGestureView.swift */; };
+		B7B2E8DC26B2CBE0006DCE9E /* CustomGestureViewFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7B2E8D826B2CBDF006DCE9E /* CustomGestureViewFactory.swift */; };
+		B7B2E8DD26B2CBE0006DCE9E /* CustomGesturesDemoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7B2E8D926B2CBDF006DCE9E /* CustomGesturesDemoViewModel.swift */; };
+		B7B2E8DE26B2CBE0006DCE9E /* CustomGesturesDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7B2E8DA26B2CBDF006DCE9E /* CustomGesturesDemoView.swift */; };
+		B7B2E8E026B2CDD9006DCE9E /* LazyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7B2E8DF26B2CDD9006DCE9E /* LazyView.swift */; };
 		B7D236C42643E16F00CC835A /* CustomMapStyleDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7D236C32643E16F00CC835A /* CustomMapStyleDemoView.swift */; };
 		B7D236C62643E1D100CC835A /* CustomMapStyleDemoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7D236C52643E1D100CC835A /* CustomMapStyleDemoViewModel.swift */; };
 		B7D24AE92646D15C00CC835A /* TouchUpRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7D24AE82646D15C00CC835A /* TouchUpRecognizer.swift */; };
@@ -159,6 +164,11 @@
 		B710FF02265FC8FA004659E8 /* MapThemeDemoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapThemeDemoView.swift; sourceTree = "<group>"; };
 		B710FF04265FC908004659E8 /* MapThemeDemoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapThemeDemoViewModel.swift; sourceTree = "<group>"; };
 		B737070F266D04D30043C0FA /* Button+Factory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Button+Factory.swift"; sourceTree = "<group>"; };
+		B7B2E8D726B2CBDF006DCE9E /* CustomMapGestureView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomMapGestureView.swift; sourceTree = "<group>"; };
+		B7B2E8D826B2CBDF006DCE9E /* CustomGestureViewFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomGestureViewFactory.swift; sourceTree = "<group>"; };
+		B7B2E8D926B2CBDF006DCE9E /* CustomGesturesDemoViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomGesturesDemoViewModel.swift; sourceTree = "<group>"; };
+		B7B2E8DA26B2CBDF006DCE9E /* CustomGesturesDemoView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomGesturesDemoView.swift; sourceTree = "<group>"; };
+		B7B2E8DF26B2CDD9006DCE9E /* LazyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LazyView.swift; sourceTree = "<group>"; };
 		B7D236C32643E16F00CC835A /* CustomMapStyleDemoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomMapStyleDemoView.swift; sourceTree = "<group>"; };
 		B7D236C52643E1D100CC835A /* CustomMapStyleDemoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomMapStyleDemoViewModel.swift; sourceTree = "<group>"; };
 		B7D24AE82646D15C00CC835A /* TouchUpRecognizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TouchUpRecognizer.swift; sourceTree = "<group>"; };
@@ -377,8 +387,20 @@
 			isa = PBXGroup;
 			children = (
 				B737070F266D04D30043C0FA /* Button+Factory.swift */,
+				B7B2E8DF26B2CDD9006DCE9E /* LazyView.swift */,
 			);
 			path = Common;
+			sourceTree = "<group>";
+		};
+		B7B2E8D626B2CBDF006DCE9E /* CustomGestures */ = {
+			isa = PBXGroup;
+			children = (
+				B7B2E8D726B2CBDF006DCE9E /* CustomMapGestureView.swift */,
+				B7B2E8D826B2CBDF006DCE9E /* CustomGestureViewFactory.swift */,
+				B7B2E8D926B2CBDF006DCE9E /* CustomGesturesDemoViewModel.swift */,
+				B7B2E8DA26B2CBDF006DCE9E /* CustomGesturesDemoView.swift */,
+			);
+			path = CustomGestures;
 			sourceTree = "<group>";
 		};
 		B7D236C12643E13400CC835A /* Views */ = {
@@ -398,6 +420,7 @@
 			children = (
 				B7D24AF42646DDB800CC835A /* Camera */,
 				64226DFA26B1B5ED0058E3D9 /* Clustering */,
+				B7B2E8D626B2CBDF006DCE9E /* CustomGestures */,
 				B7D25AD1264BDD1100CC835A /* СustomMapControls */,
 				B7D24AEA2646D1BF00CC835A /* CustomMapStyle */,
 				64226DFF26B1B5F70058E3D9 /* Fps */,
@@ -626,6 +649,7 @@
 				4BADDFCF252801BD00FBF589 /* SuggestResultViewModel.swift in Sources */,
 				4B27063524A3F24C00F12B48 /* AppDelegate.swift in Sources */,
 				4BADDFE12528941E00FBF589 /* DirectoryObjectViewModel.swift in Sources */,
+				B7B2E8DD26B2CBE0006DCE9E /* CustomGesturesDemoViewModel.swift in Sources */,
 				4BBE801B2526D98600D7EBDB /* SearchResultItemViewModel.swift in Sources */,
 				4B96EBDC2608C5780057C366 /* View+Helpers.swift in Sources */,
 				4BBE7E2025264F2B00D7EBDB /* MapView.swift in Sources */,
@@ -634,6 +658,7 @@
 				B7370710266D04D30043C0FA /* Button+Factory.swift in Sources */,
 				B7D24AF32646D55700CC835A /* DemoPage.swift in Sources */,
 				4BADDFE7252894A100FBF589 /* FormattedAddressViewModel.swift in Sources */,
+				B7B2E8DE26B2CBE0006DCE9E /* CustomGesturesDemoView.swift in Sources */,
 				B7D24AF62646DDDA00CC835A /* CameraDemoView.swift in Sources */,
 				4BADDFF4252A32AD00FBF589 /* SeachState.swift in Sources */,
 				4BBE7E1E25264DA200D7EBDB /* RootView.swift in Sources */,
@@ -641,13 +666,16 @@
 				B7D25AD5264BDD4D00CC835A /* CustomMapControlsDemoViewModel.swift in Sources */,
 				4BBE802D2526F8A600D7EBDB /* RootViewFactory.swift in Sources */,
 				4BBE80222526DCA200D7EBDB /* SearchResultItemView.swift in Sources */,
+				B7B2E8DC26B2CBE0006DCE9E /* CustomGestureViewFactory.swift in Sources */,
 				B7D236C42643E16F00CC835A /* CustomMapStyleDemoView.swift in Sources */,
 				4BADDFFC252AD63800FBF589 /* SearchAction.swift in Sources */,
 				B7D25ADB264BE09000CC835A /* CustomZoomControl.swift in Sources */,
+				B7B2E8DB26B2CBE0006DCE9E /* CustomMapGestureView.swift in Sources */,
 				64226E0226B1B5F70058E3D9 /* FpsDemoView.swift in Sources */,
 				B7D24AF12646D47A00CC835A /* SearchDemoViewModel.swift in Sources */,
 				4BADDFE42528947F00FBF589 /* FormattedAddressView.swift in Sources */,
 				4BADDFDE25288F9D00FBF589 /* DirectoryObjectView.swift in Sources */,
+				B7B2E8E026B2CDD9006DCE9E /* LazyView.swift in Sources */,
 				B710FF03265FC8FA004659E8 /* MapThemeDemoView.swift in Sources */,
 				4BBE80152526D8FE00D7EBDB /* SearchView.swift in Sources */,
 				4BADDFD8252866B300FBF589 /* SearchStore.swift in Sources */,

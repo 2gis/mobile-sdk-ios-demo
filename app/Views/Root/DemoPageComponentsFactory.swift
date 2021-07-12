@@ -21,11 +21,12 @@ struct DemoPageComponentsFactory {
 		with controls: [MapControlType] = [],
 		appearance: MapAppearance? = nil,
 		alignment: CopyrightAlignment = .bottomRight,
+		mapGesturesType: MapGesturesType? = nil,
 		mapCoordinateSpace: String = "map",
 		touchUpHandler: ((CGPoint) -> Void)? = nil
 	) -> some View {
 		ZStack {
-			self.makeMapView(appearance: appearance)
+			self.makeMapView(appearance: appearance, mapGesturesType: mapGesturesType)
 			.copyrightAlignment(alignment)
 			.coordinateSpace(name: mapCoordinateSpace)
 			.touchUpRecognizer(coordinateSpace: .named(mapCoordinateSpace), handler: { location in
@@ -37,15 +38,13 @@ struct DemoPageComponentsFactory {
 					VStack {
 						if controls.contains(.zoom) {
 							self.makeZoomControl()
-							.frame(width: 60, height: 128)
+							.frame(width: 48, height: 104)
 							.fixedSize()
-							.transformEffect(.init(scaleX: 0.8, y: 0.8))
 						}
 						if controls.contains(.currentLocation) {
 							self.makeCurrentLocationControl()
-							.frame(width: 60, height: 60)
+							.frame(width: 48, height: 48)
 							.fixedSize()
-							.transformEffect(.init(scaleX: 0.8, y: 0.8))
 						}
 					}
 					.padding(.trailing, 10)
@@ -84,10 +83,30 @@ struct DemoPageComponentsFactory {
 		return ClusterCardView(viewModel: viewModel)
 	}
 
-	private func makeMapView(appearance: MapAppearance? = nil) -> MapView {
-		MapView(appearance: appearance, mapUIViewFactory: { [mapFactory = self.mapFactory] in
-			mapFactory.mapView
-		})
+	private func makeMapView(
+		appearance: MapAppearance? = nil,
+		mapGesturesType: MapGesturesType? = nil
+	) -> MapView {
+		MapView(
+			appearance: appearance,
+			mapGesturesType: mapGesturesType,
+			mapUIViewFactory: { [mapFactory = self.mapFactory] in
+				mapFactory.mapView
+			},
+			mapGestureViewFactory: { [mapFactory = self.mapFactory] type in
+				let factory: IMapGestureViewFactory?
+				switch type {
+					case .default:
+						factory = MapOptions.default.gestureViewFactory
+					case .custom:
+						factory = CustomGestureViewFactory()
+				}
+				return factory?.makeGestureView(
+					map: mapFactory.map,
+					eventProcessor: mapFactory.mapEventProcessor,
+					coordinateSpace: mapFactory.mapCoordinateSpace
+				)
+			}
+		)
 	}
-
 }
