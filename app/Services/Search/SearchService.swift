@@ -67,6 +67,10 @@ final class SearchService {
 			let query = SearchQueryBuilder
 				.fromQueryText(queryText: queryText)
 				.setAreaOfInterest(rect: self.map.camera.visibleRect)
+				.setAllowedResultTypes(allowedResultTypes: [
+					.street,
+					.building
+				])
 				.build()
 			self.search(query: query)(dispatcher)
 		}
@@ -105,6 +109,11 @@ final class SearchService {
 			let query = SuggestQueryBuilder
 				.fromQueryText(queryText: queryText)
 				.setAreaOfInterest(rect: self.map.camera.visibleRect)
+				.setSuggestorType(suggestorType: .routeEndpoint)
+				.setAllowedResultTypes(allowedResultTypes: [
+					.street,
+					.building
+				])
 				.build()
 			self.suggest(query: query)(dispatcher)
 		}
