@@ -46,11 +46,16 @@ final class CameraDemoViewModel: ObservableObject {
 		]
 	}()
 
-	init(locationManagerFactory: @escaping () -> LocationService?,
-		map: Map
+	init(
+		locationManagerFactory: @escaping () -> LocationService?,
+		map: Map,
+		sdkContext: DGis.Context
 	) {
 		self.locationManagerFactory = locationManagerFactory
 		self.map = map
+		
+		let source = MyLocationMapObjectSource(context: sdkContext, directionBehaviour: .followMagneticHeading)
+		self.map.addSource(source: source)
 	}
 
 	func testCamera() {

@@ -66,7 +66,8 @@ struct RootViewFactory {
 		let mapFactory = self.makeMapFactory()
 		let viewModel = CameraDemoViewModel(
 			locationManagerFactory: self.locationManagerFactory,
-			map: mapFactory.map
+			map: mapFactory.map,
+			sdkContext: self.sdk.context
 		)
 		return CameraDemoView(
 			viewModel: viewModel,
