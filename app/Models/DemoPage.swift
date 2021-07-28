@@ -7,6 +7,9 @@ enum DemoPage: String, CaseIterable {
 	case mapStyles
 	case mapTheme
 	case dictionarySearch
+	case fps
+	case clustering
+	case mapGeometryObjects
 
 	var name: String {
 		switch self {
@@ -26,6 +29,12 @@ enum DemoPage: String, CaseIterable {
 				return "Поиск в справочнике"
 			case .visibleAreaDetection:
 				return "Определение выхода из области"
+			case .fps:
+				return "Установка максимального fps"
+			case .clustering:
+				return "Динамическая кластеризация"
+			case .mapGeometryObjects:
+				return "Геометрические объекты на карте"
 		}
 	}
 }
