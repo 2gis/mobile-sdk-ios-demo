@@ -32,6 +32,12 @@ struct RootViewFactory {
 				self.makeVisibleAreaDetectionDemoPage()
 			case .mapTheme:
 				self.makeMapThemeDemoPage()
+			case .fps:
+				self.makeFpsDemoPage()
+			case .clustering:
+				self.makeClusteringDemoPage()
+			case .mapGeometryObjects:
+				self.makeMapGeometryObjectsDemoPage()
 		}
 	}
 
@@ -125,6 +131,41 @@ struct RootViewFactory {
 		return MapThemeDemoView(
 			viewModel: viewModel,
 			viewFactory: self.makeDemoPageComponentsFactory(mapFactory: self.makeMapFactory())
+		)
+	}
+
+	private func makeFpsDemoPage() -> some View {
+		let mapFactory = self.makeMapFactory()
+		let viewModel = FpsDemoViewModel(
+			map: mapFactory.map,
+			energyConsumption: mapFactory.energyConsumption
+		)
+		return FpsDemoView(
+			viewModel: viewModel,
+			viewFactory: self.makeDemoPageComponentsFactory(mapFactory: mapFactory)
+		)
+	}
+
+	private func makeClusteringDemoPage() -> some View {
+		let mapFactory = self.makeMapFactory()
+		let viewModel = ClusteringDemoViewModel(
+			map: mapFactory.map,
+			imageFactory: self.sdk.imageFactory
+		)
+		return ClusteringDemoView(
+			viewModel: viewModel,
+			viewFactory: self.makeDemoPageComponentsFactory(mapFactory: mapFactory)
+		)
+	}
+
+	private func makeMapGeometryObjectsDemoPage() -> some View {
+		let mapFactory = self.makeMapFactory()
+		let viewModel = MapGeometryObjectsDemoViewModel(
+			map: mapFactory.map
+		)
+		return MapGeometryObjectsDemoView(
+			viewModel: viewModel,
+			viewFactory: self.makeDemoPageComponentsFactory(mapFactory: mapFactory)
 		)
 	}
 
