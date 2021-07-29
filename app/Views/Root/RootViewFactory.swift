@@ -36,8 +36,6 @@ struct RootViewFactory {
 				self.makeFpsDemoPage()
 			case .clustering:
 				self.makeClusteringDemoPage()
-			case .mapGeometryObjects:
-				self.makeMapGeometryObjectsDemoPage()
 		}
 	}
 
@@ -153,17 +151,6 @@ struct RootViewFactory {
 			imageFactory: self.sdk.imageFactory
 		)
 		return ClusteringDemoView(
-			viewModel: viewModel,
-			viewFactory: self.makeDemoPageComponentsFactory(mapFactory: mapFactory)
-		)
-	}
-
-	private func makeMapGeometryObjectsDemoPage() -> some View {
-		let mapFactory = self.makeMapFactory()
-		let viewModel = MapGeometryObjectsDemoViewModel(
-			map: mapFactory.map
-		)
-		return MapGeometryObjectsDemoView(
 			viewModel: viewModel,
 			viewFactory: self.makeDemoPageComponentsFactory(mapFactory: mapFactory)
 		)
