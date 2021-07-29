@@ -9,7 +9,6 @@ enum DemoPage: String, CaseIterable {
 	case dictionarySearch
 	case fps
 	case clustering
-	case mapGeometryObjects
 
 	var name: String {
 		switch self {
@@ -33,8 +32,6 @@ enum DemoPage: String, CaseIterable {
 				return "Установка максимального fps"
 			case .clustering:
 				return "Динамическая кластеризация"
-			case .mapGeometryObjects:
-				return "Геометрические объекты на карте"
 		}
 	}
 }
