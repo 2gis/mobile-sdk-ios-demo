@@ -53,8 +53,6 @@
 		64226DFE26B1B5ED0058E3D9 /* ClusteringDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64226DFC26B1B5ED0058E3D9 /* ClusteringDemoView.swift */; };
 		64226E0226B1B5F70058E3D9 /* FpsDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64226E0026B1B5F70058E3D9 /* FpsDemoView.swift */; };
 		64226E0326B1B5F70058E3D9 /* FpsDemoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64226E0126B1B5F70058E3D9 /* FpsDemoViewModel.swift */; };
-		64226E0726B1B6040058E3D9 /* MapGeometryObjectsDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64226E0526B1B6040058E3D9 /* MapGeometryObjectsDemoView.swift */; };
-		64226E0826B1B6040058E3D9 /* MapGeometryObjectsDemoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64226E0626B1B6040058E3D9 /* MapGeometryObjectsDemoViewModel.swift */; };
 		64A28EC426985B2000E7214B /* MapSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 64A28EC326985B2000E7214B /* MapSDK */; };
 		B709913925F9CBCF00B2F1A5 /* MapObjectCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B709913825F9CBCF00B2F1A5 /* MapObjectCardView.swift */; };
 		B709914C25FA11CD00B2F1A5 /* MapObjectCardViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B709914B25FA11CD00B2F1A5 /* MapObjectCardViewModel.swift */; };
@@ -149,8 +147,6 @@
 		64226DFC26B1B5ED0058E3D9 /* ClusteringDemoView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClusteringDemoView.swift; sourceTree = "<group>"; };
 		64226E0026B1B5F70058E3D9 /* FpsDemoView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FpsDemoView.swift; sourceTree = "<group>"; };
 		64226E0126B1B5F70058E3D9 /* FpsDemoViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FpsDemoViewModel.swift; sourceTree = "<group>"; };
-		64226E0526B1B6040058E3D9 /* MapGeometryObjectsDemoView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapGeometryObjectsDemoView.swift; sourceTree = "<group>"; };
-		64226E0626B1B6040058E3D9 /* MapGeometryObjectsDemoViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapGeometryObjectsDemoViewModel.swift; sourceTree = "<group>"; };
 		B709913825F9CBCF00B2F1A5 /* MapObjectCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapObjectCardView.swift; sourceTree = "<group>"; };
 		B709914B25FA11CD00B2F1A5 /* MapObjectCardViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapObjectCardViewModel.swift; sourceTree = "<group>"; };
 		B709914E25FA6B6F00B2F1A5 /* RenderedObjectInfo+Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RenderedObjectInfo+Helpers.swift"; sourceTree = "<group>"; };
@@ -333,15 +329,6 @@
 			path = Fps;
 			sourceTree = "<group>";
 		};
-		64226E0426B1B6040058E3D9 /* MapGeometryObjects */ = {
-			isa = PBXGroup;
-			children = (
-				64226E0526B1B6040058E3D9 /* MapGeometryObjectsDemoView.swift */,
-				64226E0626B1B6040058E3D9 /* MapGeometryObjectsDemoViewModel.swift */,
-			);
-			path = MapGeometryObjects;
-			sourceTree = "<group>";
-		};
 		B709914A25FA0FD700B2F1A5 /* MapObjectCardView */ = {
 			isa = PBXGroup;
 			children = (
@@ -400,7 +387,6 @@
 				B7D25AD1264BDD1100CC835A /* СustomMapControls */,
 				B7D24AEA2646D1BF00CC835A /* CustomMapStyle */,
 				64226DFF26B1B5F70058E3D9 /* Fps */,
-				64226E0426B1B6040058E3D9 /* MapGeometryObjects */,
 				B7D25ACA264B96E500CC835A /* MapObjectsIdentification */,
 				B710FF01265FC8C7004659E8 /* MapTheme */,
 				B7D251CC264A6AC800CC835A /* Markers */,
@@ -643,7 +629,6 @@
 				B7D236C42643E16F00CC835A /* CustomMapStyleDemoView.swift in Sources */,
 				4BADDFFC252AD63800FBF589 /* SearchAction.swift in Sources */,
 				B7D25ADB264BE09000CC835A /* CustomZoomControl.swift in Sources */,
-				64226E0726B1B6040058E3D9 /* MapGeometryObjectsDemoView.swift in Sources */,
 				64226E0226B1B5F70058E3D9 /* FpsDemoView.swift in Sources */,
 				B7D24AF12646D47A00CC835A /* SearchDemoViewModel.swift in Sources */,
 				4BADDFE42528947F00FBF589 /* FormattedAddressView.swift in Sources */,
@@ -656,7 +641,6 @@
 				4B96E77B2608C14C0057C366 /* Arcdegree.swift in Sources */,
 				B7D236C62643E1D100CC835A /* CustomMapStyleDemoViewModel.swift in Sources */,
 				64226E0326B1B5F70058E3D9 /* FpsDemoViewModel.swift in Sources */,
-				64226E0826B1B6040058E3D9 /* MapGeometryObjectsDemoViewModel.swift in Sources */,
 				B7D24AE92646D15C00CC835A /* TouchUpRecognizer.swift in Sources */,
 				64226DFE26B1B5ED0058E3D9 /* ClusteringDemoView.swift in Sources */,
 				4BADDFD2252802A500FBF589 /* SearchResultView.swift in Sources */,
