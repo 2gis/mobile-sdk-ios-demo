@@ -67,7 +67,10 @@ struct RootViewFactory {
 	}
 
 	private func makeCameraDemoPage() -> some View {
-		let mapFactory = self.makeMapFactory()
+		var options = MapOptions.default
+		options.gestureViewFactory = MapGestureViewFactory()
+
+		let mapFactory = self.makeMapFactory(options: options)
 		let viewModel = CameraDemoViewModel(
 			locationManagerFactory: self.locationManagerFactory,
 			map: mapFactory.map
@@ -163,7 +166,7 @@ struct RootViewFactory {
 		)
 	}
 
-	private func makeMapFactory() -> IMapFactory {
-		self.sdk.makeMapFactory(options: .default)
+	private func makeMapFactory(options: MapOptions = .default) -> IMapFactory {
+		self.sdk.makeMapFactory(options: options)
 	}
 }

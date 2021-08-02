@@ -49,6 +49,15 @@
 		4BBE80292526E22F00D7EBDB /* SearchResultViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BBE80282526E22F00D7EBDB /* SearchResultViewModel.swift */; };
 		4BBE802D2526F8A600D7EBDB /* RootViewFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BBE802C2526F8A600D7EBDB /* RootViewFactory.swift */; };
 		4BBE80302526FB0D00D7EBDB /* Container.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BBE802F2526FB0D00D7EBDB /* Container.swift */; };
+		4BCD3B9726B7EE05006F5CA5 /* IMapGestureEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BCD3B9026B7EE04006F5CA5 /* IMapGestureEvent.swift */; };
+		4BCD3B9826B7EE05006F5CA5 /* IMapGestureInputController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BCD3B9126B7EE04006F5CA5 /* IMapGestureInputController.swift */; };
+		4BCD3B9A26B7EE05006F5CA5 /* MapGestureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BCD3B9326B7EE04006F5CA5 /* MapGestureView.swift */; };
+		4BCD3B9B26B7EE05006F5CA5 /* MapGestureEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BCD3B9426B7EE04006F5CA5 /* MapGestureEvent.swift */; };
+		4BCD3B9D26B7EE05006F5CA5 /* MapGestureInputController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BCD3B9626B7EE04006F5CA5 /* MapGestureInputController.swift */; };
+		4BCD3B9F26B7EE82006F5CA5 /* DoubleTapAndPanGestureRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BCD3B9E26B7EE82006F5CA5 /* DoubleTapAndPanGestureRecognizer.swift */; };
+		4BCD3BA126B7EEBC006F5CA5 /* CGPoint+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BCD3BA026B7EEBC006F5CA5 /* CGPoint+Helpers.swift */; };
+		4BCD3BA326B7F002006F5CA5 /* MapEventProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BCD3BA226B7F002006F5CA5 /* MapEventProcessor.swift */; };
+		4BCD3BA526B7F193006F5CA5 /* MapGestureViewFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BCD3BA426B7F192006F5CA5 /* MapGestureViewFactory.swift */; };
 		64226DFD26B1B5ED0058E3D9 /* ClusteringDemoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64226DFB26B1B5ED0058E3D9 /* ClusteringDemoViewModel.swift */; };
 		64226DFE26B1B5ED0058E3D9 /* ClusteringDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64226DFC26B1B5ED0058E3D9 /* ClusteringDemoView.swift */; };
 		64226E0226B1B5F70058E3D9 /* FpsDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64226E0026B1B5F70058E3D9 /* FpsDemoView.swift */; };
@@ -143,6 +152,15 @@
 		4BBE80282526E22F00D7EBDB /* SearchResultViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultViewModel.swift; sourceTree = "<group>"; };
 		4BBE802C2526F8A600D7EBDB /* RootViewFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootViewFactory.swift; sourceTree = "<group>"; };
 		4BBE802F2526FB0D00D7EBDB /* Container.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Container.swift; sourceTree = "<group>"; };
+		4BCD3B9026B7EE04006F5CA5 /* IMapGestureEvent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMapGestureEvent.swift; sourceTree = "<group>"; };
+		4BCD3B9126B7EE04006F5CA5 /* IMapGestureInputController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMapGestureInputController.swift; sourceTree = "<group>"; };
+		4BCD3B9326B7EE04006F5CA5 /* MapGestureView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapGestureView.swift; sourceTree = "<group>"; };
+		4BCD3B9426B7EE04006F5CA5 /* MapGestureEvent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapGestureEvent.swift; sourceTree = "<group>"; };
+		4BCD3B9626B7EE04006F5CA5 /* MapGestureInputController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapGestureInputController.swift; sourceTree = "<group>"; };
+		4BCD3B9E26B7EE82006F5CA5 /* DoubleTapAndPanGestureRecognizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DoubleTapAndPanGestureRecognizer.swift; sourceTree = "<group>"; };
+		4BCD3BA026B7EEBC006F5CA5 /* CGPoint+Helpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CGPoint+Helpers.swift"; sourceTree = "<group>"; };
+		4BCD3BA226B7F002006F5CA5 /* MapEventProcessor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapEventProcessor.swift; sourceTree = "<group>"; };
+		4BCD3BA426B7F192006F5CA5 /* MapGestureViewFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapGestureViewFactory.swift; sourceTree = "<group>"; };
 		64226DFB26B1B5ED0058E3D9 /* ClusteringDemoViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClusteringDemoViewModel.swift; sourceTree = "<group>"; };
 		64226DFC26B1B5ED0058E3D9 /* ClusteringDemoView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClusteringDemoView.swift; sourceTree = "<group>"; };
 		64226E0026B1B5F70058E3D9 /* FpsDemoView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FpsDemoView.swift; sourceTree = "<group>"; };
@@ -304,6 +322,22 @@
 			path = Map;
 			sourceTree = "<group>";
 		};
+		4BCD3B8F26B7EE04006F5CA5 /* Gestures */ = {
+			isa = PBXGroup;
+			children = (
+				4BCD3BA026B7EEBC006F5CA5 /* CGPoint+Helpers.swift */,
+				4BCD3BA426B7F192006F5CA5 /* MapGestureViewFactory.swift */,
+				4BCD3B9026B7EE04006F5CA5 /* IMapGestureEvent.swift */,
+				4BCD3B9E26B7EE82006F5CA5 /* DoubleTapAndPanGestureRecognizer.swift */,
+				4BCD3B9126B7EE04006F5CA5 /* IMapGestureInputController.swift */,
+				4BCD3B9326B7EE04006F5CA5 /* MapGestureView.swift */,
+				4BCD3B9426B7EE04006F5CA5 /* MapGestureEvent.swift */,
+				4BCD3B9626B7EE04006F5CA5 /* MapGestureInputController.swift */,
+				4BCD3BA226B7F002006F5CA5 /* MapEventProcessor.swift */,
+			);
+			path = Gestures;
+			sourceTree = "<group>";
+		};
 		4BE8E9EA24A510A50036D2CC /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -417,6 +451,7 @@
 		B7D24AEB2646D3F800CC835A /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				4BCD3B8F26B7EE04006F5CA5 /* Gestures */,
 				B7D251CB264A65DF00CC835A /* Search */,
 				0938CA9F25B5BB8A00100316 /* LocationService */,
 			);
@@ -591,6 +626,7 @@
 			files = (
 				4BBE80262526DFB100D7EBDB /* RootViewModel.swift in Sources */,
 				64226DFD26B1B5ED0058E3D9 /* ClusteringDemoViewModel.swift in Sources */,
+				4BCD3B9F26B7EE82006F5CA5 /* DoubleTapAndPanGestureRecognizer.swift in Sources */,
 				4BADDFF7252A33CD00FBF589 /* SearchReducer.swift in Sources */,
 				4BADDFCC2528016600FBF589 /* SuggestResultView.swift in Sources */,
 				4BADDFEB2529AD9C00FBF589 /* SearchNavigation.swift in Sources */,
@@ -606,6 +642,7 @@
 				4BADDFD525282A2400FBF589 /* MarkedUpTextView.swift in Sources */,
 				095BE97625B7042500D09D75 /* MarkerViewModel.swift in Sources */,
 				B709915525FA72A600B2F1A5 /* Future+Helpers.swift in Sources */,
+				4BCD3B9A26B7EE05006F5CA5 /* MapGestureView.swift in Sources */,
 				B709914C25FA11CD00B2F1A5 /* MapObjectCardViewModel.swift in Sources */,
 				B709915125FA6B9D00B2F1A5 /* GeoPoint+Helpers.swift in Sources */,
 				4BADDFCF252801BD00FBF589 /* SuggestResultViewModel.swift in Sources */,
@@ -619,13 +656,16 @@
 				B7370710266D04D30043C0FA /* Button+Factory.swift in Sources */,
 				B7D24AF32646D55700CC835A /* DemoPage.swift in Sources */,
 				4BADDFE7252894A100FBF589 /* FormattedAddressViewModel.swift in Sources */,
+				4BCD3BA526B7F193006F5CA5 /* MapGestureViewFactory.swift in Sources */,
 				B7D24AF62646DDDA00CC835A /* CameraDemoView.swift in Sources */,
 				4BADDFF4252A32AD00FBF589 /* SeachState.swift in Sources */,
 				4BBE7E1E25264DA200D7EBDB /* RootView.swift in Sources */,
 				B7D24AF82646E35500CC835A /* CameraDemoViewModel.swift in Sources */,
 				B7D25AD5264BDD4D00CC835A /* CustomMapControlsDemoViewModel.swift in Sources */,
 				4BBE802D2526F8A600D7EBDB /* RootViewFactory.swift in Sources */,
+				4BCD3B9B26B7EE05006F5CA5 /* MapGestureEvent.swift in Sources */,
 				4BBE80222526DCA200D7EBDB /* SearchResultItemView.swift in Sources */,
+				4BCD3B9726B7EE05006F5CA5 /* IMapGestureEvent.swift in Sources */,
 				B7D236C42643E16F00CC835A /* CustomMapStyleDemoView.swift in Sources */,
 				4BADDFFC252AD63800FBF589 /* SearchAction.swift in Sources */,
 				B7D25ADB264BE09000CC835A /* CustomZoomControl.swift in Sources */,
@@ -634,6 +674,7 @@
 				4BADDFE42528947F00FBF589 /* FormattedAddressView.swift in Sources */,
 				4BADDFDE25288F9D00FBF589 /* DirectoryObjectView.swift in Sources */,
 				B710FF03265FC8FA004659E8 /* MapThemeDemoView.swift in Sources */,
+				4BCD3B9D26B7EE05006F5CA5 /* MapGestureInputController.swift in Sources */,
 				4BBE80152526D8FE00D7EBDB /* SearchView.swift in Sources */,
 				4BADDFD8252866B300FBF589 /* SearchStore.swift in Sources */,
 				095BE97A25B813A000D09D75 /* DetailsActionView.swift in Sources */,
@@ -650,10 +691,13 @@
 				4B4291652527A49C006E74BE /* SuggestView.swift in Sources */,
 				B709914F25FA6B6F00B2F1A5 /* RenderedObjectInfo+Helpers.swift in Sources */,
 				B7D251CE264A6AE800CC835A /* MarkersDemoView.swift in Sources */,
+				4BCD3BA326B7F002006F5CA5 /* MapEventProcessor.swift in Sources */,
 				4B96D18E260348C10057C366 /* StylePickerView.swift in Sources */,
 				B7D25AD0264BD2DE00CC835A /* DemoPageComponentsFactory.swift in Sources */,
 				B7D25ADD264BF4B600CC835A /* DemoPageListRow.swift in Sources */,
+				4BCD3BA126B7EEBC006F5CA5 /* CGPoint+Helpers.swift in Sources */,
 				B710FF05265FC908004659E8 /* MapThemeDemoViewModel.swift in Sources */,
+				4BCD3B9826B7EE05006F5CA5 /* IMapGestureInputController.swift in Sources */,
 				4BBE80302526FB0D00D7EBDB /* Container.swift in Sources */,
 				4BADDFDB252866F700FBF589 /* SearchService.swift in Sources */,
 				4B27063724A3F24C00F12B48 /* SceneDelegate.swift in Sources */,
