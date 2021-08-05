@@ -14,8 +14,8 @@ struct VisibleAreaDetectionDemoView: View {
 
 	var body: some View {
 		ZStack(alignment: .bottomTrailing) {
-			self.viewFactory.makeMapViewWithZoomControl(alignment: .bottomLeft)
-				.overlay(self.visibleAreaStateIndicator(), alignment: .bottom)
+			self.viewFactory.makeMapView(with: [.zoom], alignment: .bottomLeft)
+			.overlay(self.visibleAreaStateIndicator(), alignment: .bottom)
 			if self.viewModel.isTrackingActive {
 				self.stopTrackingButton().frame(width: 100, height: 100, alignment: .bottomTrailing)
 			} else {

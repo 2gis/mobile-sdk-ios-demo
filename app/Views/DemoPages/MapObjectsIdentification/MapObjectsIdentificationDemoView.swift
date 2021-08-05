@@ -14,7 +14,7 @@ struct MapObjectsIdentificationDemoView: View {
 
 	var body: some View {
 		ZStack(alignment: .bottomTrailing) {
-			self.viewFactory.makeMapViewWithZoomControl() { location in
+			self.viewFactory.makeMapView(with: [.zoom]) { location in
 				self.viewModel.tap(location)
 			}
 			if let cardViewModel = viewModel.selectedObjectCardViewModel {

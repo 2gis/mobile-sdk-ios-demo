@@ -14,7 +14,7 @@ struct CustomMapStyleDemoView: View {
 
 	var body: some View {
 		ZStack(alignment: .bottomTrailing) {
-			self.viewFactory.makeMapViewWithZoomControl(alignment: .bottomLeft)
+			self.viewFactory.makeMapView(with: [.zoom], alignment: .bottomLeft)
 			self.settingsButton()
 		}
 		.sheet(isPresented: self.$viewModel.showsStylePicker) {

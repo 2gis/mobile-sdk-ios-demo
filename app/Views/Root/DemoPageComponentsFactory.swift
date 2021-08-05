@@ -2,6 +2,10 @@ import SwiftUI
 import DGis
 
 struct DemoPageComponentsFactory {
+	enum MapControlType {
+		case zoom
+		case currentLocation
+	}
 	private let mapFactory: IMapFactory
 	private let sdk: DGis.Container
 
@@ -13,31 +17,39 @@ struct DemoPageComponentsFactory {
 		self.mapFactory = mapFactory
 	}
 
-	func makeMapView(appearance: MapAppearance? = nil) -> MapView {
-		MapView(appearance: appearance, mapUIViewFactory: { [mapFactory = self.mapFactory] in
-			mapFactory.mapView
-		})
-	}
-
-	func makeMapViewWithZoomControl(
+	func makeMapView(
+		with controls: [MapControlType] = [],
+		appearance: MapAppearance? = nil,
 		alignment: CopyrightAlignment = .bottomRight,
 		mapCoordinateSpace: String = "map",
 		touchUpHandler: ((CGPoint) -> Void)? = nil
 	) -> some View {
 		ZStack {
-			self.makeMapView()
-				.copyrightAlignment(alignment)
-				.coordinateSpace(name: mapCoordinateSpace)
-				.touchUpRecognizer(coordinateSpace: .named(mapCoordinateSpace), handler: { location in
-					touchUpHandler?(location)
-				})
-			HStack {
-				Spacer()
-				self.makeZoomControl()
-					.frame(width: 60, height: 128)
-					.fixedSize()
-					.transformEffect(.init(scaleX: 0.8, y: 0.8))
-					.padding(10)
+			self.makeMapView(appearance: appearance)
+			.copyrightAlignment(alignment)
+			.coordinateSpace(name: mapCoordinateSpace)
+			.touchUpRecognizer(coordinateSpace: .named(mapCoordinateSpace), handler: { location in
+				touchUpHandler?(location)
+			})
+			if controls.isEmpty == false {
+				HStack {
+					Spacer()
+					VStack {
+						if controls.contains(.zoom) {
+							self.makeZoomControl()
+							.frame(width: 60, height: 128)
+							.fixedSize()
+							.transformEffect(.init(scaleX: 0.8, y: 0.8))
+						}
+						if controls.contains(.currentLocation) {
+							self.makeCurrentLocationControl()
+							.frame(width: 60, height: 60)
+							.fixedSize()
+							.transformEffect(.init(scaleX: 0.8, y: 0.8))
+						}
+					}
+					.padding(.trailing, 10)
+				}
 			}
 		}
 	}
@@ -52,6 +64,10 @@ struct DemoPageComponentsFactory {
 		})
 	}
 
+	func makeCurrentLocationControl() -> some View {
+		MapControl(controlFactory: self.mapFactory.mapControlFactory.makeCurrentLocationControl)
+	}
+
 	func makeSearchView(searchStore: SearchStore) -> some View {
 		return SearchView(store: searchStore)
 	}
@@ -63,4 +79,11 @@ struct DemoPageComponentsFactory {
 	func makeMapObjectCardView(_ viewModel: MapObjectCardViewModel) -> some View {
 		return MapObjectCardView(viewModel: viewModel)
 	}
+
+	private func makeMapView(appearance: MapAppearance? = nil) -> MapView {
+		MapView(appearance: appearance, mapUIViewFactory: { [mapFactory = self.mapFactory] in
+			mapFactory.mapView
+		})
+	}
+
 }
