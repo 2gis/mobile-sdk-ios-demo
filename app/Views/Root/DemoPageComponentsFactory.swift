@@ -80,6 +80,10 @@ struct DemoPageComponentsFactory {
 		return MapObjectCardView(viewModel: viewModel)
 	}
 
+	func makeClusterCardView(_ viewModel: ClusterCardViewModel) -> some View {
+		return ClusterCardView(viewModel: viewModel)
+	}
+
 	private func makeMapView(appearance: MapAppearance? = nil) -> MapView {
 		MapView(appearance: appearance, mapUIViewFactory: { [mapFactory = self.mapFactory] in
 			mapFactory.mapView
