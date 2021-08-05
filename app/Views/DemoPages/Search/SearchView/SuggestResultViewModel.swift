@@ -12,7 +12,16 @@ struct SuggestResultViewModel {
 	init(
 		result: SuggestResult? = nil
 	) {
-		self.suggests = result?.suggests.compactMap({ $0 }).map(SuggestViewModel.init) ?? []
+		self.suggests = result?.suggests.compactMap { suggest in
+			switch suggest.handler {
+				case .objectHandler, .incompleteTextHandler:
+					return SuggestViewModel(suggest: suggest)
+				case .performSearchHandler:
+					return nil
+				@unknown default:
+					return nil
+			}
+		} ?? []
 	}
 }
 

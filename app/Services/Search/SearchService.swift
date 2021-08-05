@@ -102,8 +102,12 @@ final class SearchService {
 			// Не подсказываем по пустому запросу.
 			guard !queryText.isEmpty else { return }
 
+			// Устанавливаем тип саджестера route_endpoint.
+			// Ограничиваем результаты типами street и building.
 			let query = SuggestQueryBuilder
 				.fromQueryText(queryText: queryText)
+				.setSuggestorType(suggestorType: .routeEndpoint)
+				.setAllowedResultTypes(allowedResultTypes: [.street, .building])
 				.setAreaOfInterest(rect: self.map.camera.visibleRect)
 				.build()
 			self.suggest(query: query)(dispatcher)

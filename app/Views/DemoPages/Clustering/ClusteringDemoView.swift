@@ -15,7 +15,7 @@ struct ClusteringDemoView: View {
 	var body: some View {
 		ZStack {
 			ZStack(alignment: .bottomTrailing) {
-				self.viewFactory.makeMapViewWithZoomControl(alignment: .bottomLeft)
+				self.viewFactory.makeMapView(with: [.zoom, .currentLocation], alignment: .bottomLeft)
 				VStack(spacing: 12.0) {
 					VStack {
 						Text("Число добавляемых или удаляемых маркеров")

@@ -4,20 +4,16 @@ struct SuggestView: View {
 	let viewModel: SuggestViewModel
 
 	var body: some View {
-		VStack(alignment: .leading) {
-			HStack(alignment: .firstTextBaseline) {
-				MarkedUpTextView(
-					markup: self.viewModel.title,
-					normalFont: Font.callout,
-					matchFont: Font.callout.weight(.bold)
-				)
-				self.viewModel.icon
+		HStack(alignment: .firstTextBaseline) {
+			VStack(alignment: .leading) {
+				Text(self.viewModel.title)
+					.font(Font.callout)
+				if let subtitle = self.viewModel.subtitle {
+					Text(subtitle)
+						.font(Font.caption)
+				}
 			}
-			MarkedUpTextView(
-				markup: self.viewModel.subtitle,
-				normalFont: Font.caption,
-				matchFont: Font.caption.weight(.bold)
-			)
+			self.viewModel.icon
 		}
 	}
 }

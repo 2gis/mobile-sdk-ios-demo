@@ -13,7 +13,7 @@ struct SearchDemoView: View {
 	}
 
 	var body: some View {
-		self.viewFactory.makeMapView()
+		self.viewFactory.makeMapView(with: [.zoom, .currentLocation])
 		.navigationBarItems(
 			trailing: self.navigationBarTrailingItem()
 		)
