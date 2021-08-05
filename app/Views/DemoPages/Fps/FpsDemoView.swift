@@ -16,7 +16,7 @@ struct FpsDemoView: View {
 	var body: some View {
 		ZStack {
 			ZStack(alignment: .bottomTrailing) {
-				self.viewFactory.makeMapViewWithZoomControl(alignment: .bottomLeft)
+				self.viewFactory.makeMapView(with: [.zoom], alignment: .bottomLeft)
 				VStack(spacing: 12.0) {
 					VStack {
 						Text("Текущий FPS: \(self.viewModel.currentFps)")
