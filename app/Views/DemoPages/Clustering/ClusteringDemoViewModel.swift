@@ -3,6 +3,7 @@ import DGis
 
 final class SimpleClusterRendererImpl: SimpleClusterRenderer {
 	private let image: DGis.Image
+	private var idx = 0
 
 	init(
 		image: DGis.Image
@@ -17,43 +18,50 @@ final class SimpleClusterRendererImpl: SimpleClusterRenderer {
 		)
 		let objectCount = cluster.objectCount
 		let iconMapDirection = objectCount < 5 ? MapDirection(value: 45.0) : nil
+		idx += 1
 		return SimpleClusterOptions(
 			icon: self.image,
 			iconMapDirection: iconMapDirection,
 			text: String(objectCount),
 			textStyle: textStyle,
-			iconWidth: LogicalPixel(40.0),
-			userData: String(objectCount)
+			iconWidth: LogicalPixel(30.0),
+			userData: idx,
+			zIndex: ZIndex(value: 6)
 		)
 	}
 }
 
 final class ClusteringDemoViewModel: ObservableObject {
 	@Published var markersCount: String = "100"
+	@Published var showMarkersMenu: Bool = false
+
+	@Published var selectedClusterCardViewModel: ClusterCardViewModel?
 
 	private enum Constants {
 		static let minLatitude: Double = 55.53739580689267
 		static let maxLatitude: Double = 55.90242536833114
 		static let minLongitude: Double = 37.47958129271865
 		static let maxLongitude: Double = 37.86552191711962
+		static let tapRadius = ScreenDistance(value: 5)
 	}
 
 	private let map: Map
 	private let imageFactory: IImageFactory
+	private let toMap: CGAffineTransform
+
+	private var getRenderedObjectsCancellable: DGis.Cancellable?
+	private var selectedCluster: SimpleClusterObject?
+	private var selectedCameraPosition: CameraPosition?
 
 	private var markers: [Marker] = []
-	private lazy var bicycle = {
+	private lazy var scooterIcon = {
 		self.imageFactory.make(
-			image: UIImage(systemName: "bicycle")!
-				.withTintColor(.black)
-				.applyingSymbolConfiguration(.init(scale: .small))!
+			image: UIImage(named: "scooter_icon")!
 		)
 	}()
-	private lazy var bicycleBlue = {
+	private lazy var scooterModel = {
 		self.imageFactory.make(
-			image: UIImage(systemName: "bicycle")!
-				.withTintColor(.blue)
-				.applyingSymbolConfiguration(.init(scale: .large))!
+			image: UIImage(named: "scooter_model")!
 		)
 	}()
 	private lazy var mapObjectManager: MapObjectManager =
@@ -61,7 +69,7 @@ final class ClusteringDemoViewModel: ObservableObject {
 			map: self.map,
 			logicalPixel: LogicalPixel(50.0),
 			maxZoom: Zoom(18.0),
-			clusterRenderer: SimpleClusterRendererImpl(image: self.bicycleBlue)
+			clusterRenderer: SimpleClusterRendererImpl(image: self.scooterIcon)
 		)
 
 	init(
@@ -70,6 +78,10 @@ final class ClusteringDemoViewModel: ObservableObject {
 	) {
 		self.map = map
 		self.imageFactory = imageFactory
+
+		let scale = UIScreen.main.nativeScale
+		self.toMap = CGAffineTransform(scaleX: scale, y: scale)
+
 		self.installMarkers()
 	}
 
@@ -88,7 +100,7 @@ final class ClusteringDemoViewModel: ObservableObject {
 				)
 				let options = MarkerOptions(
 					position: position,
-					icon: self.bicycle,
+					icon: self.scooterIcon,
 					text: "M\(index)",
 					iconWidth: LogicalPixel(5.0),
 					userData: "Marker #\(index)"
@@ -118,6 +130,12 @@ final class ClusteringDemoViewModel: ObservableObject {
 		self.markers.removeAll()
 	}
 
+	func tap(_ location: CGPoint) {
+		let mapLocation = location.applying(self.toMap)
+		let tapPoint = ScreenPoint(x: Float(mapLocation.x), y: Float(mapLocation.y))
+		self.tap(point: tapPoint, tapRadius: Constants.tapRadius)
+	}
+
 	private func generateLatitude() -> Double {
 		Double.random(in: Constants.minLatitude...Constants.maxLatitude)
 	}
@@ -128,23 +146,73 @@ final class ClusteringDemoViewModel: ObservableObject {
 
 	private func installMarkers() {
 		self.addMarkers()
+	}
 
-		// Чисто текстовый.
-		do {
-			let position = GeoPointWithElevation(
-				latitude: 55.67895765839564,
-				longitude: 37.45498484931886
-			)
-			let options = MarkerOptions(
-				position: position,
-				icon: nil,
-				text: "Here!",
-				userData: "Text marker"
-			)
-			let marker = Marker(options: options)
-			self.mapObjectManager.addObject(item: marker)
-			self.markers.append(marker)
+	private func tap(point: ScreenPoint, tapRadius: ScreenDistance) {
+		self.hideSelectedCluster()
+		self.getRenderedObjectsCancellable?.cancel()
+
+		let cancel = self.map.getRenderedObjects(centerPoint: point, radius: tapRadius).sink(
+			receiveValue: {
+				infos in
+				guard let info = infos.first else { return }
+				DispatchQueue.main.async {
+					[weak self] in
+					self?.handle(selectedObject: info)
+				}
+			},
+			failure: { error in
+				print("Failed to fetch objects: \(error)")
+			}
+		)
+		self.getRenderedObjectsCancellable = cancel
+	}
+
+	private func hideSelectedCluster() {
+		if let object = self.selectedCluster,
+		   let cameraPosition = self.selectedCameraPosition {
+			object.setIcon(icon: scooterIcon)
+			let objects = self.mapObjectManager.clusteringObjects(position: cameraPosition)
+			objects.forEach { object in
+				if let cluster = object as? SimpleClusterObject {
+					cluster.iconOpacity = Opacity(value: 1.0)
+				} else if let marker = object as? Marker {
+					marker.iconOpacity = Opacity(value: 1.0)
+				}
+			}
 		}
+		self.selectedClusterCardViewModel = nil
+	}
+
+	private func handle(selectedObject: RenderedObjectInfo) {
+		guard let cluster = selectedObject.item.item as? SimpleClusterObject,
+			  selectedCluster?.userData as? Int != cluster.userData as? Int else {
+			self.selectedCluster = nil
+			return
+		}
+
+		cluster.setIcon(icon: self.scooterModel)
+		cluster.iconMapDirection = nil
+		self.selectedCluster = cluster
+		let cameraPosition = self.map.camera.position
+		self.selectedCameraPosition = cameraPosition
+		let objects = self.mapObjectManager.clusteringObjects(position: cameraPosition)
+		objects.forEach { object in
+			if let cluster = object as? SimpleClusterObject {
+				guard self.selectedCluster?.userData as? Int != cluster.userData as? Int else { return }
+				cluster.iconOpacity = Opacity(value: 0.5)
+			} else if let marker = object as? Marker {
+				marker.iconOpacity = Opacity(value: 0.5)
+			}
+		}
+
+		self.selectedClusterCardViewModel = ClusterCardViewModel(
+			clusterObject: cluster,
+			onClose: {
+				[weak self] in
+				self?.hideSelectedCluster()
+			}
+		)
 	}
 }
 
