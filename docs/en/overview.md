@@ -4,6 +4,8 @@ iOS SDK allows you to add a [2GIS map](https://2gis.ae/) to your iOS application
 
 You can find usage examples in the [Examples](/en/ios/sdk/examples) section. For a detailed description of all classes and methods, see [API Reference](/en/ios/sdk/reference).
 
+Geodata complies with [OGC standards](https://en.wikipedia.org/wiki/Open_Geospatial_Consortium).
+
 ## Getting API keys
 
 Usage of this SDK requires an API key to connect to 2GIS servers and retrieve the geographical data. This API key is unique to the SDK and cannot be used with other 2GIS SDKs.
