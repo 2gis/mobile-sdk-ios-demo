@@ -910,7 +910,7 @@
 			repositoryURL = "https://github.com/2gis/mobile-sdk-map-swift-package.git";
 			requirement = {
 				kind = exactVersion;
-				version = 1.5.0;
+				version = 1.6.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
