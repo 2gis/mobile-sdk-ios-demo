@@ -15,9 +15,15 @@ struct RootView: View {
 	var body: some View {
 		NavigationView  {
 			List(self.viewModel.demoPages) { page in
-				NavigationLink(destination: self.viewFactory.makeDemoPageView(page)) {
-					DemoPageListRow(page: page)
-				}
+				NavigationLink(
+					destination: {
+						LazyView(self.viewFactory.makeDemoPageView(page))
+						.navigationBarTitle(page.name)
+					}(),
+					label: {
+						DemoPageListRow(page: page)
+					}
+				)
 			}
 			.navigationBarTitle("2GIS MobileSDK Examples", displayMode: .inline)
 		}

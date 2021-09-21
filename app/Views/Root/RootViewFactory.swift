@@ -36,6 +36,8 @@ struct RootViewFactory {
 				self.makeFpsDemoPage()
 			case .clustering:
 				self.makeClusteringDemoPage()
+			case .customGestures:
+				self.makeCustomGesturesDemoPage()
 		}
 	}
 
@@ -152,6 +154,15 @@ struct RootViewFactory {
 			imageFactory: self.sdk.imageFactory
 		)
 		return ClusteringDemoView(
+			viewModel: viewModel,
+			viewFactory: self.makeDemoPageComponentsFactory(mapFactory: mapFactory)
+		)
+	}
+
+	private func makeCustomGesturesDemoPage() -> some View {
+		let mapFactory = self.makeMapFactory()
+		let viewModel = CustomGesturesDemoViewModel(mapGesturesType: .custom)
+		return CustomGesturesDemoView(
 			viewModel: viewModel,
 			viewFactory: self.makeDemoPageComponentsFactory(mapFactory: mapFactory)
 		)

@@ -9,6 +9,7 @@ enum DemoPage: String, CaseIterable {
 	case dictionarySearch
 	case fps
 	case clustering
+	case customGestures
 
 	var name: String {
 		switch self {
@@ -32,6 +33,8 @@ enum DemoPage: String, CaseIterable {
 				return "Установка максимального fps"
 			case .clustering:
 				return "Динамическая кластеризация"
+			case .customGestures:
+				return "Пользовательские жесты управления картой"
 		}
 	}
 }
