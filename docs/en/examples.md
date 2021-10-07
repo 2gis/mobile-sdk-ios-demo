@@ -230,7 +230,24 @@ self.cancellable = visibleRectChannel.sinkOnMainThread { [weak self] visibleRect
 To add dynamic objects to the map (such as markers, lines, circles, and polygons), you must first create a [MapObjectManager](/en/ios/sdk/reference/MapObjectManager) object, specifying the map instance. Deleting an object manager removes all associated objects from the map, so do not forget to save it to a property.
 
 ```swift
-self.objectsManager = createMapObjectManager(map: map)
+self.objectsManager = MapObjectManager(map: map)
+```
+
+To add markers to the map in clustering mode, you must create a [MapObjectManager](/en/ios/sdk/reference/MapObjectManager) object using MapObjectManager.withClustering, specifying the map instance, distance between clusters in logical pixels, maximum value of zoom-level, when MapObjectManager in clustering mode, and user implementation of the protocol SimpleClusterRenderer for cluster customization.
+
+```swift
+final class SimpleClusterRendererImpl: SimpleClusterRenderer {
+	func renderCluster(cluster: SimpleClusterObject) -> SimpleClusterOptions {
+
+	}
+}
+
+self.objectManager = MapObjectManager.withClustering(
+	map: map,
+	logicalPixel: LogicalPixel(80.0),
+	maxZoom: Zoom(19.0),
+	clusterRenderer: SimpleClusterRendererImpl()
+)
 ```
 
 After you have created an object manager, you can add objects to the map using the [addObject()](/en/ios/sdk/reference/MapObjectManager#nav-lvl1--addObject) and [addObjects()](/en/ios/sdk/reference/MapObjectManager#nav-lvl1--addObjects) methods. For each dynamic object, you can specify a `userData` field to store arbitrary data. Object settings can be changed after their creation.
