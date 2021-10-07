@@ -236,6 +236,23 @@ self.cancellable = visibleRectChannel.sinkOnMainThread { [weak self] visibleRect
 self.objectManager = MapObjectManager(map: map)
 ```
 
+Для добавления маркеров на карту в режиме кластеризации нужно создать менеджер объектов ([MapObjectManager](/ru/ios/sdk/reference/MapObjectManager)) через MapObjectManager.withClustering, указав инстанс карты, расстояние между кластерами в логических пикселях, максимальный zoom-уровень формирования кластеров и пользовательскую имплементацию протокола SimpleClusterRenderer для кастомизации кластеров.
+
+```swift
+final class SimpleClusterRendererImpl: SimpleClusterRenderer {
+	func renderCluster(cluster: SimpleClusterObject) -> SimpleClusterOptions {
+
+	}
+}
+
+self.objectManager = MapObjectManager.withClustering(
+	map: map,
+	logicalPixel: LogicalPixel(80.0),
+	maxZoom: Zoom(19.0),
+	clusterRenderer: SimpleClusterRendererImpl()
+)
+```
+
 Для добавления объектов используются методы [addObject()](/ru/ios/sdk/reference/MapObjectManager#nav-lvl1--addObject) и [addObjects()](/ru/ios/sdk/reference/MapObjectManager#nav-lvl1--addObjects). Для каждого динамического объекта можно указать поле `userData`, которое будет хранить произвольные данные, связанные с объектом. Настройки объектов можно менять после их создания.
 
 Для удаления объектов используются методы [removeObject()](/ru/ios/sdk/reference/MapObjectManager#nav-lvl1--removeObject) и [removeObjects()](/ru/ios/sdk/reference/MapObjectManager#nav-lvl1--removeObjects). Чтобы удалить все объекты, можно использовать метод [removeAll()](/ru/ios/sdk/reference/MapObjectManager#nav-lvl1--removeAll).
