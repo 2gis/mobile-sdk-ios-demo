@@ -236,12 +236,38 @@ self.cancellable = visibleRectChannel.sinkOnMainThread { [weak self] visibleRect
 self.objectManager = MapObjectManager(map: map)
 ```
 
-Для добавления маркеров на карту в режиме кластеризации нужно создать менеджер объектов ([MapObjectManager](/ru/ios/sdk/reference/MapObjectManager)) через MapObjectManager.withClustering, указав инстанс карты, расстояние между кластерами в логических пикселях, максимальный zoom-уровень формирования кластеров и пользовательскую имплементацию протокола SimpleClusterRenderer для кастомизации кластеров.
+Для добавления маркеров на карту в режиме кластеризации нужно создать менеджер объектов ([MapObjectManager](/ru/ios/sdk/reference/MapObjectManager)) через MapObjectManager.withClustering, указав инстанс карты, расстояние между кластерами в логических пикселях, максимальный zoom-уровень формирования кластеров и пользовательскую имплементацию протокола SimpleClusterRenderer.
+[SimpleClusterRenderer](/ru/ios/sdk/reference/SimpleClusterRenderer) используется для кастомизации кластеров в [MapObjectManager](/ru/ios/sdk/reference/MapObjectManager).
 
 ```swift
 final class SimpleClusterRendererImpl: SimpleClusterRenderer {
-	func renderCluster(cluster: SimpleClusterObject) -> SimpleClusterOptions {
+	private let image: DGis.Image
+	private var idx = 0
 
+	init(
+		image: DGis.Image
+	) {
+		self.image = image
+	}
+
+	func renderCluster(cluster: SimpleClusterObject) -> SimpleClusterOptions {
+		let textStyle = TextStyle(
+			fontSize: LogicalPixel(15.0),
+			textPlacement: TextPlacement.rightTop
+		)
+		let objectCount = cluster.objectCount
+		let iconMapDirection = objectCount < 5 ? MapDirection(value: 45.0) : nil
+		idx += 1
+		return SimpleClusterOptions(
+			icon: self.image,
+			iconMapDirection: iconMapDirection,
+			text: String(objectCount),
+			textStyle: textStyle,
+			iconWidth: LogicalPixel(30.0),
+			userData: idx,
+			zIndex: ZIndex(value: 6),
+			animatedAppearance: false
+		)
 	}
 }
 
@@ -249,7 +275,7 @@ self.objectManager = MapObjectManager.withClustering(
 	map: map,
 	logicalPixel: LogicalPixel(80.0),
 	maxZoom: Zoom(19.0),
-	clusterRenderer: SimpleClusterRendererImpl()
+	clusterRenderer: SimpleClusterRendererImpl(image: self.icon)
 )
 ```
 
