@@ -233,49 +233,6 @@ To add dynamic objects to the map (such as markers, lines, circles, and polygons
 self.objectsManager = MapObjectManager(map: map)
 ```
 
-To add markers to the map in clustering mode, you must create a [MapObjectManager](/en/ios/sdk/reference/MapObjectManager) object using MapObjectManager.withClustering, specifying the map instance, distance between clusters in logical pixels, maximum value of zoom-level, when MapObjectManager in clustering mode, and user implementation of the protocol SimpleClusterRenderer.
-[SimpleClusterRenderer](/en/ios/sdk/reference/SimpleClusterRenderer) is used to customize clusters in [MapObjectManager](/en/ios/sdk/reference/MapObjectManager).
-
-```swift
-final class SimpleClusterRendererImpl: SimpleClusterRenderer {
-	private let image: DGis.Image
-	private var idx = 0
-
-	init(
-		image: DGis.Image
-	) {
-		self.image = image
-	}
-
-	func renderCluster(cluster: SimpleClusterObject) -> SimpleClusterOptions {
-		let textStyle = TextStyle(
-			fontSize: LogicalPixel(15.0),
-			textPlacement: TextPlacement.rightTop
-		)
-		let objectCount = cluster.objectCount
-		let iconMapDirection = objectCount < 5 ? MapDirection(value: 45.0) : nil
-		idx += 1
-		return SimpleClusterOptions(
-			icon: self.image,
-			iconMapDirection: iconMapDirection,
-			text: String(objectCount),
-			textStyle: textStyle,
-			iconWidth: LogicalPixel(30.0),
-			userData: idx,
-			zIndex: ZIndex(value: 6),
-			animatedAppearance: false
-		)
-	}
-}
-
-self.objectManager = MapObjectManager.withClustering(
-	map: map,
-	logicalPixel: LogicalPixel(80.0),
-	maxZoom: Zoom(19.0),
-	clusterRenderer: SimpleClusterRendererImpl(image: self.icon)
-)
-```
-
 After you have created an object manager, you can add objects to the map using the [addObject()](/en/ios/sdk/reference/MapObjectManager#nav-lvl1--addObject) and [addObjects()](/en/ios/sdk/reference/MapObjectManager#nav-lvl1--addObjects) methods. For each dynamic object, you can specify a `userData` field to store arbitrary data. Object settings can be changed after their creation.
 
 To remove objects from the map, use [removeObject()](/en/ios/sdk/reference/MapObjectManager#nav-lvl1--removeObject) and [removeObjects()](/en/ios/sdk/reference/MapObjectManager#nav-lvl1--removeObjects). To remove all objects, call the [removeAll()](/en/ios/sdk/reference/MapObjectManager#nav-lvl1--removeAll) method.
@@ -374,6 +331,51 @@ let options = PolygonOptions(
 // Create and add the polygon to the map
 let polygon = Polygon(options: options)
 objectManager.addObject(object: polygon)
+```
+
+### Clustering
+
+To add markers to the map in clustering mode, you must create a [MapObjectManager](/en/ios/sdk/reference/MapObjectManager) object using [MapObjectManager.withClustering()](/en/ios/sdk/reference/MapObjectManager#nav-lvl1--withClustering), specifying the map instance, distance between clusters in logical pixels, maximum value of zoom-level, when MapObjectManager in clustering mode, and user implementation of the protocol SimpleClusterRenderer.
+[SimpleClusterRenderer](/en/ios/sdk/reference/SimpleClusterRenderer) is used to customize clusters in [MapObjectManager](/en/ios/sdk/reference/MapObjectManager).
+
+```swift
+final class SimpleClusterRendererImpl: SimpleClusterRenderer {
+	private let image: DGis.Image
+	private var idx = 0
+
+	init(
+		image: DGis.Image
+	) {
+		self.image = image
+	}
+
+	func renderCluster(cluster: SimpleClusterObject) -> SimpleClusterOptions {
+		let textStyle = TextStyle(
+			fontSize: LogicalPixel(15.0),
+			textPlacement: TextPlacement.rightTop
+		)
+		let objectCount = cluster.objectCount
+		let iconMapDirection = objectCount < 5 ? MapDirection(value: 45.0) : nil
+		idx += 1
+		return SimpleClusterOptions(
+			icon: self.image,
+			iconMapDirection: iconMapDirection,
+			text: String(objectCount),
+			textStyle: textStyle,
+			iconWidth: LogicalPixel(30.0),
+			userData: idx,
+			zIndex: ZIndex(value: 6),
+			animatedAppearance: false
+		)
+	}
+}
+
+self.objectManager = MapObjectManager.withClustering(
+	map: map,
+	logicalPixel: LogicalPixel(80.0),
+	maxZoom: Zoom(19.0),
+	clusterRenderer: SimpleClusterRendererImpl(image: self.icon)
+)
 ```
 
 ## Controlling the camera
