@@ -21,10 +21,16 @@ final class Container {
 
 	private lazy var locationManager = LocationService()
 
+	private lazy var navigationService: NavigationService = NavigationService()
+
 	func makeRootView() -> some View {
 		let viewModel = self.makeRootViewModel()
 		let viewFactory = self.makeRootViewFactory()
-		return RootView(viewModel: viewModel, viewFactory: viewFactory)
+		return RootView(
+			viewModel: viewModel,
+			viewFactory: viewFactory
+		)
+		.environmentObject(self.navigationService)
 	}
 
 	private func makeRootViewFactory() -> RootViewFactory {

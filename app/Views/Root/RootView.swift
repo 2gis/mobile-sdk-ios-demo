@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct RootView: View {
+	@EnvironmentObject private var navigationService: NavigationService
 	@ObservedObject private var viewModel: RootViewModel
 	private let viewFactory: RootViewFactory
 
@@ -13,19 +14,18 @@ struct RootView: View {
 	}
 
 	var body: some View {
-		NavigationView  {
-			List(self.viewModel.demoPages) { page in
-				NavigationLink(
-					destination: {
-						LazyView(self.viewFactory.makeDemoPageView(page))
-						.navigationBarTitle(page.name)
-					}(),
-					label: {
-						DemoPageListRow(page: page)
-					}
-				)
-			}
-			.navigationBarTitle("2GIS MobileSDK Examples", displayMode: .inline)
+		List(self.viewModel.demoPages) { page in
+			DemoPageListRow(page: page, action: {
+				self.navigationService.push(self.destinationView(for: page), animated: true)
+			})
 		}
+		.navigationBarTitle("2GIS MobileSDK Examples", displayMode: .inline)
+		.navigationBarHidden(false)
+	}
+
+	private func destinationView(for page: DemoPage) -> some View {
+		self.viewFactory.makeDemoPageView(page)
+		.navigationBarTitle(page.name)
+		.environmentObject(self.navigationService)
 	}
 }
