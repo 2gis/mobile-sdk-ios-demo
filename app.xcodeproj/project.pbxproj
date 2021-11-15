@@ -88,6 +88,8 @@
 		B7D25AD5264BDD4D00CC835A /* CustomMapControlsDemoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7D25AD4264BDD4D00CC835A /* CustomMapControlsDemoViewModel.swift */; };
 		B7D25ADB264BE09000CC835A /* CustomZoomControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7D25ADA264BE09000CC835A /* CustomZoomControl.swift */; };
 		B7D25ADD264BF4B600CC835A /* DemoPageListRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7D25ADC264BF4B600CC835A /* DemoPageListRow.swift */; };
+		B7ED8A35273CEAFD0020E60F /* UIWindow+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7ED8A34273CEAFD0020E60F /* UIWindow+Helpers.swift */; };
+		B7ED8A37273CEB140020E60F /* NavigationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7ED8A36273CEB140020E60F /* NavigationService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -188,6 +190,8 @@
 		B7D25AD4264BDD4D00CC835A /* CustomMapControlsDemoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomMapControlsDemoViewModel.swift; sourceTree = "<group>"; };
 		B7D25ADA264BE09000CC835A /* CustomZoomControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomZoomControl.swift; sourceTree = "<group>"; };
 		B7D25ADC264BF4B600CC835A /* DemoPageListRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoPageListRow.swift; sourceTree = "<group>"; };
+		B7ED8A34273CEAFD0020E60F /* UIWindow+Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIWindow+Helpers.swift"; sourceTree = "<group>"; };
+		B7ED8A36273CEB140020E60F /* NavigationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -370,6 +374,7 @@
 				B709915425FA72A600B2F1A5 /* Future+Helpers.swift */,
 				4B96EBDB2608C5780057C366 /* Channel+Helpers.swift */,
 				4B96EBDA2608C5780057C366 /* View+Helpers.swift */,
+				B7ED8A34273CEAFD0020E60F /* UIWindow+Helpers.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -456,6 +461,7 @@
 			children = (
 				B7D251CB264A65DF00CC835A /* Search */,
 				0938CA9F25B5BB8A00100316 /* LocationService */,
+				B7ED8A36273CEB140020E60F /* NavigationService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -632,6 +638,7 @@
 				4BADDFCC2528016600FBF589 /* SuggestResultView.swift in Sources */,
 				4BADDFEB2529AD9C00FBF589 /* SearchNavigation.swift in Sources */,
 				B709913925F9CBCF00B2F1A5 /* MapObjectCardView.swift in Sources */,
+				B7ED8A37273CEB140020E60F /* NavigationService.swift in Sources */,
 				4B96E77A2608C14C0057C366 /* GeoRect.swift in Sources */,
 				4B96EBDD2608C5780057C366 /* Channel+Helpers.swift in Sources */,
 				B7D25ACC264B970100CC835A /* MapObjectsIdentificationDemoView.swift in Sources */,
@@ -695,6 +702,7 @@
 				B709914F25FA6B6F00B2F1A5 /* RenderedObjectInfo+Helpers.swift in Sources */,
 				B7D251CE264A6AE800CC835A /* MarkersDemoView.swift in Sources */,
 				4B96D18E260348C10057C366 /* StylePickerView.swift in Sources */,
+				B7ED8A35273CEAFD0020E60F /* UIWindow+Helpers.swift in Sources */,
 				B7D25AD0264BD2DE00CC835A /* DemoPageComponentsFactory.swift in Sources */,
 				B7D25ADD264BF4B600CC835A /* DemoPageListRow.swift in Sources */,
 				B710FF05265FC908004659E8 /* MapThemeDemoViewModel.swift in Sources */,
