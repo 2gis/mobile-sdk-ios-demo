@@ -1,6 +1,6 @@
 ## Getting started
 
-To begin working with the SDK, create a [Container](/en/ios/sdk/reference/Container) object, which will store all map entities. To create it, you need to specify your API keys as an [APIKeys](/en/ios/sdk/reference/APIKeys) structure.
+To begin working with the SDK, create a [Container](/en/ios/sdk/reference/1.6/Container) object, which will store all map entities. To create it, you need to specify your API keys as an [APIKeys](/en/ios/sdk/reference/1.6/APIKeys) structure.
 
 ```swift
 // Create an APIKeys object
@@ -12,7 +12,7 @@ guard let apiKeys = APIKeys(directory: "Directory API key", map: "SDK key") else
 let sdk = DGis.Container(apiKeys: apiKeys)
 ```
 
-Additionally, you can specify logging settings ([LogOptions](/en/ios/sdk/reference/LogOptions)) and HTTP client settings ([HTTPOptions](/en/ios/sdk/reference/HTTPOptions)) such as timeout and caching.
+Additionally, you can specify logging settings ([LogOptions](/en/ios/sdk/reference/1.6/LogOptions)) and HTTP client settings ([HTTPOptions](/en/ios/sdk/reference/1.6/HTTPOptions)) such as timeout and caching.
 
 ```swift
 // Logging settings
@@ -39,7 +39,7 @@ let sdk = DGis.Container(
 
 ## Creating a map
 
-To create a map, call the [makeMapFactory()](/en/ios/sdk/reference/Container#nav-lvl1--makeMapFactory) method and specify the required map settings as a [MapOptions](/en/ios/sdk/reference/MapOptions) structure.
+To create a map, call the [makeMapFactory()](/en/ios/sdk/reference/1.6/Container#nav-lvl1--makeMapFactory) method and specify the required map settings as a [MapOptions](/en/ios/sdk/reference/1.6/MapOptions) structure.
 
 It is important to specify the correct PPI settings for the device. You can find them in the [technical specification](https://support.apple.com/specs) of the device.
 
@@ -56,7 +56,7 @@ mapOptions.devicePPI = devicePPI
 let mapFactory: PlatformMapSDK.IMapFactory = sdk.makeMapFactory(options: mapOptions)
 ```
 
-To get the view of the map, use the `mapView` property. To get the control of the map, use the [map](/en/ios/sdk/reference/Map) property.
+To get the view of the map, use the `mapView` property. To get the control of the map, use the [map](/en/ios/sdk/reference/1.6/Map) property.
 
 ```swift
 // Map view
@@ -70,9 +70,9 @@ let map = mapFactory.map
 
 ### Deferred results
 
-Some SDK methods (e.g., those that access a remote server) return deferred results ([Future](/en/ios/sdk/reference/Future)). To process a deferred result, you can specify two callback functions: completion and error. To move the execution to the main thread, you can use [DispatchQueue](https://developer.apple.com/documentation/dispatch/dispatchqueue).
+Some SDK methods (e.g., those that access a remote server) return deferred results ([Future](/en/ios/sdk/reference/1.6/Future)). To process a deferred result, you can specify two callback functions: completion and error. To move the execution to the main thread, you can use [DispatchQueue](https://developer.apple.com/documentation/dispatch/dispatchqueue).
 
-For example, to get information from object directory, you can process [Future](/en/ios/sdk/reference/Future) like so:
+For example, to get information from object directory, you can process [Future](/en/ios/sdk/reference/1.6/Future) like so:
 
 ```swift
 // Create an object for directory search
@@ -180,7 +180,7 @@ combineFuture.receive(on: DispatchQueue.main).sink {
 
 ### Data channels
 
-Some SDK objects provide data channels (see the [Channel](/en/ios/sdk/reference/Channel) class). To subscribe to a data channel, you need to create and specify a handler function.
+Some SDK objects provide data channels (see the [Channel](/en/ios/sdk/reference/1.6/Channel) class). To subscribe to a data channel, you need to create and specify a handler function.
 
 For example, you can subscribe to a visible rectangle channel, which is updated when the visible area of the map is changed:
 
@@ -227,19 +227,19 @@ self.cancellable = visibleRectChannel.sinkOnMainThread { [weak self] visibleRect
 
 ## Adding objects
 
-To add dynamic objects to the map (such as markers, lines, circles, and polygons), you must first create a [MapObjectManager](/en/ios/sdk/reference/MapObjectManager) object, specifying the map instance. Deleting an object manager removes all associated objects from the map, so do not forget to save it to a property.
+To add dynamic objects to the map (such as markers, lines, circles, and polygons), you must first create a [MapObjectManager](/en/ios/sdk/reference/1.6/MapObjectManager) object, specifying the map instance. Deleting an object manager removes all associated objects from the map, so do not forget to save it to a property.
 
 ```swift
 self.objectsManager = MapObjectManager(map: map)
 ```
 
-After you have created an object manager, you can add objects to the map using the [addObject()](/en/ios/sdk/reference/MapObjectManager#nav-lvl1--addObject) and [addObjects()](/en/ios/sdk/reference/MapObjectManager#nav-lvl1--addObjects) methods. For each dynamic object, you can specify a `userData` field to store arbitrary data. Object settings can be changed after their creation.
+After you have created an object manager, you can add objects to the map using the [addObject()](/en/ios/sdk/reference/1.6/MapObjectManager#nav-lvl1--addObject) and [addObjects()](/en/ios/sdk/reference/1.6/MapObjectManager#nav-lvl1--addObjects) methods. For each dynamic object, you can specify a `userData` field to store arbitrary data. Object settings can be changed after their creation.
 
-To remove objects from the map, use [removeObject()](/en/ios/sdk/reference/MapObjectManager#nav-lvl1--removeObject) and [removeObjects()](/en/ios/sdk/reference/MapObjectManager#nav-lvl1--removeObjects). To remove all objects, call the [removeAll()](/en/ios/sdk/reference/MapObjectManager#nav-lvl1--removeAll) method.
+To remove objects from the map, use [removeObject()](/en/ios/sdk/reference/1.6/MapObjectManager#nav-lvl1--removeObject) and [removeObjects()](/en/ios/sdk/reference/1.6/MapObjectManager#nav-lvl1--removeObjects). To remove all objects, call the [removeAll()](/en/ios/sdk/reference/1.6/MapObjectManager#nav-lvl1--removeAll) method.
 
 ### Marker
 
-To add a marker to the map, create a [Marker](/en/ios/sdk/reference/Marker) object, specifying the required options ([MarkerOptions](/en/ios/sdk/reference/MarkerOptions)), and pass it to the `addObject()` method of the object manager. The most important settings are the coordinates of the marker and its icon.
+To add a marker to the map, create a [Marker](/en/ios/sdk/reference/1.6/Marker) object, specifying the required options ([MarkerOptions](/en/ios/sdk/reference/1.6/MarkerOptions)), and pass it to the `addObject()` method of the object manager. The most important settings are the coordinates of the marker and its icon.
 
 You can create an icon for the marker by calling the `make()` method and using [UIImage](https://developer.apple.com/documentation/uikit/uiimage), PNG data, or SVG markup as input.
 
@@ -268,13 +268,13 @@ let marker = Marker(options: options)
 objectManager.addObject(object: marker)
 ```
 
-To change the hotspot of the icon, use the [anchor](/en/ios/sdk/reference/Anchor) parameter.
+To change the hotspot of the icon, use the [anchor](/en/ios/sdk/reference/1.6/Anchor) parameter.
 
 ### Line
 
-To draw a line on the map, create a [Polyline](/en/ios/sdk/reference/Polyline) object, specifying the required options, and pass it to the `addObject()` method of the object manager.
+To draw a line on the map, create a [Polyline](/en/ios/sdk/reference/1.6/Polyline) object, specifying the required options, and pass it to the `addObject()` method of the object manager.
 
-In addition to the coordinates of the line points, you can set the line width, color, stroke type, and other options (see [PolylineOptions](/en/ios/sdk/reference/PolylineOptions)).
+In addition to the coordinates of the line points, you can set the line width, color, stroke type, and other options (see [PolylineOptions](/en/ios/sdk/reference/1.6/PolylineOptions)).
 
 ```swift
 // Coordinates of the vertices of the polyline
@@ -298,11 +298,11 @@ objectManager.addObject(object: polyline)
 
 ### Polygon
 
-To draw a polygon on the map, create a [Polygon](/en/ios/sdk/reference/Polygon) object, specifying the required options, and pass it to the `addObject()` method of the object manager.
+To draw a polygon on the map, create a [Polygon](/en/ios/sdk/reference/1.6/Polygon) object, specifying the required options, and pass it to the `addObject()` method of the object manager.
 
 Coordinates for the polygon are specified as a two-dimensional array. The first subarray must contain the coordinates of the vertices of the polygon itself. The other subarrays are optional and can be specified to create a cutout (a hole) inside the polygon (one subarray - one polygonal cutout).
 
-Additionally, you can specify the polygon color and stroke options (see [PolygonOptions](/en/ios/sdk/reference/PolygonOptions)).
+Additionally, you can specify the polygon color and stroke options (see [PolygonOptions](/en/ios/sdk/reference/1.6/PolygonOptions)).
 
 ```swift
 // Polygon settings
@@ -335,8 +335,8 @@ objectManager.addObject(object: polygon)
 
 ### Clustering
 
-To add markers to the map in clustering mode, you must create a [MapObjectManager](/en/ios/sdk/reference/MapObjectManager) object using [MapObjectManager.withClustering()](/en/ios/sdk/reference/MapObjectManager#nav-lvl1--withClustering), specifying the map instance, distance between clusters in logical pixels, maximum value of zoom-level, when MapObjectManager in clustering mode, and user implementation of the protocol SimpleClusterRenderer.
-[SimpleClusterRenderer](/en/ios/sdk/reference/SimpleClusterRenderer) is used to customize clusters in [MapObjectManager](/en/ios/sdk/reference/MapObjectManager).
+To add markers to the map in clustering mode, you must create a [MapObjectManager](/en/ios/sdk/reference/1.6/MapObjectManager) object using [MapObjectManager.withClustering()](/en/ios/sdk/reference/1.6/MapObjectManager#nav-lvl1--withClustering), specifying the map instance, distance between clusters in logical pixels, maximum value of zoom-level, when MapObjectManager in clustering mode, and user implementation of the protocol SimpleClusterRenderer.
+[SimpleClusterRenderer](/en/ios/sdk/reference/1.6/SimpleClusterRenderer) is used to customize clusters in [MapObjectManager](/en/ios/sdk/reference/1.6/MapObjectManager).
 
 ```swift
 final class SimpleClusterRendererImpl: SimpleClusterRenderer {
@@ -380,17 +380,17 @@ self.objectManager = MapObjectManager.withClustering(
 
 ## Controlling the camera
 
-You can control the camera by accessing the `map.camera` property. See the [Camera](/en/ios/sdk/reference/Camera) class for a full list of available methods and properties.
+You can control the camera by accessing the `map.camera` property. See the [Camera](/en/ios/sdk/reference/1.6/Camera) class for a full list of available methods and properties.
 
 ### Changing camera position
 
-You can change the position of the camera by calling the [move()](/en/ios/sdk/reference/Camera#nav-lvl1--move) method, which initiates a flight animation. This method has three parameters:
+You can change the position of the camera by calling the [move()](/en/ios/sdk/reference/1.6/Camera#nav-lvl1--move) method, which initiates a flight animation. This method has three parameters:
 
-- `position` - new camera position (coordinates and zoom level). Additionally, you can specify the camera tilt and rotation (see [CameraPosition](/en/ios/sdk/reference/CameraPosition)).
+- `position` - new camera position (coordinates and zoom level). Additionally, you can specify the camera tilt and rotation (see [CameraPosition](/en/ios/sdk/reference/1.6/CameraPosition)).
 - `time` - flight duration in seconds (as [TimeInterval](https://developer.apple.com/documentation/foundation/timeinterval)).
-- `animationType` - type of animation to use ([CameraAnimationType](/en/ios/sdk/reference/CameraAnimationType)).
+- `animationType` - type of animation to use ([CameraAnimationType](/en/ios/sdk/reference/1.6/CameraAnimationType)).
 
-The call will return a [Future](/en/ios/sdk/reference/Future) object, which can be used to handle the animation finish event.
+The call will return a [Future](/en/ios/sdk/reference/1.6/Future) object, which can be used to handle the animation finish event.
 
 ```swift
 // New position for camera
@@ -416,7 +416,7 @@ let cancellable = future.sink { _ in
 
 ### Getting camera state
 
-The current state of the camera (i.e., whether the camera is currently in flight) can be obtained using the `state` property. See [CameraState](/en/ios/sdk/reference/CameraState) for a list of possible camera states.
+The current state of the camera (i.e., whether the camera is currently in flight) can be obtained using the `state` property. See [CameraState](/en/ios/sdk/reference/1.6/CameraState) for a list of possible camera states.
 
 ```swift
 let currentState = map.camera.state
@@ -436,7 +436,7 @@ connection.cancel()
 
 ### Getting camera position
 
-The current position of the camera can be obtained using the `position` property (see the [CameraPosition](/en/ios/sdk/reference/CameraPosition) structure).
+The current position of the camera can be obtained using the `position` property (see the [CameraPosition](/en/ios/sdk/reference/1.6/CameraPosition) structure).
 
 ```swift
 let currentPosition = map.camera.position
@@ -460,7 +460,7 @@ connection.cancel()
 
 ## My location
 
-You can add a special marker to the map that will be automatically updated to reflect the current location of the device. To do this, create a data source using the [createMyLocationMapObjectSource()](/en/ios/sdk/reference/createMyLocationMapObjectSource(context%3AdirectionBehaviour%3A)) function and pass it to the [addSource()](/en/ios/sdk/reference/Map#nav-lvl1--addSource) method of the map.
+You can add a special marker to the map that will be automatically updated to reflect the current location of the device. To do this, create a data source using the [createMyLocationMapObjectSource()](/en/ios/sdk/reference/1.6/createMyLocationMapObjectSource(context%3AdirectionBehaviour%3A)) function and pass it to the [addSource()](/en/ios/sdk/reference/1.6/Map#nav-lvl1--addSource) method of the map.
 
 ```swift
 // Create a data source
@@ -473,7 +473,7 @@ let source = createMyLocationMapObjectSource(
 map.addSource(source: source)
 ```
 
-To remove the marker, call the [removeSource()](/en/ios/sdk/reference/Map#nav-lvl1--removeSource) method. You can get the list of active data sources by using the `map.sources` property.
+To remove the marker, call the [removeSource()](/en/ios/sdk/reference/1.6/Map#nav-lvl1--removeSource) method. You can get the list of active data sources by using the `map.sources` property.
 
 ```swift
 map.removeSource(source)
@@ -481,7 +481,7 @@ map.removeSource(source)
 
 ## Getting objects using screen coordinates
 
-You can get information about map objects using pixel coordinates. For this, call the [getRenderedObjects()](/en/ios/sdk/reference/Map#nav-lvl1--getRenderedObjects) method of the map and specify the pixel coordinates and the radius in screen millimeters. The method will return a deferred result ([Future](/en/ios/sdk/reference/Future)) containing information about all found objects within the specified radius on the visible area of the map (an array of [RenderedObjectInfo](/en/ios/sdk/reference/RenderedObjectInfo)).
+You can get information about map objects using pixel coordinates. For this, call the [getRenderedObjects()](/en/ios/sdk/reference/1.6/Map#nav-lvl1--getRenderedObjects) method of the map and specify the pixel coordinates and the radius in screen millimeters. The method will return a deferred result ([Future](/en/ios/sdk/reference/1.6/Future)) containing information about all found objects within the specified radius on the visible area of the map (an array of [RenderedObjectInfo](/en/ios/sdk/reference/1.6/RenderedObjectInfo)).
 
 An example of a function that takes tap coordinates and passes them to `getRenderedObjects()`:
 
@@ -509,7 +509,7 @@ private func tap(point: ScreenPoint, tapRadius: ScreenDistance) {
 
 ## Map styles
 
-To work with map styles, you first need to create an [IStyleFactory](/en/ios/sdk/reference/IStyleFactory) object by calling the [makeStyleFactory()](/en/ios/sdk/reference/Container#nav-lvl1--makeStyleFactory) method.
+To work with map styles, you first need to create an [IStyleFactory](/en/ios/sdk/reference/1.6/IStyleFactory) object by calling the [makeStyleFactory()](/en/ios/sdk/reference/1.6/Container#nav-lvl1--makeStyleFactory) method.
 
 ```swift
 let styleFactory = sdk.makeStyleFactory()
@@ -519,7 +519,7 @@ To create an SDK-compatible map style, use the Export function in [Style Editor]
 
 ### Using a map style
 
-To create a map with a custom style, you need to use the [loadResource()](/en/ios/sdk/reference/IStyleFactory#nav-lvl1--loadResource) or [loadFile()](/en/ios/sdk/reference/IStyleFactory#nav-lvl1--loadFile) method of [IStyleFactory](/en/ios/sdk/reference/IStyleFactory) and specify the resulting object as the `styleFuture` map option.
+To create a map with a custom style, you need to use the [loadResource()](/en/ios/sdk/reference/1.6/IStyleFactory#nav-lvl1--loadResource) or [loadFile()](/en/ios/sdk/reference/1.6/IStyleFactory#nav-lvl1--loadFile) method of [IStyleFactory](/en/ios/sdk/reference/1.6/IStyleFactory) and specify the resulting object as the `styleFuture` map option.
 
 ```swift
 // Create a style factory object
@@ -533,7 +533,7 @@ mapOptions.styleFuture = styleFactory.loadResource(name: "custom_style_file.2gis
 let mapFactory = sdk.makeMapFactory(options: mapOptions)
 ```
 
-The [loadResource()](/en/ios/sdk/reference/IStyleFactory#nav-lvl1--loadResource) and [loadFile()](/en/ios/sdk/reference/IStyleFactory#nav-lvl1--loadFile) methods return a deferred result ([Future](/en/ios/sdk/reference/Future)) so as not to delay the loading of the map. If the style has already been loaded (see the next section for more details), you can convert it into a [Future](/en/ios/sdk/reference/Future) object using the [makeReadyValue()](/en/ios/sdk/reference/Future#nav-lvl1--makeReadyValue) method.
+The [loadResource()](/en/ios/sdk/reference/1.6/IStyleFactory#nav-lvl1--loadResource) and [loadFile()](/en/ios/sdk/reference/1.6/IStyleFactory#nav-lvl1--loadFile) methods return a deferred result ([Future](/en/ios/sdk/reference/1.6/Future)) so as not to delay the loading of the map. If the style has already been loaded (see the next section for more details), you can convert it into a [Future](/en/ios/sdk/reference/1.6/Future) object using the [makeReadyValue()](/en/ios/sdk/reference/1.6/Future#nav-lvl1--makeReadyValue) method.
 
 ```swift
 var mapOptions = MapOptions.default
@@ -542,9 +542,9 @@ mapOptions.styleFuture = Future.makeReadyValue(style)
 
 ### Changing the map style
 
-To change the style of an existing map, use the [setStyle()](/en/ios/sdk/reference/Map#nav-lvl1--setStyle) method.
+To change the style of an existing map, use the [setStyle()](/en/ios/sdk/reference/1.6/Map#nav-lvl1--setStyle) method.
 
-Unlike the `styleFuture` map option, [setStyle()](/en/ios/sdk/reference/Map#nav-lvl1--setStyle) accepts a fully loaded [Style](/en/ios/sdk/reference/Style) object instead of a [Future](/en/ios/sdk/reference/Future) object. Therefore, [setStyle()](/en/ios/sdk/reference/Map#nav-lvl1--setStyle) should be called after the [Future](/en/ios/sdk/reference/Future) has been resolved.
+Unlike the `styleFuture` map option, [setStyle()](/en/ios/sdk/reference/1.6/Map#nav-lvl1--setStyle) accepts a fully loaded [Style](/en/ios/sdk/reference/1.6/Style) object instead of a [Future](/en/ios/sdk/reference/1.6/Future) object. Therefore, [setStyle()](/en/ios/sdk/reference/1.6/Map#nav-lvl1--setStyle) should be called after the [Future](/en/ios/sdk/reference/1.6/Future) has been resolved.
 
 ```swift
 // Create a style factory object
@@ -563,7 +563,7 @@ self.cancellable = styleFactory.loadFile(url: styleFileURL).sink(
 
 ### Dark Mode
 
-Each map style can contain several themes that you can switch between without having to load an additional style. You can specify which theme to use by setting the [appearance](/en/ios/sdk/reference/MapOptions#nav-lvl1--appearance) map option when creating the map.
+Each map style can contain several themes that you can switch between without having to load an additional style. You can specify which theme to use by setting the [appearance](/en/ios/sdk/reference/1.6/MapOptions#nav-lvl1--appearance) map option when creating the map.
 
 In iOS 13.0 and later, you can also use the automatic switching between light and dark themes (see [Dark Mode](https://developer.apple.com/design/human-interface-guidelines/ios/visual-design/dark-mode)).
 
@@ -589,7 +589,7 @@ if #available(iOS 13.0, *) {
 let mapFactory = sdk.makeMapFactory(options: mapOptions)
 ```
 
-To change the theme after the map has been created, use the `appearance` property of [IMapView](/en/ios/sdk/reference/IMapView):
+To change the theme after the map has been created, use the `appearance` property of [IMapView](/en/ios/sdk/reference/1.6/IMapView):
 
 ```swift
 // Get the map view
