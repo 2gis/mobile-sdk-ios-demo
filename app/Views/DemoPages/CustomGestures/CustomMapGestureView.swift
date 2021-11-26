@@ -5,12 +5,27 @@ class CustomMapGestureView: UIView, IMapGestureView {
 	private(set) var panGestureRecognizer: UIPanGestureRecognizer?
 	private(set) var pinchGestureRecognizer: UIPinchGestureRecognizer?
 
+	var rotationGestureRecognizer: UIRotationGestureRecognizer? {
+		self.defaultMapGestureView?.rotationGestureRecognizer
+	}
+
 	private let mapEventProcessor: IMapEventProcessor
 	private let mapCoordinateSpace: IMapCoordinateSpace
+	private let defaultMapGestureView: IMapGestureView?
 
-	init(mapEventProcessor: IMapEventProcessor, mapCoordinateSpace: IMapCoordinateSpace) {
+	init(
+		map: Map,
+		mapEventProcessor: IMapEventProcessor,
+		mapCoordinateSpace: IMapCoordinateSpace
+	) {
 		self.mapEventProcessor = mapEventProcessor
 		self.mapCoordinateSpace = mapCoordinateSpace
+		let gestureViewFactory = MapOptions.default.gestureViewFactory
+		self.defaultMapGestureView = gestureViewFactory?.makeGestureView(
+			map: map,
+			eventProcessor: mapEventProcessor,
+			coordinateSpace: mapCoordinateSpace
+		)
 		super.init(frame: .zero)
 
 		self.setupGestureRecognizers()
@@ -32,6 +47,8 @@ class CustomMapGestureView: UIView, IMapGestureView {
 		pinchGR.delegate = self
 		self.addGestureRecognizer(pinchGR)
 		self.pinchGestureRecognizer = pinchGR
+
+		self.addGestureRecognizer(self.rotationGestureRecognizer!)
 	}
 
 	@objc func pinch(_ pinchGestureRecognizer: UIPinchGestureRecognizer) {

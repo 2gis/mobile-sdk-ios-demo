@@ -7,6 +7,6 @@ class CustomGestureViewFactory: IMapGestureViewFactory {
 		eventProcessor: IMapEventProcessor,
 		coordinateSpace: IMapCoordinateSpace
 	) -> UIView & IMapGestureView {
-		CustomMapGestureView(mapEventProcessor: eventProcessor, mapCoordinateSpace: coordinateSpace)
+		CustomMapGestureView(map: map, mapEventProcessor: eventProcessor, mapCoordinateSpace: coordinateSpace)
 	}
 }
