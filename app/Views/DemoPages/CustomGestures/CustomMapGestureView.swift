@@ -48,7 +48,7 @@ class CustomMapGestureView: UIView, IMapGestureView {
 		self.addGestureRecognizer(pinchGR)
 		self.pinchGestureRecognizer = pinchGR
 
-		self.addGestureRecognizer(self.rotationGestureRecognizer!)
+		self.rotationGestureRecognizer.map(self.addGestureRecognizer)
 	}
 
 	@objc func pinch(_ pinchGestureRecognizer: UIPinchGestureRecognizer) {
