@@ -601,6 +601,6 @@ mapView.appearance = .universal(darkTheme)
 
 ## Map gesture recognizer
 
-To recognize map gestures, you need to set the [IMapGestureView](/en/ios/sdk/reference/IMapGestureView) implementation in [IMapView](/en/ios/sdk/reference/IMapView) or [IMapGestureViewFactory](/en/ios/sdk/reference/IMapGestureViewFactory) implementation in [MapOptions](/en/ios/sdk/reference/MapOptions).
+To customize the map gesture recognizer, you need to set the [IMapGestureView](/en/ios/sdk/reference/IMapGestureView) implementation in [IMapView](/en/ios/sdk/reference/IMapView) or [IMapGestureViewFactory](/en/ios/sdk/reference/IMapGestureViewFactory) implementation in [MapOptions](/en/ios/sdk/reference/MapOptions).
 If no implementations are specified, the default implementations will be used.
-To customize the map gesture recognizer, you can use the default implementation. An example of such recognizer is available [here](https://github.com/2gis/native-sdk-ios-demo/blob/master/app/Views/DemoPages/CustomGestures/CustomMapGestureView.swift).
+An example of such recognizer is available [here](https://github.com/2gis/native-sdk-ios-demo/blob/master/app/Views/DemoPages/CustomGestures/CustomMapGestureView.swift).
