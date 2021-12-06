@@ -601,3 +601,9 @@ let mapView = mapFactory.mapView
 // Меняем тему на тёмную.
 mapView.appearance = .universal(darkTheme)
 ```
+
+## Распознаватель жестов карты
+
+Для кастомизации распознавателя жестов карты, необходимо задать реализацию протокола [IMapGestureView](/ru/ios/sdk/reference/IMapGestureView) в [IMapView](/ru/ios/sdk/reference/IMapView) или реализацию [IMapGestureViewFactory](/ru/ios/sdk/reference/IMapGestureViewFactory) в [MapOptions](/ru/ios/sdk/reference/MapOptions).
+Если ни одна из этих имплементаций задана не будет, то будет использована реализация по умолчанию.
+Пример такой кастомизации распознавателя можно посмотреть [здесь](https://github.com/2gis/native-sdk-ios-demo/blob/master/app/Views/DemoPages/CustomGestures/CustomMapGestureView.swift).
