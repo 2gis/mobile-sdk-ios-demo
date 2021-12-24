@@ -9,7 +9,7 @@
 - В структуре `Location` появились 2 поля - название источника геопозиции `source` и временная точка, в которой была определена геопозиция, `timestamp`.
 - Класс `PackedMapState` для сериализации и десериализации состояния карты. Старые методы `serialize(cameraPosition:)` и `deserialize(positionString:)` помечены, как deprecated.
 - Класс `PackedSearchQuery` для сериализации и десериализации поискового запроса.
-- Добавлен метод `map_to_screen(geoPointWithElevation:)` в структуру `Projection`.
+- Добавлен метод `mapToScreen(geoPointWithElevation:)` в структуру `Projection`.
 - Реализован контрол отображения маршрутов на общественном транспорте.
 - Реализована отправка статистики для навигатора.
 
