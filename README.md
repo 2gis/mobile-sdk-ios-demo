@@ -21,9 +21,14 @@ You can also use [xcframework](https://github.com/2gis/mobile-sdk-map-swift-pack
 
 ## Installation
 
-To install this SDK, add a package dependency to your project, specifying `https://github.com/2gis/mobile-sdk-map-swift-package` as the URL.
+To install this SDK, you need to add a package dependency to your project. See the [official documentation](https://developer.apple.com/documentation/swift_packages/adding_package_dependencies_to_your_app) for more information on using Swift packages.
 
-You can find more information about using Swift packages in the [official documentation]((https://developer.apple.com/documentation/swift_packages/adding_package_dependencies_to_your_app)).
+2GIS iOS SDK is distributed in two versions: full and lite. The lite version does not include the routes and navigation functionality.
+
+Specify one of the following URLs when adding a dependency to install the SDK:
+
+- `https://github.com/2gis/mobile-sdk-map-swift-package` - to get the lite version.
+- `https://github.com/2gis/mobile-sdk-full-swift-package` - to get the full version.
 
 ## Running the demo app
 
