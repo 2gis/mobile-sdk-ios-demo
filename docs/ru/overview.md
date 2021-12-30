@@ -4,7 +4,7 @@ iOS SDK позволяет добавить [карту 2GIS](https://2gis.ru/) 
 
 Примеры использования SDK можно найти в разделе [Примеры](/ru/ios/sdk/examples). Описание всех классов и методов можно найти в разделе [Справочник API](/ru/ios/sdk/reference).
 
-Geodata complies with [OGC standards](https://en.wikipedia.org/wiki/Open_Geospatial_Consortium).
+Картографические данные поддерживают [стандарты OGC](https://ru.wikipedia.org/wiki/Open_Geospatial_Consortium).
 
 ## Получение ключей доступа
 
@@ -14,17 +14,23 @@ Geodata complies with [OGC standards](https://en.wikipedia.org/wiki/Open_Geospat
 
 Чтобы получить любой из этих ключей, заполните форму на [dev.2gis.ru](https://dev.2gis.ru/order/).
 
-## Установка
-
-Чтобы использовать iOS SDK, добавьте в свой проект зависимость от [Swift-пакета](https://github.com/2gis/mobile-sdk-map-swift-package).
-Подробнее об установке можно прочитать в [статье](https://developer.apple.com/documentation/swift_packages/adding_package_dependencies_to_your_app).
-
 ## Требования к устройствам
 
 - Xcode 12
 - iOS 13.0+ или iPadOS 13.0+ (это обусловлено использованием в проекте [SwiftUI](https://developer.apple.com/documentation/swiftui))
 
 При необходимости можно использовать [xcframework](https://github.com/2gis/mobile-sdk-map-swift-package/blob/master/Package.swift) для сборки проекта под iOS 12.
+
+## Установка
+
+Чтобы установить iOS SDK, нужно добавить в проект пакетную зависимость. Подробнее про установку Swift-пакетов можно прочитать в [официальной документации](https://developer.apple.com/documentation/swift_packages/adding_package_dependencies_to_your_app).
+
+iOS SDK доступен в двух версиях: полной и облегченной. Облегченная версия не включает навигатор и не позволяет строить маршруты.
+
+Для подключения SDK нужно указать один из следующих URL:
+
+- `https://github.com/2gis/mobile-sdk-map-swift-package` - для установки облегченной версии.
+- `https://github.com/2gis/mobile-sdk-full-swift-package` - для установки полной версии.
 
 ## Демонстрационный проект
 
