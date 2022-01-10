@@ -6,8 +6,8 @@
         "repositoryURL": "https://github.com/2gis/mobile-sdk-map-swift-package.git",
         "state": {
           "branch": null,
-          "revision": "7becc9dc0e68d49efa40270fb1343fd67ae26d49",
-          "version": "1.6.12"
+          "revision": "573a0cd261141758a23567b8ab2f2ad9b4490535",
+          "version": "1.6.14"
         }
       }
     ]
