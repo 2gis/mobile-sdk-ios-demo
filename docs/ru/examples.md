@@ -483,6 +483,14 @@ map.addSource(source: source)
 map.removeSource(source)
 ```
 
+## Слой пробок
+
+Для отображения слоя пробок необходимо создать [TrafficSource](/ru/ios/sdk/reference/2.2/TrafficSource) и передать его в метод карты [addSource()](/ru/ios/sdk/reference/2.0/Map#nav-lvl1--addSource).
+```swift
+let trafficSource = TrafficSource(context: sdk.context)
+map.addSource(source: trafficSource)
+```
+
 ## Построение маршрута
 
 Для того, чтобы проложить маршрут на карте, нужно создать два объекта: [TrafficRouter](/ru/ios/sdk/reference/2.2/TrafficRouter) для поиска оптимального маршрута и источник данных [RouteMapObjectSource](/ru/ios/sdk/reference/2.2/RouteMapObjectSource) для отображения маршрута на карте.
