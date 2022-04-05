@@ -26,12 +26,10 @@ struct RootViewFactory {
 				self.makeMarkersDemoPage()
 			case .dictionarySearch:
 				self.makeSearchStylesDemoPage()
-			case .mapStyles:
-				self.makeCustomStylesDemoPage()
+			case .mapStyleAndTheme:
+				self.makeStyleAndThemeDemoPage()
 			case .visibleAreaDetection:
 				self.makeVisibleAreaDetectionDemoPage()
-			case .mapTheme:
-				self.makeMapThemeDemoPage()
 			case .fps:
 				self.makeFpsDemoPage()
 			case .clustering:
@@ -41,15 +39,15 @@ struct RootViewFactory {
 		}
 	}
 
-	private func makeCustomStylesDemoPage() -> some View {
+	private func makeStyleAndThemeDemoPage() -> some View {
 		let mapFactory = self.makeMapFactory()
-		let viewModel = CustomMapStyleDemoViewModel(
+		let viewModel = MapStyleAndThemeDemoViewModel(
 			styleFactory: { [sdk = self.sdk] in
 				sdk.makeStyleFactory()
 			},
 			map: mapFactory.map
 		)
-		return CustomMapStyleDemoView(
+		return MapStyleAndThemeDemoView(
 			viewModel: viewModel,
 			viewFactory: self.makeDemoPageComponentsFactory(mapFactory: mapFactory)
 		)
@@ -127,14 +125,6 @@ struct RootViewFactory {
 		)
 	}
 
-	private func makeMapThemeDemoPage() -> some View {
-		let viewModel = MapThemeDemoViewModel()
-		return MapThemeDemoView(
-			viewModel: viewModel,
-			viewFactory: self.makeDemoPageComponentsFactory(mapFactory: self.makeMapFactory())
-		)
-	}
-
 	private func makeFpsDemoPage() -> some View {
 		let mapFactory = self.makeMapFactory()
 		let viewModel = FpsDemoViewModel(
@@ -175,7 +165,11 @@ struct RootViewFactory {
 		)
 	}
 
-	private func makeMapFactory() -> IMapFactory {
-		self.sdk.makeMapFactory(options: .default)
+	private func makeMapFactory(options: MapOptions = .default) -> IMapFactory {
+		do {
+			return try self.sdk.makeMapFactory(options: options)
+		} catch {
+			fatalError("IMapFactory initialization error: \(error)")
+		}
 	}
 }
