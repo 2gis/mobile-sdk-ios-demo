@@ -13,6 +13,7 @@ guard let apiKeys = APIKeys(directory: "Directory API key", map: "SDK key") else
 // Создание контейнера для доступа к возможностям SDK.
 let sdk = DGis.Container(apiKeys: apiKeys)
 ```
+Обратите внимание, DGis.Container может быть создан только в единственном экземпляре.
 
 Дополнительно можно указать настройки журналирования ([LogOptions](/ru/ios/sdk/reference/2.0/LogOptions)) и настройки HTTP-клиента ([HTTPOptions](/ru/ios/sdk/reference/2.0/HTTPOptions)), такие как время ожидания ответа и кеширование.
 

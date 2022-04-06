@@ -11,6 +11,7 @@ guard let apiKeys = APIKeys(directory: "Directory API key", map: "SDK key") else
 // Create a Container object
 let sdk = DGis.Container(apiKeys: apiKeys)
 ```
+Note that DGis.Container can be created in single instance.
 
 Additionally, you can specify logging settings ([LogOptions](/en/ios/sdk/reference/2.0/LogOptions)) and HTTP client settings ([HTTPOptions](/en/ios/sdk/reference/2.0/HTTPOptions)) such as timeout and caching.
 
