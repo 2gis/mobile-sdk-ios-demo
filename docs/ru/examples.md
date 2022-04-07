@@ -483,6 +483,145 @@ map.addSource(source: source)
 map.removeSource(source)
 ```
 
+## Навигатор
+
+Чтобы создать навигатор, можно использовать готовый элемент интерфейса [INavigationView](/ru/ios/sdk/reference/2.2/INavigationView) и класс [NavigationManager](/ru/ios/sdk/reference/2.2/NavigationManager).
+
+Для этого нужно добавить на карту маркер с текущим местоположением и создать слой навигатора с помощью фабрики [INavigationViewFactory](/ru/ios/sdk/reference/2.2/INavigationViewFactory) и класса [NavigationManager](/ru/ios/sdk/reference/2.2/NavigationManager).
+
+```swift
+// Создаём фабрику объектов карты
+guard let mapFactory = try? sdk.makeMapFactory(options: .default) else {
+    return
+}
+
+// Создаём слой карты и добавляем его в иерархию представлений
+let mapView = mapFactory.mapView
+mapView.translatesAutoresizingMaskIntoConstraints = false
+containerView.addSubview(mapView)
+NSLayoutConstraint.activate([
+    mapView.leftAnchor.constraint(equalTo: containerView.leftAnchor),
+    mapView.rightAnchor.constraint(equalTo: containerView.rightAnchor),
+    mapView.topAnchor.constraint(equalTo: containerView.topAnchor),
+    mapView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor)
+])
+
+// Добавляем на карту маркер с текущим местоположением
+let locationSource = MyLocationMapObjectSource(
+    context: sdk.context,
+    directionBehaviour: .followSatelliteHeading,
+    controller: createSmoothMyLocationController()
+)
+let map = mapFactory.map
+map.addSource(source: locationSource)
+
+// Создаём NavigationManager
+let navigationManager = NavigationManager(platformContext: sdk.context)
+
+// Добавляем карту в навигатор
+navigationManager.mapManager.addMap(map: map)
+
+// Создаём фабрику UI-компонентов навигатора
+let navigationViewFactory = sdk.makeNavigationViewFactory()
+
+// Создаём с помощью фабрики слой навигатора и размещаем его в иерархии выше слоя карты
+let navigationView = navigationViewFactory.makeNavigationView(
+    map: map,
+    navigationManager: navigationManager
+)
+navigationView.translatesAutoresizingMaskIntoConstraints = false
+containerView.addSubview(navigationView)
+NSLayoutConstraint.activate([
+    navigationView.leftAnchor.constraint(equalTo: containerView.leftAnchor),
+    navigationView.rightAnchor.constraint(equalTo: containerView.rightAnchor),
+    navigationView.topAnchor.constraint(equalTo: containerView.topAnchor),
+    navigationView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor)
+])
+
+// Добавляем обработчик нажатия кнопки закрытия
+navigationView.closeButtonCallback = {
+    navigationManager.stop()
+}
+```
+
+Навигатор может работать в трёх режимах: свободная навигация, ведение по маршруту и симуляция ведения.
+
+Настройки навигатора можно изменить через [свойства NavigationManager](/ru/ios/sdk/reference/2.2/NavigationManager#nav-lvl1--uiModel).
+
+### Свободная навигация
+
+В этом режиме маршрут следования отсутствует, навигатор показывает только информацию о ближайших объектах.
+
+Чтобы запустить навигатор в этом режиме, нужно вызвать метод `start()` без параметров.
+
+```swift
+navigationManager.start()
+```
+
+### Ведение по маршруту
+
+В этом режиме на карте будет построен маршрут от текущего местоположения до указанной точки назначения.
+
+Чтобы запустить навигатор в этом режиме, нужно вызвать метод `start()` и указать объект [RouteBuildOptions](/ru/ios/sdk/reference/2.2/RouteBuildOptions) - координаты точки назначения и настройки маршрута.
+
+```swift
+let routeBuildOptions = RouteBuildOptions(
+    finishPoint: RouteSearchPoint(
+        coordinates: GeoPoint(
+            latitude: 55.752425,
+            longitude: 37.613983
+        )
+    ),
+    routeSearchOptions: routeSearchOptions
+)
+
+navigationManager.start(routeBuildOptions)
+```
+
+Дополнительно при вызове метода `start()` можно указать объект [TrafficRoute](/ru/ios/sdk/reference/2.2/TrafficRoute) - готовый маршрут для навигации. В таком случае навигатор не будет пытаться построить маршрут от текущего местоположения, а отобразит на карте указанный маршрут.
+
+```swift
+// Ищем маршрут
+self.routeSearchCancellable = routesFuture.sink { routes in
+    guard let route = routes.first else { return }
+
+    // Настройки маршрута
+    let routeBuildOptions = RouteBuildOptions(
+        finishPoint: finishPoint,
+        routeSearchOptions: routeSearchOptions
+    )
+    // Запускаем навигатор
+    navigationManager.start(
+        routeBuildOptions: routeBuildOptions,
+        trafficRoute: route
+    )
+} failure: { error in
+    print("Не удалось найти маршрут: \\(error)")
+}
+```
+
+### Симуляция ведения по маршруту
+
+В этом режиме навигатор не будет отслеживать реальное местоположение устройства, а запустит симулированное движение по указанному маршруту. Режим удобно использовать для отладки.
+
+Чтобы запустить навигатор в режиме симуляции, нужно вызвать метод `startSimulation()`, указав готовый маршрут ([TrafficRoute](/ru/ios/sdk/reference/2.2/TrafficRoute)) и его настройки ([RouteBuildOptions](/ru/ios/sdk/reference/2.2/RouteBuildOptions)).
+
+Скорость движения можно изменить с помощью свойства [SimulationSettings.speed](/ru/ios/sdk/reference/2.2/SimulationSettings) (метры в секунду).
+
+```swift
+navigationManager.simulationSettings.speed = 30 / 3.6
+navigationManager.startSimulation(
+    routeBuildOptions: routeBuildOptions,
+    trafficRoute: route
+)
+```
+
+Остановить симуляцию можно с помощью метода `stop()`.
+
+```swift
+navigationManager.stop()
+```
+
 ## Получение объектов по экранным координатам
 
 Информацию об объектах на карте можно получить, используя пиксельные координаты. Для этого нужно вызвать метод карты [getRenderedObjects()](/ru/ios/sdk/reference/2.0/Map#nav-lvl1--getRenderedObjects), указав координаты в пикселях и радиус в экранных миллиметрах. Метод вернет отложенный результат, содержащий информацию обо всех найденных объектах в указанном радиусе на видимой области карты (массив [RenderedObjectInfo](/ru/ios/sdk/reference/2.0/RenderedObjectInfo)).
