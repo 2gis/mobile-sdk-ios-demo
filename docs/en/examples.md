@@ -479,6 +479,147 @@ To remove the marker, call the [removeSource()](/en/ios/sdk/reference/2.0/Map#na
 map.removeSource(source)
 ```
 
+## Turn-by-turn navigation
+
+You can add a turn-by-turn navigation to your app using the ready-to-use interface components ([INavigationView](/en/ios/sdk/reference/2.2/INavigationView)) and the [NavigationManager](/en/ios/sdk/reference/2.2/NavigationManager) class.
+
+To do that, add a [My location marker](#nav-lvl1--My_location) to the map and create a navigation layer using [INavigationViewFactory](/en/ios/sdk/reference/2.2/INavigationViewFactory) and [NavigationManager](/en/ios/sdk/reference/2.2/NavigationManager).
+
+```swift
+// Create a map object
+guard let mapFactory = try? sdk.makeMapFactory(options: .default) else {
+    return
+}
+
+// Add the map view to the view hierarchy
+let mapView = mapFactory.mapView
+mapView.translatesAutoresizingMaskIntoConstraints = false
+containerView.addSubview(mapView)
+NSLayoutConstraint.activate([
+    mapView.leftAnchor.constraint(equalTo: containerView.leftAnchor),
+    mapView.rightAnchor.constraint(equalTo: containerView.rightAnchor),
+    mapView.topAnchor.constraint(equalTo: containerView.topAnchor),
+    mapView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor)
+])
+
+// Add the current location marker to the map
+let locationSource = MyLocationMapObjectSource(
+    context: sdk.context,
+    directionBehaviour: .followSatelliteHeading,
+    controller: createSmoothMyLocationController()
+)
+let map = mapFactory.map
+map.addSource(source: locationSource)
+
+// Create a NavigationManager object
+let navigationManager = NavigationManager(platformContext: sdk.context)
+
+// Attach the map to the NavigationManager
+navigationManager.mapManager.addMap(map: map)
+
+// Create a NavigationViewFactory object
+let navigationViewFactory = sdk.makeNavigationViewFactory()
+
+// Create a navigation view and add it to the view hierarchy above the map
+let navigationView = navigationViewFactory.makeNavigationView(
+    map: map,
+    navigationManager: navigationManager
+)
+navigationView.translatesAutoresizingMaskIntoConstraints = false
+containerView.addSubview(navigationView)
+NSLayoutConstraint.activate([
+    navigationView.leftAnchor.constraint(equalTo: containerView.leftAnchor),
+    navigationView.rightAnchor.constraint(equalTo: containerView.rightAnchor),
+    navigationView.topAnchor.constraint(equalTo: containerView.topAnchor),
+    navigationView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor)
+])
+
+// Add an event handler for the close button
+navigationView.closeButtonCallback = {
+    navigationManager.stop()
+}
+```
+
+You can start navigation in one of three modes: free-drive, turn-by-turn, and the simulated navigation mode.
+
+Additional navigation settings can be changed using the properties of the [NavigationManager](/en/ios/sdk/reference/2.2/NavigationManager#nav-lvl1--uiModel) object.
+
+### Free-drive mode
+
+In free-drive mode, no route will be displayed on the map, but the user will still be informed about speed limits, traffic cameras, incidents, and road closures.
+
+To start navigation in this mode, call the `start()` method without arguments.
+
+```swift
+navigationManager.start()
+```
+
+### Turn-by-turn mode
+
+In turn-by-turn mode, a route will be displayed on the map and the user will receive navigation instructions as they move along the route.
+
+To start navigation in this mode, call the `start()` method and specify a [RouteBuildOptions](/en/ios/sdk/reference/2.2/RouteBuildOptions) object - arrival coordinates and route settings.
+
+```swift
+let routeBuildOptions = RouteBuildOptions(
+    finishPoint: RouteSearchPoint(
+        coordinates: GeoPoint(
+            latitude: 55.752425,
+            longitude: 37.613983
+        )
+    ),
+    routeSearchOptions: routeSearchOptions
+)
+
+navigationManager.start(routeBuildOptions)
+```
+
+Additionally, when calling the `start()` method, you can specify a [TrafficRoute](/en/ios/sdk/reference/2.2/TrafficRoute) object - a complete route object for navigation. In this case, [NavigationManager](/en/ios/sdk/reference/2.2/NavigationManager) will use the specified route instead of building a new one.
+
+```swift
+// Building a route
+self.routeSearchCancellable = routesFuture.sink { routes in
+    guard let route = routes.first else { return }
+
+    // Route settings
+    let routeBuildOptions = RouteBuildOptions(
+        finishPoint: finishPoint,
+        routeSearchOptions: routeSearchOptions
+    )
+    // Start navigation
+    navigationManager.start(
+        routeBuildOptions: routeBuildOptions,
+        trafficRoute: route
+    )
+} failure: { error in
+    print("Couldn't build the route: \\(error)")
+}
+```
+
+### Simulated navigation
+
+In this mode, [NavigationManager](/en/ios/sdk/reference/2.2/NavigationManager) will not track the current location of the device. Instead, it will simulate a movement along the specified route.
+
+This mode is useful for debugging.
+
+To use this mode, call the `startSimulation()` method and specify a [RouteBuildOptions](/en/ios/sdk/reference/2.2/RouteBuildOptions) object (route settings) and a [TrafficRoute](/en/ios/sdk/reference/2.2/TrafficRoute) object (the route itself).
+
+You can change the speed of the simulated movement using the [SimulationSettings.speed](/en/ios/sdk/reference/2.2/SimulationSettings) property (specified in meters per second).
+
+```swift
+navigationManager.simulationSettings.speed = 30 / 3.6
+navigationManager.startSimulation(
+    routeBuildOptions: routeBuildOptions,
+    trafficRoute: route
+)
+```
+
+To stop the simulation, call the `stop()` method.
+
+```swift
+navigationManager.stop()
+```
+
 ## Getting objects using screen coordinates
 
 You can get information about map objects using pixel coordinates. For this, call the [getRenderedObjects()](/en/ios/sdk/reference/2.0/Map#nav-lvl1--getRenderedObjects) method of the map and specify the pixel coordinates and the radius in screen millimeters. The method will return a deferred result ([Future](/en/ios/sdk/reference/2.0/Future)) containing information about all found objects within the specified radius on the visible area of the map (an array of [RenderedObjectInfo](/en/ios/sdk/reference/2.0/RenderedObjectInfo)).
