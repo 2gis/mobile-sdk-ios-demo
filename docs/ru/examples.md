@@ -490,12 +490,12 @@ map.removeSource(source)
 Для этого нужно добавить на карту маркер с текущим местоположением и создать слой навигатора с помощью фабрики [INavigationViewFactory](/ru/ios/sdk/reference/2.2/INavigationViewFactory) и класса [NavigationManager](/ru/ios/sdk/reference/2.2/NavigationManager).
 
 ```swift
-// Создаём фабрику объектов карты
+// Создаём фабрику объектов карты.
 guard let mapFactory = try? sdk.makeMapFactory(options: .default) else {
     return
 }
 
-// Добавляем слой карты в иерархию представлений
+// Добавляем слой карты в иерархию представлений.
 let mapView = mapFactory.mapView
 mapView.translatesAutoresizingMaskIntoConstraints = false
 containerView.addSubview(mapView)
@@ -506,7 +506,7 @@ NSLayoutConstraint.activate([
     mapView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor)
 ])
 
-// Добавляем на карту маркер с текущим местоположением
+// Добавляем на карту маркер с текущим местоположением.
 let locationSource = MyLocationMapObjectSource(
     context: sdk.context,
     directionBehaviour: .followSatelliteHeading,
@@ -515,16 +515,16 @@ let locationSource = MyLocationMapObjectSource(
 let map = mapFactory.map
 map.addSource(source: locationSource)
 
-// Создаём NavigationManager
+// Создаём NavigationManager.
 let navigationManager = NavigationManager(platformContext: sdk.context)
 
-// Добавляем карту в навигатор
+// Добавляем карту в навигатор.
 navigationManager.mapManager.addMap(map: map)
 
-// Создаём фабрику UI-компонентов навигатора
+// Создаём фабрику UI-компонентов навигатора.
 let navigationViewFactory = sdk.makeNavigationViewFactory()
 
-// Создаём с помощью фабрики слой навигатора и размещаем его в иерархии выше слоя карты
+// Создаём с помощью фабрики слой навигатора и размещаем его в иерархии выше слоя карты.
 let navigationView = navigationViewFactory.makeNavigationView(
     map: map,
     navigationManager: navigationManager
@@ -538,7 +538,7 @@ NSLayoutConstraint.activate([
     navigationView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor)
 ])
 
-// Добавляем обработчик нажатия кнопки закрытия
+// Добавляем обработчик нажатия кнопки закрытия.
 navigationView.closeButtonCallback = {
     navigationManager.stop()
 }
@@ -581,16 +581,16 @@ navigationManager.start(routeBuildOptions)
 Дополнительно при вызове метода `start()` можно указать объект [TrafficRoute](/ru/ios/sdk/reference/2.2/TrafficRoute) - готовый маршрут для навигации. В таком случае навигатор не будет пытаться построить маршрут от текущего местоположения, а начнёт ведение по указанному маршруту.
 
 ```swift
-// Ищем маршрут
+// Ищем маршрут.
 self.routeSearchCancellable = routesFuture.sink { routes in
     guard let route = routes.first else { return }
 
-    // Настройки маршрута
+    // Настройки маршрута.
     let routeBuildOptions = RouteBuildOptions(
         finishPoint: finishPoint,
         routeSearchOptions: routeSearchOptions
     )
-    // Запускаем навигатор
+    // Запускаем навигатор.
     navigationManager.start(
         routeBuildOptions: routeBuildOptions,
         trafficRoute: route
@@ -635,7 +635,7 @@ private func tap(point: ScreenPoint, tapRadius: ScreenDistance) {
 			infos in
 			// Первый объект в массиве - самый близкий к координатам.
 			guard let info = infos.first else { return }
-			// Обработка результата в главной очереди
+			// Обработка результата в главной очереди.
 			DispatchQueue.main.async {
 				[weak self] in
 				self?.handle(selectedObject: info)
