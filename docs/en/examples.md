@@ -3,12 +3,12 @@
 To begin working with the SDK, create a [Container](/en/ios/sdk/reference/2.0/Container) object, which will store all map entities. To create it, you need to specify your API keys as an [APIKeys](/en/ios/sdk/reference/2.0/APIKeys) structure.
 
 ```swift
-// Create an APIKeys object
+// Create an APIKeys object.
 guard let apiKeys = APIKeys(directory: "Directory API key", map: "SDK key") else { 
 	fatalError("Invalid API keys.") 
 }
 
-// Create a Container object
+// Create a Container object.
 let sdk = DGis.Container(apiKeys: apiKeys)
 ```
 Note that DGis.Container can be created in single instance.
@@ -16,19 +16,19 @@ Note that DGis.Container can be created in single instance.
 Additionally, you can specify logging settings ([LogOptions](/en/ios/sdk/reference/2.0/LogOptions)) and HTTP client settings ([HTTPOptions](/en/ios/sdk/reference/2.0/HTTPOptions)) such as timeout and caching.
 
 ```swift
-// Logging settings
+// Logging settings.
 let logOptions = LogOptions(osLogLevel: .info)
 
-// HTTP client settings
+// HTTP client settings.
 let httpOptions = HTTPOptions(timeout: 5, cacheOptions: nil)
 
-// Geopositioning settings
+// Geopositioning settings.
 let positioningServices: IPositioningServicesFactory = CustomPositioningServicesFactory()
 
-// Consent to personal data processing
+// Consent to personal data processing.
 let dataCollectionOptions = DataCollectionOptions(dataCollectionStatus: .agree)
 
-// Creating the Container
+// Creating the Container.
 let sdk = DGis.Container(
 	apiKeys: apiKeys,
 	logOptions: logOptions,
@@ -47,23 +47,23 @@ It is important to specify the correct PPI settings for the device. You can find
 You can also specify the initial camera position, zoom limits, and other settings.
 
 ```swift
-// Map settings object
+// Map settings object.
 var mapOptions = MapOptions.default
 
-// PPI settings
+// PPI settings.
 mapOptions.devicePPI = devicePPI
 
-// Create a map
+// Create a map.
 let mapFactory: PlatformMapSDK.IMapFactory = sdk.makeMapFactory(options: mapOptions)
 ```
 
 To get the view of the map, use the `mapView` property. To get the control of the map, use the [map](/en/ios/sdk/reference/2.0/Map) property.
 
 ```swift
-// Map view
+// Map view.
 let mapView: UIView & IMapView = mapFactory.mapView
 
-// Map control
+// Map control.
 let map = mapFactory.map
 ```
 
@@ -76,10 +76,10 @@ Some SDK methods (e.g., those that access a remote server) return deferred resul
 For example, to get information from object directory, you can process [Future](/en/ios/sdk/reference/2.0/Future) like so:
 
 ```swift
-// Create an object for directory search
+// Create an object for directory search.
 let searchManager = SearchManager.createOnlineManager(context: sdk.context)
 
-// Get object by identifier
+// Get object by identifier.
 let future = searchManager.searchByDirectoryObjectId(objectId: object.id)
 
 // Process the search result in the main thread.
@@ -164,7 +164,7 @@ extension DGis.Future {
 // Create Combine.Future
 let combineFuture = future.asCombineFuture()
 
-// Process the search result in the main thread
+// Process the search result in the main thread.
 combineFuture.receive(on: DispatchQueue.main).sink {
 	[weak self] completion in
 	switch completion {
@@ -186,7 +186,7 @@ Some SDK objects provide data channels (see the [Channel](/en/ios/sdk/reference/
 For example, you can subscribe to a visible rectangle channel, which is updated when the visible area of the map is changed:
 
 ```swift
-// Choose a data channel
+// Choose a data channel.
 let visibleRectChannel = map.camera.visibleRectChannel
 
 // Subscribe to the channel and process the results in the main thread.
@@ -249,13 +249,13 @@ You can create an icon for the marker by calling the `make()` method and using [
 let uiImage = UIImage(systemName: "umbrella.fill")!.withTintColor(.systemRed)
 let icon = sdk.imageFactory.make(image: uiImage)
 
-// SVG markup
+// SVG markup.
 let icon = sdk.imageFactory.make(svgData: imageData, size: imageSize)
 
-// PNG data
+// PNG data.
 let icon = sdk.imageFactory.make(pngData: imageData, size: imageSize)
 
-// Marker settings
+// Marker settings.
 let options = MarkerOptions(
 	position: GeoPointWithElevation(
 		latitude: 55.752425,
@@ -264,7 +264,7 @@ let options = MarkerOptions(
 	icon: icon
 )
 
-// Create and add the marker to the map
+// Create and add the marker to the map.
 let marker = Marker(options: options)
 objectManager.addObject(object: marker)
 ```
@@ -278,21 +278,21 @@ To draw a line on the map, create a [Polyline](/en/ios/sdk/reference/2.0/Polylin
 In addition to the coordinates of the line points, you can set the line width, color, stroke type, and other options (see [PolylineOptions](/en/ios/sdk/reference/2.0/PolylineOptions)).
 
 ```swift
-// Coordinates of the vertices of the polyline
+// Coordinates of the vertices of the polyline.
 let points = [
 	GeoPoint(latitude: 55.7513, longitude: value: 37.6236),
 	GeoPoint(latitude: 55.7405, longitude: value: 37.6235),
 	GeoPoint(latitude: 55.7439, longitude: value: 37.6506)
 ]
 
-// Line settings
+// Line settings.
 let options = PolylineOptions(
 	points: points,
 	width: LogicalPixel(value: 2),
 	color: DGis.Color.init()
 )
 
-// Create and add the line to the map
+// Create and add the line to the map.
 let polyline = Polyline(options: options)
 objectManager.addObject(object: polyline)
 ```
@@ -306,10 +306,10 @@ Coordinates for the polygon are specified as a two-dimensional array. The first 
 Additionally, you can specify the polygon color and stroke options (see [PolygonOptions](/en/ios/sdk/reference/2.0/PolygonOptions)).
 
 ```swift
-// Polygon settings
+// Polygon settings.
 let options = PolygonOptions(
 	contours: [
-		// Vertices of the polygon
+		// Vertices of the polygon.
 		[
 			GeoPoint(latitude: 55.72014932919687, longitude: 37.562599182128906),
 			GeoPoint(latitude: 55.72014932919687, longitude: 37.67555236816406),
@@ -317,7 +317,7 @@ let options = PolygonOptions(
 			GeoPoint(latitude: 55.78004852149085, longitude: 37.562599182128906),
 			GeoPoint(latitude: 55.72014932919687, longitude: 37.562599182128906)
 		],
-		// Cutout inside the polygon
+		// Cutout inside the polygon.
 		[
 			GeoPoint(latitude: 55.754167897761, longitude: 37.62422561645508),
 			GeoPoint(latitude: 55.74450654680055, longitude: 37.61238098144531),
@@ -329,7 +329,7 @@ let options = PolygonOptions(
 	strokeWidth: LogicalPixel(value: 2)
 )
 
-// Create and add the polygon to the map
+// Create and add the polygon to the map.
 let polygon = Polygon(options: options)
 objectManager.addObject(object: polygon)
 ```
@@ -394,20 +394,20 @@ You can change the position of the camera by calling the [move()](/en/ios/sdk/re
 The call will return a [Future](/en/ios/sdk/reference/2.0/Future) object, which can be used to handle the animation finish event.
 
 ```swift
-// New position for camera
+// New position for camera.
 let newCameraPosition = CameraPosition(
 	point: GeoPoint(latitude: 55.752425, longitude: 37.613983),
 	zoom: Zoom(value: 16)
 )
 
-// Start the flight animation
+// Start the flight animation.
 let future = map.camera.move(
 	position: newCameraPosition,
 	time: 0.4,
 	animationType: .linear
 )
 
-// Handle the animation finish event
+// Handle the animation finish event.
 let cancellable = future.sink { _ in
 	print("Camera flight finished.")
 } failure: { error in
@@ -426,12 +426,12 @@ let currentState = map.camera.state
 You can subscribe to changes of camera state using the `stateChannel.sink` property.
 
 ```swift
-// Subscribe to camera state changes
+// Subscribe to camera state changes.
 let connection = map.camera.stateChannel.sink { state in
 	print("Camera state has changed to \(state)")
 }
 
-// Unsubscribe when it's no longer needed
+// Unsubscribe when it's no longer needed.
 connection.cancel()
 ```
 
@@ -450,12 +450,12 @@ print("Rotation: \(currentPosition.bearing)")
 You can subscribe to changes of camera position using the `positionChannel.sink` property.
 
 ```swift
-// Subscribe to camera position changes
+// Subscribe to camera position changes.
 let connection = map.camera.positionChannel.sink { position in
 	print("Camera position has changed (coordinates, zoom level, tilt, or rotation).")
 }
 
-// Unsubscribe when it's no longer needed
+// Unsubscribe when it's no longer needed.
 connection.cancel()
 ```
 
@@ -464,13 +464,13 @@ connection.cancel()
 You can add a special marker to the map that will be automatically updated to reflect the current location of the device. To do this, create a data source using the [createMyLocationMapObjectSource()](/en/ios/sdk/reference/2.0/createMyLocationMapObjectSource(context%3AdirectionBehaviour%3A)) function and pass it to the [addSource()](/en/ios/sdk/reference/2.0/Map#nav-lvl1--addSource) method of the map.
 
 ```swift
-// Create a data source
+// Create a data source.
 let source = createMyLocationMapObjectSource(
 	context: sdk.context,
 	directionBehaviour: MyLocationDirectionBehaviour.followMagneticHeading
 )
 
-// Add the data source to the map
+// Add the data source to the map.
 map.addSource(source: source)
 ```
 
@@ -487,12 +487,12 @@ You can add a turn-by-turn navigation to your app using the ready-to-use interfa
 To do that, add a [My location marker](#nav-lvl1--My_location) to the map and create a navigation layer using [INavigationViewFactory](/en/ios/sdk/reference/2.2/INavigationViewFactory) and [NavigationManager](/en/ios/sdk/reference/2.2/NavigationManager).
 
 ```swift
-// Create a map object
+// Create a map object.
 guard let mapFactory = try? sdk.makeMapFactory(options: .default) else {
     return
 }
 
-// Add the map view to the view hierarchy
+// Add the map view to the view hierarchy.
 let mapView = mapFactory.mapView
 mapView.translatesAutoresizingMaskIntoConstraints = false
 containerView.addSubview(mapView)
@@ -503,7 +503,7 @@ NSLayoutConstraint.activate([
     mapView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor)
 ])
 
-// Add the current location marker to the map
+// Add the current location marker to the map.
 let locationSource = MyLocationMapObjectSource(
     context: sdk.context,
     directionBehaviour: .followSatelliteHeading,
@@ -512,16 +512,16 @@ let locationSource = MyLocationMapObjectSource(
 let map = mapFactory.map
 map.addSource(source: locationSource)
 
-// Create a NavigationManager object
+// Create a NavigationManager object.
 let navigationManager = NavigationManager(platformContext: sdk.context)
 
-// Attach the map to the NavigationManager
+// Attach the map to the NavigationManager.
 navigationManager.mapManager.addMap(map: map)
 
-// Create a NavigationViewFactory object
+// Create a NavigationViewFactory object.
 let navigationViewFactory = sdk.makeNavigationViewFactory()
 
-// Create a navigation view and add it to the view hierarchy above the map
+// Create a navigation view and add it to the view hierarchy above the map.
 let navigationView = navigationViewFactory.makeNavigationView(
     map: map,
     navigationManager: navigationManager
@@ -535,9 +535,9 @@ NSLayoutConstraint.activate([
     navigationView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor)
 ])
 
-// Add an event handler for the close button
-navigationView.closeButtonCallback = {
-    navigationManager.stop()
+// Add an event handler for the close button.
+navigationView.closeButtonCallback = { [weak navigationManager] in
+    navigationManager?.stop()
 }
 ```
 
@@ -578,16 +578,16 @@ navigationManager.start(routeBuildOptions)
 Additionally, when calling the `start()` method, you can specify a [TrafficRoute](/en/ios/sdk/reference/2.2/TrafficRoute) object - a complete route object for navigation. In this case, [NavigationManager](/en/ios/sdk/reference/2.2/NavigationManager) will use the specified route instead of building a new one.
 
 ```swift
-// Building a route
+// Building a route.
 self.routeSearchCancellable = routesFuture.sink { routes in
     guard let route = routes.first else { return }
 
-    // Route settings
+    // Route settings.
     let routeBuildOptions = RouteBuildOptions(
         finishPoint: finishPoint,
         routeSearchOptions: routeSearchOptions
     )
-    // Start navigation
+    // Start navigation.
     navigationManager.start(
         routeBuildOptions: routeBuildOptions,
         trafficRoute: route
@@ -632,9 +632,9 @@ private func tap(point: ScreenPoint, tapRadius: ScreenDistance) {
 	let cancel = map.getRenderedObjects(centerPoint: point, radius: tapRadius).sink(
 		receiveValue: {
 			infos in
-			// First array object is the closest to the coordinates
+			// First array object is the closest to the coordinates.
 			guard let info = infos.first else { return }
-			// Process the result in the main thread
+			// Process the result in the main thread.
 			DispatchQueue.main.async {
 				[weak self] in
 				self?.handle(selectedObject: info)
@@ -644,7 +644,7 @@ private func tap(point: ScreenPoint, tapRadius: ScreenDistance) {
 			print("Error retrieving information: \(error)")
 		}
 	)
-	// Save the result to a property to prevent garbage collection
+	// Save the result to a property to prevent garbage collection.
 	self.getRenderedObjectsCancellable = cancel
 }
 ```
@@ -664,14 +664,14 @@ To create an SDK-compatible map style, use the Export function in [Style Editor]
 To create a map with a custom style, you need to use the [loadResource()](/en/ios/sdk/reference/2.0/IStyleFactory#nav-lvl1--loadResource) or [loadFile()](/en/ios/sdk/reference/2.0/IStyleFactory#nav-lvl1--loadFile) method of [IStyleFactory](/en/ios/sdk/reference/2.0/IStyleFactory) and specify the resulting object as the `styleFuture` map option.
 
 ```swift
-// Create a style factory object
+// Create a style factory object.
 let styleFactory = sdk.makeStyleFactory()
 
-// Set the map style in map settings
+// Set the map style in map settings.
 var mapOptions = MapOptions.default
 mapOptions.styleFuture = styleFactory.loadResource(name: "custom_style_file.2gis", bundle: .main)
 
-// Create a map with the specified settings
+// Create a map with the specified settings.
 let mapFactory = sdk.makeMapFactory(options: mapOptions)
 ```
 
@@ -689,7 +689,7 @@ To change the style of an existing map, use the [setStyle()](/en/ios/sdk/referen
 Unlike the `styleFuture` map option, [setStyle()](/en/ios/sdk/reference/2.0/Map#nav-lvl1--setStyle) accepts a fully loaded [Style](/en/ios/sdk/reference/2.0/Style) object instead of a [Future](/en/ios/sdk/reference/2.0/Future) object. Therefore, [setStyle()](/en/ios/sdk/reference/2.0/Map#nav-lvl1--setStyle) should be called after the [Future](/en/ios/sdk/reference/2.0/Future) has been resolved.
 
 ```swift
-// Create a style factory object
+// Create a style factory object.
 let styleFactory = sdk.makeStyleFactory()
 
 // Load a new map style. The loadFile() method only accepts the file:// URI scheme.
@@ -710,34 +710,34 @@ Each map style can contain several themes that you can switch between without ha
 In iOS 13.0 and later, you can also use the automatic switching between light and dark themes (see [Dark Mode](https://developer.apple.com/design/human-interface-guidelines/ios/visual-design/dark-mode)).
 
 ```swift
-// Map settings
+// Map settings.
 var mapOptions = MapOptions.default
 
-// Name of the light theme
+// Name of the light theme.
 let lightTheme: Theme = "day"
 
-// Name of the dark theme
+// Name of the dark theme.
 let darkTheme: Theme = "night"
 
 if #available(iOS 13.0, *) {
-	// Automatically switch between the light and dark themes
+	// Automatically switch between the light and dark themes.
 	mapOptions.appearance = .automatic(light: lightTheme, dark: darkTheme)
 } else {
-	// Use only the light theme
+	// Use only the light theme.
 	mapOptions.appearance = .universal(lightTheme)
 }
 
-// Create a map with the specified settings
+// Create a map with the specified settings.
 let mapFactory = sdk.makeMapFactory(options: mapOptions)
 ```
 
 To change the theme after the map has been created, use the `appearance` property of [IMapView](/en/ios/sdk/reference/2.0/IMapView):
 
 ```swift
-// Get the map view
+// Get the map view.
 let mapView = mapFactory.mapView
 
-// Change the theme to dark
+// Change the theme to dark.
 mapView.appearance = .universal(darkTheme)
 ```
 
