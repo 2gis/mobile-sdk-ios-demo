@@ -538,8 +538,8 @@ NSLayoutConstraint.activate([
 ])
 
 // Добавляем обработчик нажатия кнопки закрытия.
-navigationView.closeButtonCallback = {
-    navigationManager.stop()
+navigationView.closeButtonCallback = { [weak navigationManager] in
+    navigationManager?.stop()
 }
 ```
 
