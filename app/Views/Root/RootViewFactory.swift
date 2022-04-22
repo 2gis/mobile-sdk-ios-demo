@@ -176,6 +176,6 @@ struct RootViewFactory {
 	}
 
 	private func makeMapFactory() -> IMapFactory {
-		self.sdk.makeMapFactory(options: .default)
+		try! self.sdk.makeMapFactory(options: .default)
 	}
 }
