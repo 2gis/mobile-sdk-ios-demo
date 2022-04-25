@@ -34,4 +34,4 @@ Specify one of the following URLs when adding a dependency to install the SDK:
 
 ## Demo project
 
-You can find a demo app with the source code in our [GitHub repository](https://github.com/2gis/native-sdk-ios-demo/).
+You can find a demo app with the source code in our [GitHub repository](https://github.com/2gis/mobile-sdk-ios-demo/).
