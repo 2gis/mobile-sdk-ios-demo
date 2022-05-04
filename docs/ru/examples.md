@@ -40,6 +40,49 @@ let sdk = DGis.Container(
 )
 ```
 
+## Начало работы с версии 4.x
+
+Сначала нужно обратиться в техническую поддержку 2ГИС для получения нового ключа. Обязательно нужно указать `appId` приложения, для которого будет создан ключ.
+
+Для работы с SDK нужно создать специальный объект [Container](/ru/ios/sdk/reference/4.0/Container), который будет хранить все сущности, связанные с картой.
+
+Чтобы его создать, нужно указать путь до файла ключа через объект структуры [ApiKeyOptions](/ru/ios/sdk/reference/4.0/ApiKeyOptions).
+При указании ApiKeyOptions.default файл должен быть добавлен в корень приложения.
+
+```swift
+// Файл ключа для доступа к сервисам.
+let apiKeyOptions = ApiKeyOptions(apiKeyFile: File(path: "Path to key info file"))
+
+// Создание контейнера для доступа к возможностям SDK.
+let sdk = DGis.Container(apiKeyOptions: apiKeyOptions)
+```
+Обратите внимание, DGis.Container может быть создан только в единственном экземпляре.
+
+Дополнительно можно указать настройки журналирования ([LogOptions](/ru/ios/sdk/reference/4.0/LogOptions)) и настройки HTTP-клиента ([HTTPOptions](/ru/ios/sdk/reference/4.0/HTTPOptions)), такие как время ожидания ответа и кеширование.
+
+```swift
+// Настройки журналирования.
+let logOptions = LogOptions(osLogLevel: .info)
+
+// Настройки HTTP-клиента.
+let httpOptions = HTTPOptions(timeout: 5, cacheOptions: nil)
+
+// Сервисы геопозиционирования.
+let positioningServices: IPositioningServicesFactory = CustomPositioningServicesFactory()
+
+// Настройки сбора анонимной статистики использования.
+let dataCollectionOptions = DataCollectionOptions(dataCollectionStatus: .agree)
+
+// Создание контейнера.
+let sdk = DGis.Container(
+	apiKeyOptions: apiKeyOptions,
+	logOptions: logOptions,
+	httpOptions: httpOptions,
+	positioningServices: positioningServices,
+	dataCollectionOptions: dataCollectionOptions
+)
+```
+
 ## Создание карты
 
 Чтобы создать карту, нужно вызвать метод [makeMapFactory()](/ru/ios/sdk/reference/2.0/Container#nav-lvl1--makeMapFactory) и передать настройки карты в виде структуры [MapOptions](/ru/ios/sdk/reference/2.0/MapOptions).
@@ -481,6 +524,57 @@ map.addSource(source: source)
 
 ```swift
 map.removeSource(source)
+```
+
+## Слой пробок
+
+Для отображения слоя пробок необходимо создать [TrafficSource](/ru/ios/sdk/reference/2.2/TrafficSource) и передать его в метод карты [addSource()](/ru/ios/sdk/reference/2.0/Map#nav-lvl1--addSource).
+```swift
+let trafficSource = TrafficSource(context: sdk.context)
+map.addSource(source: trafficSource)
+```
+
+## Построение маршрута
+
+Для того, чтобы проложить маршрут на карте, нужно создать два объекта: [TrafficRouter](/ru/ios/sdk/reference/2.2/TrafficRouter) для поиска оптимального маршрута и источник данных [RouteMapObjectSource](/ru/ios/sdk/reference/2.2/RouteMapObjectSource) для отображения маршрута на карте.
+
+Чтобы найти маршрут между двумя точками, нужно вызвать метод [findRoute()](/ru/ios/sdk/reference/2.2/TrafficRouter#nav-lvl1--findRoute), передав координаты точек в виде объектов [RouteSearchPoint](/ru/ios/sdk/reference/2.2/RouteSearchPoint) и параметры маршрута ([RouteSearchOptions](/ru/ios/sdk/reference/2.2/RouteSearchOptions)). Дополнительно можно указать также список промежуточных точек маршрута (список RouteSearchPoint).
+
+```swift
+let startPoint = RouteSearchPoint(coordinates: GeoPoint(latitude: 55.759909, longitude: 37.618806))
+let finishPoint = RouteSearchPoint(coordinates: GeoPoint(latitude: 55.752425, longitude: 37.613983))
+let routeSearchOptions = RouteSearchOptions.car(CarRouteSearchOptions())
+
+let trafficRouter = TrafficRouter(context: sdk.context)
+let routesFuture = trafficRouter.findRoute(
+	startPoint: startPoint,
+	finishPoint: finishPoint,
+	routeSearchOptions: routeSearchOptions
+)
+```
+
+Вызов вернёт отложенный результат со списком объектов [TrafficRoute](/ru/ios/sdk/reference/2.2/TrafficRoute). Чтобы отобразить найденный маршрут на карте, нужно на основе этих объектов создать объекты [RouteMapObject](/ru/ios/sdk/reference/2.2/RouteMapObject) и добавить их в источник данных [RouteMapObjectSource](/ru/ios/sdk/reference/2.2/RouteMapObjectSource).
+
+```swift
+// Создаём источник данных.
+let routeMapObjectSource = RouteMapObjectSource(context: sdk.context, routeVisualizationType: .normal)
+map.addSource(source: routeMapObjectSource)
+
+// Ищем маршрут.
+self.routeSearchCancellable = routesFuture.sink { routes in
+	// Ддобавляем их на карту.
+	for (index, route) in routes.enumerated() {
+		let routeMapObject = RouteMapObject(
+			route: route,
+			isActive: index == 0,
+			index: RouteIndex(value: UInt64(index)),
+			displayFlags: nil
+		)
+		routeMapObjectSource.addObject(item: routeMapObject)
+	}
+} failure: { error in
+	print("Не удалось найти маршрут: \(error)")
+}
 ```
 
 ## Навигатор
