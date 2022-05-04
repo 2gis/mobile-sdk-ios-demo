@@ -38,6 +38,49 @@ let sdk = DGis.Container(
 )
 ```
 
+## Getting started since 4.x version
+
+First you need to contact 2GIS technical support to get a new key. Be sure to specify the `appId` of the application for which the key will be generated.
+
+To begin working with the SDK, create a [Container](/en/ios/sdk/reference/4.0/Container) object, which will store all map entities.
+
+To create it, you need to specify path to your key file via [ApiKeyOptions](/en/ios/sdk/reference/4.0/ApiKeyOptions).
+When specifying ApiKeyOptions.default, the file must be added to the application root.
+
+```swift
+// Key file.
+let apiKeyOptions = ApiKeyOptions(apiKeyFile: File(path: "Path to key info file"))
+
+// Создание контейнера для доступа к возможностям SDK.
+let sdk = DGis.Container(apiKeyOptions: apiKeyOptions)
+```
+Note that DGis.Container can be created in single instance.
+
+Additionally, you can specify logging settings ([LogOptions](/en/ios/sdk/reference/4.0/LogOptions)) and HTTP client settings ([HTTPOptions](/en/ios/sdk/reference/4.0/HTTPOptions)) such as timeout and caching.
+
+```swift
+// Logging settings.
+let logOptions = LogOptions(osLogLevel: .info)
+
+// HTTP client settings.
+let httpOptions = HTTPOptions(timeout: 5, cacheOptions: nil)
+
+// Geopositioning settings.
+let positioningServices: IPositioningServicesFactory = CustomPositioningServicesFactory()
+
+// Consent to personal data processing.
+let dataCollectionOptions = DataCollectionOptions(dataCollectionStatus: .agree)
+
+// Creating the Container.
+let sdk = DGis.Container(
+	apiKeyOptions: apiKeyOptions,
+	logOptions: logOptions,
+	httpOptions: httpOptions,
+	positioningServices: positioningServices,
+	dataCollectionOptions: dataCollectionOptions
+)
+```
+
 ## Creating a map
 
 To create a map, call the [makeMapFactory()](/en/ios/sdk/reference/2.0/Container#nav-lvl1--makeMapFactory) method and specify the required map settings as a [MapOptions](/en/ios/sdk/reference/2.0/MapOptions) structure.

@@ -40,6 +40,49 @@ let sdk = DGis.Container(
 )
 ```
 
+## Начало работы с версии 4.x
+
+Сначала нужно обратиться в техническую поддержку 2ГИС для получения нового ключа. Обязательно нужно указать `appId` приложения, для которого будет создан ключ.
+
+Для работы с SDK нужно создать специальный объект [Container](/ru/ios/sdk/reference/4.0/Container), который будет хранить все сущности, связанные с картой.
+
+Чтобы его создать, нужно указать путь до файла ключа через объект структуры [ApiKeyOptions](/ru/ios/sdk/reference/4.0/ApiKeyOptions).
+При указании ApiKeyOptions.default файл должен быть добавлен в корень приложения.
+
+```swift
+// Файл ключа для доступа к сервисам.
+let apiKeyOptions = ApiKeyOptions(apiKeyFile: File(path: "Path to key info file"))
+
+// Создание контейнера для доступа к возможностям SDK.
+let sdk = DGis.Container(apiKeyOptions: apiKeyOptions)
+```
+Обратите внимание, DGis.Container может быть создан только в единственном экземпляре.
+
+Дополнительно можно указать настройки журналирования ([LogOptions](/ru/ios/sdk/reference/4.0/LogOptions)) и настройки HTTP-клиента ([HTTPOptions](/ru/ios/sdk/reference/4.0/HTTPOptions)), такие как время ожидания ответа и кеширование.
+
+```swift
+// Настройки журналирования.
+let logOptions = LogOptions(osLogLevel: .info)
+
+// Настройки HTTP-клиента.
+let httpOptions = HTTPOptions(timeout: 5, cacheOptions: nil)
+
+// Сервисы геопозиционирования.
+let positioningServices: IPositioningServicesFactory = CustomPositioningServicesFactory()
+
+// Настройки сбора анонимной статистики использования.
+let dataCollectionOptions = DataCollectionOptions(dataCollectionStatus: .agree)
+
+// Создание контейнера.
+let sdk = DGis.Container(
+	apiKeyOptions: apiKeyOptions,
+	logOptions: logOptions,
+	httpOptions: httpOptions,
+	positioningServices: positioningServices,
+	dataCollectionOptions: dataCollectionOptions
+)
+```
+
 ## Создание карты
 
 Чтобы создать карту, нужно вызвать метод [makeMapFactory()](/ru/ios/sdk/reference/2.0/Container#nav-lvl1--makeMapFactory) и передать настройки карты в виде структуры [MapOptions](/ru/ios/sdk/reference/2.0/MapOptions).
