@@ -34,7 +34,7 @@ final class StylePickerViewModel: ObservableObject {
 		let styleFuture = factory.loadFile(url: fileURL)
 		self.loadStyleCancellable = styleFuture.sink(
 			receiveValue: { [map = self.map] style in
-				map.setStyle(style: style)
+				map.style = style
 			},
 			failure: { error in
 				print("Failed to load style from <\(fileURL)>. Error: \(error)")
