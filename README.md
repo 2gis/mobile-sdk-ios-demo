@@ -35,27 +35,16 @@ Specify one of the following URLs when adding a dependency to install the SDK:
 To run the demo app, do the following:
 
 1. Clone this repository.
-2. Open the `app.xcodeproj` project and set your API keys in `Info.plist`:
 
-   ```
-   DGISMapAPIKey = YOUR_MAP_KEY
-   DGISDirectoryAPIKey = YOUR_DIRECTORY_KEY
-   ```
+2. Open the `app.xcodeproj` project and add the key file `dgissdk.key` to the application root.
 
-   Alternatively, create a file named `Local.xcconfig` in the repository root (this file is included in .gitignore):
+3. Set `Bundle Identifier` of demo app to `app_id` value of your key file.
 
-   ```
-   DGIS_MAP_API_KEY = xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
-   DGIS_DIRECTORY_API_KEY = xxxxxxxxxx
-   ```
-
-   API keys are not mandatory. You can keep the placeholder values if you don't need the corresponding functionality.
-
-3. Wait for Swift Package Manager to finish installing all dependencies (this could take a while).
+4. Wait for Swift Package Manager to finish installing all dependencies (this could take a while).
 
    You won't be able to build the project until the dependencies are installed.
 
-4. Build and run the project (⌘+R).
+5. Build and run the project (⌘+R).
 
 ## Documentation
 
