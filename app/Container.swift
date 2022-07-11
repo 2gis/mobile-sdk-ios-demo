@@ -2,20 +2,8 @@ import SwiftUI
 import DGis
 
 final class Container {
-
-	private lazy var apiKeys: APIKeys = {
-		guard let info = Bundle.main.infoDictionary,
-			let dirKey = info["DGISDirectoryAPIKey"] as? String,
-			let mapKey = info["DGISMapAPIKey"] as? String,
-			let apiKeys = APIKeys(directory: dirKey, map: mapKey)
-		else {
-			fatalError("2GIS API keys are missing or invalid. Check Info.plist")
-		}
-		return apiKeys
-	}()
-
 	private lazy var sdk = DGis.Container(
-		apiKeys: self.apiKeys,
+		apiKeyOptions: .default,
 		httpOptions: HTTPOptions(timeout: 5, cacheOptions: nil)
 	)
 

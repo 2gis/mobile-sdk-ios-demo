@@ -55,7 +55,7 @@ final class MapObjectCardViewModel: ObservableObject {
 					\(directoryObject.subtitle)
 					\(directoryObject.formattedAddress(type: .short)?.streetAddress ?? "(no address)")
 					\(directoryObject.markerPosition?.description ?? "(no location)")
-					ID: \(object.id.value)
+					ID: \(object.id)
 					"""
 			},
 			failure: { error in
