@@ -15,7 +15,7 @@ struct MarkersDemoView: View {
 	var body: some View {
 		ZStack {
 			ZStack(alignment: .bottomTrailing) {
-				self.viewFactory.makeMapView(with: [.zoom], alignment: .bottomLeft)
+				self.viewFactory.makeMapViewWithZoomControl(alignment: .bottomLeft)
 				if !self.viewModel.showMarkers {
 					self.settingsButton().frame(width: 100, height: 100, alignment: .bottomTrailing)
 				}

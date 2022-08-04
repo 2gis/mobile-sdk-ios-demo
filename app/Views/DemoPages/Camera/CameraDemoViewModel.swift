@@ -10,6 +10,7 @@ final class CameraDemoViewModel: ObservableObject {
 	private var locationService: LocationService?
 
 	private var moveCameraCancellable: DGis.Cancellable?
+	private var dataLoadingCancellable: DGis.Cancellable?
 
 	private let testPoints: [(position: CameraPosition, time: TimeInterval, type: CameraAnimationType)] = {
 		return [
@@ -56,6 +57,10 @@ final class CameraDemoViewModel: ObservableObject {
 		
 		let source = MyLocationMapObjectSource(context: sdkContext, directionBehaviour: .followMagneticHeading)
 		self.map.addSource(source: source)
+
+		self.dataLoadingCancellable = self.map.dataLoadingStateChannel.sink { state in
+			print(state)
+		}
 	}
 
 	func testCamera() {

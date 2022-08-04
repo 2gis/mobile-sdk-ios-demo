@@ -2,55 +2,88 @@ import SwiftUI
 import DGis
 
 struct DemoPageComponentsFactory {
-	enum MapControlType {
-		case zoom
-		case currentLocation
-	}
-	private let mapFactory: IMapFactory
 	private let sdk: DGis.Container
+	private let mapFactory: IMapFactory
+	private let settingsService: ISettingsService
 
 	internal init(
 		sdk: DGis.Container,
-		mapFactory: IMapFactory
+		mapFactory: IMapFactory,
+		settingsService: ISettingsService
 	) {
 		self.sdk = sdk
 		self.mapFactory = mapFactory
+		self.settingsService = settingsService
 	}
 
 	func makeMapView(
-		with controls: [MapControlType] = [],
 		appearance: MapAppearance? = nil,
 		alignment: CopyrightAlignment = .bottomRight,
-		mapGesturesType: MapGesturesType? = nil,
-		mapCoordinateSpace: String = "map",
-		touchUpHandler: ((CGPoint) -> Void)? = nil
+		mapGesturesType: MapGesturesType = .default(.event),
+		copyrightInsets: UIEdgeInsets = .zero,
+		showsAPIVersion: Bool = true,
+		overlayFactory: IMapViewOverlayFactory? = nil,
+		tapRecognizerCallback: MapView.TapRecognizerCallback? = nil,
+		markerViewOverlay: IMarkerViewOverlay? = nil
+	) -> MapView {
+		MapView(
+			mapGesturesType: mapGesturesType,
+			appearance: appearance,
+			copyrightInsets: copyrightInsets,
+			copyrightAlignment: alignment,
+			showsAPIVersion: showsAPIVersion,
+			overlayFactory: overlayFactory,
+			tapRecognizerCallback: tapRecognizerCallback,
+			mapUIViewFactory: { [mapFactory = self.mapFactory] in
+				mapFactory.mapView
+			},
+			markerViewOverlay: markerViewOverlay
+		)
+	}
+
+	func makeMapViewWithZoomControl(
+		appearance: MapAppearance? = nil,
+		alignment: CopyrightAlignment = .bottomRight,
+		mapGesturesType: MapGesturesType = .default(.event),
+		copyrightInsets: UIEdgeInsets = .zero,
+		showsAPIVersion: Bool = true,
+		tapRecognizerCallback: MapView.TapRecognizerCallback? = nil
 	) -> some View {
 		ZStack {
-			self.makeMapView(appearance: appearance, mapGesturesType: mapGesturesType)
-			.copyrightAlignment(alignment)
-			.coordinateSpace(name: mapCoordinateSpace)
-			.touchUpRecognizer(coordinateSpace: .named(mapCoordinateSpace), handler: { location in
-				touchUpHandler?(location)
-			})
-			if controls.isEmpty == false {
-				HStack {
-					Spacer()
-					VStack {
-						if controls.contains(.zoom) {
-							self.makeZoomControl()
-							.frame(width: 48, height: 104)
-							.fixedSize()
-						}
-						if controls.contains(.currentLocation) {
-							self.makeCurrentLocationControl()
-							.frame(width: 48, height: 48)
-							.fixedSize()
-						}
-					}
-					.padding(.trailing, 10)
-				}
+			self.makeMapView(
+				appearance: appearance,
+				alignment: alignment,
+				copyrightInsets: copyrightInsets,
+				showsAPIVersion: showsAPIVersion,
+				tapRecognizerCallback: tapRecognizerCallback
+			)
+			HStack {
+				Spacer()
+				self.makeZoomControl()
+				.frame(width: 48, height: 102)
+				.fixedSize()
+				.padding(10)
 			}
 		}
+	}
+
+	func makeMapViewWithMarkerViewOverlay(
+		appearance: MapAppearance? = nil,
+		alignment: CopyrightAlignment = .bottomRight,
+		copyrightInsets: UIEdgeInsets = .zero,
+		showsAPIVersion: Bool = true,
+		overlayFactory: IMapViewOverlayFactory? = nil,
+		tapRecognizerCallback: MapView.TapRecognizerCallback? = nil
+	) -> MapView {
+		self.makeMapView(
+			appearance: appearance,
+			alignment: alignment,
+			copyrightInsets: copyrightInsets,
+			showsAPIVersion: showsAPIVersion,
+			overlayFactory: overlayFactory,
+			tapRecognizerCallback: tapRecognizerCallback,
+			markerViewOverlay: mapFactory.markerViewOverlay
+		)
 	}
 
 	func makeZoomControl() -> some View {
@@ -64,7 +97,9 @@ struct DemoPageComponentsFactory {
 	}
 
 	func makeCurrentLocationControl() -> some View {
-		MapControl(controlFactory: self.mapFactory.mapControlFactory.makeCurrentLocationControl)
+		MapControl(
+			controlFactory: self.mapFactory.mapControlFactory.makeCurrentLocationControl
+		)
 	}
 
 	func makeSearchView(searchStore: SearchStore) -> some View {
@@ -83,30 +118,68 @@ struct DemoPageComponentsFactory {
 		return ClusterCardView(viewModel: viewModel)
 	}
 
-	private func makeMapView(
-		appearance: MapAppearance? = nil,
-		mapGesturesType: MapGesturesType? = nil
-	) -> MapView {
-		MapView(
-			appearance: appearance,
-			mapGesturesType: mapGesturesType,
-			mapUIViewFactory: { [mapFactory = self.mapFactory] in
-				mapFactory.mapView
+	func makeRouteView(
+		show: Binding<Bool>,
+		transportType: TransportType,
+		carRouteSearchOptions: CarRouteSearchOptions,
+		publicTransportRouteSearchOptions: PublicTransportRouteSearchOptions,
+		truckRouteSearchOptions: TruckRouteSearchOptions,
+		taxiRouteSearchOptions: TaxiRouteSearchOptions,
+		bicycleRouteSearchOptions: BicycleRouteSearchOptions,
+		pedestrianRouteSearchOptions: PedestrianRouteSearchOptions
+	) -> some View {
+		let viewModel = RouteViewModel(
+			transportType: transportType,
+			carRouteSearchOptions: carRouteSearchOptions,
+			publicTransportRouteSearchOptions: publicTransportRouteSearchOptions,
+			truckRouteSearchOptions: truckRouteSearchOptions,
+			taxiRouteSearchOptions: taxiRouteSearchOptions,
+			bicycleRouteSearchOptions: bicycleRouteSearchOptions,
+			pedestrianRouteSearchOptions: pedestrianRouteSearchOptions,
+			sourceFactory: { [sdk = self.sdk] in
+				sdk.sourceFactory
 			},
-			mapGestureViewFactory: { [mapFactory = self.mapFactory] type in
-				let factory: IMapGestureViewFactory?
-				switch type {
-					case .default:
-						factory = MapOptions.default.gestureViewFactory
-					case .custom:
-						factory = CustomGestureViewFactory()
-				}
-				return factory?.makeGestureView(
-					map: mapFactory.map,
-					eventProcessor: mapFactory.mapEventProcessor,
-					coordinateSpace: mapFactory.mapCoordinateSpace
-				)
-			}
+			routeEditorSourceFactory: { [sdk = self.sdk] routeEditor in
+				return RouteEditorSource(context: sdk.context, routeEditor: routeEditor)
+			},
+			routeEditorFactory: { [sdk = self.sdk] in
+				return RouteEditor(context: sdk.context)
+			},
+			map: self.mapFactory.map,
+			feedbackGenerator: FeedbackGenerator()
 		)
+		return RouteView(viewModel: viewModel, show: show, viewFactory: self)
+	}
+
+	func makeNavigatorView(
+		navigationManager: NavigationManager,
+		roadEventCardPresenter: IRoadEventCardPresenter,
+		onCloseButtonTapped: (() -> Void)?,
+		onMapTapped: ((CGPoint) -> Void)?,
+		onMapLongPressed: ((CGPoint) -> Void)?
+	) -> some View {
+		var options = NavigationViewOptions.default
+		if self.settingsService.navigatorTheme == .custom {
+			options.theme = NavigationViewTheme.custom
+		}
+		return NavigatorView(
+			mapFactory: self.mapFactory,
+			navigationViewFactory: self.sdk.makeNavigationViewFactory(options: options),
+			navigationManager: navigationManager,
+			roadEventCardPresenter: roadEventCardPresenter,
+			onCloseButtonTapped: onCloseButtonTapped,
+			onMapTapped: onMapTapped,
+			onMapLongPressed: onMapLongPressed
+		)
+	}
+
+	func makeRoutePreviewListVC(routesInfo: RouteEditorRoutesInfo) -> RoutePreviewListVC {
+		let factory = self.sdk.makeNavigationViewFactory()
+		return RoutePreviewListVC(routesInfo: routesInfo, factory: factory)
+	}
+
+	func makeRouteDetailsVC(route: TrafficRoute) -> RouteDetailsVC {
+		let factory = self.sdk.makeNavigationViewFactory()
+		return RouteDetailsVC(route: route, factory: factory)
 	}
 }
