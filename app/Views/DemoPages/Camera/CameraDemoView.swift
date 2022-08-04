@@ -14,7 +14,7 @@ struct CameraDemoView: View {
 
 	var body: some View {
 		ZStack(alignment: .bottomTrailing) {
-			self.viewFactory.makeMapView(with: [.zoom, .currentLocation], alignment: .bottomLeft)
+			self.viewFactory.makeMapViewWithZoomControl(alignment: .bottomLeft)
 			self.settingsButton().frame(width: 100, height: 100, alignment: .bottomTrailing)
 		}
 		.edgesIgnoringSafeArea(.all)

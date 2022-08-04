@@ -15,8 +15,7 @@ struct CustomGesturesDemoView: View {
 	var body: some View {
 		ZStack {
 			ZStack(alignment: .top) {
-				self.viewFactory.makeMapView(
-					with: [.zoom, .currentLocation],
+				self.viewFactory.makeMapViewWithZoomControl(
 					mapGesturesType: self.viewModel.currentMapGesturesType
 				)
 				self.gestureTypePicker()
