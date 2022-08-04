@@ -111,7 +111,7 @@ struct NavigatorDemoView: View {
 			}
 		)
 		return ActionSheet(
-			title: Text("По какому маршруту поедем?"),
+			title: Text("Which route will we take?"),
 			buttons: buttons
 		)
 	}
