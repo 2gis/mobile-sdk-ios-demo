@@ -48,6 +48,7 @@
 		4BBE80292526E22F00D7EBDB /* SearchResultViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BBE80282526E22F00D7EBDB /* SearchResultViewModel.swift */; };
 		4BBE802D2526F8A600D7EBDB /* RootViewFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BBE802C2526F8A600D7EBDB /* RootViewFactory.swift */; };
 		4BBE80302526FB0D00D7EBDB /* Container.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BBE802F2526FB0D00D7EBDB /* Container.swift */; };
+		641B4462289D12F500A0DEE7 /* FullSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 641B4461289D12F500A0DEE7 /* FullSDK */; };
 		64226DFD26B1B5ED0058E3D9 /* ClusteringDemoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64226DFB26B1B5ED0058E3D9 /* ClusteringDemoViewModel.swift */; };
 		64226DFE26B1B5ED0058E3D9 /* ClusteringDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64226DFC26B1B5ED0058E3D9 /* ClusteringDemoView.swift */; };
 		64226E0226B1B5F70058E3D9 /* FpsDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64226E0026B1B5F70058E3D9 /* FpsDemoView.swift */; };
@@ -89,7 +90,6 @@
 		64A96D4426BC3BF000CC21A3 /* ClusterCardViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64A96D4226BC3BF000CC21A3 /* ClusterCardViewModel.swift */; };
 		64C4FE662812E87F00CE8F6B /* Longitude.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64C4FE642812E87F00CE8F6B /* Longitude.swift */; };
 		64C4FE672812E87F00CE8F6B /* Latitude.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64C4FE652812E87F00CE8F6B /* Latitude.swift */; };
-		64EE1A98289AB1DF00FF301C /* FullSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 64EE1A97289AB1DF00FF301C /* FullSDK */; };
 		64EE1A9E289B22AA00FF301C /* CustomMapControlsDemoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64EE1A9A289B22AA00FF301C /* CustomMapControlsDemoViewModel.swift */; };
 		64EE1A9F289B22AA00FF301C /* CustomMapControlsDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64EE1A9B289B22AA00FF301C /* CustomMapControlsDemoView.swift */; };
 		64EE1AA0289B22AA00FF301C /* CustomZoomControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64EE1A9D289B22AA00FF301C /* CustomZoomControl.swift */; };
@@ -317,7 +317,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				64EE1A98289AB1DF00FF301C /* FullSDK in Frameworks */,
+				641B4462289D12F500A0DEE7 /* FullSDK in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -821,7 +821,7 @@
 			);
 			name = app;
 			packageProductDependencies = (
-				64EE1A97289AB1DF00FF301C /* FullSDK */,
+				641B4461289D12F500A0DEE7 /* FullSDK */,
 			);
 			productName = app;
 			productReference = 4B27063124A3F24C00F12B48 /* NativeApp.app */;
@@ -852,7 +852,7 @@
 			);
 			mainGroup = 4B27062824A3F24C00F12B48;
 			packageReferences = (
-				64EE1A96289AB1DF00FF301C /* XCRemoteSwiftPackageReference "mobile-sdk-full-swift-package" */,
+				641B4460289D12F500A0DEE7 /* XCRemoteSwiftPackageReference "mobile-sdk-full-swift-package" */,
 			);
 			productRefGroup = 4B27063224A3F24C00F12B48 /* Products */;
 			projectDirPath = "";
@@ -1221,20 +1221,20 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		64EE1A96289AB1DF00FF301C /* XCRemoteSwiftPackageReference "mobile-sdk-full-swift-package" */ = {
+		641B4460289D12F500A0DEE7 /* XCRemoteSwiftPackageReference "mobile-sdk-full-swift-package" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://stash.2gis.ru/scm/vn/mobile-sdk-full-swift-package.git";
+			repositoryURL = "https://github.com/2gis/mobile-sdk-full-swift-package.git";
 			requirement = {
 				kind = exactVersion;
-				version = 4.1.0;
+				version = 4.2.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		64EE1A97289AB1DF00FF301C /* FullSDK */ = {
+		641B4461289D12F500A0DEE7 /* FullSDK */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 64EE1A96289AB1DF00FF301C /* XCRemoteSwiftPackageReference "mobile-sdk-full-swift-package" */;
+			package = 641B4460289D12F500A0DEE7 /* XCRemoteSwiftPackageReference "mobile-sdk-full-swift-package" */;
 			productName = FullSDK;
 		};
 /* End XCSwiftPackageProductDependency section */
