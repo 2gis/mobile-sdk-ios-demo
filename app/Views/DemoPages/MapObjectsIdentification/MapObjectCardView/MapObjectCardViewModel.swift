@@ -5,18 +5,29 @@ final class MapObjectCardViewModel: ObservableObject {
 
 	typealias CloseCallback = () -> Void
 
-	@Published var title: String = "Some place"
+	@Published var title: String = "Some place" {
+		didSet {
+			self.titleChangedCallback?(self.title, self.subtitle)
+		}
+	}
 	@Published var description: String
+
+	var objectPosition: GeoPointWithElevation {
+		self.objectInfo.closestMapPoint
+	}
+
+	var titleChangedCallback: ((String, String) -> Void)? = nil
 
 	private let objectInfo: RenderedObjectInfo
 	private let onClose: CloseCallback
-	private var getDirectoryObjectCancellable: Cancellable?
 	private let searchManagerFactory: () -> SearchManager
+	private var getDirectoryObjectCancellable: Cancellable?
+	private var subtitle: String = ""
 	private lazy var searchManager: SearchManager = self.searchManagerFactory()
 
 	init(
 		objectInfo: RenderedObjectInfo,
-        searchManagerFactory: @escaping () -> SearchManager,
+		searchManagerFactory: @escaping () -> SearchManager,
 		onClose: @escaping CloseCallback
 	) {
 		self.objectInfo = objectInfo
@@ -50,12 +61,13 @@ final class MapObjectCardViewModel: ObservableObject {
 				[weak self] directoryObject in
 				guard let directoryObject = directoryObject else { return }
 
+				self?.subtitle = directoryObject.subtitle
 				self?.title = directoryObject.title
 				self?.description = """
 					\(directoryObject.subtitle)
 					\(directoryObject.formattedAddress(type: .short)?.streetAddress ?? "(no address)")
 					\(directoryObject.markerPosition?.description ?? "(no location)")
-					ID: \(object.id)
+					ID: \(object.id.objectId)
 					"""
 			},
 			failure: { error in
@@ -66,6 +78,7 @@ final class MapObjectCardViewModel: ObservableObject {
 
 	private func fetchInfo(marker: Marker) {
 		let text = marker.text
+		self.subtitle = "\(marker.position)"
 		self.title = text.isEmpty ? "Marker" : text
 		self.description = "\(marker.position)"
 	}

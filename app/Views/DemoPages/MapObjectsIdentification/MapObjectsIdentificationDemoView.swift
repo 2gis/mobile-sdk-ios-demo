@@ -1,8 +1,10 @@
 import SwiftUI
+import DGis
 
 struct MapObjectsIdentificationDemoView: View {
 	@ObservedObject private var viewModel: MapObjectsIdentificationDemoViewModel
 	private let viewFactory: DemoPageComponentsFactory
+	private var mapView: MapView? = nil
 
 	init(
 		viewModel: MapObjectsIdentificationDemoViewModel,
@@ -10,16 +12,37 @@ struct MapObjectsIdentificationDemoView: View {
 	) {
 		self.viewModel = viewModel
 		self.viewFactory = viewFactory
+		self.mapView = self.viewFactory.makeMapViewWithMarkerViewOverlay(tapRecognizerCallback: { [viewModel = self.viewModel] location in
+			viewModel.tap(location)
+		})
+		self.viewModel.mapMarkerPresenter.setAddMarkerViewCallback { [mapView = self.mapView] markerView in
+			mapView?.append(markerView: markerView)
+		}
+		self.viewModel.mapMarkerPresenter.setRemoveMarkerViewCallback { [mapView = self.mapView] markerView in
+			mapView?.remove(markerView: markerView)
+		}
 	}
 
 	var body: some View {
 		ZStack(alignment: .bottomTrailing) {
-			self.viewFactory.makeMapView(with: [.zoom]) { location in
-				self.viewModel.tap(location)
+			ZStack(alignment: .center) {
+				self.mapView
+				HStack {
+					Spacer()
+					VStack {
+						self.viewFactory.makeZoomControl()
+						.frame(width: 48, height: 102)
+						.fixedSize()
+						.padding(20)
+						self.viewFactory.makeCurrentLocationControl()
+						.frame(width: 48, height: 48)
+						.fixedSize()
+					}
+				}
 			}
-			if let cardViewModel = viewModel.selectedObjectCardViewModel {
-				self.viewFactory.makeMapObjectCardView(cardViewModel)
-					.transition(.move(edge: .bottom))
+			if let selectedMapObject = self.viewModel.selectedMapObject {
+				self.viewFactory.makeMapObjectCardView(selectedMapObject)
+				.transition(.move(edge: .bottom))
 			}
 		}
 		.edgesIgnoringSafeArea(.all)

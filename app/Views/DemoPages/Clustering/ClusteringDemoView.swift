@@ -15,7 +15,7 @@ struct ClusteringDemoView: View {
 	var body: some View {
 		ZStack {
 			ZStack(alignment: .bottomTrailing) {
-				self.viewFactory.makeMapView(with: [.zoom]) { location in
+				self.viewFactory.makeMapViewWithZoomControl { location in
 					self.viewModel.tap(location)
 				}
 				self.settingsButton().frame(width: 100, height: 100, alignment: .bottomTrailing)

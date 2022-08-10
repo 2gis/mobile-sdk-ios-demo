@@ -10,31 +10,40 @@ enum DemoPage: String, CaseIterable {
 	case fps
 	case clustering
 	case customGestures
+	case territoryManager
+	case routeSearch
+	case navigator
 
 	var name: String {
 		switch self {
 			case .camera:
-				return "Перелеты камеры"
+				return "Camera moves"
 			case .customMapControls:
-				return "Пользовательские кнопки управления картой"
+				return "Custom map control buttons"
 			case .markers:
-				return "Добавление маркеров на карту"
+				return "Adding markers to the map"
 			case .mapStyles:
-				return "Пользовательские стили карты"
+				return "Uploading custom map styles"
 			case .mapTheme:
-				return "Переключение темы стиля карты"
+				return "Switch map theme"
 			case .mapObjectsIdentification:
-				return "Определение объектов на карте"
+				return "Map objects identification"
 			case .dictionarySearch:
-				return "Поиск в справочнике"
+				return "Directory search"
 			case .visibleAreaDetection:
-				return "Определение выхода из области"
+				return "Visible area detection"
 			case .fps:
-				return "Установка максимального fps"
+				return "Change map fps"
 			case .clustering:
-				return "Динамическая кластеризация"
+				return "Clustering"
 			case .customGestures:
-				return "Пользовательские жесты управления картой"
+				return "Custom map control gestures"
+			case .territoryManager:
+				return "Download territories"
+			case .routeSearch:
+				return "Route editor"
+			case .navigator:
+				return "Navigator"
 		}
 	}
 }

@@ -20,9 +20,9 @@ extension MapGesturesType {
 	var name: String {
 		switch self {
 			case .default:
-				return "По умолчанию"
+				return "Default"
 			case .custom:
-				return "Пользовательские"
+				return "Custom"
 		}
 	}
 }
