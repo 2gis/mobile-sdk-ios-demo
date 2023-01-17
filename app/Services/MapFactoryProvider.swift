@@ -84,7 +84,8 @@ class MapFactoryProvider: IMapFactoryProvider {
 				return MapGestureViewFactory(
 					options: MapGestureViewOptions(
 						doubleTapScalingCenter: center,
-						twoFingerTapScalingCenter: center
+						twoFingerTapScalingCenter: center,
+						pinchScalingCenter: center
 					)
 				)
 			case .custom:
