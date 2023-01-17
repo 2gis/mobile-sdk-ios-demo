@@ -96,7 +96,6 @@ struct MapView: UIViewRepresentable {
 		mapView.showsAPIVersion = self.showsAPIVersion
 		mapView.copyrightAlignment = self.copyrightAlignment
 		mapView.urlOpener = self.urlOpener
-		mapView.osmCopyrightAnimationDuration = 4
 	}
 }
 

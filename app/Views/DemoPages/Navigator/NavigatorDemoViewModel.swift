@@ -404,6 +404,7 @@ final class NavigatorDemoViewModel: ObservableObject {
 	private func rebuildTrafficRoute(routePoint: RouteSearchPoint) {
 		guard
 			let routePosition = self.navigatorModel.routePosition,
+			let routePositionPoint = self.navigatorModel.route.route.geometry.calculateGeoPoint(routePoint: routePosition)?.point,
 			let targetPoint = self.navigatorModel.route.routeBuildOptions?.finishPoint
 		else {
 			return
@@ -412,7 +413,7 @@ final class NavigatorDemoViewModel: ObservableObject {
 		self.intermediatePoints.removeAll()
 		let intermediatePoints = self.navigatorModel.route.route.intermediatePoints
 		if intermediatePoints.entries.count > 0,
-		   let intermediatePointEntry = intermediatePoints.findNearForward(point: routePosition.routePoint),
+		   let intermediatePointEntry = intermediatePoints.findNearForward(point: routePosition),
 		   let index = intermediatePoints.entries.firstIndex(of: intermediatePointEntry) {
 			for itemIndex in index..<intermediatePoints.entries.count {
 				self.intermediatePoints.append(RouteSearchPoint(coordinates: intermediatePoints.entries[itemIndex].value))
@@ -421,8 +422,8 @@ final class NavigatorDemoViewModel: ObservableObject {
 		self.intermediatePoints.append(routePoint)
 
 		let currentLocation = CLLocationCoordinate2D(
-			latitude: routePosition.geoPoint.latitude.value,
-			longitude: routePosition.geoPoint.longitude.value
+			latitude: routePositionPoint.latitude.value,
+			longitude: routePositionPoint.longitude.value
 		)
 		self.searchRoute(to: targetPoint, currentLocation: currentLocation) { [weak self] result in
 			guard let self = self else { return }
