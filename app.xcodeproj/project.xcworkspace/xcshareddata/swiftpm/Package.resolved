@@ -1,16 +1,14 @@
 {
-  "object": {
-    "pins": [
-      {
-        "package": "DGisMobileSDK",
-        "repositoryURL": "https://github.com/2gis/mobile-sdk-full-swift-package.git",
-        "state": {
-          "branch": null,
-          "revision": "e907c6c72f444e6e60e618c00c4fb6189f6f3a6f",
-          "version": "4.2.0"
-        }
+  "pins" : [
+    {
+      "identity" : "mobile-sdk-full-swift-package",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/2gis/mobile-sdk-full-swift-package.git",
+      "state" : {
+        "revision" : "bacb239ae35f7d34693b90e62359372b7c646c19",
+        "version" : "5.1.0"
       }
-    ]
-  },
-  "version": 1
+    }
+  ],
+  "version" : 2
 }
