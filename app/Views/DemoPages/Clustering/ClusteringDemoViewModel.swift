@@ -47,9 +47,7 @@ final class ClusteringDemoViewModel: ObservableObject {
 
 	private let map: Map
 	private let imageFactory: IImageFactory
-	private let toMap: CGAffineTransform
 
-	private var getRenderedObjectsCancellable: DGis.Cancellable?
 	private var selectedCluster: SimpleClusterObject?
 	private var selectedCameraPosition: CameraPosition?
 
@@ -78,9 +76,6 @@ final class ClusteringDemoViewModel: ObservableObject {
 	) {
 		self.map = map
 		self.imageFactory = imageFactory
-
-		let scale = UIScreen.main.nativeScale
-		self.toMap = CGAffineTransform(scaleX: scale, y: scale)
 
 		self.installMarkers()
 	}
@@ -130,12 +125,6 @@ final class ClusteringDemoViewModel: ObservableObject {
 		self.markers.removeAll()
 	}
 
-	func tap(_ location: CGPoint) {
-		let mapLocation = location.applying(self.toMap)
-		let tapPoint = ScreenPoint(x: Float(mapLocation.x), y: Float(mapLocation.y))
-		self.tap(point: tapPoint, tapRadius: Constants.tapRadius)
-	}
-
 	private func generateLatitude() -> Double {
 		Double.random(in: Constants.minLatitude...Constants.maxLatitude)
 	}
@@ -148,24 +137,9 @@ final class ClusteringDemoViewModel: ObservableObject {
 		self.addMarkers()
 	}
 
-	private func tap(point: ScreenPoint, tapRadius: ScreenDistance) {
+	func tap(objectInfo: RenderedObjectInfo) {
 		self.hideSelectedCluster()
-		self.getRenderedObjectsCancellable?.cancel()
-
-		let cancel = self.map.getRenderedObjects(centerPoint: point, radius: tapRadius).sink(
-			receiveValue: {
-				infos in
-				guard let info = infos.first else { return }
-				DispatchQueue.main.async {
-					[weak self] in
-					self?.handle(selectedObject: info)
-				}
-			},
-			failure: { error in
-				print("Failed to fetch objects: \(error)")
-			}
-		)
-		self.getRenderedObjectsCancellable = cancel
+		self.handle(selectedObject: objectInfo)
 	}
 
 	private func hideSelectedCluster() {
