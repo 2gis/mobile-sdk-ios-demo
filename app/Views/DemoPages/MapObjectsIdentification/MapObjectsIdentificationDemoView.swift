@@ -12,8 +12,8 @@ struct MapObjectsIdentificationDemoView: View {
 	) {
 		self.viewModel = viewModel
 		self.viewFactory = viewFactory
-		self.mapView = self.viewFactory.makeMapViewWithMarkerViewOverlay(tapRecognizerCallback: { [viewModel = self.viewModel] location in
-			viewModel.tap(location)
+		self.mapView = self.viewFactory.makeMapViewWithMarkerViewOverlay(tapRecognizerCallback: { [viewModel = self.viewModel] objectInfo in
+			viewModel.tap(objectInfo: objectInfo)
 		})
 		self.viewModel.mapMarkerPresenter.setAddMarkerViewCallback { [mapView = self.mapView] markerView in
 			mapView?.append(markerView: markerView)

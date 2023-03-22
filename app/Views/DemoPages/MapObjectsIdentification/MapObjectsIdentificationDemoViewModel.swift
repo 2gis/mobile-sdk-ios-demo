@@ -14,8 +14,6 @@ final class MapObjectsIdentificationDemoViewModel: ObservableObject {
 	private let searchManagerFactory: () -> SearchManager
 	private let imageFactory: () -> IImageFactory
 	private let map: Map
-	private let toMap: CGAffineTransform
-	private var getRenderedObjectsCancellable: DGis.Cancellable?
 	private var selectedMarker: Marker?
 	private lazy var mapObjectManager: MapObjectManager = MapObjectManager(map: self.map)
 	private lazy var selectedMarkerIcon: DGis.Image = {
@@ -43,39 +41,11 @@ final class MapObjectsIdentificationDemoViewModel: ObservableObject {
 		)
 		self.map.addSource(source: locationSource)
 		self.map.addSource(source: mapSourceFactory.makeRoadEventSource())
-
-		let scale = UIScreen.main.nativeScale
-		self.toMap = CGAffineTransform(scaleX: scale, y: scale)
 	}
 
-	func tap(_ location: CGPoint) {
-		let mapLocation = location.applying(self.toMap)
-		let tapPoint = ScreenPoint(x: Float(mapLocation.x), y: Float(mapLocation.y))
-		self.tap(point: tapPoint, tapRadius: Constants.tapRadius)
-	}
-
-	/// - Parameter point: A tap point in *pixel* (native scale) coordinates.
-	/// - Parameter tapRadius: Radius around tap point in which objects will
-	///   be detected.
-	private func tap(point: ScreenPoint, tapRadius: ScreenDistance) {
+	func tap(objectInfo: RenderedObjectInfo) {
 		self.hideSelectedMarker()
-		self.getRenderedObjectsCancellable?.cancel()
-
-		let cancel = self.map.getRenderedObjects(centerPoint: point, radius: tapRadius).sink(
-			receiveValue: {
-				infos in
-				// The first object is the closest one to the tapped point.
-				guard let info = infos.first else { return }
-				DispatchQueue.main.async {
-					[weak self] in
-					self?.handle(selectedObject: info)
-				}
-			},
-			failure: { error in
-				print("Failed to fetch objects: \(error)")
-			}
-		)
-		self.getRenderedObjectsCancellable = cancel
+		self.handle(selectedObject: objectInfo)
 	}
 
 	private func hideSelectedMarker() {
