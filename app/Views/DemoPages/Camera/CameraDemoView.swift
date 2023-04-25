@@ -28,12 +28,12 @@ struct CameraDemoView: View {
 		.padding(.trailing, 20)
 		.actionSheet(isPresented: self.$viewModel.showActionSheet) {
 			ActionSheet(
-				title: Text("Тестовые перелеты"),
+				title: Text("Test movings"),
 				buttons: [
-					.default(Text("Перелет по Москве")) {
+					.default(Text("Move camera around Moscow")) {
 						self.viewModel.testCamera()
 					},
-					.default(Text("Перелет в текущую геопозицию")) {
+					.default(Text("Move camera to current position")) {
 						self.viewModel.showCurrentPosition()
 					},
 					.cancel(Text("Отмена"))

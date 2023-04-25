@@ -49,9 +49,9 @@ struct VoiceRow: View {
 		})
 		.actionSheet(isPresented: self.$viewModel.isUninstallRequestShown, content: {
 			ActionSheet(
-				title: Text("Удалить голосовой пакет «\(self.viewModel.name)»?"),
+				title: Text("Remove voice package «\(self.viewModel.name)»?"),
 				buttons: [
-					.destructive(Text("Удалить"), action: { self.viewModel.uninstall() }),
+					.destructive(Text("Remove"), action: { self.viewModel.uninstall() }),
 					.cancel()
 				]
 			)

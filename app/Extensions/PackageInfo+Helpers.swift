@@ -6,15 +6,15 @@ enum PackageStatus: Equatable {
 	var description: String {
 		switch self {
 			case .preinstalled:
-				return "Предустановлен"
+				return "Preinstalled"
 			case .installing(let progress):
-				return "Установка \(progress)%"
+				return "Installing \(progress)%"
 			case .notCompatible:
-				return "Не совместим с текущей версией"
+				return "Not compatible with current version"
 			case .installed:
-				return "Установлен"
+				return "Installed"
 			case .notInstalled:
-				return "Не установлен"
+				return "Not installed"
 		}
 	}
 }

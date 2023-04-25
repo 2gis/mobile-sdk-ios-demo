@@ -22,7 +22,7 @@ struct ClusteringDemoView: View {
 				if self.viewModel.showMarkersMenu {
 					VStack(spacing: 12.0) {
 						VStack {
-							Text("Число добавляемых или удаляемых маркеров")
+							Text("Number of markers added or removed")
 							.font(.caption)
 							.foregroundColor(.gray)
 							TextField("", text: self.$viewModel.markersCount)
@@ -36,13 +36,13 @@ struct ClusteringDemoView: View {
 						)
 						DetailsActionView(action: {
 							self.viewModel.addMarkers()
-						}, primaryText: "Добавить заданное число маркеров")
+						}, primaryText: "Add specified number of markers")
 						DetailsActionView(action: {
 							self.viewModel.removeMarkers()
-						}, primaryText: "Удалить заданное число маркеров")
+						}, primaryText: "Remove specified number of markers")
 						DetailsActionView(action: {
 							self.viewModel.removeAll()
-						}, primaryText: "Удалить все маркеры")
+						}, primaryText: "Remove all markers")
 					}
 					.padding(.trailing, 40.0)
 					.padding(.bottom, 60.0)

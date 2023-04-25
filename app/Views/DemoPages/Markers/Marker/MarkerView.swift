@@ -17,10 +17,10 @@ struct MarkerView: View {
 		VStack(spacing: 12.0) {
 			DetailsActionView(action: {
 				self.viewModel.type.next()
-			}, primaryText: self.viewModel.type.text, detailsText: "Выберите маркер")
+			}, primaryText: self.viewModel.type.text, detailsText: "Choose marker type")
 			DetailsActionView(action: {
 				self.viewModel.size.next()
-			}, primaryText: self.viewModel.size.text, detailsText: "Установите размер")
+			}, primaryText: self.viewModel.size.text, detailsText: "Set size")
 			VStack {
 				Text("Добавьте текст").font(.caption).foregroundColor(.gray)
 				TextField("", text: self.$text)
@@ -28,15 +28,15 @@ struct MarkerView: View {
 			}.background(RoundedRectangle(cornerRadius: 6).scale(1.2).fill(Color.white))
 			DetailsActionView(action: {
 				self.viewModel.addMarkers(text: self.text)
-			}, primaryText: "Установить")
+			}, primaryText: "Set")
 			if self.viewModel.hasMarkers {
 				DetailsActionView(action: {
 					self.viewModel.removeAll()
-				}, primaryText: "Удалить все")
+				}, primaryText: "Remove all")
 			}
 			DetailsActionView(action: {
 				self.show = false
-			}, primaryText: "Закрыть")
+			}, primaryText: "Close")
 		}
 		.padding([.trailing], 40.0)
 		.padding([.bottom], 60.0)

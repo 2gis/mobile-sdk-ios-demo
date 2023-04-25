@@ -9,13 +9,13 @@ final class MapThemeDemoViewModel: ObservableObject {
 		var title: String {
 			switch self {
 				case .default:
-					return "Тема стиля по умолчанию"
+					return "Default"
 				case .dark:
-					return "Темная"
+					return "Dark"
 				case .light:
-					return "Светлая"
+					return "Light"
 				case .system:
-					return "Системная"
+					return "System"
 			}
 		}
 

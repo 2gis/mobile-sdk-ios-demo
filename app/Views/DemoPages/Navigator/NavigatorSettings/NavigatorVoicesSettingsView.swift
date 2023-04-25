@@ -18,8 +18,8 @@ struct NavigatorVoicesSettingsView: View {
 					VoiceRow(viewModel: rowVM)
 				})
 			}
-			.navigationBarTitle(Text("Голосовые пакеты"), displayMode: .inline)
-			.navigationBarItems(trailing: Button("Закрыть", action: { self.isPresented = false }))
+			.navigationBarTitle(Text("Voice packages"), displayMode: .inline)
+			.navigationBarItems(trailing: Button("Close", action: { self.isPresented = false }))
 		}
 	}
 }
