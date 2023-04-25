@@ -13,9 +13,9 @@ extension NavigatorTheme: PickerViewOption {
 	var name: String {
 		switch self {
 			case .default:
-				return "По умолчанию"
+				return "System"
 			case .custom:
-				return "Кастомная"
+				return "Custom"
 		}
 	}
 }

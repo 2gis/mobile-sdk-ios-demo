@@ -29,8 +29,8 @@ struct RoadEventsDisplayFilterView: View {
 					}
 				)
 			}
-			.navigationBarTitle(Text("Видимые дорожные события"), displayMode: .inline)
-			.navigationBarItems(trailing: Button("Закрыть", action: { self.isPresented = false }))
+			.navigationBarTitle(Text("Visible road events"), displayMode: .inline)
+			.navigationBarItems(trailing: Button("Close", action: { self.isPresented = false }))
 		}
 	}
 }
@@ -47,25 +47,25 @@ extension RoadEventDisplayCategoryOptionSet: Identifiable {
 	fileprivate var name: String {
 		var names: [String] = []
 		if self.contains(.camera) {
-			names.append("Камеры")
+			names.append("Camera")
 		}
 		if self.contains(.comment) {
-			names.append("Комментарии на дорогах")
+			names.append("Comments on roads")
 		}
 		if self.contains(.accident) {
-			names.append("ДТП")
+			names.append("Accident")
 		}
 		if self.contains(.roadRestriction) {
-			names.append("Перекрытия дорог")
+			names.append("Road restrictions")
 		}
 		if self.contains(.roadWorks) {
-			names.append("Дорожные работы")
+			names.append("Road works")
 		}
 		if self.contains(.user) {
-			names.append("События текущего пользователя")
+			names.append("Current user's events")
 		}
 		if self.contains(.other) {
-			names.append("Другое")
+			names.append("Others")
 		}
 		return names.joined(separator: ", ")
 	}

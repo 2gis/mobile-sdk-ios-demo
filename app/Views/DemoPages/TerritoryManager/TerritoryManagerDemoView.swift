@@ -30,7 +30,7 @@ struct TerritoryManagerDemoView: View {
 	}
 
 	private func makeSearchField() -> some View {
-		TextField("Поиск", text: self.$viewModel.searchString)
+		TextField("Search", text: self.$viewModel.searchString)
 		.multilineTextAlignment(.center)
 	}
 

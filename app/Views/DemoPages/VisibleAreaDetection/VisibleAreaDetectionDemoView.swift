@@ -32,7 +32,7 @@ struct VisibleAreaDetectionDemoView: View {
 				.foregroundColor(.from(state))
 				.frame(width: 24, height: 24)
 				.shadow(color: .gray, radius: 0.2, x: 1, y: 1)
-				Text(state == .inside ? "Внутри" : "Снаружи")
+				Text(state == .inside ? "Inside" : "Outside")
 			}
 		}
 		.padding()
