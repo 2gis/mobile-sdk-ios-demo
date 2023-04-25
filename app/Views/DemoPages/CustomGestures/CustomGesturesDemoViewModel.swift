@@ -20,7 +20,7 @@ extension MapGesturesType {
 	var name: String {
 		switch self {
 			case .default:
-				return "Default"
+				return "Event"
 			case .custom:
 				return "Custom"
 		}

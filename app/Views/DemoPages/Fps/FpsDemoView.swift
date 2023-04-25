@@ -19,7 +19,7 @@ struct FpsDemoView: View {
 				self.viewFactory.makeMapViewWithZoomControl(alignment: .bottomLeft)
 				VStack(spacing: 12.0) {
 					VStack {
-						Text("Текущий FPS: \(self.viewModel.currentFps)")
+						Text("Current FPS: \(self.viewModel.currentFps)")
 						.font(.caption)
 						.foregroundColor(.gray)
 					}
@@ -29,7 +29,7 @@ struct FpsDemoView: View {
 						.fill(Color.white)
 					)
 					VStack {
-						Text("Максимальный fps")
+						Text("Max fps")
 						.font(.caption)
 						.foregroundColor(.gray)
 						TextField("", text: self.$viewModel.maxFps)
@@ -43,7 +43,7 @@ struct FpsDemoView: View {
 						.fill(Color.white)
 					)
 					VStack {
-						Text("Максимальный fps для режима энергосбережения")
+						Text("Max fps in power saving mode")
 						.font(.caption)
 						.foregroundColor(.gray)
 						TextField("", text: self.$viewModel.powerSavingMaxFps)
@@ -58,10 +58,10 @@ struct FpsDemoView: View {
 					)
 					DetailsActionView(action: {
 						self.viewModel.setFps()
-					}, primaryText: "Установить значения fps")
+					}, primaryText: "Set fps")
 					DetailsActionView(action: {
 						self.viewModel.startCameraMoving()
-					}, primaryText: "Запустить перелет по Москве")
+					}, primaryText: "Move camera around Moscow")
 					if self.keyboardOffset > 0 {
 						DetailsActionView(action: {
 							UIApplication.shared.sendAction(
@@ -70,7 +70,7 @@ struct FpsDemoView: View {
 								from: nil,
 								for: nil
 							)
-						}, primaryText: "Готово")
+						}, primaryText: "OK")
 					}
 				}
 				.padding(.trailing, 40.0)

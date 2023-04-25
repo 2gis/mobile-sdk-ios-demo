@@ -32,10 +32,10 @@ struct MapThemeDemoView: View {
 					self.viewModel.currentTheme = theme
 				}
 			}
-			buttons.append(.cancel(Text("Отмена")))
+			buttons.append(.cancel(Text("Cancel")))
 			return ActionSheet(
-				title: Text("Сменить тему"),
-				message: Text("Текущая тема: \(self.viewModel.currentTheme.title)"),
+				title: Text("Change map theme"),
+				message: Text("Current theme: \(self.viewModel.currentTheme.title)"),
 				buttons: buttons
 			)
 		}

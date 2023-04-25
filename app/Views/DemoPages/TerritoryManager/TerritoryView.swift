@@ -46,9 +46,9 @@ struct TerritoryView: View {
 			})
 			.actionSheet(isPresented: self.$viewModel.isUninstallRequestShown, content: {
 				ActionSheet(
-					title: Text("Удалить \"\(self.viewModel.name)\"?"),
+					title: Text("Remove \"\(self.viewModel.name)\"?"),
 					buttons: [
-						.destructive(Text("Удалить"), action: { self.viewModel.uninstall() }),
+						.destructive(Text("Remove"), action: { self.viewModel.uninstall() }),
 						.cancel()
 					]
 				)

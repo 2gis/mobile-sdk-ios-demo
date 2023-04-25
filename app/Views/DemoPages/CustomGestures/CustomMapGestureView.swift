@@ -61,10 +61,10 @@ class CustomMapGestureView: UIView, IMapGestureView {
 				let convertedScalingCenter = self.convert(scalingCenter, to: self.mapCoordinateSpace)
 					.applying(self.mapCoordinateSpace.toPixels)
 
-				// Существует разница между масштабом (zoom) и множителем (scale).
-				// Их взаимоотношение подчиняется формуле: scale = C*exp(2, zoom).
-				// Для передачи события необходимо именно изменение масштаба,
-				// выражающегося через логарифм от изменения множителя.
+				// There is a difference between zoom and scale.
+				// Their relationship is subject to the formula: scale = C*exp(2, zoom).
+				// To send an event, it is necessary to change the scale,
+				// expressed in terms of the logarithm of the change in the multiplier.
 				let zoomDelta = Float(log2(scaleDelta))
 				let center = ScreenPoint(convertedScalingCenter)
 				let event = DirectMapScalingEvent(

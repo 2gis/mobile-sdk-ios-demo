@@ -14,9 +14,9 @@ final class MarkerViewModel: ObservableObject {
 
 		var text: String {
 			switch self {
-				case .camera: return "Камера"
-				case .water: return "Вода"
-				case .shelter: return "Укрытие"
+				case .camera: return "Camera"
+				case .water: return "Water"
+				case .shelter: return "Shelter"
 			}
 		}
 
@@ -46,9 +46,9 @@ final class MarkerViewModel: ObservableObject {
 
 		var text: String {
 			switch self {
-				case .small: return "маленький"
-				case .medium: return "средний"
-				case .big: return "большой"
+				case .small: return "Small"
+				case .medium: return "Medium"
+				case .big: return "Big"
 			}
 		}
 

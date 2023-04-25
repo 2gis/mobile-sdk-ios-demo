@@ -121,10 +121,6 @@ class RoadEventsMapOverlayView: UIView, IMapOverlayView {
 	}
 
 	private func updateCameraPaddings() {
-		// Пересчитываем отступы камеры на основании видимой области карты.
-		// Операция нужна для корректного позиционирования создаваемого дорожного события,
-		// так как для размещения события используется точка местности,
-		// которая находится в точке позиции камеры (`map.camera.position.point`).
 		guard let scale = self.window?.screen.nativeScale else { return }
 		var insets: UIEdgeInsets = .zero
 		if let createRoadEventView = self.createRoadEventView {

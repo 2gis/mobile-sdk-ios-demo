@@ -159,7 +159,7 @@ final class NavigatorDemoViewModel: ObservableObject {
 		let options = self.navigatorSettingsViewModel.navigatorOptions
 		self.getCurrentPosition { [weak self] coordinate in
 			guard let coordinate = coordinate else {
-				self?.errorMessage = "Не можем вас найти:("
+				self?.errorMessage = "We can't find you:("
 				self?.stopNavigation()
 				return
 			}
@@ -291,7 +291,7 @@ final class NavigatorDemoViewModel: ObservableObject {
 		switch routeSearchResult {
 			case .success(let routes):
 				if routes.isEmpty {
-					self.handle(routeSearchError: "Проезд не найден.")
+					self.handle(routeSearchError: "Route not found.")
 				} else if routes.count > 1 {
 					self.request = .routeSelection(routes)
 					self.state = .routeSelection(targetPoint, options)
