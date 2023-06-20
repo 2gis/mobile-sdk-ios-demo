@@ -21,25 +21,18 @@ struct ClusteringDemoView: View {
 				self.settingsButton().frame(width: 100, height: 100, alignment: .bottomTrailing)
 				if self.viewModel.showMarkersMenu {
 					VStack(spacing: 12.0) {
-						VStack {
-							Text("Number of markers added or removed")
-							.font(.caption)
-							.foregroundColor(.gray)
-							TextField("", text: self.$viewModel.markersCount)
-							.frame(width: 50, height: 20, alignment: .center)
-							.keyboardType(.numberPad)
-						}
-						.background(
-							RoundedRectangle(cornerRadius: 6)
-							.scale(1.2)
-							.fill(Color.white)
-						)
 						DetailsActionView(action: {
 							self.viewModel.addMarkers()
 						}, primaryText: "Add specified number of markers")
 						DetailsActionView(action: {
 							self.viewModel.removeMarkers()
 						}, primaryText: "Remove specified number of markers")
+						DetailsActionView(action: {
+							self.viewModel.removeAndAddMarkers()
+						}, primaryText: "Remove and add specified number of markers")
+						DetailsActionView(action: {
+							self.viewModel.reinitMapObjectManager()
+						}, primaryText: "Create new MapObjectManager")
 						DetailsActionView(action: {
 							self.viewModel.removeAll()
 						}, primaryText: "Remove all markers")
@@ -52,6 +45,17 @@ struct ClusteringDemoView: View {
 						.transition(.move(edge: .bottom))
 				}
 			}
+			.sheet(isPresented: self.$viewModel.showDetailsSettings) {
+				ClusteringSettingsView(
+					isPresented: self.$viewModel.showDetailsSettings,
+					groupingType: self.$viewModel.groupingType,
+					objectsCount: self.$viewModel.markersCount,
+					minZoom: self.$viewModel.minZoom,
+					maxZoom: self.$viewModel.maxZoom,
+					isVisible: self.$viewModel.isVisible
+				)
+			}
+			.navigationBarItems(trailing: self.detailsSettingsButton())
 		}
 		.edgesIgnoringSafeArea(.all)
 	}
@@ -62,5 +66,16 @@ struct ClusteringDemoView: View {
 		}
 		.padding(.bottom, 40)
 		.padding(.trailing, 20)
+	}
+
+	private func detailsSettingsButton() -> some View {
+		Button {
+			self.viewModel.showDetailsSettings = true
+		} label: {
+			Image(systemName: "gear")
+			.resizable()
+			.aspectRatio(contentMode: .fit)
+			.frame(width: 30)
+		}
 	}
 }

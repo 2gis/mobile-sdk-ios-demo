@@ -6,7 +6,7 @@ import DGis
 final class NavigatorDemoViewModel: ObservableObject {
 	private enum Constants {
 		static let kmhToMs = 1 / 3.6
-		static let initialZoom: Zoom = 17.5
+		static let initialStyleZoom: StyleZoom = 17.5
 		static let minZoom: Double = 15.0
 		static let maxZoom: Double = 18.0
 		static let animationDuration = abs(maxZoom - minZoom) * 1000
@@ -75,24 +75,21 @@ final class NavigatorDemoViewModel: ObservableObject {
 	private let voiceManager: VoiceManager
 	private var applicationIdleTimerService: IApplicationIdleTimerService
 	private let toMap: CGAffineTransform
-	private let imageFactory: () -> IImageFactory
-	private let zoomFollowController = PlatformZoomFollowController()
+	private let imageFactory: IImageFactory
 
 	private var routeSearchCancellable: ICancellable?
 	private var navigationStateCancellable: ICancellable?
 	private var voiceChangedCancellable: AnyCancellable?
 	private var getRenderedObjectsCancellable: ICancellable?
-	private var zoomFollowControllerTypeCancellable: AnyCancellable?
 	private var isVoiceConfigured: Bool = false
 	private var intermediatePoints: [RouteSearchPoint] = []
 	private lazy var storage: IKeyValueStorage = UserDefaults.standard
 	private lazy var mapObjectManager: MapObjectManager = MapObjectManager(map: self.map)
 	private lazy var intermediatePointMarkerIcon: DGis.Image = {
-		let factory = self.imageFactory()
 		let icon = UIImage(systemName: "mappin.and.ellipse")!
 			.withTintColor(#colorLiteral(red: 0.2470588235, green: 0.6, blue: 0.1607843137, alpha: 1))
 			.withConfiguration(UIImage.SymbolConfiguration(scale: .large))
-		return factory.make(image: icon)
+		return self.imageFactory.make(image: icon)
 	}()
 
 	init(
@@ -106,8 +103,8 @@ final class NavigatorDemoViewModel: ObservableObject {
 		mapSourceFactory: IMapSourceFactory,
 		roadEventCardPresenter: IRoadEventCardPresenter,
 		settingsService: ISettingsService,
-		imageFactory: @escaping () -> IImageFactory
-	) {
+		imageFactory: IImageFactory
+	) throws {
 		self.map = map
 		self.trafficRouter = trafficRouter
 		self.navigationManager = navigationManager
@@ -141,7 +138,7 @@ final class NavigatorDemoViewModel: ObservableObject {
 		if settingsService.addRoadEventSourceInNavigationView {
 			self.map.addSource(source: mapSourceFactory.makeRoadEventSource())
 		}
-		self.setupCamera()
+		try self.setupCamera()
 		self.restoreMapState()
 	}
 
@@ -172,7 +169,7 @@ final class NavigatorDemoViewModel: ObservableObject {
 		self.applicationIdleTimerService.isIdleTimerDisabled = false
 		self.routeSearchCancellable?.cancel()
 		self.routeSearchCancellable = nil
-		if self.navigationManager.uiModel.state == .freeRoam {
+		if self.navigationManager.uiModel.isFreeRoam {
 			self.navigationManager.stop()
 			self.state = .targetPointSearch
 		} else {
@@ -236,16 +233,32 @@ final class NavigatorDemoViewModel: ObservableObject {
 	}
 
 	private func restoreMapState() {
-		guard let rawValue: String = self.storage.value(forKey: Constants.mapState),
-			  let storedMapState = Data(base64Encoded: rawValue),
-			  let mapState = try? PackedMapState.fromBytes(data: storedMapState) else { return }
+		guard
+			let rawValue: String = self.storage.value(forKey: Constants.mapState),
+			let storedMapState = Data(base64Encoded: rawValue),
+			let mapState = try? PackedMapState.fromBytes(data: storedMapState)
+		else {
+			return
+		}
 
-		self.map.camera.position = mapState.cameraPosition
+		do {
+			try self.map.camera.setPosition(position: mapState.cameraPosition)
+		} catch let error as SimpleError {
+			self.errorMessage = error.description
+		} catch {
+			self.errorMessage = error.localizedDescription
+		}
 	}
 
 	private func startFreeRoamNavigation() {
 		self.state = .navigation
-		self.navigationManager.start()
+		do {
+			try self.navigationManager.start()
+		} catch let error as SimpleError {
+			self.errorMessage = error.description
+		} catch {
+			self.errorMessage = error.localizedDescription
+		}
 	}
 
 	private func searchRoute(
@@ -322,18 +335,24 @@ final class NavigatorDemoViewModel: ObservableObject {
 	) {
 		self.state = .navigation
 		let routeSearchOptions = routeSearchOptions ?? self.navigatorSettingsViewModel.routeType.routeSearchOptions
-		if simulation {
-			let simulationSpeed = SimulationConstantSpeed(speed: simulationSpeedKmH * Constants.kmhToMs)
-			self.navigationManager.simulationSettings.speedMode = .speed(simulationSpeed)
-			self.navigationManager.startSimulation(
-				routeBuildOptions: RouteBuildOptions(finishPoint: targetPoint, routeSearchOptions: routeSearchOptions),
-				trafficRoute: route
-			)
-		} else {
-			self.navigationManager.start(
-				routeBuildOptions: RouteBuildOptions(finishPoint: targetPoint, routeSearchOptions: routeSearchOptions),
-				trafficRoute: route
-			)
+		do {
+			if simulation {
+				let simulationSpeed = SimulationConstantSpeed(speed: simulationSpeedKmH * Constants.kmhToMs)
+				self.navigationManager.simulationSettings.speedMode = .speed(simulationSpeed)
+				try self.navigationManager.startSimulation(
+					routeBuildOptions: RouteBuildOptions(finishPoint: targetPoint, routeSearchOptions: routeSearchOptions),
+					trafficRoute: route
+				)
+			} else {
+				try self.navigationManager.start(
+					routeBuildOptions: RouteBuildOptions(finishPoint: targetPoint, routeSearchOptions: routeSearchOptions),
+					trafficRoute: route
+				)
+			}
+		} catch let error as SimpleError {
+			self.handle(routeSearchError: error.description)
+		} catch {
+			self.handle(routeSearchError: error.localizedDescription)
 		}
 	}
 
@@ -341,13 +360,11 @@ final class NavigatorDemoViewModel: ObservableObject {
 		self.navigationManager.voiceSelector.voice = voice?.navigationVoice
 	}
 
-	private func setupCamera() {
+	private func setupCamera() throws {
 		var position = self.map.camera.position
-		position.zoom = Constants.initialZoom
-		self.map.camera.position = position
-		self.map.camera.setBehaviour(behaviour: CameraBehaviour(position: .init(bearing: .satellite, tilt: .off, zoom: .on)))
-
-		self.zoomFollowController.setZoom(zoom: Constants.initialZoom)
+		position.zoom = styleZToProjectionZ(styleZ: Constants.initialStyleZoom, latitude: position.point.latitude)
+		try self.map.camera.setPosition(position: position)
+		self.map.camera.setBehaviour(behaviour: CameraBehaviour(position: .init(bearing: .satellite, tilt: .off, styleZoom: .on)))
 	}
 
 	private func getCurrentPosition(completion: @escaping (CLLocationCoordinate2D?) -> ()) {

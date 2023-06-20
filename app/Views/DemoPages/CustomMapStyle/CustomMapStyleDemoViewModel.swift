@@ -11,7 +11,7 @@ final class CustomMapStyleDemoViewModel: ObservableObject {
 	private var loadStyleCancellable: DGis.Cancellable?
 
 	init(
-		styleFactory: @escaping () -> IStyleFactory,
+		styleFactory: IStyleFactory,
 		map: Map
 	) {
 		self.map = map

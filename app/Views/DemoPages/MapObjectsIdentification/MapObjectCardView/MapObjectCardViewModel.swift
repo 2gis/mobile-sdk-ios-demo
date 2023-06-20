@@ -19,19 +19,22 @@ final class MapObjectCardViewModel: ObservableObject {
 	var titleChangedCallback: ((String, String) -> Void)? = nil
 
 	private let objectInfo: RenderedObjectInfo
+	private let searchManager: SearchManager
+	private let dgisSource: DgisSource?
 	private let onClose: CloseCallback
-	private let searchManagerFactory: () -> SearchManager
 	private var getDirectoryObjectCancellable: Cancellable?
 	private var subtitle: String = ""
-	private lazy var searchManager: SearchManager = self.searchManagerFactory()
+	private var selectedObjectIds: [DgisObjectId] = []
 
 	init(
 		objectInfo: RenderedObjectInfo,
-		searchManagerFactory: @escaping () -> SearchManager,
+		searchManager: SearchManager,
+		dgisSource: DgisSource?,
 		onClose: @escaping CloseCallback
 	) {
 		self.objectInfo = objectInfo
-		self.searchManagerFactory = searchManagerFactory
+		self.searchManager = searchManager
+		self.dgisSource = dgisSource
 		self.description = objectInfo.description
 		self.onClose = onClose
 		self.fetchObjectInfo()
@@ -39,6 +42,11 @@ final class MapObjectCardViewModel: ObservableObject {
 
 	func close() {
 		self.onClose()
+	}
+
+	func hideObjects() {
+		self.dgisSource?.setHighlighted(directoryObjectIds: self.selectedObjectIds, highlighted: false)
+		self.selectedObjectIds.removeAll()
 	}
 
 	private func fetchObjectInfo() {
@@ -59,16 +67,25 @@ final class MapObjectCardViewModel: ObservableObject {
 		self.getDirectoryObjectCancellable = future.sinkOnMainThread(
 			receiveValue: {
 				[weak self] directoryObject in
+				guard let self = self else { return }
 				guard let directoryObject = directoryObject else { return }
 
-				self?.subtitle = directoryObject.subtitle
-				self?.title = directoryObject.title
-				self?.description = """
+				self.subtitle = directoryObject.subtitle
+				self.title = directoryObject.title
+				self.description = """
 					\(directoryObject.subtitle)
 					\(directoryObject.formattedAddress(type: .short)?.streetAddress ?? "(no address)")
 					\(directoryObject.markerPosition?.description ?? "(no location)")
 					ID: \(object.id.objectId)
 					"""
+
+				if let objectId = directoryObject.id {
+					self.selectedObjectIds = [objectId]
+					directoryObject.entrances.forEach { entrance in
+						self.selectedObjectIds.append(entrance.id)
+					}
+					self.dgisSource?.setHighlighted(directoryObjectIds: self.selectedObjectIds, highlighted: true)
+				}
 			},
 			failure: { error in
 				print("Unable to fetch a directory object. Error: \(error).")

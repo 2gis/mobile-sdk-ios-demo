@@ -6,13 +6,13 @@ final class StylePickerViewModel: ObservableObject {
 	/// URL to a selected style URL. Must be a file URL.
 	@Published var styleFileURL: URL?
 
-	private let styleFactory: () -> IStyleFactory
+	private let styleFactory: IStyleFactory
 	private let map: Map
 	private var cancellables: [Combine.AnyCancellable] = []
 	private var loadStyleCancellable: DGis.Cancellable?
 
 	init(
-		styleFactory: @escaping () -> IStyleFactory,
+		styleFactory: IStyleFactory,
 		map: Map
 	) {
 		self.styleFactory = styleFactory
@@ -30,8 +30,7 @@ final class StylePickerViewModel: ObservableObject {
 
 		assert(fileURL.isFileURL)
 
-		let factory = styleFactory()
-		let styleFuture = factory.loadFile(url: fileURL)
+		let styleFuture = self.styleFactory.loadFile(url: fileURL)
 		self.loadStyleCancellable = styleFuture.sink(
 			receiveValue: { [map = self.map] style in
 				map.style = style

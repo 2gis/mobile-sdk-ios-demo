@@ -3,10 +3,17 @@ import DGis
 
 final class MarkerViewModel: ObservableObject {
 
+	enum ImageOrData {
+		case image(UIImage?)
+		case data(Data?)
+	}
+
 	enum MarkerType: UInt {
 		case camera
 		case water
 		case shelter
+		case droneLottie
+		case batLottie
 
 		mutating func next() {
 			self = MarkerType(rawValue: self.rawValue + 1) ?? .camera
@@ -17,20 +24,26 @@ final class MarkerViewModel: ObservableObject {
 				case .camera: return "Camera"
 				case .water: return "Water"
 				case .shelter: return "Shelter"
+				case .droneLottie: return "Animated drone"
+				case .batLottie: return "Animated bat"
 			}
 		}
 
-		var image: UIImage? {
+		var imageData: ImageOrData {
 			switch self {
 				case .camera:
-					return UIImage(systemName: "camera.fill")?
-						.withTintColor(.systemGray)
+					return .image(UIImage(systemName: "camera.fill")?
+						.withTintColor(.systemGray))
 				case .water:
-					return UIImage(systemName: "drop.fill")?
-						.withTintColor(.systemTeal)
+					return .image(UIImage(systemName: "drop.fill")?
+						.withTintColor(.systemTeal))
 				case .shelter:
-					return UIImage(systemName: "umbrella.fill")?
-						.withTintColor(.systemRed)
+					return .image(UIImage(systemName: "umbrella.fill")?
+						.withTintColor(.systemRed))
+				case .droneLottie:
+					return .data(NSDataAsset(name: "Drone")?.data)
+				case .batLottie:
+					return .data(NSDataAsset(name: "Bat")?.data)
 			}
 		}
 	}
@@ -46,21 +59,27 @@ final class MarkerViewModel: ObservableObject {
 
 		var text: String {
 			switch self {
-				case .small: return "Small"
-				case .medium: return "Medium"
-				case .big: return "Big"
+				case .small: return "small"
+				case .medium: return "medium"
+				case .big: return "big"
 			}
 		}
 
-		var scale: UIImage.SymbolScale {
+		var pixel: DGis.LogicalPixel {
 			switch self {
-				case .small: return .small
-				case .medium: return .medium
-				case .big: return .large
+				case .small: return .init(value: 20)
+				case .medium: return .init(value: 60)
+				case .big: return .init(value: 120)
 			}
 		}
-
 	}
+
+	private static let tapRadius: CGFloat = 5
+
+	private let toMap: CGAffineTransform = {
+		let scale = UIScreen.main.nativeScale
+		return CGAffineTransform(scaleX: scale, y: scale)
+	}()
 
 	private struct TypeSize: Hashable {
 		let type: MarkerType
@@ -75,6 +94,7 @@ final class MarkerViewModel: ObservableObject {
 	private let imageFactory: IImageFactory
 	private lazy var mapObjectManager: MapObjectManager =
 		MapObjectManager(map: self.map)
+	private var cancellable: ICancellable = NoopCancellable()
 
 	private var icons: [TypeSize: DGis.Image] = [:]
 
@@ -86,18 +106,37 @@ final class MarkerViewModel: ObservableObject {
 		self.imageFactory = imageFactory
 	}
 
-	func addMarkers(text: String) {
+	func tap(_ location: CGPoint) {
+		let mapLocation = location.applying(self.toMap)
+		let tapPoint = ScreenPoint(x: Float(mapLocation.x), y: Float(mapLocation.y))
+		let tapRadius = ScreenDistance(value: Float(Self.tapRadius))
+		self.cancellable = self.map.getRenderedObjects(centerPoint: tapPoint, radius: tapRadius)
+			.sink(receiveValue: { infos in
+				for info in infos {
+					let object = info.item.item
+					if let label = object.userData as? String {
+						print("Marker label: \(label). Info: \(object)")
+					}
+				}
+			},
+			failure: { error in
+				print("Failed to fetch objects: \(error)")
+			})
+	}
+
+	func addMarker(text: String) {
 		let flatPoint = self.map.camera.position.point
 		let point = GeoPointWithElevation(
 			latitude: flatPoint.latitude,
 			longitude: flatPoint.longitude
 		)
-		let icon = self.makeIcon(type: self.type, size: self.size)
+		let icon = self.makeIcon()
 
 		let options = MarkerOptions(
 			position: point,
 			icon: icon,
-			text: text
+			text: text,
+			iconWidth: self.size.pixel
 		)
 		let marker = Marker(options: options)
 		self.mapObjectManager.addObject(item: marker)
@@ -108,17 +147,21 @@ final class MarkerViewModel: ObservableObject {
 		self.mapObjectManager.removeAll()
 	}
 
-	private func makeIcon(type: MarkerType, size: MarkerSize) -> DGis.Image? {
-		let typeSize = TypeSize(type: type, size: size)
+	private func makeIcon() -> DGis.Image? {
+		let typeSize = TypeSize(type: self.type, size: self.size)
 		if let icon = self.icons[typeSize] {
 			return icon
-		} else if let image = type.image,
-			let scaledImage = image.applyingSymbolConfiguration(.init(scale: size.scale)) {
-			let icon = self.imageFactory.make(image: scaledImage)
-			self.icons[typeSize] = icon
-			return icon
-		} else {
-			return nil
 		}
+
+		let icon: DGis.Image?
+		switch self.type.imageData {
+			case .image(let image):
+				icon = image.map { self.imageFactory.make(image: $0) }
+			case .data(let data):
+				icon = data.map { self.imageFactory.make(lottieData: $0, size: .zero) }
+		}
+
+		self.icons[typeSize] = icon
+		return icon
 	}
 }

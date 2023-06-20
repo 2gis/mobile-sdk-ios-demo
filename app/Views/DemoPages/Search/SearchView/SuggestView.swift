@@ -16,7 +16,8 @@ struct SuggestView: View {
 			MarkedUpTextView(
 				markup: self.viewModel.subtitle,
 				normalFont: Font.caption,
-				matchFont: Font.caption.weight(.bold)
+				matchFont: Font.caption.weight(.bold),
+				distance: self.viewModel.object?.distanceToObject
 			)
 		}
 	}
