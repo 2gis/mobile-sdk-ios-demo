@@ -134,7 +134,7 @@ class RoadEventsMapOverlayView: UIView, IMapOverlayView {
 			right: UInt32(insets.right * scale),
 			bottom: UInt32(insets.bottom * scale)
 		)
-		self.map.camera.setPadding(padding: padding)
+		self.map.camera.padding = padding
 	}
 
 	private func hideRoadEventForm() {

@@ -1,3 +1,4 @@
+import CoreLocation
 import DGis
 
 struct SearchResultViewModel {
@@ -7,8 +8,12 @@ struct SearchResultViewModel {
 		self.items.isEmpty
 	}
 
-	init(_ result: SearchResult? = nil) {
-		self.items = result?.firstPage?.items.compactMap({ $0 }).map(SearchResultItemViewModel.init) ?? []
+	init(
+		result: SearchResult? = nil,
+		lastPosition: CLLocation? = nil
+	) {
+		let lastPositionPoint = lastPosition.map { GeoPoint(coordinate: $0.coordinate) }
+		self.items = result?.firstPage?.items.compactMap({ ($0, lastPositionPoint) }).map(SearchResultItemViewModel.init) ?? []
 	}
 }
 

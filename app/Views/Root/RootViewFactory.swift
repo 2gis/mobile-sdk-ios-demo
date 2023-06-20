@@ -3,6 +3,7 @@ import DGis
 
 struct RootViewFactory {
 	private let sdk: DGis.Container
+	private let context: Context
 	private let locationManagerFactory: () -> LocationService
 	private let settingsService: ISettingsService
 	private let mapProvider: IMapProvider
@@ -16,8 +17,9 @@ struct RootViewFactory {
 		mapProvider: IMapProvider,
 		applicationIdleTimerService: IApplicationIdleTimerService,
 		navigatorSettings: INavigatorSettings
-	) {
+	) throws {
 		self.sdk = sdk
+		self.context = try sdk.context
 		self.locationManagerFactory = locationManagerFactory
 		self.settingsService = settingsService
 		self.mapProvider = mapProvider
@@ -26,18 +28,18 @@ struct RootViewFactory {
 	}
 
 	@ViewBuilder
-	func makeDemoPageView(_ page: DemoPage) -> some View {
+	func makeDemoPageView(_ page: DemoPage) throws -> some View {
 		switch page {
 			case .camera:
 				self.makeCameraDemoPage()
 			case .customMapControls:
 				self.makeCustomMapControlsDemoPage()
 			case .mapObjectsIdentification:
-				self.makeMapObjectsIdentificationDemoPage()
+				try self.makeMapObjectsIdentificationDemoPage()
 			case .markers:
 				self.makeMarkersDemoPage()
 			case .dictionarySearch:
-				self.makeSearchStylesDemoPage()
+				try self.makeSearchStylesDemoPage()
 			case .mapStyles:
 				self.makeCustomStylesDemoPage()
 			case .visibleAreaDetection:
@@ -55,16 +57,14 @@ struct RootViewFactory {
 			case .routeSearch:
 				self.makeRouteSearchDemoPage()
 			case .navigator:
-				self.makeNavigatorDemoPage()
+				try self.makeNavigatorDemoPage()
 		}
 	}
 
 	private func makeCustomStylesDemoPage() -> some View {
 		let mapFactory = self.makeMapFactory()
 		let viewModel = CustomMapStyleDemoViewModel(
-			styleFactory: { [sdk = self.sdk] in
-				sdk.makeStyleFactory()
-			},
+			styleFactory: self.makeStyleFactory(),
 			map: mapFactory.map
 		)
 		return CustomMapStyleDemoView(
@@ -73,31 +73,25 @@ struct RootViewFactory {
 		)
 	}
 
-	private func makeSearchStylesDemoPage() -> some View {
+	private func makeSearchStylesDemoPage() throws -> some View {
 		let mapFactory = self.makeMapFactory()
-		let viewModel = SearchDemoViewModel(
-			searchManagerFactory: { [sdk = self.sdk] in
-				SearchManager.createOnlineManager(context: sdk.context)
-			},
-			map: mapFactory.map
+		let viewModel = try SearchDemoViewModel(
+			searchManager: self.makeSearchManager(),
+			map: mapFactory.map,
+			locationService: self.sdk.locationService
 		)
 		return SearchDemoView(
 			viewModel: viewModel,
-			viewFactory: self.makeDemoPageComponentsFactory(mapFactory: mapFactory))
+			viewFactory: self.makeDemoPageComponentsFactory(mapFactory: mapFactory)
+		)
 	}
 
 	private func makeCameraDemoPage() -> some View {
-		let coordinate = GeoPoint(latitude: 55.759909, longitude: 37.618806)
-		let cameraPosition = CameraPosition(point: coordinate, zoom: Zoom(value: 17))
-		
-		var mapOptions = MapOptions.default
-		mapOptions.position = cameraPosition
-		mapOptions.deviceDensity = DeviceDensity(value: Float(UIScreen.main.nativeScale))
-		let mapFactory = self.makeMapFactory(mapOptions: mapOptions)
+		let mapFactory = self.makeMapFactory()
 		let viewModel = CameraDemoViewModel(
 			locationManagerFactory: self.locationManagerFactory,
 			map: mapFactory.map,
-			sdkContext: self.sdk.context
+			mapSourceFactory: MapSourceFactory(context: self.context)
 		)
 		return CameraDemoView(
 			viewModel: viewModel,
@@ -109,7 +103,7 @@ struct RootViewFactory {
 		let mapFactory = self.makeMapFactory()
 		let viewModel = MarkersDemoViewModel(
 			map: mapFactory.map,
-			imageFactory: self.sdk.imageFactory
+			imageFactory: self.makeImageFactory()
 		)
 		return MarkersDemoView(
 			viewModel: viewModel,
@@ -126,16 +120,14 @@ struct RootViewFactory {
 		)
 	}
 
-	private func makeMapObjectsIdentificationDemoPage() -> some View {
+	private func makeMapObjectsIdentificationDemoPage() throws -> some View {
 		let mapFactory = self.makeMapFactory()
-		let viewModel = MapObjectsIdentificationDemoViewModel(
-			searchManagerFactory: self.makeSearchManagerFactory(),
-			imageFactory: { [sdk = self.sdk] in
-				sdk.imageFactory
-			},
+		let viewModel = try MapObjectsIdentificationDemoViewModel(
+			searchManager: self.makeSearchManager(),
+			imageFactory: self.makeImageFactory(),
 			mapMarkerPresenter: self.makeMapMarkerPresenter(),
 			map: mapFactory.map,
-			mapSourceFactory: MapSourceFactory(context: self.sdk.context)
+			mapSourceFactory: MapSourceFactory(context: self.context)
 		)
 		return MapObjectsIdentificationDemoView(
 			viewModel: viewModel,
@@ -175,7 +167,7 @@ struct RootViewFactory {
 		let mapFactory = self.makeMapFactory()
 		let viewModel = ClusteringDemoViewModel(
 			map: mapFactory.map,
-			imageFactory: self.sdk.imageFactory
+			imageFactory: self.makeImageFactory()
 		)
 		return ClusteringDemoView(
 			viewModel: viewModel,
@@ -195,8 +187,8 @@ struct RootViewFactory {
 	private func makeTerritoryManagerDemoView() -> some View {
 		let mapFactory = self.makeMapFactory()
 		let viewModel = TerritoryManagerDemoViewModel(
-			packageManager: getPackageManager(context: self.sdk.context),
-			territoryManager: getTerritoryManager(context: self.sdk.context)
+			packageManager: getPackageManager(context: self.context),
+			territoryManager: getTerritoryManager(context: self.context)
 		)
 		return TerritoryManagerDemoView(
 			viewModel: viewModel,
@@ -208,7 +200,7 @@ struct RootViewFactory {
 		let mapFactory = self.makeMapFactory()
 		let viewModel = RouteSearchDemoViewModel(
 			map: mapFactory.map,
-			mapSourceFactory: MapSourceFactory(context: self.sdk.context)
+			mapSourceFactory: MapSourceFactory(context: self.context)
 		)
 		return RouteSearchDemoView(
 			viewModel: viewModel,
@@ -216,9 +208,9 @@ struct RootViewFactory {
 		)
 	}
 
-	private func makeNavigatorDemoPage() -> some View {
+	private func makeNavigatorDemoPage() throws -> some View {
 		let mapFactory = self.makeMapFactory()
-		let viewModel = NavigatorDemoViewModel(
+		let viewModel = try NavigatorDemoViewModel(
 			map: mapFactory.map,
 			trafficRouter: TrafficRouter(context: self.sdk.context),
 			navigationManager: NavigationManager(platformContext: self.sdk.context),
@@ -229,9 +221,7 @@ struct RootViewFactory {
 			mapSourceFactory: MapSourceFactory(context: self.sdk.context),
 			roadEventCardPresenter: RoadEventCardPresenter(),
 			settingsService: self.settingsService,
-			imageFactory: { [sdk = self.sdk] in
-				sdk.imageFactory
-			}
+			imageFactory: self.makeImageFactory()
 		)
 		return NavigatorDemoView(
 			viewModel: viewModel,
@@ -242,25 +232,58 @@ struct RootViewFactory {
 	private func makeDemoPageComponentsFactory(mapFactory: IMapFactory) -> DemoPageComponentsFactory {
 		DemoPageComponentsFactory(
 			sdk: self.sdk,
+			context: self.context,
 			mapFactory: mapFactory,
 			settingsService: self.settingsService
 		)
 	}
 
-	private func makeMapFactory(mapOptions: MapOptions = .default) -> IMapFactory {
-		try! self.sdk.makeMapFactory(options: mapOptions)
+	private func makeMapFactory() -> IMapFactory {
+		var options = MapOptions.default
+		options.sourceDescriptors = [self.settingsService.mapDataSource.sourceDescriptor]
+		do {
+			return try self.sdk.makeMapFactory(options: options)
+		} catch let error as SimpleError {
+			let errorMessage = "IMapFactory initialization error: \(error.description)"
+			fatalError(errorMessage)
+		} catch {
+			let errorMessage = "IMapFactory initialization error: \(error)"
+			fatalError(errorMessage)
+		}
 	}
 
-	private func makeSearchManagerFactory() -> (() -> SearchManager) {
-		return { [sdk = self.sdk, settingsService = self.settingsService] in
-			switch settingsService.mapDataSource {
-				case .online:
-					return SearchManager.createOnlineManager(context: sdk.context)
-				case .hybrid:
-					return SearchManager.createSmartManager(context: sdk.context)
-				case .offline:
-					return SearchManager.createOfflineManager(context: sdk.context)
-			}
+	private func makeStyleFactory() -> IStyleFactory {
+		do {
+			return try self.sdk.makeStyleFactory()
+		} catch let error as SimpleError {
+			let errorMessage = "IStyleFactory initialization error: \(error.description)"
+			fatalError(errorMessage)
+		} catch {
+			let errorMessage = "IStyleFactory initialization error: \(error)"
+			fatalError(errorMessage)
+		}
+	}
+
+	private func makeImageFactory() -> IImageFactory {
+		do {
+			return try self.sdk.makeImageFactory()
+		} catch let error as SimpleError {
+			let errorMessage = "IImageFactory initialization error: \(error.description)"
+			fatalError(errorMessage)
+		} catch {
+			let errorMessage = "IImageFactory initialization error: \(error)"
+			fatalError(errorMessage)
+		}
+	}
+
+	private func makeSearchManager() throws -> SearchManager {
+		switch settingsService.mapDataSource {
+			case .online:
+				return try SearchManager.createOnlineManager(context: self.context)
+			case .hybrid:
+				return try SearchManager.createSmartManager(context: self.context)
+			case .offline:
+				return try SearchManager.createOfflineManager(context: self.context)
 		}
 	}
 
@@ -273,6 +296,31 @@ struct RootViewFactory {
 				offsetX: 0.0,
 				offsetY: 0.0
 			)
+		}
+	}
+
+	private func makeRoadEventCardViewFactory() -> IRoadEventCardViewFactory {
+		do {
+			return try self.sdk.makeRoadEventCardViewFactory()
+		} catch let error as SimpleError {
+			let errorMessage = "IRoadEventCardViewFactory initialization error: \(error.description)"
+			fatalError(errorMessage)
+		} catch {
+			let errorMessage = "IRoadEventCardViewFactory initialization error: \(error)"
+			fatalError(errorMessage)
+		}
+	}
+}
+
+private extension MapDataSource {
+	var sourceDescriptor: MapOptions.SourceDescriptor {
+		switch self {
+			case .online:
+				return .dgisOnlineSource
+			case .hybrid:
+				return .dgisHybridSource
+			case .offline:
+				return .dgisOfflineSource
 		}
 	}
 }

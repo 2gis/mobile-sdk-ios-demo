@@ -6,7 +6,7 @@ final class SearchStore: ObservableObject {
 		{ [weak self] in self?.dispatch($0) }
 	}
 
-	@Published private(set) var state: SearchState
+	@Published var state: SearchState
 	private let reducer: SearchReducer
 
 	init(initialState: SearchState, reducer: SearchReducer) {

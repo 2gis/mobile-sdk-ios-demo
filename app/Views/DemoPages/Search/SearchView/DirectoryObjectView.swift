@@ -8,12 +8,16 @@ struct DirectoryObjectView: View {
 			VStack(alignment: .leading) {
 				Divider()
 				Text(self.viewModel.title)
-					.font(.headline)
+				.font(.headline)
 				Text(self.viewModel.subtitle)
-					.font(.subheadline)
+				.font(.subheadline)
 				self.viewModel.address.map(FormattedAddressView.init)?
-					.padding([.top, .bottom], 8)
-					.foregroundColor(.gray)
+				.padding([.top, .bottom], 8)
+				.foregroundColor(.gray)
+				if let distanceText = self.viewModel.distanceToObject?.description {
+					Text(distanceText)
+					.font(.subheadline)
+				}
 				Divider()
 			}
 			Spacer()

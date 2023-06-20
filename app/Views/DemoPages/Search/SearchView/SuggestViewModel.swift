@@ -10,12 +10,12 @@ struct SuggestViewModel: Identifiable, Hashable {
 	let icon: SwiftUI.Image
 	let object: DirectoryObjectViewModel?
 
-	init(suggest: Suggest) {
+	init(suggest: Suggest, lastLocation: GeoPoint?) {
 		self.title = suggest.title
 		self.subtitle = suggest.subtitle
 		self.applyHandler = suggest.handler
 		self.icon = makeIcon(for: suggest.handler)
-		self.object = suggest.handler.object.map(DirectoryObjectViewModel.init)
+		self.object = suggest.handler.object.map { DirectoryObjectViewModel(object: $0, lastLocation: lastLocation) }
 	}
 
 	static func ==(_ lhs: Self, rhs: Self) -> Bool {

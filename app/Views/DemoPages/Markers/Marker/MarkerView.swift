@@ -17,17 +17,23 @@ struct MarkerView: View {
 		VStack(spacing: 12.0) {
 			DetailsActionView(action: {
 				self.viewModel.type.next()
-			}, primaryText: self.viewModel.type.text, detailsText: "Choose marker type")
+			}, primaryText: self.viewModel.type.text, detailsText: "Choose marker")
 			DetailsActionView(action: {
 				self.viewModel.size.next()
 			}, primaryText: self.viewModel.size.text, detailsText: "Set size")
 			VStack {
-				Text("Добавьте текст").font(.caption).foregroundColor(.gray)
+				Text("Add text")
+				.font(.caption)
+				.foregroundColor(.gray)
 				TextField("", text: self.$text)
-					.frame(width: 100, height: 20, alignment: .center)
-			}.background(RoundedRectangle(cornerRadius: 6).scale(1.2).fill(Color.white))
+				.frame(width: 100, height: 20, alignment: .center)
+			}.background(
+				RoundedRectangle(cornerRadius: 6)
+				.scale(1.2)
+				.fill(Color.white)
+			)
 			DetailsActionView(action: {
-				self.viewModel.addMarkers(text: self.text)
+				self.viewModel.addMarker(text: self.text)
 			}, primaryText: "Set")
 			if self.viewModel.hasMarkers {
 				DetailsActionView(action: {
@@ -42,5 +48,3 @@ struct MarkerView: View {
 		.padding([.bottom], 60.0)
 	}
 }
-
-

@@ -13,15 +13,25 @@ final class SearchReducer {
 
 			case .setError(let message):
 				state.errorMessage = message
+				state.isErrorAlertShown = true
 
 			case .setQueryText(let queryText):
-				state.queryText = queryText
-				self.service.suggestIfNeeded(queryText: queryText)
-					.store(in: &result)
+				if state.queryText != queryText {
+					state.queryText = queryText
+					self.service.suggestIfNeeded(queryText: queryText)
+						.store(in: &result)
+				}
 
 			case .search:
-				self.service.search(queryText: state.queryText)
+				self.service.search(queryText: state.queryText, searchOptions: state.searchOptions)
 					.store(in: &result)
+
+			case .setSearchOptions(let options):
+				state.searchOptions = options
+				if !state.queryText.isEmpty {
+					self.service.search(queryText: state.queryText, searchOptions: options)
+						.store(in: &result)
+				}
 
 			case .searchQuery(let query):
 				self.service.search(query: query)
