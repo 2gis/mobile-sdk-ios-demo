@@ -59,9 +59,9 @@ final class Container {
 
 	private lazy var navigationService: NavigationService = NavigationService()
 
-	func makeRootView() -> some View {
+	func makeRootView() throws -> some View {
 		let viewModel = self.makeRootViewModel()
-		let viewFactory = self.makeRootViewFactory()
+		let viewFactory = try self.makeRootViewFactory()
 		return RootView(
 			viewModel: viewModel,
 			viewFactory: viewFactory
@@ -69,8 +69,8 @@ final class Container {
 		.environmentObject(self.navigationService)
 	}
 
-	private func makeRootViewFactory() -> RootViewFactory {
-		let viewFactory = RootViewFactory(
+	private func makeRootViewFactory() throws -> RootViewFactory {
+		let viewFactory = try RootViewFactory(
 			sdk: self.sdk,
 			locationManagerFactory: {
 				LocationService()

@@ -126,7 +126,7 @@ final class NavigatorSettingsViewModel: ObservableObject {
 		}
 
 		if let navigationState = self.navigationState {
-			self.isFreeRoam = navigationState.state == .freeRoam
+			self.isFreeRoam = navigationState.state != .disabled && navigationState.finishPoint != nil
 		}
 
 		self.isSimulation = self.storage.value(forKey: Constants.isSimulationState) ?? false

@@ -1,4 +1,5 @@
 import SwiftUI
+import DGis
 
 struct RootView: View {
 	@EnvironmentObject private var navigationService: NavigationService
@@ -16,7 +17,13 @@ struct RootView: View {
 	var body: some View {
 		List(self.viewModel.demoPages) { page in
 			DemoPageListRow(page: page, action: {
-				self.navigationService.push(self.destinationView(for: page), animated: true)
+				do {
+					try self.navigationService.push(self.destinationView(for: page), animated: true)
+				} catch let error as DGis.SDKError {
+					self.viewModel.errorMessage = error.description
+				} catch {
+					self.viewModel.errorMessage = "Unknown error: \(error)"
+				}
 			})
 		}
 		.navigationBarItems(trailing: self.settingsButton())
@@ -28,12 +35,15 @@ struct RootView: View {
 				show: self.$viewModel.showsSettings
 			)
 		}
+		.alert(isPresented: self.$viewModel.isErrorAlertShown) {
+			Alert(title: Text(self.viewModel.errorMessage ?? ""))
+		}
 	}
 
-	private func destinationView(for page: DemoPage) -> some View {
-		self.viewFactory.makeDemoPageView(page)
-		.navigationBarTitle(page.name)
-		.environmentObject(self.navigationService)
+	private func destinationView(for page: DemoPage) throws -> some View {
+		try self.viewFactory.makeDemoPageView(page)
+			.navigationBarTitle(page.name)
+			.environmentObject(self.navigationService)
 	}
 
 	private func settingsButton() -> some View {

@@ -11,30 +11,31 @@ final class MapObjectsIdentificationDemoViewModel: ObservableObject {
 
 	let mapMarkerPresenter: MapMarkerPresenter
 
-	private let searchManagerFactory: () -> SearchManager
-	private let imageFactory: () -> IImageFactory
+	private let searchManager: SearchManager
+	private let imageFactory: IImageFactory
 	private let map: Map
+	private let dgisSource: DgisSource?
 	private var selectedMarker: Marker?
 	private lazy var mapObjectManager: MapObjectManager = MapObjectManager(map: self.map)
 	private lazy var selectedMarkerIcon: DGis.Image = {
-		let factory = self.imageFactory()
 		let icon = UIImage(systemName: "mappin.and.ellipse")!
 			.withTintColor(#colorLiteral(red: 0.2470588235, green: 0.6, blue: 0.1607843137, alpha: 1))
 			.withConfiguration(UIImage.SymbolConfiguration(scale: .large))
-		return factory.make(image: icon)
+		return self.imageFactory.make(image: icon)
 	}()
 
 	init(
-		searchManagerFactory: @escaping () -> SearchManager,
-		imageFactory: @escaping () -> IImageFactory,
+		searchManager: SearchManager,
+		imageFactory: IImageFactory,
 		mapMarkerPresenter: MapMarkerPresenter,
 		map: Map,
 		mapSourceFactory: IMapSourceFactory
 	) {
-		self.searchManagerFactory = searchManagerFactory
+		self.searchManager = searchManager
 		self.imageFactory = imageFactory
 		self.mapMarkerPresenter = mapMarkerPresenter
 		self.map = map
+		self.dgisSource = self.map.sources.first(where: { $0 is DgisSource }) as? DgisSource
 
 		let locationSource = mapSourceFactory.makeSmoothMyLocationMapObjectSource(
 			directionBehaviour: .followSatelliteHeading
@@ -52,6 +53,7 @@ final class MapObjectsIdentificationDemoViewModel: ObservableObject {
 		if let marker = self.selectedMarker {
 			self.mapObjectManager.removeObject(item: marker)
 		}
+		self.selectedMapObject?.hideObjects()
 		self.selectedMapObject = nil
 	}
 
@@ -71,7 +73,8 @@ final class MapObjectsIdentificationDemoViewModel: ObservableObject {
 
 		self.selectedMapObject = MapObjectCardViewModel(
 			objectInfo: selectedObject,
-			searchManagerFactory: searchManagerFactory,
+			searchManager: self.searchManager,
+			dgisSource: self.dgisSource,
 			onClose: {
 				[weak self] in
 				self?.hideSelectedMarker()
@@ -81,4 +84,3 @@ final class MapObjectsIdentificationDemoViewModel: ObservableObject {
 		self.mapMarkerPresenter.showMarkerView(viewModel: self.selectedMapObject!)
 	}
 }
-

@@ -5,15 +5,18 @@ struct MarkedUpTextView: View {
 	private let markup: MarkedUpText
 	private let normalFont: Font
 	private let matchFont: Font
+	private let distance: Meter?
 
 	init(
 		markup: MarkedUpText,
 		normalFont: Font = Font.body,
-		matchFont: Font = Font.body.weight(.medium)
+		matchFont: Font = Font.body.weight(.medium),
+		distance: Meter? = nil
 	) {
 		self.markup = markup
 		self.normalFont = normalFont
 		self.matchFont = matchFont
+		self.distance = distance
 	}
 
 	var body: some View {
@@ -29,10 +32,14 @@ struct MarkedUpTextView: View {
 			}
 			return texts
 		}
-		texts.reduce(into: Text(verbatim: ""), {
+		var resultText = texts.reduce(into: Text(verbatim: ""), {
 			acc, text in
 			acc = acc + text
 		})
+		if let distanceText = self.distance?.descriptionSuggest {
+			resultText = resultText + Text(verbatim: distanceText).font(self.normalFont)
+		}
+		return resultText
 	}
 }
 

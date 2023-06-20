@@ -50,13 +50,15 @@ final class CameraDemoViewModel: ObservableObject {
 	init(
 		locationManagerFactory: @escaping () -> LocationService?,
 		map: Map,
-		sdkContext: DGis.Context
+		mapSourceFactory: IMapSourceFactory
 	) {
 		self.locationManagerFactory = locationManagerFactory
 		self.map = map
-		
-		let source = MyLocationMapObjectSource(context: sdkContext, directionBehaviour: .followMagneticHeading)
-		self.map.addSource(source: source)
+
+		let locationSource = mapSourceFactory.makeMyLocationMapObjectSource(
+			directionBehaviour: .followSatelliteHeading
+		)
+		map.addSource(source: locationSource)
 
 		self.dataLoadingCancellable = self.map.dataLoadingStateChannel.sink { state in
 			print(state)
@@ -71,7 +73,7 @@ final class CameraDemoViewModel: ObservableObject {
 		if self.locationService == nil {
 			self.locationService = self.locationManagerFactory()
 		}
-		self.locationService?.getCurrentPosition { (coordinates) in
+		self.locationService?.getCurrentPosition { coordinates in
 			DispatchQueue.main.async {
 				self.moveCameraCancellable?.cancel()
 				self.moveCameraCancellable = self.map

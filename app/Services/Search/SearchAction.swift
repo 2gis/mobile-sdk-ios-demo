@@ -5,6 +5,7 @@ enum SearchAction {
 	case search
 	case searchQuery(SearchQuery)
 	case setQueryText(String)
+	case setSearchOptions(SearchOptions)
 	case setError(String)
 	case resetSuggestions
 	case setSuggestResult(SuggestResultViewModel)

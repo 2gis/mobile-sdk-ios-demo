@@ -3,15 +3,18 @@ import DGis
 
 struct DemoPageComponentsFactory {
 	private let sdk: DGis.Container
+	private let context: Context
 	private let mapFactory: IMapFactory
 	private let settingsService: ISettingsService
 
 	internal init(
 		sdk: DGis.Container,
+		context: Context,
 		mapFactory: IMapFactory,
 		settingsService: ISettingsService
 	) {
 		self.sdk = sdk
+		self.context = context
 		self.mapFactory = mapFactory
 		self.settingsService = settingsService
 	}
@@ -96,6 +99,12 @@ struct DemoPageComponentsFactory {
 		})
 	}
 
+	func makeCompassControl() -> some View {
+		MapControl(
+			controlFactory: self.mapFactory.mapControlFactory.makeCompassControl
+		)
+	}
+
 	func makeCurrentLocationControl() -> some View {
 		MapControl(
 			controlFactory: self.mapFactory.mapControlFactory.makeCurrentLocationControl
@@ -137,13 +146,13 @@ struct DemoPageComponentsFactory {
 			bicycleRouteSearchOptions: bicycleRouteSearchOptions,
 			pedestrianRouteSearchOptions: pedestrianRouteSearchOptions,
 			sourceFactory: { [sdk = self.sdk] in
-				sdk.sourceFactory
+				try! sdk.makeSourceFactory()
 			},
-			routeEditorSourceFactory: { [sdk = self.sdk] routeEditor in
-				return RouteEditorSource(context: sdk.context, routeEditor: routeEditor)
+			routeEditorSourceFactory: { [context = self.context] routeEditor in
+				return RouteEditorSource(context: context, routeEditor: routeEditor)
 			},
-			routeEditorFactory: { [sdk = self.sdk] in
-				return RouteEditor(context: sdk.context)
+			routeEditorFactory: { [context = self.context] in
+				return RouteEditor(context: context)
 			},
 			map: self.mapFactory.map,
 			feedbackGenerator: FeedbackGenerator()
@@ -164,7 +173,7 @@ struct DemoPageComponentsFactory {
 		}
 		return NavigatorView(
 			mapFactory: self.mapFactory,
-			navigationViewFactory: self.sdk.makeNavigationViewFactory(options: options),
+			navigationViewFactory: try! self.sdk.makeNavigationViewFactory(options: options),
 			navigationManager: navigationManager,
 			roadEventCardPresenter: roadEventCardPresenter,
 			onCloseButtonTapped: onCloseButtonTapped,
@@ -174,12 +183,12 @@ struct DemoPageComponentsFactory {
 	}
 
 	func makeRoutePreviewListVC(routesInfo: RouteEditorRoutesInfo) -> RoutePreviewListVC {
-		let factory = self.sdk.makeNavigationViewFactory()
+		let factory = try! self.sdk.makeNavigationViewFactory()
 		return RoutePreviewListVC(routesInfo: routesInfo, factory: factory)
 	}
 
 	func makeRouteDetailsVC(route: TrafficRoute) -> RouteDetailsVC {
-		let factory = self.sdk.makeNavigationViewFactory()
+		let factory = try! self.sdk.makeNavigationViewFactory()
 		return RouteDetailsVC(route: route, factory: factory)
 	}
 }

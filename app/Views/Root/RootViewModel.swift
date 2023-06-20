@@ -7,6 +7,12 @@ final class RootViewModel: ObservableObject {
 
 	@Published var showsSettings: Bool = false
 	@Published var mapDataSourceId: String
+	@Published var isErrorAlertShown: Bool = false
+	var errorMessage: String? {
+		didSet {
+			self.isErrorAlertShown = self.errorMessage != nil
+		}
+	}
 
 	init(
 		demoPages: [DemoPage],
