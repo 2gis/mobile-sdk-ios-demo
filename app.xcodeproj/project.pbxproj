@@ -92,9 +92,9 @@
 		648B1C2A2A41B0A8008EDB1C /* WeekTimePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 648B1C292A41B0A8008EDB1C /* WeekTimePickerView.swift */; };
 		648B1C2C2A41D5FD008EDB1C /* ErrorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 648B1C2B2A41D5FD008EDB1C /* ErrorViewController.swift */; };
 		648B1C2E2A41E4FF008EDB1C /* ClusteringSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 648B1C2D2A41E4FF008EDB1C /* ClusteringSettingsView.swift */; };
-		648B1C302A41EE7A008EDB1C /* SearchState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 648B1C2F2A41EE7A008EDB1C /* SearchState.swift */; };
 		64A96D4326BC3BF000CC21A3 /* ClusterCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64A96D4126BC3BF000CC21A3 /* ClusterCardView.swift */; };
 		64A96D4426BC3BF000CC21A3 /* ClusterCardViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64A96D4226BC3BF000CC21A3 /* ClusterCardViewModel.swift */; };
+		64AC48FA2A42C72400CB3C94 /* SearchState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64AC48F92A42C72400CB3C94 /* SearchState.swift */; };
 		64C4FE662812E87F00CE8F6B /* Longitude.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64C4FE642812E87F00CE8F6B /* Longitude.swift */; };
 		64C4FE672812E87F00CE8F6B /* Latitude.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64C4FE652812E87F00CE8F6B /* Latitude.swift */; };
 		64EE1A9E289B22AA00FF301C /* CustomMapControlsDemoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64EE1A9A289B22AA00FF301C /* CustomMapControlsDemoViewModel.swift */; };
@@ -259,9 +259,9 @@
 		648B1C292A41B0A8008EDB1C /* WeekTimePickerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WeekTimePickerView.swift; sourceTree = "<group>"; };
 		648B1C2B2A41D5FD008EDB1C /* ErrorViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErrorViewController.swift; sourceTree = "<group>"; };
 		648B1C2D2A41E4FF008EDB1C /* ClusteringSettingsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClusteringSettingsView.swift; sourceTree = "<group>"; };
-		648B1C2F2A41EE7A008EDB1C /* SearchState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SearchState.swift; path = "../../../../v4sdkmobilerelease/v4sdk/native-sdk/ios/app/app/Services/Search/SearchState.swift"; sourceTree = "<group>"; };
 		64A96D4126BC3BF000CC21A3 /* ClusterCardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClusterCardView.swift; sourceTree = "<group>"; };
 		64A96D4226BC3BF000CC21A3 /* ClusterCardViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClusterCardViewModel.swift; sourceTree = "<group>"; };
+		64AC48F92A42C72400CB3C94 /* SearchState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchState.swift; sourceTree = "<group>"; };
 		64C4FE642812E87F00CE8F6B /* Longitude.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Longitude.swift; sourceTree = "<group>"; };
 		64C4FE652812E87F00CE8F6B /* Latitude.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Latitude.swift; sourceTree = "<group>"; };
 		64EE1A9A289B22AA00FF301C /* CustomMapControlsDemoViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomMapControlsDemoViewModel.swift; sourceTree = "<group>"; };
@@ -786,7 +786,7 @@
 				4BADDFEA2529AD9C00FBF589 /* SearchNavigation.swift */,
 				4BADDFF6252A33CD00FBF589 /* SearchReducer.swift */,
 				4BADDFDA252866F700FBF589 /* SearchService.swift */,
-				648B1C2F2A41EE7A008EDB1C /* SearchState.swift */,
+				64AC48F92A42C72400CB3C94 /* SearchState.swift */,
 				4BADDFD7252866B200FBF589 /* SearchStore.swift */,
 			);
 			path = Search;
@@ -904,7 +904,7 @@
 				644D33AF289BF3B200C78ED2 /* NavigatorView.swift in Sources */,
 				64EE1ABB289B232800FF301C /* TerritoryManagerDemoView.swift in Sources */,
 				644D33D5289C070800C78ED2 /* ApplicationIdleTimerService.swift in Sources */,
-				648B1C302A41EE7A008EDB1C /* SearchState.swift in Sources */,
+				64AC48FA2A42C72400CB3C94 /* SearchState.swift in Sources */,
 				648B1C2E2A41E4FF008EDB1C /* ClusteringSettingsView.swift in Sources */,
 				4BBE80262526DFB100D7EBDB /* RootViewModel.swift in Sources */,
 				64EE1AB2289B22E800FF301C /* RouteSearchDemoView.swift in Sources */,
