@@ -18,6 +18,13 @@ final class SettingsViewModel: ObservableObject {
 			}
 		}
 	}
+	@Published var language: Language {
+		didSet {
+			if oldValue != self.language {
+				self.settingsService.language = self.language
+			}
+		}
+	}
 	@Published var httpCacheEnabled: Bool {
 		didSet {
 			if oldValue != self.httpCacheEnabled {
@@ -73,6 +80,7 @@ final class SettingsViewModel: ObservableObject {
 		self.settingsService = settingsService
 		self.mapDataSources = mapDataSources
 		self.mapDataSource = settingsService.mapDataSource
+		self.language = settingsService.language
 		self.navigatorVoiceVolumeSources = navigatorVoiceVolumeSources
 		self.navigatorThemes = navigatorThemes
 		self.navigatorTheme = settingsService.navigatorTheme
