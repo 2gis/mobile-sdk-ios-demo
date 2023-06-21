@@ -38,9 +38,6 @@ final class Container {
 		let service = SettingsService(
 			storage: self.settingsStorage
 		)
-		service.onCurrentLanguageDidChange = { [weak self] in
-			self?.mapFactoryProvider.resetMapFactory()
-		}
 		service.onMuteOtherSoundsDidChange = { [weak self] value in
 			self?.sdk.audioSettings.muteOtherSounds = value
 		}
@@ -59,6 +56,8 @@ final class Container {
 
 	private lazy var navigationService: NavigationService = NavigationService()
 
+	private var localeManager: LocaleManager?
+
 	func makeRootView() throws -> some View {
 		let viewModel = self.makeRootViewModel()
 		let viewFactory = try self.makeRootViewFactory()
@@ -70,6 +69,15 @@ final class Container {
 	}
 
 	private func makeRootViewFactory() throws -> RootViewFactory {
+		self.localeManager = try self.sdk.makeLocaleManager()
+		let locales = settingsService.language.locale.map { [$0] }
+		self.localeManager?.overrideLocales(locales ?? [])
+		self.settingsService.onCurrentLanguageDidChange = { [weak self] language in
+			self?.mapFactoryProvider.resetMapFactory()
+			let locales = language.locale.map { [$0] }
+			self?.localeManager?.overrideLocales(locales ?? [])
+		}
+
 		let viewFactory = try RootViewFactory(
 			sdk: self.sdk,
 			locationManagerFactory: {

@@ -113,7 +113,11 @@ struct RootViewFactory {
 
 	private func makeVisibleAreaDetectionDemoPage() -> some View {
 		let mapFactory = self.makeMapFactory()
-		let viewModel = VisibleAreaDetectionDemoViewModel(map: mapFactory.map)
+		let viewModel = VisibleAreaDetectionDemoViewModel(
+			map: mapFactory.map,
+			mapObjectManager: MapObjectManager(map: mapFactory.map),
+			mapSourceFactory: MapSourceFactory(context: self.context)
+		)
 		return VisibleAreaDetectionDemoView(
 			viewModel: viewModel,
 			viewFactory: self.makeDemoPageComponentsFactory(mapFactory: mapFactory)

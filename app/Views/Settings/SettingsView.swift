@@ -17,6 +17,8 @@ struct SettingsView: View {
 				List {
 					self.mapSourcePicker()
 					.padding(.bottom)
+					self.languagePicker()
+					.padding(.bottom)
 					self.httpCacheSwitch()
 					.padding(.bottom)
 					self.makeLoggerSettings()
@@ -40,6 +42,17 @@ struct SettingsView: View {
 			options: self.viewModel.mapDataSources,
 			pickerStyle: SegmentedPickerStyle()
 		)
+	}
+
+	private func languagePicker() -> some View {
+		Picker(
+			"Map language",
+			selection: self.$viewModel.language
+		) {
+			ForEach(Language.allCases) { lang in
+				Text(lang.name).tag(lang)
+			}
+		}
 	}
 
 	private func httpCacheSwitch() -> some View {
