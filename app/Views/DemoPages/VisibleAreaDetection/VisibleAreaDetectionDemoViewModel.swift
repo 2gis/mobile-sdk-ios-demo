@@ -4,6 +4,7 @@ import DGis
 
 final class VisibleAreaDetectionDemoViewModel: ObservableObject {
 	private enum Constants {
+		static let minRectExpansionRatio = 1.0
 		static let initialRectExpansionRatio = 1.5
 	}
 
@@ -18,6 +19,7 @@ final class VisibleAreaDetectionDemoViewModel: ObservableObject {
 	}
 
 	@Published var trackingState: VisibleAreaTrackingState = .inactive
+	@Published var rectExpansionRatio: Double
 	var isTrackingActive: Bool {
 		return self.trackingState != .inactive
 	}
@@ -25,12 +27,34 @@ final class VisibleAreaDetectionDemoViewModel: ObservableObject {
 		guard case let .active(state) = self.trackingState else { return nil }
 		return state
 	}
+	var minRectExpansionRatio: Double {
+		Constants.minRectExpansionRatio
+	}
+	var maxRectExpansionRatio: Double {
+		Constants.initialRectExpansionRatio
+	}
 	private let map: Map
-	private var initialRect: GeoRect?
+	private let mapObjectManager: MapObjectManager
+	private let mapSourceFactory: IMapSourceFactory
+	private var initialRect: GeoRect? {
+		didSet {
+			self.updateVisibleAreaPolygon()
+		}
+	}
 	private var initialRectCancellable: DGis.Cancellable?
 
-	init(map: Map) {
+	init(
+		map: Map,
+		mapObjectManager: MapObjectManager,
+		mapSourceFactory: IMapSourceFactory
+	) {
 		self.map = map
+		self.mapObjectManager = mapObjectManager
+		self.mapSourceFactory = mapSourceFactory
+		self.rectExpansionRatio = Constants.initialRectExpansionRatio
+
+		let source = mapSourceFactory.makeMyLocationMapObjectSource(directionBehaviour: .followMagneticHeading)
+		map.addSource(source: source)
 	}
 
 	func detectExtendedVisibleRectChange() {
@@ -49,7 +73,12 @@ final class VisibleAreaDetectionDemoViewModel: ObservableObject {
 	}
 
 	private func formInitialVisibleRect(from rect: GeoRect) {
-		self.initialRect = rect.expanded(by: Constants.initialRectExpansionRatio)
+		let expandedRect = rect.expanded(by: self.rectExpansionRatio)
+		if expandedRect.isValid {
+			self.initialRect = expandedRect
+		} else {
+			self.initialRect = rect
+		}
 	}
 
 	private func updateVisibleRect(_ rect: GeoRect) {
@@ -60,6 +89,26 @@ final class VisibleAreaDetectionDemoViewModel: ObservableObject {
 		} else {
 			// Current visible rect is outside the initial expanded rect.
 			self.trackingState = .active(.outside)
+		}
+	}
+
+	private func updateVisibleAreaPolygon() {
+		if let rect = self.initialRect {
+			let southEastPoint = GeoPoint(latitude: rect.southWestPoint.latitude, longitude: rect.northEastPoint.longitude)
+			let northWestPoint = GeoPoint(latitude: rect.northEastPoint.latitude, longitude: rect.southWestPoint.longitude)
+			let options = PolygonOptions(
+				contours: [[
+					rect.northEastPoint,
+					southEastPoint,
+					rect.southWestPoint,
+					northWestPoint
+				]],
+				color: Color(red: 0, green: 1, blue: 0, alpha: 0.3)
+			)
+			let polygon = Polygon(options: options)
+			self.mapObjectManager.addObject(item: polygon)
+		} else {
+			self.mapObjectManager.removeAll()
 		}
 	}
 }

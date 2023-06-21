@@ -95,6 +95,7 @@
 		64A96D4326BC3BF000CC21A3 /* ClusterCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64A96D4126BC3BF000CC21A3 /* ClusterCardView.swift */; };
 		64A96D4426BC3BF000CC21A3 /* ClusterCardViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64A96D4226BC3BF000CC21A3 /* ClusterCardViewModel.swift */; };
 		64AC48FA2A42C72400CB3C94 /* SearchState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64AC48F92A42C72400CB3C94 /* SearchState.swift */; };
+		64AC48FC2A42E52600CB3C94 /* LanguageSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64AC48FB2A42E52600CB3C94 /* LanguageSettings.swift */; };
 		64C4FE662812E87F00CE8F6B /* Longitude.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64C4FE642812E87F00CE8F6B /* Longitude.swift */; };
 		64C4FE672812E87F00CE8F6B /* Latitude.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64C4FE652812E87F00CE8F6B /* Latitude.swift */; };
 		64EE1A9E289B22AA00FF301C /* CustomMapControlsDemoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64EE1A9A289B22AA00FF301C /* CustomMapControlsDemoViewModel.swift */; };
@@ -262,6 +263,7 @@
 		64A96D4126BC3BF000CC21A3 /* ClusterCardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClusterCardView.swift; sourceTree = "<group>"; };
 		64A96D4226BC3BF000CC21A3 /* ClusterCardViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClusterCardViewModel.swift; sourceTree = "<group>"; };
 		64AC48F92A42C72400CB3C94 /* SearchState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchState.swift; sourceTree = "<group>"; };
+		64AC48FB2A42E52600CB3C94 /* LanguageSettings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LanguageSettings.swift; sourceTree = "<group>"; };
 		64C4FE642812E87F00CE8F6B /* Longitude.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Longitude.swift; sourceTree = "<group>"; };
 		64C4FE652812E87F00CE8F6B /* Latitude.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Latitude.swift; sourceTree = "<group>"; };
 		64EE1A9A289B22AA00FF301C /* CustomMapControlsDemoViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomMapControlsDemoViewModel.swift; sourceTree = "<group>"; };
@@ -740,6 +742,7 @@
 				644D33B6289BF66F00C78ED2 /* FeedbackGenerator.swift */,
 				644D33AB289BF2B700C78ED2 /* IKeyValueStorage.swift */,
 				644D339F289BECE800C78ED2 /* IMapSourceFactory.swift */,
+				64AC48FB2A42E52600CB3C94 /* LanguageSettings.swift */,
 				644D33CC289BFD7E00C78ED2 /* MapFactoryProvider.swift */,
 				B7ED8A36273CEB140020E60F /* NavigationService.swift */,
 				644D33D6289C073D00C78ED2 /* NavigatorSettings.swift */,
@@ -926,6 +929,7 @@
 				64EE1AD4289B235200FF301C /* NavigatorOptions.swift in Sources */,
 				4B96EBDD2608C5780057C366 /* Channel+Helpers.swift in Sources */,
 				B7D25ACC264B970100CC835A /* MapObjectsIdentificationDemoView.swift in Sources */,
+				64AC48FC2A42E52600CB3C94 /* LanguageSettings.swift in Sources */,
 				4B4291682527A4DB006E74BE /* SuggestViewModel.swift in Sources */,
 				4BBE80292526E22F00D7EBDB /* SearchResultViewModel.swift in Sources */,
 				B7D25ACE264B971300CC835A /* MapObjectsIdentificationDemoViewModel.swift in Sources */,

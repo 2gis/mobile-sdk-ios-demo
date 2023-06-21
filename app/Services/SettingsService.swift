@@ -2,8 +2,9 @@ import Foundation
 import DGis
 
 protocol ISettingsService: AnyObject {
-	var onCurrentLanguageDidChange: (() -> Void)? { get set }
+	var onCurrentLanguageDidChange: ((Language) -> Void)? { get set }
 	var mapDataSource: MapDataSource { get set }
+	var language: Language { get set }
 	var httpCacheEnabled: Bool { get set }
 	var muteOtherSounds: Bool { get set }
 	var addRoadEventSourceInNavigationView: Bool { get set }
@@ -15,6 +16,7 @@ protocol ISettingsService: AnyObject {
 final class SettingsService: ISettingsService {
 	private enum Keys {
 		static let mapDataSource = "Global/MapDataSource"
+		static let language = "Global/Language"
 		static let httpCacheEnabled = "Global/HttpCacheEnabled"
 		static let muteOtherSounds = "Global/MuteOtherSounds"
 		static let navigatorVoiceVolumeSource = "Global/NavigatorVoiceVolumeSource"
@@ -23,7 +25,7 @@ final class SettingsService: ISettingsService {
 		static let logLevel = "Global/LogLevel"
 	}
 
-	var onCurrentLanguageDidChange: (() -> Void)?
+	var onCurrentLanguageDidChange: ((Language) -> Void)?
 
 	var mapDataSource: MapDataSource {
 		get {
@@ -32,6 +34,17 @@ final class SettingsService: ISettingsService {
 		}
 		set {
 			self.storage.set(newValue.rawValue, forKey: Keys.mapDataSource)
+		}
+	}
+
+	var language: Language {
+		get {
+			let rawValue: String? = self.storage.value(forKey: Keys.language)
+			return rawValue.flatMap { Language(rawValue: $0) } ?? .default
+		}
+		set {
+			self.storage.set(newValue.rawValue, forKey: Keys.language)
+			self.onCurrentLanguageDidChange?(newValue)
 		}
 	}
 
