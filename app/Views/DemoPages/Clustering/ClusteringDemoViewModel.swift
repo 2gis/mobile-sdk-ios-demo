@@ -57,8 +57,15 @@ final class ClusteringDemoViewModel: ObservableObject {
 	@Published var maxZoom: UInt32 = 19
 	@Published var showDetailsSettings: Bool = false
 	@Published var showMarkersMenu: Bool = false
+	@Published var isErrorAlertShown: Bool = false
 
 	@Published var selectedClusterCardViewModel: ClusterCardViewModel?
+
+	private(set) var errorMessage: String? {
+		didSet {
+			self.isErrorAlertShown = self.errorMessage != nil
+		}
+	}
 
 	private enum Constants {
 		static let minLatitude: Double = 55.53739580689267
@@ -305,7 +312,16 @@ final class ClusteringDemoViewModel: ObservableObject {
 					iconWidth: LogicalPixel(5.0),
 					userData: "Marker #\(index)"
 				)
-				let marker = Marker(options: options)
+				let marker: Marker
+				do {
+					marker = try Marker(options: options)
+				} catch let error as SimpleError {
+					self.errorMessage = error.description
+					continue
+				} catch {
+					self.errorMessage = error.localizedDescription
+					continue
+				}
 				newMarkers.append(marker)
 				self.markers.append(marker)
 			}

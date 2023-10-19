@@ -19,6 +19,11 @@ struct DetailsActionView: View {
 				}
 				Text(self.primaryText)
 			}
-		}).background(RoundedRectangle(cornerRadius: 6).scale(1.2).fill(Color.white))
+		})
+		.background(
+			RoundedRectangle(cornerRadius: 6)
+			.scale(1.2)
+			.fill(Color.white)
+		)
 	}
 }

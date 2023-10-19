@@ -40,6 +40,25 @@ struct NavigatorDemoView: View {
 			.id(self.viewModel.mapId)
 
 			if self.viewModel.showTargetPointPicker {
+				HStack {
+					self.viewFactory.makeIndoorControl()
+					.frame(width: 38, height: 119)
+					.fixedSize()
+					.padding(.leading, 20)
+					Spacer()
+				}
+				HStack {
+					Spacer()
+					VStack {
+						self.viewFactory.makeZoomControl()
+						.frame(width: 48, height: 102)
+						.fixedSize()
+						.padding(20)
+						self.viewFactory.makeCurrentLocationControl()
+						.frame(width: 48, height: 48)
+						.fixedSize()
+					}
+				}
 				self.targetPointSearchOverlay()
 			}
 
@@ -117,8 +136,9 @@ struct NavigatorDemoView: View {
 	}
 
 	private func addIntermediatePointActionSheet(_ routePoint: RouteSearchPoint) -> ActionSheet {
+		let actionSheetText = self.viewModel.isFreeRoam ? "Add a destination point?" : "Add an intermediate point?"
 		return ActionSheet(
-			title: Text("Add an intermediate point?"),
+			title: Text(actionSheetText),
 			buttons: [
 				.default(Text("Submit")) {
 					self.viewModel.addIntermediatePoint(routePoint: routePoint)
@@ -131,7 +151,6 @@ struct NavigatorDemoView: View {
 	}
 
 	private func stopNavigation() {
-		self.viewModel.saveState()
 		self.viewModel.stopNavigation()
 	}
 }
