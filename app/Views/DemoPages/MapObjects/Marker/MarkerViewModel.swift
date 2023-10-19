@@ -12,6 +12,8 @@ final class MarkerViewModel: ObservableObject {
 		case camera
 		case water
 		case shelter
+		case text
+		case emptyObject
 		case droneLottie
 		case batLottie
 
@@ -24,6 +26,8 @@ final class MarkerViewModel: ObservableObject {
 				case .camera: return "Camera"
 				case .water: return "Water"
 				case .shelter: return "Shelter"
+				case .text: return "Text object"
+				case .emptyObject: return "Empty object"
 				case .droneLottie: return "Animated drone"
 				case .batLottie: return "Animated bat"
 			}
@@ -40,6 +44,10 @@ final class MarkerViewModel: ObservableObject {
 				case .shelter:
 					return .image(UIImage(systemName: "umbrella.fill")?
 						.withTintColor(.systemRed))
+				case .text:
+					return .image(nil)
+				case .emptyObject:
+					return .image(UIImage())
 				case .droneLottie:
 					return .data(NSDataAsset(name: "Drone")?.data)
 				case .batLottie:
@@ -59,9 +67,9 @@ final class MarkerViewModel: ObservableObject {
 
 		var text: String {
 			switch self {
-				case .small: return "small"
-				case .medium: return "medium"
-				case .big: return "big"
+				case .small: return "Small"
+				case .medium: return "Medium"
+				case .big: return "Big"
 			}
 		}
 
@@ -88,21 +96,28 @@ final class MarkerViewModel: ObservableObject {
 
 	@Published var type: MarkerType = .camera
 	@Published var size: MarkerSize = .small
-	@Published private(set) var hasMarkers = false
+	@Published var markerText: String = ""
+	@Published var isErrorAlertShown: Bool = false
 
 	private let map: Map
+	private let mapObjectManager: MapObjectManager
 	private let imageFactory: IImageFactory
-	private lazy var mapObjectManager: MapObjectManager =
-		MapObjectManager(map: self.map)
 	private var cancellable: ICancellable = NoopCancellable()
+	private(set) var errorMessage: String? {
+		didSet {
+			self.isErrorAlertShown = self.errorMessage != nil
+		}
+	}
 
 	private var icons: [TypeSize: DGis.Image] = [:]
 
 	init(
 		map: Map,
+		mapObjectManager: MapObjectManager,
 		imageFactory: IImageFactory
 	) {
 		self.map = map
+		self.mapObjectManager = mapObjectManager
 		self.imageFactory = imageFactory
 	}
 
@@ -110,21 +125,22 @@ final class MarkerViewModel: ObservableObject {
 		let mapLocation = location.applying(self.toMap)
 		let tapPoint = ScreenPoint(x: Float(mapLocation.x), y: Float(mapLocation.y))
 		let tapRadius = ScreenDistance(value: Float(Self.tapRadius))
-		self.cancellable = self.map.getRenderedObjects(centerPoint: tapPoint, radius: tapRadius)
-			.sink(receiveValue: { infos in
+		let cancel = self.map.getRenderedObjects(centerPoint: tapPoint, radius: tapRadius)
+			.sink(receiveValue: { [weak self] infos in
 				for info in infos {
 					let object = info.item.item
 					if let label = object.userData as? String {
-						print("Marker label: \(label). Info: \(object)")
+						self?.errorMessage = "Marker label: \(label). Info: \(object)"
 					}
 				}
 			},
-			failure: { error in
-				print("Failed to fetch objects: \(error)")
+			failure: { [weak self] error in
+				self?.errorMessage = "Failed to fetch objects: \(error)"
 			})
+		self.cancellable = cancel
 	}
 
-	func addMarker(text: String) {
+	func addMarker() {
 		let flatPoint = self.map.camera.position.point
 		let point = GeoPointWithElevation(
 			latitude: flatPoint.latitude,
@@ -135,16 +151,17 @@ final class MarkerViewModel: ObservableObject {
 		let options = MarkerOptions(
 			position: point,
 			icon: icon,
-			text: text,
+			text: self.markerText,
 			iconWidth: self.size.pixel
 		)
-		let marker = Marker(options: options)
-		self.mapObjectManager.addObject(item: marker)
-		self.hasMarkers = true
-	}
-
-	func removeAll() {
-		self.mapObjectManager.removeAll()
+		do {
+			let marker = try Marker(options: options)
+			self.mapObjectManager.addObject(item: marker)
+		} catch let error as SimpleError {
+			self.errorMessage = error.description
+		} catch {
+			self.errorMessage = error.localizedDescription
+		}
 	}
 
 	private func makeIcon() -> DGis.Image? {

@@ -60,6 +60,9 @@ struct VisibleAreaDetectionDemoView: View {
 				.padding([.bottom, .trailing])
 			}
 		}
+		.alert(isPresented: self.$viewModel.isErrorAlertShown) {
+			Alert(title: Text(self.viewModel.errorMessage ?? ""))
+		}
 		.edgesIgnoringSafeArea([.leading, .bottom, .trailing])
 	}
 
@@ -92,16 +95,14 @@ struct VisibleAreaDetectionDemoView: View {
 		imageSystemName: String,
 		_ action: @escaping () -> Void
 	) -> some View {
-		Button(
-			action: action,
-			label: {
-				Image(systemName: imageSystemName)
-				.resizable()
-				.frame(width: 44, height: 44, alignment: .center)
-				.foregroundColor(.white)
-				.shadow(color: .gray, radius: 1)
-			}
-		)
+		Button(action: action,
+			   label: {
+			Image(systemName: imageSystemName)
+			.resizable()
+			.frame(width: 44, height: 44, alignment: .center)
+			.foregroundColor(.white)
+			.shadow(color: .gray, radius: 1)
+		})
 	}
 }
 

@@ -8,6 +8,7 @@ final class MapObjectsIdentificationDemoViewModel: ObservableObject {
 	}
 
 	@Published var selectedMapObject: MapObjectCardViewModel?
+	@Published var isErrorAlertShown: Bool = false
 
 	let mapMarkerPresenter: MapMarkerPresenter
 
@@ -16,6 +17,11 @@ final class MapObjectsIdentificationDemoViewModel: ObservableObject {
 	private let map: Map
 	private let dgisSource: DgisSource?
 	private var selectedMarker: Marker?
+	private(set) var errorMessage: String? {
+		didSet {
+			self.isErrorAlertShown = self.errorMessage != nil
+		}
+	}
 	private lazy var mapObjectManager: MapObjectManager = MapObjectManager(map: self.map)
 	private lazy var selectedMarkerIcon: DGis.Image = {
 		let icon = UIImage(systemName: "mappin.and.ellipse")!
@@ -37,9 +43,7 @@ final class MapObjectsIdentificationDemoViewModel: ObservableObject {
 		self.map = map
 		self.dgisSource = self.map.sources.first(where: { $0 is DgisSource }) as? DgisSource
 
-		let locationSource = mapSourceFactory.makeSmoothMyLocationMapObjectSource(
-			directionBehaviour: .followSatelliteHeading
-		)
+		let locationSource = mapSourceFactory.makeMyLocationMapObjectSource()
 		self.map.addSource(source: locationSource)
 		self.map.addSource(source: mapSourceFactory.makeRoadEventSource())
 	}
@@ -67,7 +71,16 @@ final class MapObjectsIdentificationDemoViewModel: ObservableObject {
 			position: markerPoint,
 			icon: self.selectedMarkerIcon
 		)
-		let marker = Marker(options: markerOptions)
+		let marker: Marker
+		do {
+			marker = try Marker(options: markerOptions)
+		} catch let error as SimpleError {
+			self.errorMessage = error.description
+			return
+		} catch {
+			self.errorMessage = error.localizedDescription
+			return
+		}
 		self.mapObjectManager.addObject(item: marker)
 		self.selectedMarker = marker
 

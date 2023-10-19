@@ -55,9 +55,7 @@ final class CameraDemoViewModel: ObservableObject {
 		self.locationManagerFactory = locationManagerFactory
 		self.map = map
 
-		let locationSource = mapSourceFactory.makeMyLocationMapObjectSource(
-			directionBehaviour: .followSatelliteHeading
-		)
+		let locationSource = mapSourceFactory.makeMyLocationMapObjectSource()
 		map.addSource(source: locationSource)
 
 		self.dataLoadingCancellable = self.map.dataLoadingStateChannel.sink { state in

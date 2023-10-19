@@ -67,9 +67,12 @@ final class NavigatorSettingsViewModel: ObservableObject {
 		)
 	}
 	var navigationState: PackedNavigationState? = nil
+	@Published var styleZoomFollowControllerType: StyleZoomFollowControllerType
 	@Published var showBetterRouteSettings: Bool = false
+	@Published var betterRouteSettings: NavigatorBetterRouteSettings
 	@Published var showFreeRoamSettings: Bool = false
 	@Published var freeRoamSettings: FreeRoamSettings
+	let styleZoomFollowControllerTypes: [StyleZoomFollowControllerType]
 
 	private let voiceManager: VoiceManager
 	private let navigatorSettings: INavigatorSettings
@@ -85,6 +88,9 @@ final class NavigatorSettingsViewModel: ObservableObject {
 		allowableSpeedExcessKmH: Float = Constants.defaultAllowableSpeedExcessKmH,
 		maxAllowableSpeedExcessKmH: Float = Constants.defaultMaxAllowableSpeedExcessKmH,
 		routeTypeSources: [DemoRouteType] = DemoRouteType.allCases,
+		styleZoomFollowControllerType: StyleZoomFollowControllerType,
+		styleZoomFollowControllerTypes: [StyleZoomFollowControllerType] =  StyleZoomFollowControllerType.allCases,
+		betterRouteSettings: NavigatorBetterRouteSettings,
 		freeRoamSettings: FreeRoamSettings
 	) {
 		self.voiceManager = voiceManager
@@ -96,6 +102,9 @@ final class NavigatorSettingsViewModel: ObservableObject {
 		self.allowableSpeedExcessKmH = allowableSpeedExcessKmH
 		self.maxAllowableSpeedExcessKmH = maxAllowableSpeedExcessKmH
 		self.routeTypeSources = routeTypeSources
+		self.styleZoomFollowControllerType = styleZoomFollowControllerType
+		self.styleZoomFollowControllerTypes = styleZoomFollowControllerTypes
+		self.betterRouteSettings = betterRouteSettings
 		self.freeRoamSettings = freeRoamSettings
 
 		self.setupNavigationVoice(initialVoiceId: self.navigatorSettings.voiceId)
@@ -152,7 +161,6 @@ final class NavigatorSettingsViewModel: ObservableObject {
 		if let userVoice = self.voiceManager.voices.first(where: { $0.id == initialVoiceId }) {
 			self.currentVoice = userVoice
 		} else {
-			// Конфигурируем навигатор первым установленным голосом.
 			self.currentVoice = preinstalledVoice
 			self.navigatorSettings.voiceId = preinstalledVoice.id
 		}

@@ -2,7 +2,7 @@ enum DemoPage: String, CaseIterable {
 	case camera
 	case visibleAreaDetection
 	case mapObjectsIdentification
-	case markers
+	case mapObjects
 	case customMapControls
 	case mapStyles
 	case mapTheme
@@ -20,8 +20,8 @@ enum DemoPage: String, CaseIterable {
 				return "Camera moves"
 			case .customMapControls:
 				return "Custom map control buttons"
-			case .markers:
-				return "Adding markers to the map"
+			case .mapObjects:
+				return "Adding map objects to the map"
 			case .mapStyles:
 				return "Uploading custom map styles"
 			case .mapTheme:
