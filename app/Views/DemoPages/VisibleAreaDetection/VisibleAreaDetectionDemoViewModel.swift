@@ -20,6 +20,7 @@ final class VisibleAreaDetectionDemoViewModel: ObservableObject {
 
 	@Published var trackingState: VisibleAreaTrackingState = .inactive
 	@Published var rectExpansionRatio: Double
+	@Published var isErrorAlertShown: Bool = false
 	var isTrackingActive: Bool {
 		return self.trackingState != .inactive
 	}
@@ -41,6 +42,11 @@ final class VisibleAreaDetectionDemoViewModel: ObservableObject {
 			self.updateVisibleAreaPolygon()
 		}
 	}
+	private(set) var errorMessage: String? {
+		didSet {
+			self.isErrorAlertShown = self.errorMessage != nil
+		}
+	}
 	private var initialRectCancellable: DGis.Cancellable?
 
 	init(
@@ -53,7 +59,7 @@ final class VisibleAreaDetectionDemoViewModel: ObservableObject {
 		self.mapSourceFactory = mapSourceFactory
 		self.rectExpansionRatio = Constants.initialRectExpansionRatio
 
-		let source = mapSourceFactory.makeMyLocationMapObjectSource(directionBehaviour: .followMagneticHeading)
+		let source = mapSourceFactory.makeMyLocationMapObjectSource()
 		map.addSource(source: source)
 	}
 
@@ -105,7 +111,16 @@ final class VisibleAreaDetectionDemoViewModel: ObservableObject {
 				]],
 				color: Color(red: 0, green: 1, blue: 0, alpha: 0.3)
 			)
-			let polygon = Polygon(options: options)
+			let polygon: Polygon
+			do {
+				polygon = try Polygon(options: options)
+			} catch let error as SimpleError {
+				self.errorMessage = error.description
+				return
+			} catch {
+				self.errorMessage = error.localizedDescription
+				return
+			}
 			self.mapObjectManager.addObject(item: polygon)
 		} else {
 			self.mapObjectManager.removeAll()

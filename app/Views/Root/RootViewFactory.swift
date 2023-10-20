@@ -36,8 +36,8 @@ struct RootViewFactory {
 				self.makeCustomMapControlsDemoPage()
 			case .mapObjectsIdentification:
 				try self.makeMapObjectsIdentificationDemoPage()
-			case .markers:
-				self.makeMarkersDemoPage()
+			case .mapObjects:
+				self.makeMapObjectsDemoPage()
 			case .dictionarySearch:
 				try self.makeSearchStylesDemoPage()
 			case .mapStyles:
@@ -99,18 +99,6 @@ struct RootViewFactory {
 		)
 	}
 
-	private func makeMarkersDemoPage() -> some View {
-		let mapFactory = self.makeMapFactory()
-		let viewModel = MarkersDemoViewModel(
-			map: mapFactory.map,
-			imageFactory: self.makeImageFactory()
-		)
-		return MarkersDemoView(
-			viewModel: viewModel,
-			viewFactory: self.makeDemoPageComponentsFactory(mapFactory: mapFactory)
-		)
-	}
-
 	private func makeVisibleAreaDetectionDemoPage() -> some View {
 		let mapFactory = self.makeMapFactory()
 		let viewModel = VisibleAreaDetectionDemoViewModel(
@@ -134,6 +122,18 @@ struct RootViewFactory {
 			mapSourceFactory: MapSourceFactory(context: self.context)
 		)
 		return MapObjectsIdentificationDemoView(
+			viewModel: viewModel,
+			viewFactory: self.makeDemoPageComponentsFactory(mapFactory: mapFactory)
+		)
+	}
+
+	private func makeMapObjectsDemoPage() -> some View {
+		let mapFactory = self.makeMapFactory()
+		let viewModel = MapObjectsDemoViewModel(
+			map: mapFactory.map,
+			imageFactory: self.makeImageFactory()
+		)
+		return MapObjectsDemoView(
 			viewModel: viewModel,
 			viewFactory: self.makeDemoPageComponentsFactory(mapFactory: mapFactory)
 		)

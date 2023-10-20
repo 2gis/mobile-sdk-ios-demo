@@ -50,12 +50,23 @@ struct NavigatorSettingsView: View {
 				)
 				self.voiceSettingsButton()
 				.padding([.leading, .trailing, .top], 10)
+				self.betterRouteSettingsButton()
+				.padding([.leading, .trailing, .top], 10)
 				self.freeRoamSettingsButton()
 				.padding([.leading, .trailing, .top], 10)
 				PickerView(
 					title: "Route type",
+					titleFont: .headline,
 					selection: self.$viewModel.routeType,
 					options: self.viewModel.routeTypeSources,
+					pickerStyle: .segmented
+				)
+				.padding([.leading, .trailing, .top], 10)
+				PickerView(
+					title: "Follow controller type",
+					titleFont: .headline,
+					selection: self.$viewModel.styleZoomFollowControllerType,
+					options: self.viewModel.styleZoomFollowControllerTypes,
 					pickerStyle: .segmented
 				)
 				.padding([.leading, .trailing, .top], 10)
@@ -119,6 +130,18 @@ struct NavigatorSettingsView: View {
 			NavigatorVoicesSettingsView(
 				viewModel: self.viewModel,
 				isPresented: self.$viewModel.showNavigatorVoicesSettings
+			)
+		}
+	}
+
+	private func betterRouteSettingsButton() -> some View {
+		SettingsFormDisclosureButton(title: "Alternative routes settings") {
+			self.viewModel.showBetterRouteSettings = true
+		}
+		.sheet(isPresented: self.$viewModel.showBetterRouteSettings) {
+			NavigatorBetterRouteSettingsView(
+				settings: self.$viewModel.betterRouteSettings,
+				isPresented: self.$viewModel.showBetterRouteSettings
 			)
 		}
 	}

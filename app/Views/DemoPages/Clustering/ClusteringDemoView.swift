@@ -56,6 +56,9 @@ struct ClusteringDemoView: View {
 				)
 			}
 			.navigationBarItems(trailing: self.detailsSettingsButton())
+			.alert(isPresented: self.$viewModel.isErrorAlertShown) {
+				Alert(title: Text(self.viewModel.errorMessage ?? ""))
+			}
 		}
 		.edgesIgnoringSafeArea(.all)
 	}
