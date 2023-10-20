@@ -18,7 +18,7 @@ final class RouteSearchDemoViewModel: ObservableObject {
 	init(map: Map, mapSourceFactory: IMapSourceFactory) {
 		self.map = map
 
-		let source = mapSourceFactory.makeMyLocationMapObjectSource(directionBehaviour: .followSatelliteHeading)
+		let source = mapSourceFactory.makeMyLocationMapObjectSource()
 		map.addSource(source: source)
 	}
 }

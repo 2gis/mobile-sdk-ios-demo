@@ -48,6 +48,9 @@ struct MapObjectsIdentificationDemoView: View {
 				.transition(.move(edge: .bottom))
 			}
 		}
+		.alert(isPresented: self.$viewModel.isErrorAlertShown) {
+			Alert(title: Text(self.viewModel.errorMessage ?? ""))
+		}
 		.edgesIgnoringSafeArea(.all)
 	}
 }

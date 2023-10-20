@@ -3,13 +3,7 @@ import DGis
 
 /// Фабрика источников карты.
 protocol IMapSourceFactory {
-	func makeMyLocationMapObjectSource(
-		directionBehaviour: MyLocationDirectionBehaviour
-	) -> MyLocationMapObjectSource
-
-	func makeSmoothMyLocationMapObjectSource(
-		directionBehaviour: MyLocationDirectionBehaviour
-	) -> MyLocationMapObjectSource
+	func makeMyLocationMapObjectSource() -> MyLocationMapObjectSource
 
 	func makeRoadEventSource() -> RoadEventSource
 }
@@ -21,23 +15,10 @@ struct MapSourceFactory: IMapSourceFactory {
 		self.context = context
 	}
 
-	func makeMyLocationMapObjectSource(
-		directionBehaviour: MyLocationDirectionBehaviour
-	) -> MyLocationMapObjectSource {
+	func makeMyLocationMapObjectSource() -> MyLocationMapObjectSource {
 		MyLocationMapObjectSource(
 			context: self.context,
-			directionBehaviour: directionBehaviour,
-			controller: createRawMyLocationController()
-		)
-	}
-
-	func makeSmoothMyLocationMapObjectSource(
-		directionBehaviour: MyLocationDirectionBehaviour
-	) -> MyLocationMapObjectSource {
-		MyLocationMapObjectSource(
-			context: self.context,
-			directionBehaviour: directionBehaviour,
-			controller: createSmoothMyLocationController()
+			controller: MyLocationController(bearingSource: .auto)
 		)
 	}
 
