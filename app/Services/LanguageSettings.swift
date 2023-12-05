@@ -30,11 +30,11 @@ extension Language {
 	var locale: DGis.Locale? {
 		switch self {
 			case .en:
-				return "en-US"
+				return .init(language: "en", region: "US")
 			case .ru:
-				return "ru-RU"
+				return .init(language: "ru", region: "RU")
 			case .ar:
-				return "ar-AE"
+				return .init(language: "ar", region: "SA")
 			case .system:
 				return nil
 		}

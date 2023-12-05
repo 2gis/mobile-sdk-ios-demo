@@ -71,11 +71,11 @@ final class Container {
 	private func makeRootViewFactory() throws -> RootViewFactory {
 		self.localeManager = try self.sdk.makeLocaleManager()
 		let locales = settingsService.language.locale.map { [$0] }
-		self.localeManager?.overrideLocales(locales ?? [])
+		self.localeManager?.overrideLocales(locales: locales ?? [])
 		self.settingsService.onCurrentLanguageDidChange = { [weak self] language in
 			self?.mapFactoryProvider.resetMapFactory()
 			let locales = language.locale.map { [$0] }
-			self?.localeManager?.overrideLocales(locales ?? [])
+			self?.localeManager?.overrideLocales(locales: locales ?? [])
 		}
 
 		let viewFactory = try RootViewFactory(
