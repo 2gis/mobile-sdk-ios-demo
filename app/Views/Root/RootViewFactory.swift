@@ -1,7 +1,7 @@
 import SwiftUI
 import DGis
 
-struct RootViewFactory {
+final class RootViewFactory: ObservableObject {
 	private let sdk: DGis.Container
 	private let context: Context
 	private let locationManagerFactory: () -> LocationService
@@ -9,6 +9,7 @@ struct RootViewFactory {
 	private let mapProvider: IMapProvider
 	private let applicationIdleTimerService: IApplicationIdleTimerService
 	private let navigatorSettings: INavigatorSettings
+	private lazy var styleFactory: IStyleFactory = self.makeStyleFactory()
 
 	init(
 		sdk: DGis.Container,
@@ -31,50 +32,38 @@ struct RootViewFactory {
 	func makeDemoPageView(_ page: DemoPage) throws -> some View {
 		switch page {
 			case .camera:
-				self.makeCameraDemoPage()
+				try self.makeCameraDemoPage()
 			case .customMapControls:
-				self.makeCustomMapControlsDemoPage()
+				try self.makeCustomMapControlsDemoPage()
 			case .mapObjectsIdentification:
 				try self.makeMapObjectsIdentificationDemoPage()
 			case .mapObjects:
-				self.makeMapObjectsDemoPage()
+				try self.makeMapObjectsDemoPage()
 			case .dictionarySearch:
 				try self.makeSearchStylesDemoPage()
-			case .mapStyles:
-				self.makeCustomStylesDemoPage()
 			case .visibleAreaDetection:
-				self.makeVisibleAreaDetectionDemoPage()
+				try self.makeVisibleAreaDetectionDemoPage()
 			case .mapTheme:
-				self.makeMapThemeDemoPage()
+				try self.makeMapThemeDemoPage()
 			case .fps:
-				self.makeFpsDemoPage()
+				try self.makeFpsDemoPage()
 			case .clustering:
-				self.makeClusteringDemoPage()
+				try self.makeClusteringDemoPage()
 			case .customGestures:
-				self.makeCustomGesturesDemoPage()
+				try self.makeCustomGesturesDemoPage()
+			case .copyrightSettings:
+				try self.makeCopyrightDemoPage()
 			case .territoryManager:
-				self.makeTerritoryManagerDemoView()
+				try self.makeTerritoryManagerDemoView()
 			case .routeSearch:
-				self.makeRouteSearchDemoPage()
+				try self.makeRouteSearchDemoPage()
 			case .navigator:
 				try self.makeNavigatorDemoPage()
 		}
 	}
 
-	private func makeCustomStylesDemoPage() -> some View {
-		let mapFactory = self.makeMapFactory()
-		let viewModel = CustomMapStyleDemoViewModel(
-			styleFactory: self.makeStyleFactory(),
-			map: mapFactory.map
-		)
-		return CustomMapStyleDemoView(
-			viewModel: viewModel,
-			viewFactory: self.makeDemoPageComponentsFactory(mapFactory: mapFactory)
-		)
-	}
-
 	private func makeSearchStylesDemoPage() throws -> some View {
-		let mapFactory = self.makeMapFactory()
+		let mapFactory = try self.makeMapFactory()
 		let viewModel = try SearchDemoViewModel(
 			searchManager: self.makeSearchManager(),
 			map: mapFactory.map,
@@ -86,8 +75,8 @@ struct RootViewFactory {
 		)
 	}
 
-	private func makeCameraDemoPage() -> some View {
-		let mapFactory = self.makeMapFactory()
+	private func makeCameraDemoPage() throws -> some View {
+		let mapFactory = try self.makeMapFactory()
 		let viewModel = CameraDemoViewModel(
 			locationManagerFactory: self.locationManagerFactory,
 			map: mapFactory.map,
@@ -99,8 +88,8 @@ struct RootViewFactory {
 		)
 	}
 
-	private func makeVisibleAreaDetectionDemoPage() -> some View {
-		let mapFactory = self.makeMapFactory()
+	private func makeVisibleAreaDetectionDemoPage() throws -> some View {
+		let mapFactory = try self.makeMapFactory()
 		let viewModel = VisibleAreaDetectionDemoViewModel(
 			map: mapFactory.map,
 			mapObjectManager: MapObjectManager(map: mapFactory.map),
@@ -113,7 +102,7 @@ struct RootViewFactory {
 	}
 
 	private func makeMapObjectsIdentificationDemoPage() throws -> some View {
-		let mapFactory = self.makeMapFactory()
+		let mapFactory = try self.makeMapFactory()
 		let viewModel = try MapObjectsIdentificationDemoViewModel(
 			searchManager: self.makeSearchManager(),
 			imageFactory: self.makeImageFactory(),
@@ -127,8 +116,8 @@ struct RootViewFactory {
 		)
 	}
 
-	private func makeMapObjectsDemoPage() -> some View {
-		let mapFactory = self.makeMapFactory()
+	private func makeMapObjectsDemoPage() throws -> some View {
+		let mapFactory = try self.makeMapFactory()
 		let viewModel = MapObjectsDemoViewModel(
 			map: mapFactory.map,
 			imageFactory: self.makeImageFactory()
@@ -139,24 +128,24 @@ struct RootViewFactory {
 		)
 	}
 
-	private func makeCustomMapControlsDemoPage() -> some View {
+	private func makeCustomMapControlsDemoPage() throws -> some View {
 		let viewModel = CustomMapControlsDemoViewModel()
 		return CustomMapControlsDemoView(
 			viewModel: viewModel,
-			viewFactory: self.makeDemoPageComponentsFactory(mapFactory: self.makeMapFactory())
+			viewFactory: self.makeDemoPageComponentsFactory(mapFactory: try self.makeMapFactory())
 		)
 	}
 
-	private func makeMapThemeDemoPage() -> some View {
+	private func makeMapThemeDemoPage() throws -> some View {
 		let viewModel = MapThemeDemoViewModel()
 		return MapThemeDemoView(
 			viewModel: viewModel,
-			viewFactory: self.makeDemoPageComponentsFactory(mapFactory: self.makeMapFactory())
+			viewFactory: self.makeDemoPageComponentsFactory(mapFactory: try self.makeMapFactory())
 		)
 	}
 
-	private func makeFpsDemoPage() -> some View {
-		let mapFactory = self.makeMapFactory()
+	private func makeFpsDemoPage() throws -> some View {
+		let mapFactory = try self.makeMapFactory()
 		let viewModel = FpsDemoViewModel(
 			map: mapFactory.map,
 			energyConsumption: mapFactory.energyConsumption
@@ -167,8 +156,8 @@ struct RootViewFactory {
 		)
 	}
 
-	private func makeClusteringDemoPage() -> some View {
-		let mapFactory = self.makeMapFactory()
+	private func makeClusteringDemoPage() throws -> some View {
+		let mapFactory = try self.makeMapFactory()
 		let viewModel = ClusteringDemoViewModel(
 			map: mapFactory.map,
 			imageFactory: self.makeImageFactory()
@@ -179,8 +168,8 @@ struct RootViewFactory {
 		)
 	}
 
-	private func makeCustomGesturesDemoPage() -> some View {
-		let mapFactory = self.makeMapFactory()
+	private func makeCustomGesturesDemoPage() throws -> some View {
+		let mapFactory = try self.makeMapFactory()
 		let viewModel = CustomGesturesDemoViewModel(mapGesturesType: .custom)
 		return CustomGesturesDemoView(
 			viewModel: viewModel,
@@ -188,8 +177,15 @@ struct RootViewFactory {
 		)
 	}
 
-	private func makeTerritoryManagerDemoView() -> some View {
-		let mapFactory = self.makeMapFactory()
+	private func makeCopyrightDemoPage() throws -> some View {
+		return CopyrightSettingsDemoView(
+			viewModel: CopyrightSettingsDemoViewModel(),
+			viewFactory: self.makeDemoPageComponentsFactory(mapFactory: try self.makeMapFactory())
+		)
+	}
+
+	private func makeTerritoryManagerDemoView() throws -> some View {
+		let mapFactory = try self.makeMapFactory()
 		let viewModel = TerritoryManagerDemoViewModel(
 			packageManager: getPackageManager(context: self.context),
 			territoryManager: getTerritoryManager(context: self.context)
@@ -200,8 +196,8 @@ struct RootViewFactory {
 		)
 	}
 
-	private func makeRouteSearchDemoPage() -> some View {
-		let mapFactory = self.makeMapFactory()
+	private func makeRouteSearchDemoPage() throws -> some View {
+		let mapFactory = try self.makeMapFactory()
 		let viewModel = RouteSearchDemoViewModel(
 			map: mapFactory.map,
 			mapSourceFactory: MapSourceFactory(context: self.context)
@@ -213,7 +209,7 @@ struct RootViewFactory {
 	}
 
 	private func makeNavigatorDemoPage() throws -> some View {
-		let mapFactory = self.makeMapFactory()
+		let mapFactory = try self.makeMapFactory()
 		let viewModel = try NavigatorDemoViewModel(
 			map: mapFactory.map,
 			trafficRouter: TrafficRouter(context: self.sdk.context),
@@ -242,18 +238,20 @@ struct RootViewFactory {
 		)
 	}
 
-	private func makeMapFactory() -> IMapFactory {
+	private func makeMapOptions() -> MapOptions {
 		var options = MapOptions.default
-		options.sourceDescriptors = [self.settingsService.mapDataSource.sourceDescriptor]
-		do {
-			return try self.sdk.makeMapFactory(options: options)
-		} catch let error as SimpleError {
-			let errorMessage = "IMapFactory initialization error: \(error.description)"
-			fatalError(errorMessage)
-		} catch {
-			let errorMessage = "IMapFactory initialization error: \(error)"
-			fatalError(errorMessage)
+		if let styleUrl = self.settingsService.customStyleUrl {
+			let absoluteUrl = FileManager.default.temporaryDirectory.appendingPathComponent(styleUrl.relativePath)
+			options.styleFuture = self.styleFactory.loadFile(url: absoluteUrl)
 		}
+		options.appearance = self.settingsService.mapTheme.mapAppearance
+		return options
+	}
+
+	private func makeMapFactory() throws -> IMapFactory {
+		var options = self.makeMapOptions()
+		options.sourceDescriptors = [self.settingsService.mapDataSource.sourceDescriptor]
+		return try self.sdk.makeMapFactory(options: options)
 	}
 
 	private func makeStyleFactory() -> IStyleFactory {

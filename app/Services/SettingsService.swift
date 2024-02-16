@@ -3,29 +3,43 @@ import DGis
 
 protocol ISettingsService: AnyObject {
 	var onCurrentLanguageDidChange: ((Language) -> Void)? { get set }
+	var customStyleUrl: URL? { get set }
 	var mapDataSource: MapDataSource { get set }
 	var language: Language { get set }
 	var httpCacheEnabled: Bool { get set }
 	var muteOtherSounds: Bool { get set }
 	var addRoadEventSourceInNavigationView: Bool { get set }
 	var logLevel: DGis.LogLevel { get set }
+	var mapTheme: MapTheme { get set }
 	var navigatorVoiceVolumeSource: NavigatorVoiceVolumeSource { get set }
 	var navigatorTheme: NavigatorTheme { get set }
 }
 
 final class SettingsService: ISettingsService {
 	private enum Keys {
+		static let customStyleURL = "Global/CustomStyleURL"
 		static let mapDataSource = "Global/MapDataSource"
 		static let language = "Global/Language"
 		static let httpCacheEnabled = "Global/HttpCacheEnabled"
 		static let muteOtherSounds = "Global/MuteOtherSounds"
-		static let navigatorVoiceVolumeSource = "Global/NavigatorVoiceVolumeSource"
-		static let navigatorTheme = "Global/NavigatorTheme"
 		static let addRoadEventSourceInNavigationView = "Global/AddRoadEventSourceInNavigationView"
 		static let logLevel = "Global/LogLevel"
+		static let mapTheme = "Global/MapTheme"
+		static let navigatorVoiceVolumeSource = "Global/NavigatorVoiceVolumeSource"
+		static let navigatorTheme = "Global/NavigatorTheme"
 	}
 
 	var onCurrentLanguageDidChange: ((Language) -> Void)?
+
+	var customStyleUrl: URL? {
+		get {
+			let rawValue: String? = self.storage.value(forKey: Keys.customStyleURL)
+			return rawValue.flatMap { URL(string: $0) } ?? nil
+		}
+		set {
+			self.storage.set(newValue?.absoluteString ?? nil, forKey: Keys.customStyleURL)
+		}
+	}
 
 	var mapDataSource: MapDataSource {
 		get {
@@ -107,6 +121,16 @@ final class SettingsService: ISettingsService {
 		}
 		set {
 			self.storage.set(newValue.rawValue, forKey: Keys.logLevel)
+		}
+	}
+
+	var mapTheme: MapTheme {
+		get {
+			let rawValue: String? = self.storage.value(forKey: Keys.mapTheme)
+			return rawValue.flatMap { MapTheme(rawValue: $0) } ?? .default
+		}
+		set {
+			self.storage.set(newValue.rawValue, forKey: Keys.mapTheme)
 		}
 	}
 

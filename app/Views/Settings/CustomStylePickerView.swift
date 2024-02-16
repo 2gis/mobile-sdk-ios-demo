@@ -1,15 +1,14 @@
 import SwiftUI
 import CoreServices
 
-struct StylePickerView: UIViewControllerRepresentable {
+struct CustomStylePickerView: UIViewControllerRepresentable {
 	@Binding var fileURL: URL?
 
-	func makeCoordinator() -> StylePickerCoordinator {
-		StylePickerCoordinator(fileURL: self.$fileURL)
+	func makeCoordinator() -> CustomStylePickerCoordinator {
+		CustomStylePickerCoordinator(fileURL: self.$fileURL)
 	}
 
 	func makeUIViewController(context: Context) -> UIDocumentPickerViewController {
-		// Allow to pick *any* file.
 		let anyType = kUTTypeItem as String
 		let documentPicker = UIDocumentPickerViewController(
 			documentTypes: [anyType],
@@ -23,19 +22,22 @@ struct StylePickerView: UIViewControllerRepresentable {
 		return documentPicker
 	}
 
-  func updateUIViewController(_ uiViewController: UIDocumentPickerViewController, context: Context) {
-  }
+	func updateUIViewController(_ uiViewController: UIDocumentPickerViewController, context: Context) {
+	}
 }
 
-class StylePickerCoordinator: NSObject, UIDocumentPickerDelegate {
+class CustomStylePickerCoordinator: NSObject, UIDocumentPickerDelegate {
 	@Binding var fileURL: URL?
+
+	private lazy var temporaryDirectoryPath = FileManager.default.temporaryDirectory.relativePath
 
 	init(fileURL: Binding<URL?>) {
 		self._fileURL = fileURL
 	}
 
 	func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
-		self.fileURL = urls.first
+		guard let urlRelativePath = urls.first?.relativePath else { return }
+		self.fileURL = URL(string: String(urlRelativePath.suffix(from: self.temporaryDirectoryPath.endIndex)))
 	}
 
 	func documentPickerWasCancelled(_ controller: UIDocumentPickerViewController) {

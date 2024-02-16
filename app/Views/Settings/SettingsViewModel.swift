@@ -9,6 +9,7 @@ final class SettingsViewModel: ObservableObject {
 	let navigatorThemes: [NavigatorTheme]
 	let mapDataSources: [MapDataSource]
 	let logLevels: [DGis.LogLevel]
+	let mapThemes: [MapTheme]
 	var mapDataSourceChangedCallback: MapDataSourceChangedCallback?
 	@Published var mapDataSource: MapDataSource {
 		didSet {
@@ -54,6 +55,23 @@ final class SettingsViewModel: ObservableObject {
 			}
 		}
 	}
+	@Published var customStylePickerShown: Bool = false
+	var customStyleUrl: URL? {
+		didSet {
+			if oldValue != self.customStyleUrl {
+				self.customStyleChoosen = true
+				self.settingsService.customStyleUrl = self.customStyleUrl
+			}
+		}
+	}
+	@Published var customStyleChoosen: Bool = false
+	@Published var mapTheme: MapTheme {
+		didSet {
+			if oldValue != self.mapTheme {
+				self.settingsService.mapTheme = self.mapTheme
+			}
+		}
+	}
 	@Published var navigatorVoiceVolumeSource: NavigatorVoiceVolumeSource {
 		didSet {
 			if oldValue != self.navigatorVoiceVolumeSource {
@@ -75,7 +93,8 @@ final class SettingsViewModel: ObservableObject {
 		mapDataSources: [MapDataSource] = MapDataSource.allCases,
 		navigatorVoiceVolumeSources: [NavigatorVoiceVolumeSource] = NavigatorVoiceVolumeSource.allCases,
 		navigatorThemes: [NavigatorTheme] = NavigatorTheme.allCases,
-		logLevels: [DGis.LogLevel] = DGis.LogLevel.availableLevels
+		logLevels: [DGis.LogLevel] = DGis.LogLevel.availableLevels,
+		mapThemes: [MapTheme] = MapTheme.allCases
 	) {
 		self.settingsService = settingsService
 		self.mapDataSources = mapDataSources
@@ -90,6 +109,10 @@ final class SettingsViewModel: ObservableObject {
 		self.addRoadEventSourceInNavigationView = settingsService.addRoadEventSourceInNavigationView
 		self.logLevel = settingsService.logLevel
 		self.logLevels = logLevels
+		self.mapTheme = settingsService.mapTheme
+		self.mapThemes = mapThemes
+		self.customStyleUrl = settingsService.customStyleUrl
+		if self.customStyleUrl != nil { self.customStyleChoosen = true }
 	}
 
 	func selectLogLevel() {
