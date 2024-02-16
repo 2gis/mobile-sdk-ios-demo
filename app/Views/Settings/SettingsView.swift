@@ -5,6 +5,7 @@ struct SettingsView: View {
 	@Binding private var show: Bool
 	@ObservedObject private var viewModel: SettingsViewModel
 	@EnvironmentObject private var navigationService: NavigationService
+	@SwiftUI.State private var isStylePickerPresented: Bool = false
 
 	init(viewModel: SettingsViewModel, show: Binding<Bool>) {
 		self.viewModel = viewModel
@@ -18,6 +19,10 @@ struct SettingsView: View {
 					self.mapSourcePicker()
 					.padding(.bottom)
 					self.languagePicker()
+					.padding(.bottom)
+					self.loadCustomStyles()
+					.padding(.bottom)
+					self.mapThemePicker()
 					.padding(.bottom)
 					self.httpCacheSwitch()
 					.padding(.bottom)
@@ -33,6 +38,9 @@ struct SettingsView: View {
 			.navigationBarItems(trailing: self.closeButton())
 			.navigationBarTitle(Text("Settings"), displayMode: .inline)
 		}
+		.sheet(isPresented: self.$isStylePickerPresented, content: {
+			CustomStylePickerView(fileURL: self.$viewModel.customStyleUrl)
+		})
 	}
 
 	private func mapSourcePicker() -> some View {
@@ -53,6 +61,37 @@ struct SettingsView: View {
 				Text(lang.name).tag(lang)
 			}
 		}
+	}
+
+	private func loadCustomStyles() -> some View {
+		HStack {
+			Text("Custom styles:")
+			Spacer()
+			Button(action: {
+				if self.viewModel.customStyleUrl == nil {
+					self.isStylePickerPresented = true
+				} else {
+					self.viewModel.customStyleUrl = nil
+					self.viewModel.customStyleChoosen = false
+				}
+			}) {
+				Text(self.viewModel.customStyleChoosen ? "Reset styles" : "Choose styles")
+				.padding()
+				.background(self.viewModel.customStyleChoosen ? Color.red : Color.gray)
+				.foregroundColor(.white)
+				.cornerRadius(15)
+				.font(.callout)
+			}
+		}
+	}
+
+	private func mapThemePicker() -> some View {
+		PickerView(
+			title: "Map theme",
+			selection: self.$viewModel.mapTheme,
+			options: self.viewModel.mapThemes,
+			pickerStyle: SegmentedPickerStyle()
+		)
 	}
 
 	private func httpCacheSwitch() -> some View {
