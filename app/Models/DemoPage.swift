@@ -4,12 +4,12 @@ enum DemoPage: String, CaseIterable {
 	case mapObjectsIdentification
 	case mapObjects
 	case customMapControls
-	case mapStyles
 	case mapTheme
 	case dictionarySearch
 	case fps
 	case clustering
 	case customGestures
+	case copyrightSettings
 	case territoryManager
 	case routeSearch
 	case navigator
@@ -22,8 +22,6 @@ enum DemoPage: String, CaseIterable {
 				return "Custom map control buttons"
 			case .mapObjects:
 				return "Adding map objects to the map"
-			case .mapStyles:
-				return "Uploading custom map styles"
 			case .mapTheme:
 				return "Switch map theme"
 			case .mapObjectsIdentification:
@@ -38,6 +36,8 @@ enum DemoPage: String, CaseIterable {
 				return "Clustering"
 			case .customGestures:
 				return "Custom map control gestures"
+			case .copyrightSettings:
+				return "Copyright"
 			case .territoryManager:
 				return "Download territories"
 			case .routeSearch:
