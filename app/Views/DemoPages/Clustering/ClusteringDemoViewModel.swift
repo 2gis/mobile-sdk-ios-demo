@@ -52,9 +52,17 @@ final class ClusteringDemoViewModel: ObservableObject {
 		}
 	}
 
+	@Published var useLottie: Bool = false {
+		didSet {
+			if oldValue != self.useLottie {
+				self.reinitMapObjectManager()
+			}
+		}
+	}
+
 	@Published var markersCount: UInt32 = 100
-	@Published var minZoom: UInt32 = 0
-	@Published var maxZoom: UInt32 = 19
+	@Published var minZoom: Float = 0.0
+	@Published var maxZoom: Float = 19.0
 	@Published var showDetailsSettings: Bool = false
 	@Published var showMarkersMenu: Bool = false
 	@Published var isErrorAlertShown: Bool = false
@@ -99,14 +107,35 @@ final class ClusteringDemoViewModel: ObservableObject {
 			image: UIImage(named: "scooter_model")!
 		)
 	}()
+	private lazy var moscow = {
+		self.imageFactory.make(
+			image: UIImage(named: "moscow")!
+		)
+	}()
+	private lazy var animatedBlue = {
+		self.imageFactory.make(
+			lottieData: NSDataAsset(name: "animated_marker_blue")!.data,
+			size: .zero
+		)
+	}()
+	private lazy var animatedGreen = {
+		self.imageFactory.make(
+			lottieData: NSDataAsset(name: "animated_marker_green")!.data,
+			size: .zero
+		)
+	}()
 	private lazy var mapObjectManager: MapObjectManager? = self.makeMapObjectManager()
 
 	init(
 		map: Map,
+		mapSourceFactory: IMapSourceFactory,
 		imageFactory: IImageFactory
 	) {
 		self.map = map
 		self.imageFactory = imageFactory
+
+		let locationSource = mapSourceFactory.makeMyLocationMapObjectSource()
+		self.map.addSource(source: locationSource)
 
 		self.installMarkers()
 	}
@@ -149,6 +178,14 @@ final class ClusteringDemoViewModel: ObservableObject {
 	}
 
 	func reinitMapObjectManager() {
+		if !self.markers.isEmpty {
+			self.markers[0].position = GeoPointWithElevation(
+				latitude: generateLatitude(),
+				longitude: generateLongitude(),
+				elevation: 0.0
+			)
+		}
+
 		DispatchQueue.main.async {
 			self.mapObjectManager = nil
 			self.markers.removeAll()
@@ -159,6 +196,15 @@ final class ClusteringDemoViewModel: ObservableObject {
 	func tap(objectInfo: RenderedObjectInfo) {
 		self.hideSelectedCluster()
 		self.handle(selectedObject: objectInfo)
+	}
+
+	func longPress(objectInfo: RenderedObjectInfo) {
+		guard let marker = objectInfo.item.item as? Marker else { return }
+		marker.position = GeoPointWithElevation(
+			latitude: generateLatitude(),
+			longitude: generateLongitude(),
+			elevation: 0.0
+		)
 	}
 
 	private func generateLatitude() -> Double {
@@ -184,9 +230,9 @@ final class ClusteringDemoViewModel: ObservableObject {
 
 		switch object {
 			case let cluster as SimpleClusterObject:
-				cluster.setIcon(icon: self.scooterIcon)
+				cluster.setIcon(icon: self.useLottie ? self.animatedBlue : self.scooterIcon)
 			case let marker as Marker:
-				marker.icon = self.scooterIcon
+				marker.icon = self.useLottie ? self.animatedBlue : self.scooterIcon
 			default:
 				return
 		}
@@ -195,7 +241,7 @@ final class ClusteringDemoViewModel: ObservableObject {
 		let objects = self.mapObjectManager?.clusteringObjects(position: cameraPosition)
 		objects?.forEach { object in
 			if let cluster = object as? SimpleClusterObject {
-				cluster.iconOpacity = Opacity(value: 1.0)
+				cluster.setIcon(icon: self.useLottie ? self.animatedBlue : self.scooterIcon)
 			} else if let marker = object as? Marker {
 				marker.iconOpacity = Opacity(value: 1.0)
 			}
@@ -219,7 +265,7 @@ final class ClusteringDemoViewModel: ObservableObject {
 			return
 		}
 
-		cluster.setIcon(icon: self.scooterModel)
+		cluster.setIcon(icon: self.useLottie ? self.animatedGreen : self.scooterModel)
 		cluster.iconMapDirection = nil
 		self.selectedCluster = cluster
 		let cameraPosition = self.map.camera.position
@@ -243,7 +289,7 @@ final class ClusteringDemoViewModel: ObservableObject {
 			return
 		}
 
-		marker.icon = self.scooterModel
+		marker.icon = self.useLottie ? self.animatedGreen : self.scooterIcon
 		marker.iconMapDirection = nil
 		self.selectedCluster = marker
 		let cameraPosition = self.map.camera.position
@@ -265,7 +311,7 @@ final class ClusteringDemoViewModel: ObservableObject {
 			switch object {
 				case let cluster as SimpleClusterObject:
 					guard self.selectedCluster?.userData as? Int != object.userData as? Int else { return }
-					cluster.iconOpacity = Opacity(value: 0.5)
+					cluster.setIcon(icon: self.moscow)
 				case let marker as Marker:
 					guard self.selectedCluster?.userData as? String != object.userData as? String else { return }
 					marker.iconOpacity = Opacity(value: 0.5)
@@ -281,16 +327,16 @@ final class ClusteringDemoViewModel: ObservableObject {
 				return MapObjectManager.withClustering(
 					map: self.map,
 					logicalPixel: LogicalPixel(80.0),
-					maxZoom: Zoom(floatLiteral: Float(self.maxZoom)),
-					clusterRenderer: SimpleClusterRendererImpl(image: self.scooterIcon),
-					minZoom: Zoom(floatLiteral: Float(self.minZoom))
+					maxZoom: Zoom(floatLiteral: self.maxZoom),
+					clusterRenderer: SimpleClusterRendererImpl(image: self.useLottie ? self.animatedBlue : self.scooterIcon),
+					minZoom: Zoom(floatLiteral: self.minZoom)
 				)
 			case .generalization:
 				return MapObjectManager.withGeneralization(
 					map: self.map,
 					logicalPixel: LogicalPixel(80.0),
-					maxZoom: Zoom(floatLiteral: Float(self.maxZoom)),
-					minZoom: Zoom(floatLiteral: Float(self.minZoom))
+					maxZoom: Zoom(floatLiteral: self.maxZoom),
+					minZoom: Zoom(floatLiteral: self.minZoom)
 				)
 		}
 	}
@@ -306,10 +352,10 @@ final class ClusteringDemoViewModel: ObservableObject {
 				)
 				let options = MarkerOptions(
 					position: position,
-					icon: self.scooterIcon,
+					icon: self.useLottie ? self.animatedBlue : self.scooterIcon,
 					text: "M\(index)",
 					textStyle: Constants.textStyle,
-					iconWidth: LogicalPixel(5.0),
+					iconWidth: self.useLottie ? LogicalPixel(15.0) : LogicalPixel(5.0),
 					userData: "Marker #\(index)"
 				)
 				let marker: Marker

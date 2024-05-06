@@ -160,6 +160,7 @@ final class RootViewFactory: ObservableObject {
 		let mapFactory = try self.makeMapFactory()
 		let viewModel = ClusteringDemoViewModel(
 			map: mapFactory.map,
+			mapSourceFactory: MapSourceFactory(context: self.context),
 			imageFactory: self.makeImageFactory()
 		)
 		return ClusteringDemoView(
