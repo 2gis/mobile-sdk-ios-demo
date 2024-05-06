@@ -4,8 +4,9 @@ struct ClusteringSettingsView: View {
 	@SwiftUI.Binding private var isPresented: Bool
 	@SwiftUI.Binding private var groupingType: GroupingType
 	@SwiftUI.Binding private var objectsCount: UInt32
-	@SwiftUI.Binding private var minZoom: UInt32
-	@SwiftUI.Binding private var maxZoom: UInt32
+	@SwiftUI.Binding private var minZoom: Float
+	@SwiftUI.Binding private var maxZoom: Float
+	@SwiftUI.Binding private var useLottie: Bool
 	@SwiftUI.Binding private var isVisible: Bool
 
 	private let groupingTypes: [GroupingType] = [
@@ -17,8 +18,9 @@ struct ClusteringSettingsView: View {
 		isPresented: Binding<Bool>,
 		groupingType: Binding<GroupingType>,
 		objectsCount: Binding<UInt32>,
-		minZoom: Binding<UInt32>,
-		maxZoom: Binding<UInt32>,
+		minZoom: Binding<Float>,
+		maxZoom: Binding<Float>,
+		useLottie: Binding<Bool>,
 		isVisible: Binding<Bool>
 	) {
 		self._isPresented = isPresented
@@ -26,6 +28,7 @@ struct ClusteringSettingsView: View {
 		self._objectsCount = objectsCount
 		self._minZoom = minZoom
 		self._maxZoom = maxZoom
+		self._useLottie = useLottie
 		self._isVisible = isVisible
 	}
 
@@ -34,6 +37,8 @@ struct ClusteringSettingsView: View {
 			ZStack {
 				List {
 					self.makeGroupingTypePicker()
+					.padding(.bottom)
+					self.makeLottieSwitch()
 					.padding(.bottom)
 					self.makeVisibleSwitch()
 					.padding(.bottom)
@@ -86,6 +91,14 @@ struct ClusteringSettingsView: View {
 		VStack(alignment: .leading) {
 			Toggle(isOn: self.$isVisible, label: {
 				self.makeTitle("Markers are visible")
+			})
+		}
+	}
+
+	private func makeLottieSwitch() -> some View {
+		VStack(alignment: .leading) {
+			Toggle(isOn: self.$useLottie, label: {
+				self.makeTitle("Use Lottie animations")
 			})
 		}
 	}

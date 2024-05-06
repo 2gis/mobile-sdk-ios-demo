@@ -102,3 +102,18 @@ extension SettingsFormTextField where Value == TimeInterval {
 		)
 	}
 }
+
+extension SettingsFormTextField where Value == Float {
+	init(
+		title: String,
+		value: Binding<Float>
+	) {
+		self.init(
+			title: title,
+			value: value,
+			rawToValueConverter: { Float($0) ?? 0.0 },
+			valueToRawConverter: { "\($0)" },
+			keyboardType: .numbersAndPunctuation
+		)
+	}
+}

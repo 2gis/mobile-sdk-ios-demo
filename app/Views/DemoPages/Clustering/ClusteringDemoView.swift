@@ -52,6 +52,7 @@ struct ClusteringDemoView: View {
 					objectsCount: self.$viewModel.markersCount,
 					minZoom: self.$viewModel.minZoom,
 					maxZoom: self.$viewModel.maxZoom,
+					useLottie: self.$viewModel.useLottie,
 					isVisible: self.$viewModel.isVisible
 				)
 			}
