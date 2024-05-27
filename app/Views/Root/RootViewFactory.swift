@@ -53,6 +53,8 @@ final class RootViewFactory: ObservableObject {
 				try self.makeCustomGesturesDemoPage()
 			case .copyrightSettings:
 				try self.makeCopyrightDemoPage()
+			case .calcPosition:
+				try self.makeCalcPositionDemoPage()
 			case .territoryManager:
 				try self.makeTerritoryManagerDemoView()
 			case .routeSearch:
@@ -182,6 +184,18 @@ final class RootViewFactory: ObservableObject {
 		return CopyrightSettingsDemoView(
 			viewModel: CopyrightSettingsDemoViewModel(),
 			viewFactory: self.makeDemoPageComponentsFactory(mapFactory: try self.makeMapFactory())
+		)
+	}
+	
+	private func makeCalcPositionDemoPage() throws -> some View {
+		let mapFactory = try self.makeMapFactory()
+		let viewModel = CalcPositionDemoViewModel(
+			map: mapFactory.map,
+			imageFactory: self.makeImageFactory()
+		)
+		return CalcPositionDemoView(
+			viewModel: viewModel,
+			viewFactory: self.makeDemoPageComponentsFactory(mapFactory: mapFactory)
 		)
 	}
 

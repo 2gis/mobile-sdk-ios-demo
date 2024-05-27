@@ -10,6 +10,7 @@ enum DemoPage: String, CaseIterable {
 	case clustering
 	case customGestures
 	case copyrightSettings
+	case calcPosition
 	case territoryManager
 	case routeSearch
 	case navigator
@@ -38,6 +39,8 @@ enum DemoPage: String, CaseIterable {
 				return "Custom map control gestures"
 			case .copyrightSettings:
 				return "Copyright"
+			case .calcPosition:
+				return "Camera CalcPosition"
 			case .territoryManager:
 				return "Download territories"
 			case .routeSearch:
