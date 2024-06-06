@@ -168,6 +168,15 @@
 		B7D25ADD264BF4B600CC835A /* DemoPageListRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7D25ADC264BF4B600CC835A /* DemoPageListRow.swift */; };
 		B7ED8A35273CEAFD0020E60F /* UIWindow+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7ED8A34273CEAFD0020E60F /* UIWindow+Helpers.swift */; };
 		B7ED8A37273CEB140020E60F /* NavigationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7ED8A36273CEB140020E60F /* NavigationService.swift */; };
+		C47F372A2C04575800FBC91C /* CalcPositionWays.swift in Sources */ = {isa = PBXBuildFile; fileRef = C47F37292C04575800FBC91C /* CalcPositionWays.swift */; };
+		C47F372C2C04576C00FBC91C /* PaddingRect.swift in Sources */ = {isa = PBXBuildFile; fileRef = C47F372B2C04576C00FBC91C /* PaddingRect.swift */; };
+		C47F372E2C04576D00FBC91C /* CalcPositionDemoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C47F372D2C04576D00FBC91C /* CalcPositionDemoViewModel.swift */; };
+		C47F37302C04576E00FBC91C /* CalcPositionInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C47F372F2C04576E00FBC91C /* CalcPositionInfoView.swift */; };
+		C47F37322C04576F00FBC91C /* CalcPositionMapObjects.swift in Sources */ = {isa = PBXBuildFile; fileRef = C47F37312C04576F00FBC91C /* CalcPositionMapObjects.swift */; };
+		C47F37342C04577000FBC91C /* CalcPositionSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C47F37332C04577000FBC91C /* CalcPositionSettingsView.swift */; };
+		C47F37362C04577300FBC91C /* PaddingRectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C47F37352C04577200FBC91C /* PaddingRectView.swift */; };
+		C47F37382C0457A600FBC91C /* CalcPositionDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C47F37372C0457A600FBC91C /* CalcPositionDemoView.swift */; };
+		C47F373A2C0459A800FBC91C /* Formatters.swift in Sources */ = {isa = PBXBuildFile; fileRef = C47F37392C0459A800FBC91C /* Formatters.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -347,6 +356,15 @@
 		B7D25ADC264BF4B600CC835A /* DemoPageListRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoPageListRow.swift; sourceTree = "<group>"; };
 		B7ED8A34273CEAFD0020E60F /* UIWindow+Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIWindow+Helpers.swift"; sourceTree = "<group>"; };
 		B7ED8A36273CEB140020E60F /* NavigationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationService.swift; sourceTree = "<group>"; };
+		C47F37292C04575800FBC91C /* CalcPositionWays.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalcPositionWays.swift; sourceTree = "<group>"; };
+		C47F372B2C04576C00FBC91C /* PaddingRect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaddingRect.swift; sourceTree = "<group>"; };
+		C47F372D2C04576D00FBC91C /* CalcPositionDemoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalcPositionDemoViewModel.swift; sourceTree = "<group>"; };
+		C47F372F2C04576E00FBC91C /* CalcPositionInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalcPositionInfoView.swift; sourceTree = "<group>"; };
+		C47F37312C04576F00FBC91C /* CalcPositionMapObjects.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalcPositionMapObjects.swift; sourceTree = "<group>"; };
+		C47F37332C04577000FBC91C /* CalcPositionSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalcPositionSettingsView.swift; sourceTree = "<group>"; };
+		C47F37352C04577200FBC91C /* PaddingRectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaddingRectView.swift; sourceTree = "<group>"; };
+		C47F37372C0457A600FBC91C /* CalcPositionDemoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalcPositionDemoView.swift; sourceTree = "<group>"; };
+		C47F37392C0459A800FBC91C /* Formatters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Formatters.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -706,6 +724,7 @@
 				644D33DC289C09CC00C78ED2 /* UIColor+Hex.swift */,
 				B7ED8A34273CEAFD0020E60F /* UIWindow+Helpers.swift */,
 				4B96EBDA2608C5780057C366 /* View+Helpers.swift */,
+				C47F37392C0459A800FBC91C /* Formatters.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -761,6 +780,7 @@
 		B7D236C22643E14700CC835A /* DemoPages */ = {
 			isa = PBXGroup;
 			children = (
+				C47F37282C04573000FBC91C /* CalcPosition */,
 				B7D24AF42646DDB800CC835A /* Camera */,
 				64226DFA26B1B5ED0058E3D9 /* Clustering */,
 				647301AF2B7FEEB9005C3065 /* CopyrightSettings */,
@@ -874,6 +894,21 @@
 			path = MapObjectsIdentification;
 			sourceTree = "<group>";
 		};
+		C47F37282C04573000FBC91C /* CalcPosition */ = {
+			isa = PBXGroup;
+			children = (
+				C47F37372C0457A600FBC91C /* CalcPositionDemoView.swift */,
+				C47F372D2C04576D00FBC91C /* CalcPositionDemoViewModel.swift */,
+				C47F372F2C04576E00FBC91C /* CalcPositionInfoView.swift */,
+				C47F37312C04576F00FBC91C /* CalcPositionMapObjects.swift */,
+				C47F37332C04577000FBC91C /* CalcPositionSettingsView.swift */,
+				C47F37292C04575800FBC91C /* CalcPositionWays.swift */,
+				C47F372B2C04576C00FBC91C /* PaddingRect.swift */,
+				C47F37352C04577200FBC91C /* PaddingRectView.swift */,
+			);
+			path = CalcPosition;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -953,6 +988,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C47F37342C04577000FBC91C /* CalcPositionSettingsView.swift in Sources */,
 				6410A4592AE1C4620065C1BC /* NavigatorBetterRouteSettingsView.swift in Sources */,
 				644D33AF289BF3B200C78ED2 /* NavigatorView.swift in Sources */,
 				64EE1ABB289B232800FF301C /* TerritoryManagerDemoView.swift in Sources */,
@@ -972,8 +1008,10 @@
 				4BADDFEB2529AD9C00FBF589 /* SearchNavigation.swift in Sources */,
 				644D33DD289C09CC00C78ED2 /* UIColor+Hex.swift in Sources */,
 				64EE1AD6289B235200FF301C /* NavigatorSettingsView.swift in Sources */,
+				C47F372C2C04576C00FBC91C /* PaddingRect.swift in Sources */,
 				B709913925F9CBCF00B2F1A5 /* MapObjectCardView.swift in Sources */,
 				6410A4482AE1BF570065C1BC /* MapObjectsDemoViewModel.swift in Sources */,
+				C47F37362C04577300FBC91C /* PaddingRectView.swift in Sources */,
 				B7ED8A37273CEB140020E60F /* NavigationService.swift in Sources */,
 				4B96E77A2608C14C0057C366 /* GeoRect.swift in Sources */,
 				644D33D9289C07FC00C78ED2 /* PackageInfo+Helpers.swift in Sources */,
@@ -1006,6 +1044,7 @@
 				644D33CD289BFD7E00C78ED2 /* MapFactoryProvider.swift in Sources */,
 				6410A4512AE1BF570065C1BC /* MapObjectType.swift in Sources */,
 				4B27063524A3F24C00F12B48 /* AppDelegate.swift in Sources */,
+				C47F37302C04576E00FBC91C /* CalcPositionInfoView.swift in Sources */,
 				4BADDFE12528941E00FBF589 /* DirectoryObjectViewModel.swift in Sources */,
 				64EE1AD1289B235200FF301C /* NavigatorSettingsViewModel.swift in Sources */,
 				64EE1AAD289B22E800FF301C /* RouteDetailsVC.swift in Sources */,
@@ -1026,6 +1065,7 @@
 				64EE1ACF289B235200FF301C /* NavigatorVoicesSettingsView.swift in Sources */,
 				64EE1AD9289B235200FF301C /* RoadEventCardPresenter.swift in Sources */,
 				4BADDFE7252894A100FBF589 /* FormattedAddressViewModel.swift in Sources */,
+				C47F37322C04576F00FBC91C /* CalcPositionMapObjects.swift in Sources */,
 				647301B32B7FEEB9005C3065 /* CopyrightSettingsDemoViewModel.swift in Sources */,
 				64EE1AA0289B22AA00FF301C /* CustomZoomControl.swift in Sources */,
 				64EE1AB1289B22E800FF301C /* RouteSearchSettingsView.swift in Sources */,
@@ -1039,6 +1079,7 @@
 				6410A4522AE1BF570065C1BC /* MarkerViewModel.swift in Sources */,
 				644D33EB289C1B9400C78ED2 /* LongPressAndDragRecognizer.swift in Sources */,
 				4BBE80222526DCA200D7EBDB /* SearchResultItemView.swift in Sources */,
+				C47F372E2C04576D00FBC91C /* CalcPositionDemoViewModel.swift in Sources */,
 				B7B2E8DC26B2CBE0006DCE9E /* CustomGestureViewFactory.swift in Sources */,
 				64EE1AD0289B235200FF301C /* VoiceRowView.swift in Sources */,
 				644D33C7289BFD0200C78ED2 /* RoadEventsMapOverlayView.swift in Sources */,
@@ -1066,11 +1107,13 @@
 				64226DFE26B1B5ED0058E3D9 /* ClusteringDemoView.swift in Sources */,
 				644D33D2289C022700C78ED2 /* SettingsFormDisclosureButton.swift in Sources */,
 				4BADDFD2252802A500FBF589 /* SearchResultView.swift in Sources */,
+				C47F372A2C04575800FBC91C /* CalcPositionWays.swift in Sources */,
 				64EE1AAC289B22E800FF301C /* RouteView.swift in Sources */,
 				644D33B1289BF60100C78ED2 /* AudioVolume.swift in Sources */,
 				6410A4572AE1C45B0065C1BC /* NavigatorBetterRouteSettings.swift in Sources */,
 				644D33DB289C09C100C78ED2 /* TextFieldClearButton.swift in Sources */,
 				644D33DF289C0B0500C78ED2 /* TrafficRoute+Helpers.swift in Sources */,
+				C47F373A2C0459A800FBC91C /* Formatters.swift in Sources */,
 				644D33A6289BF20800C78ED2 /* MapDataSource.swift in Sources */,
 				0991909625B96E1C00F4235B /* MapControl.swift in Sources */,
 				64A96D4326BC3BF000CC21A3 /* ClusterCardView.swift in Sources */,
@@ -1091,6 +1134,7 @@
 				644D33A7289BF20800C78ED2 /* NavigatorTheme.swift in Sources */,
 				B7D25ADD264BF4B600CC835A /* DemoPageListRow.swift in Sources */,
 				64EE1ABA289B232800FF301C /* TerritoryViewModel.swift in Sources */,
+				C47F37382C0457A600FBC91C /* CalcPositionDemoView.swift in Sources */,
 				644D33A2289BECFA00C78ED2 /* SettingsService.swift in Sources */,
 				648B1C242A41A7EB008EDB1C /* SearchOptionsView.swift in Sources */,
 				B710FF05265FC908004659E8 /* MapThemeDemoViewModel.swift in Sources */,
@@ -1248,14 +1292,14 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = app/NativeApp.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = YBQ9YAY5XL;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = app/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = ru.2gis.nativesdk.app;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.mobile.sdk.app;
 				PRODUCT_NAME = NativeApp;
 				SUPPORTS_MACCATALYST = NO;
 				SWIFT_VERSION = 5.0;
@@ -1269,7 +1313,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = app/NativeApp.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = YBQ9YAY5XL;
 				INFOPLIST_FILE = app/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1277,7 +1321,7 @@
 				);
 				LLVM_LTO = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = ru.2gis.nativesdk.app;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.mobile.sdk.app;
 				PRODUCT_NAME = NativeApp;
 				SUPPORTS_MACCATALYST = NO;
 				SWIFT_VERSION = 5.0;
