@@ -10,6 +10,7 @@ final class CircleViewModel: ObservableObject {
 	@Published var circleRadius: String = ""
 	@Published var strokeWidth: StrokeWidth = .thin
 	@Published var strokeColor: MapObjectColor = .transparent
+	@Published var strokeType: CircleStrokeType = .solid
 	@Published var isErrorAlertShown: Bool = false
 
 	private let map: Map
@@ -35,7 +36,8 @@ final class CircleViewModel: ObservableObject {
 			radius: .init(value: radius),
 			color: self.circleColor.value,
 			strokeWidth: self.strokeWidth.pixel,
-			strokeColor: self.strokeColor.value
+			strokeColor: self.strokeColor.value,
+			dashedStrokeOptions: self.strokeType.dashedOptions
 		)
 		do {
 			let circle = try Circle(options: options)

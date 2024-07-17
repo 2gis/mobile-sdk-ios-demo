@@ -49,6 +49,13 @@ struct CircleView: View {
 			)
 			DetailsActionView(
 				action: {
+					self.viewModel.strokeType.next()
+				},
+				primaryText: self.viewModel.strokeType.text,
+				detailsText: "Stroke type"
+			)
+			DetailsActionView(
+				action: {
 					self.viewModel.addCircle()
 				},
 				primaryText: "Add circle"
