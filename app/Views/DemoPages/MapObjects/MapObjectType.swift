@@ -26,7 +26,7 @@ enum MapObjectColor: UInt {
 
 	var value: DGis.Color {
 		switch self {
-			case .transparent: return .init()
+			case .transparent: return .init(UIColor.clear)!
 			case .black: return .init(UIColor.black)!
 			case .white: return .init(UIColor.white)!
 			case .red: return .init(UIColor.red)!
@@ -58,6 +58,71 @@ enum StrokeWidth: UInt {
 			case .thin: return .init(value: 1)
 			case .medium: return .init(value: 3)
 			case .thick: return .init(value: 5)
+		}
+	}
+}
+
+enum PolylineFillType: UInt {
+	case solid
+	case dashed
+	case gradient
+	
+	mutating func next() {
+		self = PolylineFillType(rawValue: self.rawValue + 1) ?? .solid
+	}
+	
+	var text: String {
+		switch self {
+			case .solid: return "Solid"
+			case .dashed: return "Dashed"
+			case .gradient: return "Gradient"
+		}
+	}
+	
+	var dashedOptions: DashedPolylineOptions? {
+		switch self {
+			case .solid: return nil
+		case .dashed: return .init(dashLength: 4.0, dashSpaceLength: 2.0)
+			case .gradient: return nil
+		}
+	}
+	
+	var gradientOptions: GradientPolylineOptions? {
+		switch self {
+			case .solid: return nil
+			case .dashed: return nil
+			case .gradient: return .init(
+				borderWidth: 1.0,
+				secondBorderWidth: 1.0,
+				gradientLength: 4000.0,
+				borderColor: .init(.black)!,
+				secondBorderColor: .init(.black)!,
+				colors: [.init(.red)!, .init(.yellow)!, .init(.green)!, .init(.blue)!, .init(.magenta)!],
+				colorIndices: Data([])
+			)
+		}
+	}
+}
+
+enum CircleStrokeType: UInt {
+	case solid
+	case dashed
+	
+	mutating func next() {
+		self = CircleStrokeType(rawValue: self.rawValue + 1) ?? .solid
+	}
+	
+	var text: String {
+		switch self {
+			case .solid: return "Solid"
+			case .dashed: return "Dashed"
+		}
+	}
+	
+	var dashedOptions: DashedStrokeCircleOptions? {
+		switch self {
+			case .solid: return nil
+			case .dashed: return DashedStrokeCircleOptions(dashLength: 4.0, dashSpaceLength: 2.0)
 		}
 	}
 }
