@@ -42,6 +42,13 @@ struct PolylineView: View {
 			)
 			DetailsActionView(
 				action: {
+					self.viewModel.polylineType.next()
+				},
+				primaryText: self.viewModel.polylineType.text,
+				detailsText: "Type"
+			)
+			DetailsActionView(
+				action: {
 					self.viewModel.addPolyline()
 				},
 				primaryText: "Add polyline"

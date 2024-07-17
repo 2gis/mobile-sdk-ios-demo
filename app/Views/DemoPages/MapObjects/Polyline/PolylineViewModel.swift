@@ -9,6 +9,7 @@ final class PolylineViewModel: ObservableObject {
 	@Published var pointsCount: String = ""
 	@Published var polylineWidth: StrokeWidth = .thin
 	@Published var polylineColor: MapObjectColor = .transparent
+	@Published var polylineType: PolylineFillType = .solid
 	@Published var isErrorAlertShown: Bool = false
 
 	private let map: Map
@@ -29,10 +30,24 @@ final class PolylineViewModel: ObservableObject {
 
 	func addPolyline() {
 		let points = self.makePoints()
+		var gradientOptions: GradientPolylineOptions? = nil
+		if self.polylineType.gradientOptions != nil {
+			gradientOptions = self.polylineType.gradientOptions.map { GradientPolylineOptions(
+				borderWidth: $0.borderWidth,
+				secondBorderWidth: $0.secondBorderWidth,
+				gradientLength: $0.gradientLength,
+				borderColor: $0.borderColor,
+				secondBorderColor: $0.secondBorderColor,
+				colors: $0.colors,
+				colorIndices: self.adjustedData(base: [0,1,2,3,4], length: points.count - 1)
+			)}
+		}
 		let options = PolylineOptions(
 			points: points,
 			width: self.polylineWidth.pixel,
-			color: self.polylineColor.value
+			color: self.polylineColor.value,
+			dashedPolylineOptions: self.polylineType.dashedOptions,
+			gradientPolylineOptions: gradientOptions
 		)
 		do {
 			let polyline = try Polyline(options: options)
@@ -60,5 +75,14 @@ final class PolylineViewModel: ObservableObject {
 				meter: .init(value: Float.random(in: 50000.0...100000.0))
 			)
 		}
+	}
+
+	private func adjustedData(base: [UInt8], length: Int) -> Data {
+		var result = [UInt8]()
+		while result.count < length {
+			result.append(contentsOf: base)
+		}
+		result = Array(result.prefix(length))
+		return Data(result)
 	}
 }
