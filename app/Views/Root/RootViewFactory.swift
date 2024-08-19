@@ -255,9 +255,9 @@ final class RootViewFactory: ObservableObject {
 
 	private func makeMapOptions() -> MapOptions {
 		var options = MapOptions.default
+		options.graphicsPreset = self.settingsService.graphicsOption.preset
 		if let styleUrl = self.settingsService.customStyleUrl {
-			let absoluteUrl = FileManager.default.temporaryDirectory.appendingPathComponent(styleUrl.relativePath)
-			options.styleFuture = self.styleFactory.loadFile(url: absoluteUrl)
+			options.styleFuture = self.styleFactory.loadFile(url: styleUrl)
 		}
 		options.appearance = self.settingsService.mapTheme.mapAppearance
 		return options
@@ -271,7 +271,7 @@ final class RootViewFactory: ObservableObject {
 
 	private func makeStyleFactory() -> IStyleFactory {
 		do {
-			return try self.sdk.makeStyleFactory()
+			return try self.sdk.styleFactory
 		} catch let error as SimpleError {
 			let errorMessage = "IStyleFactory initialization error: \(error.description)"
 			fatalError(errorMessage)
@@ -283,7 +283,7 @@ final class RootViewFactory: ObservableObject {
 
 	private func makeImageFactory() -> IImageFactory {
 		do {
-			return try self.sdk.makeImageFactory()
+			return try self.sdk.imageFactory
 		} catch let error as SimpleError {
 			let errorMessage = "IImageFactory initialization error: \(error.description)"
 			fatalError(errorMessage)
