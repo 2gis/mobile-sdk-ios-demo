@@ -5,7 +5,6 @@ struct SettingsView: View {
 	@Binding private var show: Bool
 	@ObservedObject private var viewModel: SettingsViewModel
 	@EnvironmentObject private var navigationService: NavigationService
-	@SwiftUI.State private var isStylePickerPresented: Bool = false
 
 	init(viewModel: SettingsViewModel, show: Binding<Bool>) {
 		self.viewModel = viewModel
@@ -20,9 +19,11 @@ struct SettingsView: View {
 					.padding(.bottom)
 					self.languagePicker()
 					.padding(.bottom)
-					self.loadCustomStyles()
+					self.graphicsOptionPicker()
 					.padding(.bottom)
 					self.mapThemePicker()
+					.padding(.bottom)
+					self.stylesPicker()
 					.padding(.bottom)
 					self.httpCacheSwitch()
 					.padding(.bottom)
@@ -38,9 +39,6 @@ struct SettingsView: View {
 			.navigationBarItems(trailing: self.closeButton())
 			.navigationBarTitle(Text("Settings"), displayMode: .inline)
 		}
-		.sheet(isPresented: self.$isStylePickerPresented, content: {
-			CustomStylePickerView(fileURL: self.$viewModel.customStyleUrl)
-		})
 	}
 
 	private func mapSourcePicker() -> some View {
@@ -63,24 +61,25 @@ struct SettingsView: View {
 		}
 	}
 
-	private func loadCustomStyles() -> some View {
-		HStack {
-			Text("Custom styles:")
-			Spacer()
-			Button(action: {
-				if self.viewModel.customStyleUrl == nil {
-					self.isStylePickerPresented = true
-				} else {
-					self.viewModel.customStyleUrl = nil
-					self.viewModel.customStyleChoosen = false
+	private func stylesPicker() -> some View {
+		VStack(alignment: .leading, spacing: 5) {
+			HStack {
+				Text("Styles")
+				.font(.system(size: 20, weight: .bold))
+				Spacer()
+				Button(action: {
+					self.navigationService.present(CustomStylePickerView(fileURL: self.$viewModel.newStyleURL))
+				}) {
+					Image(systemName: "plus.circle")
+					.resizable()
+					.frame(width: 24, height: 24)
+					.foregroundColor(.accentColor)
 				}
-			}) {
-				Text(self.viewModel.customStyleChoosen ? "Reset styles" : "Choose styles")
-				.padding()
-				.background(self.viewModel.customStyleChoosen ? Color.red : Color.gray)
-				.foregroundColor(.white)
-				.cornerRadius(15)
-				.font(.callout)
+				.buttonStyle(PlainButtonStyle())
+			}
+			.padding(.bottom, 10)
+			ForEach(self.viewModel.styles, id: \.self) { style in
+				StyleRow(viewModel: viewModel, style: style)
 			}
 		}
 	}
@@ -90,6 +89,15 @@ struct SettingsView: View {
 			title: "Map theme",
 			selection: self.$viewModel.mapTheme,
 			options: self.viewModel.mapThemes,
+			pickerStyle: SegmentedPickerStyle()
+		)
+	}
+	
+	private func graphicsOptionPicker() -> some View {
+		PickerView(
+			title: "Graphics Option",
+			selection: self.$viewModel.graphicsOption,
+			options: self.viewModel.graphicsOptions,
 			pickerStyle: SegmentedPickerStyle()
 		)
 	}
@@ -155,7 +163,7 @@ struct SettingsView: View {
 		VStack(alignment: .leading) {
 			self.makeTitle("Navigator settings:")
 			.padding(.bottom)
-			self.navigatorVoiceVolumePicker()
+			self.navigatorVoiceVolumeSlider()
 			.padding(.bottom, 8)
 			self.muteOtherSoundsSwitch()
 			.padding(.bottom, 8)
@@ -174,13 +182,16 @@ struct SettingsView: View {
 		)
 	}
 
-	private func navigatorVoiceVolumePicker() -> some View {
-		PickerView(
-			title: "Sound level",
-			selection: self.$viewModel.navigatorVoiceVolumeSource,
-			options: self.viewModel.navigatorVoiceVolumeSources,
-			pickerStyle: SegmentedPickerStyle()
-		)
+	private func navigatorVoiceVolumeSlider() -> some View {
+		VStack(alignment: .leading) {
+			Text("Sound level: \(Int(self.viewModel.navigatorVoiceVolume))")
+				.font(.system(size: 20, weight: .bold))
+			Slider(
+				value: self.$viewModel.navigatorVoiceVolume,
+				in: 0...100,
+				step: 1
+			)
+		}
 	}
 
 	private func closeButton() -> some View {
@@ -212,7 +223,7 @@ extension DGis.LogLevel: PickerViewOption {
 	
 	var name: String {
 		switch self {
-			case .disabled:
+			case .off:
 				return "Disabled"
 			case .verbose:
 				return "Verbose"
@@ -222,7 +233,7 @@ extension DGis.LogLevel: PickerViewOption {
 				return "Error"
 			case .warning:
 				return "Warning"
-			case .fault:
+			case .fatal:
 				return "Fault"
 			@unknown default:
 				assertionFailure("Unknown type: \(self)")

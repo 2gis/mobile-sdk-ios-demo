@@ -18,7 +18,7 @@ struct MapSourceFactory: IMapSourceFactory {
 	func makeMyLocationMapObjectSource() -> MyLocationMapObjectSource {
 		MyLocationMapObjectSource(
 			context: self.context,
-			controller: MyLocationController(bearingSource: .auto)
+			controllerSettings: MyLocationControllerSettings(bearingSource: .auto)
 		)
 	}
 

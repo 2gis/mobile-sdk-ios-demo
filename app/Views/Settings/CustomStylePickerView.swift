@@ -36,8 +36,8 @@ class CustomStylePickerCoordinator: NSObject, UIDocumentPickerDelegate {
 	}
 
 	func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
-		guard let urlRelativePath = urls.first?.relativePath else { return }
-		self.fileURL = URL(string: String(urlRelativePath.suffix(from: self.temporaryDirectoryPath.endIndex)))
+		guard let url = urls.first else { return }
+		self.fileURL = url
 	}
 
 	func documentPickerWasCancelled(_ controller: UIDocumentPickerViewController) {

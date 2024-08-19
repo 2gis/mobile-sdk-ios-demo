@@ -169,7 +169,7 @@ struct DemoPageComponentsFactory {
 			bicycleRouteSearchOptions: bicycleRouteSearchOptions,
 			pedestrianRouteSearchOptions: pedestrianRouteSearchOptions,
 			sourceFactory: { [sdk = self.sdk] in
-				try! sdk.makeSourceFactory()
+				try! sdk.sourceFactory
 			},
 			routeEditorSourceFactory: { [context = self.context] routeEditor in
 				return RouteEditorSource(context: context, routeEditor: routeEditor)

@@ -67,11 +67,9 @@
 		644D33A2289BECFA00C78ED2 /* SettingsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 644D33A1289BECFA00C78ED2 /* SettingsService.swift */; };
 		644D33A6289BF20800C78ED2 /* MapDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 644D33A3289BF20800C78ED2 /* MapDataSource.swift */; };
 		644D33A7289BF20800C78ED2 /* NavigatorTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 644D33A4289BF20800C78ED2 /* NavigatorTheme.swift */; };
-		644D33A8289BF20800C78ED2 /* NavigatorVoiceVolumeSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 644D33A5289BF20800C78ED2 /* NavigatorVoiceVolumeSource.swift */; };
 		644D33AA289BF29900C78ED2 /* PickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 644D33A9289BF29900C78ED2 /* PickerView.swift */; };
 		644D33AC289BF2B700C78ED2 /* IKeyValueStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 644D33AB289BF2B700C78ED2 /* IKeyValueStorage.swift */; };
 		644D33AF289BF3B200C78ED2 /* NavigatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 644D33AE289BF3B200C78ED2 /* NavigatorView.swift */; };
-		644D33B1289BF60100C78ED2 /* AudioVolume.swift in Sources */ = {isa = PBXBuildFile; fileRef = 644D33B0289BF60100C78ED2 /* AudioVolume.swift */; };
 		644D33B3289BF61300C78ED2 /* LogLevel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 644D33B2289BF61300C78ED2 /* LogLevel.swift */; };
 		644D33B5289BF62600C78ED2 /* NavigationViewTheme+Custom.swift in Sources */ = {isa = PBXBuildFile; fileRef = 644D33B4289BF62600C78ED2 /* NavigationViewTheme+Custom.swift */; };
 		644D33B7289BF66F00C78ED2 /* FeedbackGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 644D33B6289BF66F00C78ED2 /* FeedbackGenerator.swift */; };
@@ -177,6 +175,8 @@
 		C47F37362C04577300FBC91C /* PaddingRectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C47F37352C04577200FBC91C /* PaddingRectView.swift */; };
 		C47F37382C0457A600FBC91C /* CalcPositionDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C47F37372C0457A600FBC91C /* CalcPositionDemoView.swift */; };
 		C47F373A2C0459A800FBC91C /* Formatters.swift in Sources */ = {isa = PBXBuildFile; fileRef = C47F37392C0459A800FBC91C /* Formatters.swift */; };
+		C4EA59672C7361C6005ED414 /* GraphicsOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4EA59662C7361B9005ED414 /* GraphicsOption.swift */; };
+		C4EA59692C736E69005ED414 /* StyleRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4EA59682C736E65005ED414 /* StyleRow.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -255,11 +255,9 @@
 		644D33A1289BECFA00C78ED2 /* SettingsService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsService.swift; sourceTree = "<group>"; };
 		644D33A3289BF20800C78ED2 /* MapDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapDataSource.swift; sourceTree = "<group>"; };
 		644D33A4289BF20800C78ED2 /* NavigatorTheme.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigatorTheme.swift; sourceTree = "<group>"; };
-		644D33A5289BF20800C78ED2 /* NavigatorVoiceVolumeSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigatorVoiceVolumeSource.swift; sourceTree = "<group>"; };
 		644D33A9289BF29900C78ED2 /* PickerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PickerView.swift; sourceTree = "<group>"; };
 		644D33AB289BF2B700C78ED2 /* IKeyValueStorage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IKeyValueStorage.swift; sourceTree = "<group>"; };
 		644D33AE289BF3B200C78ED2 /* NavigatorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigatorView.swift; sourceTree = "<group>"; };
-		644D33B0289BF60100C78ED2 /* AudioVolume.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioVolume.swift; sourceTree = "<group>"; };
 		644D33B2289BF61300C78ED2 /* LogLevel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogLevel.swift; sourceTree = "<group>"; };
 		644D33B4289BF62600C78ED2 /* NavigationViewTheme+Custom.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NavigationViewTheme+Custom.swift"; sourceTree = "<group>"; };
 		644D33B6289BF66F00C78ED2 /* FeedbackGenerator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedbackGenerator.swift; sourceTree = "<group>"; };
@@ -365,6 +363,8 @@
 		C47F37352C04577200FBC91C /* PaddingRectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaddingRectView.swift; sourceTree = "<group>"; };
 		C47F37372C0457A600FBC91C /* CalcPositionDemoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalcPositionDemoView.swift; sourceTree = "<group>"; };
 		C47F37392C0459A800FBC91C /* Formatters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Formatters.swift; sourceTree = "<group>"; };
+		C4EA59662C7361B9005ED414 /* GraphicsOption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphicsOption.swift; sourceTree = "<group>"; };
+		C4EA59682C736E65005ED414 /* StyleRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StyleRow.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -428,7 +428,6 @@
 		4B96D5F12607BA9B0057C366 /* SDKTypes */ = {
 			isa = PBXGroup;
 			children = (
-				644D33B0289BF60100C78ED2 /* AudioVolume.swift */,
 				4B96E7782608C14B0057C366 /* GeoRect.swift */,
 				64C4FE652812E87F00CE8F6B /* Latitude.swift */,
 				644D33B2289BF61300C78ED2 /* LogLevel.swift */,
@@ -593,6 +592,7 @@
 		644D33E5289C1A2200C78ED2 /* Settings */ = {
 			isa = PBXGroup;
 			children = (
+				C4EA59682C736E65005ED414 /* StyleRow.swift */,
 				647301B62B7FF4CE005C3065 /* CustomStylePickerView.swift */,
 				644D33E6289C1A2200C78ED2 /* SettingsView.swift */,
 				644D33E7289C1A2200C78ED2 /* SettingsViewModel.swift */,
@@ -833,10 +833,10 @@
 			children = (
 				4B96D5F12607BA9B0057C366 /* SDKTypes */,
 				B7D24AF22646D55700CC835A /* DemoPage.swift */,
+				C4EA59662C7361B9005ED414 /* GraphicsOption.swift */,
 				644D33A3289BF20800C78ED2 /* MapDataSource.swift */,
 				647301B42B7FF2B1005C3065 /* MapTheme.swift */,
 				644D33A4289BF20800C78ED2 /* NavigatorTheme.swift */,
-				644D33A5289BF20800C78ED2 /* NavigatorVoiceVolumeSource.swift */,
 				6410A45A2AE1C5870065C1BC /* ValueAnimator.swift */,
 			);
 			path = Models;
@@ -1035,6 +1035,7 @@
 				64EE1AB0289B22E800FF301C /* RouteSearchDemoViewModel.swift in Sources */,
 				B709915525FA72A600B2F1A5 /* Future+Helpers.swift in Sources */,
 				64EE1AD3289B235200FF301C /* FreeRoamSettings.swift in Sources */,
+				C4EA59672C7361C6005ED414 /* GraphicsOption.swift in Sources */,
 				B709914C25FA11CD00B2F1A5 /* MapObjectCardViewModel.swift in Sources */,
 				644D33B5289BF62600C78ED2 /* NavigationViewTheme+Custom.swift in Sources */,
 				B709915125FA6B9D00B2F1A5 /* GeoPoint+Helpers.swift in Sources */,
@@ -1053,7 +1054,6 @@
 				4BBE801B2526D98600D7EBDB /* SearchResultItemViewModel.swift in Sources */,
 				4B96EBDC2608C5780057C366 /* View+Helpers.swift in Sources */,
 				4BBE7E2025264F2B00D7EBDB /* MapView.swift in Sources */,
-				644D33A8289BF20800C78ED2 /* NavigatorVoiceVolumeSource.swift in Sources */,
 				B7D251D5264A77D100CC835A /* VisibleAreaDetectionDemoViewModel.swift in Sources */,
 				B7D251D3264A77C100CC835A /* VisibleAreaDetectionDemoView.swift in Sources */,
 				B7370710266D04D30043C0FA /* Button+Factory.swift in Sources */,
@@ -1070,6 +1070,7 @@
 				64EE1AA0289B22AA00FF301C /* CustomZoomControl.swift in Sources */,
 				64EE1AB1289B22E800FF301C /* RouteSearchSettingsView.swift in Sources */,
 				644D33B7289BF66F00C78ED2 /* FeedbackGenerator.swift in Sources */,
+				C4EA59692C736E69005ED414 /* StyleRow.swift in Sources */,
 				B7B2E8DE26B2CBE0006DCE9E /* CustomGesturesDemoView.swift in Sources */,
 				B7D24AF62646DDDA00CC835A /* CameraDemoView.swift in Sources */,
 				648B1C222A419E93008EDB1C /* Meter+Helpers.swift in Sources */,
@@ -1109,7 +1110,6 @@
 				4BADDFD2252802A500FBF589 /* SearchResultView.swift in Sources */,
 				C47F372A2C04575800FBC91C /* CalcPositionWays.swift in Sources */,
 				64EE1AAC289B22E800FF301C /* RouteView.swift in Sources */,
-				644D33B1289BF60100C78ED2 /* AudioVolume.swift in Sources */,
 				6410A4572AE1C45B0065C1BC /* NavigatorBetterRouteSettings.swift in Sources */,
 				644D33DB289C09C100C78ED2 /* TextFieldClearButton.swift in Sources */,
 				644D33DF289C0B0500C78ED2 /* TrafficRoute+Helpers.swift in Sources */,
@@ -1358,7 +1358,7 @@
 			repositoryURL = "https://github.com/2gis/mobile-sdk-full-swift-package.git";
 			requirement = {
 				kind = exactVersion;
-				version = 10.5.0;
+				version = 12.0.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
