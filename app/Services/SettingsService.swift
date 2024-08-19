@@ -11,8 +11,9 @@ protocol ISettingsService: AnyObject {
 	var addRoadEventSourceInNavigationView: Bool { get set }
 	var logLevel: DGis.LogLevel { get set }
 	var mapTheme: MapTheme { get set }
-	var navigatorVoiceVolumeSource: NavigatorVoiceVolumeSource { get set }
+	var navigatorVoiceVolume: UInt32 { get set }
 	var navigatorTheme: NavigatorTheme { get set }
+	var graphicsOption: GraphicsOption { get set }
 }
 
 final class SettingsService: ISettingsService {
@@ -25,8 +26,9 @@ final class SettingsService: ISettingsService {
 		static let addRoadEventSourceInNavigationView = "Global/AddRoadEventSourceInNavigationView"
 		static let logLevel = "Global/LogLevel"
 		static let mapTheme = "Global/MapTheme"
-		static let navigatorVoiceVolumeSource = "Global/NavigatorVoiceVolumeSource"
+		static let navigatorVoiceVolume = "Global/NavigatorVoiceVolume"
 		static let navigatorTheme = "Global/NavigatorTheme"
+		static let graphicsOption = "Global/GraphicsOption"
 	}
 
 	var onCurrentLanguageDidChange: ((Language) -> Void)?
@@ -82,18 +84,16 @@ final class SettingsService: ISettingsService {
 	}
 	var onMuteOtherSoundsDidChange: ((Bool) -> Void)?
 
-	var navigatorVoiceVolumeSource: NavigatorVoiceVolumeSource {
+	var navigatorVoiceVolume: UInt32 {
 		get {
-			let rawValue: String? = self.storage.value(forKey: Keys.navigatorVoiceVolumeSource)
-			return rawValue.flatMap { NavigatorVoiceVolumeSource(rawValue: $0) } ?? .high
+			return self.storage.value(forKey: Keys.navigatorVoiceVolume) ?? 100
 		}
 		set {
-			self.storage.set(newValue.rawValue, forKey: Keys.navigatorVoiceVolumeSource)
-			let volume = AudioVolume(newValue)
-			self.onNavigatorVoiceVolumeSourceDidChange?(volume)
+			self.storage.set(newValue, forKey: Keys.navigatorVoiceVolume)
+			self.onNavigatorVoiceVolumeSourceDidChange?(newValue)
 		}
 	}
-	var onNavigatorVoiceVolumeSourceDidChange: ((AudioVolume) -> Void)?
+	var onNavigatorVoiceVolumeSourceDidChange: ((UInt32) -> Void)?
 
 	var navigatorTheme: NavigatorTheme {
 		get {
@@ -131,6 +131,16 @@ final class SettingsService: ISettingsService {
 		}
 		set {
 			self.storage.set(newValue.rawValue, forKey: Keys.mapTheme)
+		}
+	}
+	
+	var graphicsOption: GraphicsOption {
+		get {
+			let rawValue: String? = self.storage.value(forKey: Keys.graphicsOption)
+			return rawValue.flatMap { GraphicsOption(rawValue: $0) } ?? .default
+		}
+		set {
+			self.storage.set(newValue.rawValue, forKey: Keys.graphicsOption)
 		}
 	}
 

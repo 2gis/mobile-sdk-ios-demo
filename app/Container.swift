@@ -3,29 +3,25 @@ import DGis
 
 final class Container {
 	private(set) lazy var sdk: DGis.Container = {
-		var cacheOptions: HTTPOptions.CacheOptions?
-		if self.settingsService.httpCacheEnabled {
-			cacheOptions = HTTPOptions.default.cacheOptions
-		} else {
-			cacheOptions = nil
-		}
-
 		let logOptions = LogOptions(
-			osLogLevel: self.settingsService.logLevel,
-			customLogLevel: self.settingsService.logLevel,
+			systemLevel: self.settingsService.logLevel,
+			customLevel: self.settingsService.logLevel,
 			customSink: nil
 		)
-		let httpOptions = HTTPOptions(timeout: 15, cacheOptions: cacheOptions)
-		let audioOptions = AudioOptions(
-			muteOtherSounds: self.settingsService.muteOtherSounds,
-			audioVolume: AudioVolume(self.settingsService.navigatorVoiceVolumeSource)
+		let httpOptions = HttpOptions(
+			timeout: 15,
+			useCache: self.settingsService.httpCacheEnabled
 		)
-		return DGis.Container(
-			apiKeyOptions: .default,
+		let container = DGis.Container(
+			keySource: .default,
 			logOptions: logOptions,
-			httpOptions: httpOptions,
-			audioOptions: audioOptions
+			httpOptions: httpOptions
 		)
+		if let audioSettings = try? container.audioSettings {
+			audioSettings.audioFocusPolicy = self.settingsService.muteOtherSounds ? .duck : .ignore
+			audioSettings.volume = self.settingsService.navigatorVoiceVolume
+		}
+		return container
 	}()
 
 	private var applicationIdleTimerService: IApplicationIdleTimerService {
@@ -39,10 +35,23 @@ final class Container {
 			storage: self.settingsStorage
 		)
 		service.onMuteOtherSoundsDidChange = { [weak self] value in
-			self?.sdk.audioSettings.muteOtherSounds = value
+			guard
+				let audioSettings = try? self?.sdk.audioSettings
+			else {
+				return
+			}
+			audioSettings.audioFocusPolicy = value ? .duck : .ignore
 		}
 		service.onNavigatorVoiceVolumeSourceDidChange = { [weak self] value in
-			self?.sdk.audioSettings.audioVolume = value
+			guard
+				let audioSettings = try? self?.sdk.audioSettings
+			else {
+				return
+			}
+			audioSettings.volume = value
+		}
+		service.onCurrentLanguageDidChange = { [weak self] (Language) -> Void in
+			self?.mapFactoryProvider.resetMapFactory()
 		}
 		return service
 	}()
@@ -69,15 +78,6 @@ final class Container {
 	}
 
 	private func makeRootViewFactory() throws -> RootViewFactory {
-		self.localeManager = try self.sdk.makeLocaleManager()
-		let locales = settingsService.language.locale.map { [$0] }
-		self.localeManager?.overrideLocales(locales: locales ?? [])
-		self.settingsService.onCurrentLanguageDidChange = { [weak self] language in
-			self?.mapFactoryProvider.resetMapFactory()
-			let locales = language.locale.map { [$0] }
-			self?.localeManager?.overrideLocales(locales: locales ?? [])
-		}
-
 		let viewFactory = try RootViewFactory(
 			sdk: self.sdk,
 			locationManagerFactory: {

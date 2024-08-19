@@ -22,7 +22,7 @@ final class SearchService {
 
 	private let searchManager: ISearchManager
 	private let map: Map
-	private let locationService: DGis.ILocationService
+	private let locationService: DGis.LocationService
 	private let schedule: (@escaping () -> Void) -> Void
 	private var suggestDebouncer = PassthroughSubject<AppliedThunk, Never>()
 	private var suggestCancellable: ICancellable = NoopCancellable()
@@ -32,7 +32,7 @@ final class SearchService {
 	init<S: Scheduler>(
 		searchManager: ISearchManager,
 		map: Map,
-		locationService: DGis.ILocationService,
+		locationService: DGis.LocationService,
 		scheduler: S
 	) {
 		self.searchManager = searchManager
@@ -106,7 +106,7 @@ final class SearchService {
 				schedule {
 					let resultViewModel = self.makeSearchResultViewModel(
 						result: result,
-						lastPosition: locationService.lastLocation
+						lastPosition: locationService.lastLocation.map({ CLLocation(location: $0) })
 					)
 					dispatcher(.setSearchResult(resultViewModel))
 				}
@@ -150,7 +150,7 @@ final class SearchService {
 				schedule {
 					let suggestResultViewModel = self.makeSuggestResultViewModel(
 						result: result,
-						lastPosition: locationService.lastLocation
+						lastPosition: locationService.lastLocation.map({ CLLocation(location: $0) })
 					)
 					dispatcher(.setSuggestResult(suggestResultViewModel))
 				}
