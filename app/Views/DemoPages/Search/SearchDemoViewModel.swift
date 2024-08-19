@@ -13,14 +13,14 @@ final class SearchDemoViewModel: ObservableObject {
 
 	private let searchManager: SearchManager
 	private let map: Map
-	private let locationService: DGis.ILocationService
+	private let locationService: DGis.LocationService
 	private let service: SearchService
 	private lazy var storage: IKeyValueStorage = UserDefaults.standard
 
 	init(
 		searchManager: SearchManager,
 		map: Map,
-		locationService: DGis.ILocationService
+		locationService: DGis.LocationService
 	) throws {
 		self.searchManager = searchManager
 		self.map = map
