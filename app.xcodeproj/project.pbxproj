@@ -18,7 +18,6 @@
 		4B4291682527A4DB006E74BE /* SuggestViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B4291672527A4DB006E74BE /* SuggestViewModel.swift */; };
 		4B96E77A2608C14C0057C366 /* GeoRect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B96E7782608C14B0057C366 /* GeoRect.swift */; };
 		4B96EBDC2608C5780057C366 /* View+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B96EBDA2608C5780057C366 /* View+Helpers.swift */; };
-		4B96EBDD2608C5780057C366 /* Channel+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B96EBDB2608C5780057C366 /* Channel+Helpers.swift */; };
 		4BADDFCC2528016600FBF589 /* SuggestResultView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BADDFCB2528016600FBF589 /* SuggestResultView.swift */; };
 		4BADDFCF252801BD00FBF589 /* SuggestResultViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BADDFCE252801BC00FBF589 /* SuggestResultViewModel.swift */; };
 		4BADDFD2252802A500FBF589 /* SearchResultView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BADDFD1252802A500FBF589 /* SearchResultView.swift */; };
@@ -207,7 +206,6 @@
 		4B4291672527A4DB006E74BE /* SuggestViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestViewModel.swift; sourceTree = "<group>"; };
 		4B96E7782608C14B0057C366 /* GeoRect.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GeoRect.swift; sourceTree = "<group>"; };
 		4B96EBDA2608C5780057C366 /* View+Helpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "View+Helpers.swift"; sourceTree = "<group>"; };
-		4B96EBDB2608C5780057C366 /* Channel+Helpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Channel+Helpers.swift"; sourceTree = "<group>"; };
 		4BADDFCB2528016600FBF589 /* SuggestResultView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestResultView.swift; sourceTree = "<group>"; };
 		4BADDFCE252801BC00FBF589 /* SuggestResultViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestResultViewModel.swift; sourceTree = "<group>"; };
 		4BADDFD1252802A500FBF589 /* SearchResultView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultView.swift; sourceTree = "<group>"; };
@@ -712,7 +710,6 @@
 		B709914D25FA6B1000B2F1A5 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				4B96EBDB2608C5780057C366 /* Channel+Helpers.swift */,
 				644D33CE289C000B00C78ED2 /* Color+Palette.swift */,
 				B709915425FA72A600B2F1A5 /* Future+Helpers.swift */,
 				B709915025FA6B9D00B2F1A5 /* GeoPoint+Helpers.swift */,
@@ -1017,7 +1014,6 @@
 				644D33D9289C07FC00C78ED2 /* PackageInfo+Helpers.swift in Sources */,
 				64EE1AD4289B235200FF301C /* NavigatorOptions.swift in Sources */,
 				6410A4532AE1BF570065C1BC /* MarkerView.swift in Sources */,
-				4B96EBDD2608C5780057C366 /* Channel+Helpers.swift in Sources */,
 				647301B72B7FF4CE005C3065 /* CustomStylePickerView.swift in Sources */,
 				B7D25ACC264B970100CC835A /* MapObjectsIdentificationDemoView.swift in Sources */,
 				64AC48FC2A42E52600CB3C94 /* LanguageSettings.swift in Sources */,
@@ -1358,7 +1354,7 @@
 			repositoryURL = "https://github.com/2gis/mobile-sdk-full-swift-package.git";
 			requirement = {
 				kind = exactVersion;
-				version = 12.0.0;
+				version = 12.2.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */

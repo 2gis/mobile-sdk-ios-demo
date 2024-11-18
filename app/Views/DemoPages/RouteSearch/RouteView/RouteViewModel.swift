@@ -122,10 +122,9 @@ final class RouteViewModel: ObservableObject {
 		self.map.addSource(source: self.geometryObjectSource)
 		self.updatePointA(nil)
 		self.updatePointB(nil)
-		self.routeInfoCancellable = self.routeEditor.routesInfoChannel.sinkOnMainThread(receiveValue: {
-			[weak self] info in
+		self.routeInfoCancellable = self.routeEditor.routesInfoChannel.sinkOnMainThread { [weak self] info in
 			self?.handle(info)
-		})
+		}
 	}
 
 	deinit {
