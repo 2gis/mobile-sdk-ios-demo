@@ -23,10 +23,10 @@ final class TerritoryManagerDemoViewModel: ObservableObject {
 		self.packageManager = packageManager
 		self.territoryManager = territoryManager
 
-		self.territoriesCancellable = territoryManager.territoriesChannel.sinkOnMainThread(receiveValue: {
+		self.territoriesCancellable = territoryManager.territoriesChannel.sinkOnMainThread {
 			[weak self] _ in
 			self?.updateTerritories()
-		})
+		}
 		self.searchStringCancellable = self.$searchString
 			.debounce(for: .seconds(Constants.searchDelay), scheduler: DispatchQueue.main)
 			.sink { [weak self] output in

@@ -26,14 +26,14 @@ class TerritoryViewModel: ObservableObject, Identifiable {
 		self.territory = territory
 		self.status = territory.status
 
-		self.progressCancellable = territory.progressChannel.sinkOnMainThread(receiveValue: {
+		self.progressCancellable = territory.progressChannel.sinkOnMainThread {
 			[weak self] progress in
 			self?.updateStatus()
-		})
-		self.infoCancellable = territory.infoChannel.sinkOnMainThread(receiveValue: {
+		}
+		self.infoCancellable = territory.infoChannel.sinkOnMainThread {
 			[weak self] info in
 			self?.updateStatus()
-		})
+		}
 	}
 
 	func install() {
