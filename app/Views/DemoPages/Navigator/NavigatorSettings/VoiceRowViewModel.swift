@@ -38,8 +38,8 @@ class VoiceRowViewModel: ObservableObject, Identifiable {
 
 			self.status = self.voice.status
 		}
-		self.progressCancellable = voice.progressChannel.sinkOnMainThread(receiveValue: updateStatusCallback)
-		self.infoCancellable = voice.infoChannel.sinkOnMainThread(receiveValue: updateStatusCallback)
+		self.progressCancellable = voice.progressChannel.sinkOnMainThread(updateStatusCallback)
+		self.infoCancellable = voice.infoChannel.sinkOnMainThread(updateStatusCallback)
 	}
 
 	func install() {
