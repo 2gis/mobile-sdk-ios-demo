@@ -38,7 +38,7 @@ struct MarkerView: View {
 			}.background(
 				RoundedRectangle(cornerRadius: 6)
 				.scale(1.2)
-				.fill(Color.white)
+				.fill(Color(UIColor.systemBackground))
 			)
 			DetailsActionView(
 				action: {

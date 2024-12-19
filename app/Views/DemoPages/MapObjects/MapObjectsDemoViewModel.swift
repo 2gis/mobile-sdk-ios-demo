@@ -7,14 +7,17 @@ final class MapObjectsDemoViewModel: ObservableObject {
 	@Published var showObjects: Bool = false
 	private let map: Map
 	private let imageFactory: IImageFactory
+	private let modelFactory: IModelFactory
 	private lazy var mapObjectManager = MapObjectManager(map: self.map)
 
 	init(
 		map: Map,
-		imageFactory: IImageFactory
+		imageFactory: IImageFactory,
+		modelFactory: IModelFactory
 	) {
 		self.map = map
 		self.imageFactory = imageFactory
+		self.modelFactory = modelFactory
 	}
 
 	func makeCircleViewModel() -> CircleViewModel {
@@ -29,6 +32,13 @@ final class MapObjectsDemoViewModel: ObservableObject {
 			map: self.map,
 			mapObjectManager: self.mapObjectManager,
 			imageFactory: self.imageFactory
+		)
+	}
+
+	func makeModelViewModel() -> ModelViewModel {
+		ModelViewModel(
+			map: self.map,
+			modelFactory: self.modelFactory
 		)
 	}
 

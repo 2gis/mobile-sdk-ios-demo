@@ -122,7 +122,8 @@ final class RootViewFactory: ObservableObject {
 		let mapFactory = try self.makeMapFactory()
 		let viewModel = MapObjectsDemoViewModel(
 			map: mapFactory.map,
-			imageFactory: self.makeImageFactory()
+			imageFactory: self.makeImageFactory(),
+			modelFactory: self.makeModelFactory()
 		)
 		return MapObjectsDemoView(
 			viewModel: viewModel,
@@ -289,6 +290,18 @@ final class RootViewFactory: ObservableObject {
 			fatalError(errorMessage)
 		} catch {
 			let errorMessage = "IImageFactory initialization error: \(error)"
+			fatalError(errorMessage)
+		}
+	}
+
+	private func makeModelFactory() -> IModelFactory {
+		do {
+			return try self.sdk.modelFactory
+		} catch let error as SimpleError {
+			let errorMessage = "IModelFactory initialization error: \(error.description)"
+			fatalError(errorMessage)
+		} catch {
+			let errorMessage = "IModelFactory initialization error: \(error)"
 			fatalError(errorMessage)
 		}
 	}
