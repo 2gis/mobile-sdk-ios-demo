@@ -140,11 +140,11 @@ enum MapObjectType: UInt {
 
 	var text: String {
 		switch self {
-			case .circle: return "Circle"
-			case .marker: return "Marker"
-			case .model: return "Model"
-			case .polygon: return "Polygon"
-			case .polyline: return "Polyline"
+		case .circle: return "Circle"
+		case .marker: return "Marker"
+		case .model: return "Model"
+		case .polygon: return "Polygon"
+		case .polyline: return "Polyline"
 		}
 	}
 }

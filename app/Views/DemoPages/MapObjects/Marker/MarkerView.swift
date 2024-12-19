@@ -29,11 +29,40 @@ struct MarkerView: View {
 				primaryText: self.viewModel.size.text,
 				detailsText: "Size"
 			)
+			DetailsActionView(
+				action: {
+					self.viewModel.animationMode.next()
+				},
+				primaryText: self.viewModel.animationMode.text,
+				detailsText: "Animation mode"
+			)
 			VStack {
 				Text("Add text")
 				.font(.caption)
 				.foregroundColor(.gray)
 				TextField("", text: self.$viewModel.markerText)
+				.frame(width: 100, height: 20, alignment: .center)
+			}.background(
+				RoundedRectangle(cornerRadius: 6)
+				.scale(1.2)
+				.fill(Color(UIColor.systemBackground))
+			)
+			VStack {
+				Text("zIndex")
+				.font(.caption)
+				.foregroundColor(.gray)
+				TextField("", text: self.$viewModel.zIndex)
+				.frame(width: 100, height: 20, alignment: .center)
+			}.background(
+				RoundedRectangle(cornerRadius: 6)
+				.scale(1.2)
+				.fill(Color(UIColor.systemBackground))
+			)
+			VStack {
+				Text("UserData")
+				.font(.caption)
+				.foregroundColor(.gray)
+				TextField("", text: self.$viewModel.userData)
 				.frame(width: 100, height: 20, alignment: .center)
 			}.background(
 				RoundedRectangle(cornerRadius: 6)
