@@ -30,11 +30,10 @@ final class ModelViewModel: ObservableObject {
 	}
 
 	@Published var type: ModelType = .cubesFly
-	@Published var modelSize: String = "0"
+	@Published var modelSize: String = "50"
 	@Published var scaleEnabled: Bool = false
 	@Published var userData: String = ""
 	@Published var isErrorAlertShown: Bool = false
-
 	private let map: Map
 	private let modelFactory: IModelFactory
 	private lazy var mapObjectManager = MapObjectManager(map: self.map)
@@ -85,5 +84,11 @@ final class ModelViewModel: ObservableObject {
 		} else {
 			return DGis.ModelSize.logicalPixel(.init(value: modelSizeValue))
 		}
+	}
+}
+
+extension ModelViewModel: IMapObjectViewModel {
+	func removeAll() {
+		self.mapObjectManager.removeAll()
 	}
 }

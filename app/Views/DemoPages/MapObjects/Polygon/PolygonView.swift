@@ -37,6 +37,28 @@ struct PolygonView: View {
 				.scale(1.2)
 				.fill(Color(UIColor.systemBackground))
 			)
+			VStack {
+				Text("zIndex")
+				.font(.caption)
+				.foregroundColor(.gray)
+				TextField("", text: self.$viewModel.zIndex)
+				.frame(width: 100, height: 20, alignment: .center)
+			}.background(
+				RoundedRectangle(cornerRadius: 6)
+				.scale(1.2)
+				.fill(Color(UIColor.systemBackground))
+			)
+			VStack {
+				Text("UserData")
+				.font(.caption)
+				.foregroundColor(.gray)
+				TextField("", text: self.$viewModel.userData)
+				.frame(width: 100, height: 20, alignment: .center)
+			}.background(
+				RoundedRectangle(cornerRadius: 6)
+				.scale(1.2)
+				.fill(Color.white)
+			)
 			DetailsActionView(
 				action: {
 					self.viewModel.polygonColor.next()

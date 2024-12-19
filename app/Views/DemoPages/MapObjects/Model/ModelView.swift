@@ -1,5 +1,4 @@
 import SwiftUI
-
 struct ModelView: View {
 	@State private var keyboardOffset: CGFloat = 0
 	@ObservedObject private var viewModel: ModelViewModel
@@ -20,7 +19,6 @@ struct ModelView: View {
 		self.viewModel = viewModel
 		self._show = show
 	}
-
 	var body: some View {
 		VStack(spacing: 12.0) {
 			DetailsActionView(
@@ -78,5 +76,3 @@ struct ModelView: View {
 		.followKeyboard(self.$keyboardOffset)
 	}
 }
-
-

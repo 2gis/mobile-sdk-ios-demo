@@ -96,12 +96,15 @@ final class MarkerViewModel: ObservableObject {
 
 	@Published var type: MarkerType = .camera
 	@Published var size: MarkerSize = .small
+	@Published var animationMode: AnimationMode = .normal
 	@Published var markerText: String = ""
+	@Published var zIndex: String = "0"
+	@Published var userData: String = ""
 	@Published var isErrorAlertShown: Bool = false
 
 	private let map: Map
-	private let mapObjectManager: MapObjectManager
 	private let imageFactory: IImageFactory
+	private lazy var mapObjectManager = MapObjectManager(map: self.map)
 	private var cancellable: ICancellable = NoopCancellable()
 	private(set) var errorMessage: String? {
 		didSet {
@@ -113,31 +116,10 @@ final class MarkerViewModel: ObservableObject {
 
 	init(
 		map: Map,
-		mapObjectManager: MapObjectManager,
 		imageFactory: IImageFactory
 	) {
 		self.map = map
-		self.mapObjectManager = mapObjectManager
 		self.imageFactory = imageFactory
-	}
-
-	func tap(_ location: CGPoint) {
-		let mapLocation = location.applying(self.toMap)
-		let tapPoint = ScreenPoint(x: Float(mapLocation.x), y: Float(mapLocation.y))
-		let tapRadius = ScreenDistance(value: Float(Self.tapRadius))
-		let cancel = self.map.getRenderedObjects(centerPoint: tapPoint, radius: tapRadius)
-			.sink(receiveValue: { [weak self] infos in
-				for info in infos {
-					let object = info.item.item
-					if let label = object.userData as? String {
-						self?.errorMessage = "Marker label: \(label). Info: \(object)"
-					}
-				}
-			},
-			failure: { [weak self] error in
-				self?.errorMessage = "Failed to fetch objects: \(error)"
-			})
-		self.cancellable = cancel
 	}
 
 	func addMarker() {
@@ -147,12 +129,16 @@ final class MarkerViewModel: ObservableObject {
 			longitude: flatPoint.longitude
 		)
 		let icon = self.makeIcon()
+		let indexValue = UInt32(self.zIndex) ?? 0
 
 		let options = MarkerOptions(
 			position: point,
 			icon: icon,
 			text: self.markerText,
-			iconWidth: self.size.pixel
+			iconWidth: self.size.pixel,
+			userData: self.userData,
+			zIndex: .init(value: indexValue),
+			iconAnimationMode: self.animationMode
 		)
 		do {
 			let marker = try Marker(options: options)
@@ -180,5 +166,24 @@ final class MarkerViewModel: ObservableObject {
 
 		self.icons[typeSize] = icon
 		return icon
+	}
+}
+
+extension MarkerViewModel: IMapObjectViewModel {
+	func removeAll() {
+		self.mapObjectManager.removeAll()
+	}
+}
+
+extension AnimationMode {
+	mutating func next() {
+		self = AnimationMode(rawValue: self.rawValue + 1) ?? .normal
+	}
+
+	var text: String {
+		switch self {
+			case .normal: return "Normal"
+			case .loop: return "Loop"
+		}
 	}
 }
