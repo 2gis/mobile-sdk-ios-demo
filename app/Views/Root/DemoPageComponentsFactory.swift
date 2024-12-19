@@ -126,12 +126,20 @@ struct DemoPageComponentsFactory {
 		return SearchView(store: searchStore)
 	}
 
+	func makeRenderedObjectInfoView(_ viewModel: RenderedObjectInfoViewModel) -> some View {
+		return RenderedObjectInfoView(viewModel: viewModel)
+	}
+
 	func makeCircleView(viewModel: CircleViewModel, show: Binding<Bool>) -> some View {
 		return CircleView(viewModel: viewModel, show: show)
 	}
 
 	func makeMarkerView(viewModel: MarkerViewModel, show: Binding<Bool>) -> some View {
 		return MarkerView(viewModel: viewModel, show: show)
+	}
+
+	func makeModelView(viewModel: ModelViewModel, show: Binding<Bool>) -> some View {
+		return ModelView(viewModel: viewModel, show: show)
 	}
 
 	func makePolygonView(viewModel: PolygonViewModel, show: Binding<Bool>) -> some View {
