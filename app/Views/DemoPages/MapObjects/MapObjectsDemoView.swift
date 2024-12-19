@@ -32,6 +32,11 @@ struct MapObjectsDemoView: View {
 									viewModel: self.viewModel.makeMarkerViewModel(),
 									show: self.$viewModel.showObjects
 								)
+							case .model:
+								self.viewFactory.makeModelView(
+									viewModel: self.viewModel.makeModelViewModel(),
+									show: self.$viewModel.showObjects
+								)
 							case .polygon:
 								self.viewFactory.makePolygonView(
 									viewModel: self.viewModel.makePolygonViewModel(),
