@@ -130,6 +130,7 @@ enum CircleStrokeType: UInt {
 enum MapObjectType: UInt {
 	case circle
 	case marker
+	case model
 	case polygon
 	case polyline
 
@@ -141,6 +142,7 @@ enum MapObjectType: UInt {
 		switch self {
 			case .circle: return "Circle"
 			case .marker: return "Marker"
+			case .model: return "Model"
 			case .polygon: return "Polygon"
 			case .polyline: return "Polyline"
 		}

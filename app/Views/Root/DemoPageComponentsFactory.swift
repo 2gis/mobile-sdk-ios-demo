@@ -134,6 +134,10 @@ struct DemoPageComponentsFactory {
 		return MarkerView(viewModel: viewModel, show: show)
 	}
 
+	func makeModelView(viewModel: ModelViewModel, show: Binding<Bool>) -> some View {
+		return ModelView(viewModel: viewModel, show: show)
+	}
+
 	func makePolygonView(viewModel: PolygonViewModel, show: Binding<Bool>) -> some View {
 		return PolygonView(viewModel: viewModel, show: show)
 	}
