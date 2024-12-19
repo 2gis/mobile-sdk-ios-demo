@@ -1,0 +1,3 @@
+protocol IMapObjectViewModel {
+	func removeAll()
+}

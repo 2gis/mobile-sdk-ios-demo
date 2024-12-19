@@ -15,38 +15,40 @@ struct MapObjectsDemoView: View {
 	var body: some View {
 		ZStack {
 			ZStack(alignment: .bottomTrailing) {
-				self.viewFactory.makeMapViewWithZoomControl(alignment: .bottomLeft)
+				self.viewFactory.makeMapViewWithZoomControl(alignment: .bottomLeft) { [viewModel = self.viewModel] objectInfo in
+					viewModel.tap(objectInfo: objectInfo)
+				}
 				VStack(spacing: 12.0) {
 					if !self.viewModel.showObjects {
 						self.settingsButton().frame(width: 100, height: 100, alignment: .bottomTrailing)
 					}
 					if self.viewModel.showObjects {
 						switch self.viewModel.mapObjectType {
-							case .circle:
-								self.viewFactory.makeCircleView(
-									viewModel: self.viewModel.makeCircleViewModel(),
-									show: self.$viewModel.showObjects
-								)
-							case .marker:
-								self.viewFactory.makeMarkerView(
-									viewModel: self.viewModel.makeMarkerViewModel(),
-									show: self.$viewModel.showObjects
-								)
-							case .model:
-								self.viewFactory.makeModelView(
-									viewModel: self.viewModel.makeModelViewModel(),
-									show: self.$viewModel.showObjects
-								)
-							case .polygon:
-								self.viewFactory.makePolygonView(
-									viewModel: self.viewModel.makePolygonViewModel(),
-									show: self.$viewModel.showObjects
-								)
-							case .polyline:
-								self.viewFactory.makePolylineView(
-									viewModel: self.viewModel.makePolylineViewModel(),
-									show: self.$viewModel.showObjects
-								)
+						case .circle:
+							self.viewFactory.makeCircleView(
+								viewModel: self.viewModel.circleViewModel,
+								show: self.$viewModel.showObjects
+							)
+						case .marker:
+							self.viewFactory.makeMarkerView(
+								viewModel: self.viewModel.markerViewModel,
+								show: self.$viewModel.showObjects
+							)
+						case .model:
+							self.viewFactory.makeModelView(
+								viewModel: self.viewModel.modelViewModel,
+								show: self.$viewModel.showObjects
+							)
+						case .polygon:
+							self.viewFactory.makePolygonView(
+								viewModel: self.viewModel.polygonViewModel,
+								show: self.$viewModel.showObjects
+							)
+						case .polyline:
+							self.viewFactory.makePolylineView(
+								viewModel: self.viewModel.polylineViewModel,
+								show: self.$viewModel.showObjects
+							)
 						}
 					}
 					DetailsActionView(
@@ -65,6 +67,11 @@ struct MapObjectsDemoView: View {
 				}
 				.padding(.bottom, 40)
 				.padding(.trailing, 20)
+
+				if let selectedMapObject = self.viewModel.selectedMapObject {
+					self.viewFactory.makeRenderedObjectInfoView(selectedMapObject)
+						.transition(.move(edge: .bottom))
+				}
 			}
 			if self.viewModel.showObjects {
 				Image(systemName: "multiply")

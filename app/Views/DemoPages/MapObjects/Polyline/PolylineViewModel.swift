@@ -7,13 +7,15 @@ final class PolylineViewModel: ObservableObject {
 	}
 
 	@Published var pointsCount: String = ""
+	@Published var zIndex: String = "0"
+	@Published var userData: String = ""
 	@Published var polylineWidth: StrokeWidth = .thin
 	@Published var polylineColor: MapObjectColor = .transparent
 	@Published var polylineType: PolylineFillType = .solid
 	@Published var isErrorAlertShown: Bool = false
 
 	private let map: Map
-	private let mapObjectManager: MapObjectManager
+	private lazy var mapObjectManager = MapObjectManager(map: self.map)
 	private(set) var errorMessage: String? {
 		didSet {
 			self.isErrorAlertShown = self.errorMessage != nil
@@ -21,11 +23,9 @@ final class PolylineViewModel: ObservableObject {
 	}
 
 	init(
-		map: Map,
-		mapObjectManager: MapObjectManager
+		map: Map
 	) {
 		self.map = map
-		self.mapObjectManager = mapObjectManager
 	}
 
 	func addPolyline() {
@@ -42,12 +42,15 @@ final class PolylineViewModel: ObservableObject {
 				colorIndices: self.adjustedData(base: [0,1,2,3,4], length: points.count - 1)
 			)}
 		}
+		let indexValue = UInt32(self.zIndex) ?? 0
 		let options = PolylineOptions(
 			points: points,
 			width: self.polylineWidth.pixel,
 			color: self.polylineColor.value,
 			dashedPolylineOptions: self.polylineType.dashedOptions,
-			gradientPolylineOptions: gradientOptions
+			gradientPolylineOptions: gradientOptions,
+			userData: self.userData,
+			zIndex: .init(value: indexValue)
 		)
 		do {
 			let polyline = try Polyline(options: options)
@@ -84,5 +87,11 @@ final class PolylineViewModel: ObservableObject {
 		}
 		result = Array(result.prefix(length))
 		return Data(result)
+	}
+}
+
+extension PolylineViewModel: IMapObjectViewModel {
+	func removeAll() {
+		self.mapObjectManager.removeAll()
 	}
 }

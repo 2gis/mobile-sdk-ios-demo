@@ -10,12 +10,14 @@ final class PolygonViewModel: ObservableObject {
 	@Published var polygonColor: MapObjectColor = .transparent
 	@Published var contourSize: String = ""
 	@Published var contoursCount: String = ""
+	@Published var zIndex: String = "0"
+	@Published var userData: String = ""
 	@Published var strokeWidth: StrokeWidth = .thin
 	@Published var strokeColor: MapObjectColor = .transparent
 	@Published var isErrorAlertShown: Bool = false
 
 	private let map: Map
-	private let mapObjectManager: MapObjectManager
+	private lazy var mapObjectManager = MapObjectManager(map: self.map)
 	private(set) var errorMessage: String? {
 		didSet {
 			self.isErrorAlertShown = self.errorMessage != nil
@@ -23,20 +25,21 @@ final class PolygonViewModel: ObservableObject {
 	}
 
 	init(
-		map: Map,
-		mapObjectManager: MapObjectManager
+		map: Map
 	) {
 		self.map = map
-		self.mapObjectManager = mapObjectManager
 	}
 
 	func addPolygon() {
 		let contours = self.makeContours()
+		let indexValue = UInt32(self.zIndex) ?? 0
 		let options = PolygonOptions(
 			contours: contours,
 			color: self.polygonColor.value,
 			strokeWidth: self.strokeWidth.pixel,
-			strokeColor: self.strokeColor.value
+			strokeColor: self.strokeColor.value,
+			userData: self.userData,
+			zIndex: .init(value: indexValue)
 		)
 		do {
 			let polygon = try Polygon(options: options)
@@ -67,5 +70,11 @@ final class PolygonViewModel: ObservableObject {
 				)
 			}
 		}
+	}
+}
+
+extension PolygonViewModel: IMapObjectViewModel {
+	func removeAll() {
+		self.mapObjectManager.removeAll()
 	}
 }

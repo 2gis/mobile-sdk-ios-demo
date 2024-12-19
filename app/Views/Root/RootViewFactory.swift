@@ -122,6 +122,7 @@ final class RootViewFactory: ObservableObject {
 		let mapFactory = try self.makeMapFactory()
 		let viewModel = MapObjectsDemoViewModel(
 			map: mapFactory.map,
+			mapSourceFactory: MapSourceFactory(context: self.context),
 			imageFactory: self.makeImageFactory(),
 			modelFactory: self.makeModelFactory()
 		)

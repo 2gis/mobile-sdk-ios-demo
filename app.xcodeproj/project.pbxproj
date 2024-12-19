@@ -62,6 +62,9 @@
 		64226DFE26B1B5ED0058E3D9 /* ClusteringDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64226DFC26B1B5ED0058E3D9 /* ClusteringDemoView.swift */; };
 		64226E0226B1B5F70058E3D9 /* FpsDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64226E0026B1B5F70058E3D9 /* FpsDemoView.swift */; };
 		64226E0326B1B5F70058E3D9 /* FpsDemoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64226E0126B1B5F70058E3D9 /* FpsDemoViewModel.swift */; };
+		64235BEA2D14AED00039224E /* MapObjectViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64235BE92D14AED00039224E /* MapObjectViewModel.swift */; };
+		64235BEC2D14AED70039224E /* RenderedObjectInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64235BEB2D14AED70039224E /* RenderedObjectInfoView.swift */; };
+		64235BEE2D14AEDC0039224E /* RenderedObjectInfoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64235BED2D14AEDC0039224E /* RenderedObjectInfoViewModel.swift */; };
 		644D33A0289BECE800C78ED2 /* IMapSourceFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 644D339F289BECE800C78ED2 /* IMapSourceFactory.swift */; };
 		644D33A2289BECFA00C78ED2 /* SettingsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 644D33A1289BECFA00C78ED2 /* SettingsService.swift */; };
 		644D33A6289BF20800C78ED2 /* MapDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 644D33A3289BF20800C78ED2 /* MapDataSource.swift */; };
@@ -251,6 +254,9 @@
 		64226DFC26B1B5ED0058E3D9 /* ClusteringDemoView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClusteringDemoView.swift; sourceTree = "<group>"; };
 		64226E0026B1B5F70058E3D9 /* FpsDemoView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FpsDemoView.swift; sourceTree = "<group>"; };
 		64226E0126B1B5F70058E3D9 /* FpsDemoViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FpsDemoViewModel.swift; sourceTree = "<group>"; };
+		64235BE92D14AED00039224E /* MapObjectViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapObjectViewModel.swift; sourceTree = "<group>"; };
+		64235BEB2D14AED70039224E /* RenderedObjectInfoView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RenderedObjectInfoView.swift; sourceTree = "<group>"; };
+		64235BED2D14AEDC0039224E /* RenderedObjectInfoViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RenderedObjectInfoViewModel.swift; sourceTree = "<group>"; };
 		644D339F289BECE800C78ED2 /* IMapSourceFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMapSourceFactory.swift; sourceTree = "<group>"; };
 		644D33A1289BECFA00C78ED2 /* SettingsService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsService.swift; sourceTree = "<group>"; };
 		644D33A3289BF20800C78ED2 /* MapDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapDataSource.swift; sourceTree = "<group>"; };
@@ -503,6 +509,9 @@
 				6410A43C2AE1BF570065C1BC /* MapObjectsDemoView.swift */,
 				6410A4382AE1BF570065C1BC /* MapObjectsDemoViewModel.swift */,
 				6410A4442AE1BF570065C1BC /* MapObjectType.swift */,
+				64235BE92D14AED00039224E /* MapObjectViewModel.swift */,
+				64235BEB2D14AED70039224E /* RenderedObjectInfoView.swift */,
+				64235BED2D14AEDC0039224E /* RenderedObjectInfoViewModel.swift */,
 			);
 			path = MapObjects;
 			sourceTree = "<group>";
@@ -1061,6 +1070,7 @@
 				64EE1AAD289B22E800FF301C /* RouteDetailsVC.swift in Sources */,
 				6410A4502AE1BF570065C1BC /* CircleView.swift in Sources */,
 				B7B2E8DD26B2CBE0006DCE9E /* CustomGesturesDemoViewModel.swift in Sources */,
+				64235BEC2D14AED70039224E /* RenderedObjectInfoView.swift in Sources */,
 				4BBE801B2526D98600D7EBDB /* SearchResultItemViewModel.swift in Sources */,
 				4B96EBDC2608C5780057C366 /* View+Helpers.swift in Sources */,
 				4BBE7E2025264F2B00D7EBDB /* MapView.swift in Sources */,
@@ -1162,6 +1172,8 @@
 				6410A44E2AE1BF570065C1BC /* DetailsActionView.swift in Sources */,
 				64EE1AB8289B232800FF301C /* TerritoryView.swift in Sources */,
 				4BBE80182526D92C00D7EBDB /* SearchViewModel.swift in Sources */,
+				64235BEA2D14AED00039224E /* MapObjectViewModel.swift in Sources */,
+				64235BEE2D14AEDC0039224E /* RenderedObjectInfoViewModel.swift in Sources */,
 				6410A44D2AE1BF570065C1BC /* PolygonView.swift in Sources */,
 				6410A44A2AE1BF570065C1BC /* PolylineView.swift in Sources */,
 				6410A44C2AE1BF570065C1BC /* PolygonViewModel.swift in Sources */,
