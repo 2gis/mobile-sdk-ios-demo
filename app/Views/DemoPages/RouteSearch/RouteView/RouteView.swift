@@ -61,10 +61,6 @@ struct RouteView: View {
 				Spacer()
 			}
 		}
-		.contentShape(Rectangle())
-		.longPressAndDragRecognizer { state in
-			self.viewModel.handleDragGesture(state)
-		}
 	}
 
 	@ViewBuilder
