@@ -257,6 +257,7 @@ final class RootViewFactory: ObservableObject {
 
 	private func makeMapOptions() -> MapOptions {
 		var options = MapOptions.default
+		options.maxFps = UIScreen.main.maximumFramesPerSecond
 		options.graphicsPreset = self.settingsService.graphicsOption.preset
 		if let styleUrl = self.settingsService.customStyleUrl {
 			options.styleFuture = self.styleFactory.loadFile(url: styleUrl)
