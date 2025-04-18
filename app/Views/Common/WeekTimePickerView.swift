@@ -23,7 +23,7 @@ struct WeekTimePickerView: View {
 					options: WeekDay.availableValues,
 					pickerStyle: .wheel
 				)
-				.modifier(EmbedInNavigationView(title: "Week day", isPresented: self.$isWeekDayPopoverShown))
+				.modifier(EmbedInNavigationView(title: "День недели", isPresented: self.$isWeekDayPopoverShown))
 			}
 			.padding(.trailing, 10)
 			Button("\(self.weekTime.time.hours) : \(self.weekTime.time.minutes)") {
@@ -41,7 +41,7 @@ struct WeekTimePickerView: View {
 					displayedComponents: [.hourAndMinute]
 				)
 				.datePickerStyle(.wheel)
-				.modifier(EmbedInNavigationView(title: "Time", isPresented: self.$isDayTimePopoverShown))
+				.modifier(EmbedInNavigationView(title:"Время", isPresented: self.$isDayTimePopoverShown))
 			}
 		}
 	}
@@ -55,7 +55,7 @@ private struct EmbedInNavigationView: ViewModifier {
 		NavigationView {
 			content
 			.navigationBarTitle(self.title)
-			.navigationBarItems(leading: Button("Close", action: {
+			.navigationBarItems(leading: Button("Закрыть", action: {
 				self.isPresented = false
 			}))
 		}
@@ -114,7 +114,7 @@ extension WeekDay: PickerViewOption {
 				return "Sunday"
 			@unknown default:
 				assertionFailure("Unsupported WeekDay \(self)")
-				return "Unsupported week day \(self.rawValue)"
+				return "Unsupported WeekDay \(self.rawValue)"
 		}
 	}
 	static let availableValues: [WeekDay] = [.monday, .tuesday, .wednesday, .thursday, .friday, .saturday, .sunday]

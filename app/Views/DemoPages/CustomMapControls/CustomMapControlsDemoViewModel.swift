@@ -1,6 +1,6 @@
-import SwiftUI
 import Combine
 import DGis
+import SwiftUI
 
 final class CustomMapControlsDemoViewModel: ObservableObject {
 	enum MapControlsType: CaseIterable, Identifiable {
@@ -9,10 +9,10 @@ final class CustomMapControlsDemoViewModel: ObservableObject {
 		var id: MapControlsType { self }
 		var title: String {
 			switch self {
-				case .default:
-					return "Default"
-				case .custom:
-					return "Custom"
+			case .default:
+				return "Default"
+			case .custom:
+				return "Custom"
 			}
 		}
 	}

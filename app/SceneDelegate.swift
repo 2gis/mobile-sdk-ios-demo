@@ -5,7 +5,12 @@ import DGis
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 	var window: UIWindow?
 
+#if APP_CARPLAY
+	private let container = Container.shared
+#else
 	private let container = Container()
+#endif
+
 
 	func scene(
 		_ scene: UIScene,

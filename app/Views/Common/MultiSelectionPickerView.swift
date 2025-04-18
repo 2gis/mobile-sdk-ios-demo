@@ -13,11 +13,11 @@ struct MultiSelectionPickerView<T: PickerViewOption>: View {
 		VStack(alignment: .leading) {
 			HStack {
 				if self.selection.count == self.options.count {
-					Button("Remove selection") {
+					Button("Снять выделение") {
 						self.selection.removeAll()
 					}
 				} else {
-					Button("Select all") {
+					Button("Выбрать все") {
 						self.selection = self.options
 					}
 				}

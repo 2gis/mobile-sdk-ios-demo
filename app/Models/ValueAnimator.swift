@@ -6,6 +6,7 @@ fileprivate var defaultFunction: (CFTimeInterval, CFTimeInterval) -> (Double) = 
 	return time / duration
 }
 
+/// Удобная реализация для анимации.
 class ValueAnimator {
 	private let from: Double
 	private let to: Double

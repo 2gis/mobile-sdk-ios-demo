@@ -47,7 +47,7 @@ struct SettingsFormTextField<Value>: View {
 		)
 		Text(self.title)
 		.fontWeight(.bold)
-		.foregroundColor(.primaryTitle)
+		.foregroundColor(.primary)
 		.fixedSize(horizontal: false, vertical: true)
 		TextField(self.title, text: binding)
 		.textFieldStyle(.roundedBorder)
@@ -83,6 +83,21 @@ extension SettingsFormTextField where Value == UInt32? {
 			rawToValueConverter: { UInt32($0) },
 			valueToRawConverter: { $0.map {"\($0)"} },
 			valueValidator: { $0 != nil },
+			keyboardType: .numberPad
+		)
+	}
+}
+
+extension SettingsFormTextField where Value == Int32 {
+	init(
+		title: String,
+		value: Binding<Int32>
+	) {
+		self.init(
+			title: title,
+			value: value,
+			rawToValueConverter: { Int32($0) ?? 0 },
+			valueToRawConverter: { $0.description },
 			keyboardType: .numberPad
 		)
 	}
