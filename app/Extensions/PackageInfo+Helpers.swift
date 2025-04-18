@@ -8,9 +8,9 @@ enum PackageStatus: Equatable {
 			case .preinstalled:
 				return "Preinstalled"
 			case .installing(let progress):
-				return "Installing \(progress)%"
+				return "Downloading \(progress)%"
 			case .notCompatible:
-				return "Not compatible with current version"
+				return "Is not compatible with current version"
 			case .installed:
 				return "Installed"
 			case .notInstalled:

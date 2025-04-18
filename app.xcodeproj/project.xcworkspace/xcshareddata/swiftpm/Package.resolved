@@ -1,13 +1,22 @@
 {
-  "originHash" : "ed64f1bdc9c8741d846b3753fcd2143b882024fe8a7118aa7f15c8aca26750ef",
+  "originHash" : "075f3c3620d447f396343ac94979ac0f35b48db1de9f0c34fc3e9dd48d5b475f",
   "pins" : [
     {
       "identity" : "mobile-sdk-full-swift-package",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/2gis/mobile-sdk-full-swift-package.git",
       "state" : {
-        "revision" : "fddffe0259e1544e7e3494cf21e1112dd19ce8e2",
-        "version" : "12.5.0"
+        "revision" : "18f8197cd09ce27796d3dc3705046a2f119460a9",
+        "version" : "12.6.0"
+      }
+    },
+    {
+      "identity" : "swiftybeaver",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/SwiftyBeaver/SwiftyBeaver.git",
+      "state" : {
+        "revision" : "8cba041db09596183331d123f337d0eb2e6e8e91",
+        "version" : "2.1.1"
       }
     }
   ],

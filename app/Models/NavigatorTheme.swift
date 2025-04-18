@@ -1,6 +1,5 @@
 import Foundation
 
-// Тема навигатора
 enum NavigatorTheme: String, CaseIterable {
 	case `default`, custom
 }
@@ -13,7 +12,7 @@ extension NavigatorTheme: PickerViewOption {
 	var name: String {
 		switch self {
 			case .default:
-				return "System"
+				return "Default"
 			case .custom:
 				return "Custom"
 		}

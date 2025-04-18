@@ -39,4 +39,11 @@ extension View {
 				}
 			}
 	}
+
+	#if canImport(UIKit)
+	//Sometimes you need to force close the keyboard and unfocus all text fields. This simple function does just that
+	func hideKeyboard() {
+		UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+	}
+	#endif
 }

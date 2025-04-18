@@ -1,7 +1,7 @@
 import SwiftUI
 import DGis
 
-extension Meter: CustomStringConvertible {
+extension Meter {
 	private enum Constants {
 		static let metersInKm: Float = 1000.0
 	}
