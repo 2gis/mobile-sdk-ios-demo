@@ -26,7 +26,7 @@ final class FullScreenMapViewController: UIViewController {
 		let dismissButton = UIButton()
 		dismissButton.backgroundColor = .gray
 		dismissButton.translatesAutoresizingMaskIntoConstraints = false
-		dismissButton.setTitle("Закрыть", for: .normal)
+		dismissButton.setTitle("Close", for: .normal)
 		self.view.addSubview(dismissButton)
 		NSLayoutConstraint.activate([
 			dismissButton.leftAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leftAnchor),

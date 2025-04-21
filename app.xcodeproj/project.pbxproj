@@ -967,9 +967,9 @@
 		64A238DE269EF835007385DA /* Services */ = {
 			isa = PBXGroup;
 			children = (
-				7484B5C12CA4379E001939C2 /* SearchHistory */,
 				B7BC284A26BCF86E005E3EDC /* LocationGenerator */,
 				64A238F0269EF96C007385DA /* LocationService */,
+				7484B5C12CA4379E001939C2 /* SearchHistory */,
 				64A238EE269EF94F007385DA /* Search */,
 				B72EF93F26A5253E00ECC013 /* ApplicationIdleTimerService.swift */,
 				64A238DF269EF8D1007385DA /* ConsoleLogSink.swift */,
@@ -1036,13 +1036,13 @@
 				64A23962269EFC81007385DA /* SDKTypes */,
 				64A2395C269EFC06007385DA /* DemoPage.swift */,
 				C448BB012C1AEBD3005011D3 /* GeolocationMarkerType.swift */,
+				C42DFC7B2C577B26005B00FB /* GraphicsOption.swift */,
 				B745F3CC26E5C99F003984BA /* MapDataSource.swift */,
 				64C64D002AFA7F8D002A1B17 /* MapTheme.swift */,
 				64EAF792292CCC0E00921CC6 /* NavigatorControls.swift */,
 				64490EE62C681F3E00600FBB /* NavigatorDashboardButton.swift */,
 				B7227B432704A98200021395 /* NavigatorTheme.swift */,
 				64B772DE2718613200EBCD4C /* ValueAnimator.swift */,
-				C42DFC7B2C577B26005B00FB /* GraphicsOption.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -1077,14 +1077,14 @@
 			isa = PBXGroup;
 			children = (
 				64A23971269EFE77007385DA /* Button+Factory.swift */,
-				B7FB3A0926A5B36700EBE5DA /* LazyView.swift */,
 				B715FEFB26B1285400216F30 /* FullScreenMapViewController.swift */,
-				B7B7CA5627A8E92D006159BC /* PickerView.swift */,
-				B74DFFC527B4BFA0000A73E8 /* MultiSelectionPickerView.swift */,
-				B74DFFCB27B4F348000A73E8 /* WeekTimePickerView.swift */,
 				B74DFFCE27B56C8B000A73E8 /* GeoPointPickerView.swift */,
+				B7FB3A0926A5B36700EBE5DA /* LazyView.swift */,
+				B74DFFC527B4BFA0000A73E8 /* MultiSelectionPickerView.swift */,
+				B7B7CA5627A8E92D006159BC /* PickerView.swift */,
 				B7ABA9F927F33D98008D3EFC /* SettingsFormDisclosureButton.swift */,
 				B7B7CA5C27A94C76006159BC /* SettingsFormTextField.swift */,
+				B74DFFCB27B4F348000A73E8 /* WeekTimePickerView.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";

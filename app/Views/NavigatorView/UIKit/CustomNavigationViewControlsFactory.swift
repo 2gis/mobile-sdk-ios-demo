@@ -8,26 +8,26 @@ class CustomNavigationViewControlsFactory: INavigationViewControlsFactory {
 		self.navigationViewControlsFactory = navigationViewControlsFactory
 	}
 
-	/// UI элемент с информацией о следующем манёвре и дополнительном манёвре.
-	/// См. `RouteInstruction`, `RouteInstruction.extraInstructionInfo`, `getInstructionManeuver`.
+	/// UI element with information about the next maneuver and additional maneuver.
+	/// See `RouteInstruction`, `RouteInstruction.extraInstructionInfo`, `getInstructionManeuver`.
 	func makeNextManeuverControl(uiModel: DGis.Model) -> UIView & DGis.INextManeuverControlView {
 		return navigationViewControlsFactory.makeNextManeuverControl(uiModel: uiModel)
 	}
 
-	/// UI элемент с информацией о текущей скорости движения, ограничении скорости на текущем участке маршрута и предупреждении о прохождении зоны действия камеры.
-    /// См. `Model.currentSpeed`, `Model.maxSpeedLimit` и `Model.cameraProgress`.
+	/// UI element with information about the current speed, speed limit on the current route segment, and camera zone warning.
+	/// See `Model.currentSpeed`, `Model.maxSpeedLimit`, and `Model.cameraProgress`.
 	func makeSpeedControl(uiModel: DGis.Model) -> (UIView & DGis.INavigationControlView) {
 		return navigationViewControlsFactory.makeSpeedControl(uiModel: uiModel)
 	}
 
-	/// UI элемент с информацией об оставшемся расстоянии и ориентировочном времени прибытия/оставшемся времени в пути.
-    /// См. `Model.duration`, `Model.routeDuration` и `DistanceCounters`.
+	/// UI element with information about the remaining distance and estimated time of arrival/remaining travel time.
+	/// See `Model.duration`, `Model.routeDuration`, and `DistanceCounters`.
 	func makeRemainingRouteInfoControl(navigationManager: DGis.NavigationManager) -> UIView & DGis.INavigationControlView {
 		return navigationViewControlsFactory.makeRemainingRouteInfoControl(navigationManager: navigationManager)
 	}
 
-	/// UI элемент для отображения сообщений о статусе навигации, например, о поиске маршрута и потере сигнала GPS.
-    /// См. `Model.state` и `Model.badLocation`.
+	/// UI element for displaying navigation status messages, such as route searching and GPS signal loss.
+	/// See `Model.state` and `Model.badLocation`.
 	func makeMessageBarControl(uiModel: DGis.Model) -> UIView & DGis.INavigationControlView {
 		let control = navigationViewControlsFactory.makeMessageBarControl(uiModel: uiModel)
 
@@ -38,25 +38,25 @@ class CustomNavigationViewControlsFactory: INavigationViewControlsFactory {
 		} else {
 			return control
 		}
-    }
+	}
 
-	/// UI элемент перехода на маршрут с меньшим ожидаемым временем прибытия.
-    /// См. `Model.betterRoute`.
+	/// UI element for switching to a route with a shorter estimated arrival time.
+	/// See `Model.betterRoute`.
 	func makeBetterRouteControl(uiModel: DGis.Model) -> UIView & DGis.INavigationControlView {
 		return navigationViewControlsFactory.makeBetterRouteControl(uiModel: uiModel)
-    }
+	}
 
-	/// UI элемент для отображения скоростей движения ТС и дорожных событий на маршруте.
-    /// См. `Model.dynamicRouteInfo`.
+	/// UI element for displaying vehicle speeds and road events along the route.
+	/// See `Model.dynamicRouteInfo`.
 	func makeThermometerControl(uiModel: DGis.Model) -> UIView & DGis.IThermometerControlView {
 		return navigationViewControlsFactory.makeThermometerControl(uiModel: uiModel)
 	}
 }
 
 class BadLocationView: UIView & DGis.INavigationControlView {
-	/// Видимость элемента.
+	/// Visibility of the element.
 	public var isVisible = true
-	/// Сигнал изменения видимости элемента.
+	/// Signal for visibility change.
 	var onDidChangeVisibility: (() -> Void)?
 
 	private lazy var infoLabel: UILabel = {
