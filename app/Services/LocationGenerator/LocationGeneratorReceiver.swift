@@ -4,12 +4,13 @@ import Combine
 import CoreLocation
 
 protocol ILocationGeneratorReceiver {
-	/// Последние данные о местоположении.
+	/// Latest location data.
 	var locations: CurrentValueSubject<[CLLocation], Never> { get }
 
-	/// Создать соединение на прослушивание.
+	/// Establish a connection to start listening.
 	func connect()
-	/// Удалить соединение.
+
+	/// Remove the connection.
 	func disconnect()
 }
 

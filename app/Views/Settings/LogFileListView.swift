@@ -11,9 +11,9 @@ struct LogFileListView: View {
 	var body: some View {
 		List {
 			if self.viewModel.logFileURLs.isEmpty {
-				Text("Нет логов")
+				Text("No logs")
 			} else {
-				ForEach(self.viewModel.logFileURLs, id:\.self) { url in
+				ForEach(self.viewModel.logFileURLs, id: \.self) { url in
 					VStack(alignment: .leading) {
 						HStack {
 							Text(url.lastPathComponent)
@@ -27,7 +27,7 @@ struct LogFileListView: View {
 						.frame(height: 44)
 						HStack {
 							HStack {
-								Text("Поделиться")
+								Text("Share")
 								Image(systemName: "square.and.arrow.up")
 							}
 							.foregroundColor(.blue)
@@ -37,7 +37,7 @@ struct LogFileListView: View {
 								self.shareLogFile(url)
 							})
 							HStack {
-								Text("Удалить")
+								Text("Delete")
 								Image(systemName: "trash")
 							}
 							.foregroundColor(.red)
@@ -68,12 +68,12 @@ struct LogFileListView: View {
 
 	private func deleteLogFile(_ fileURL: URL) {
 		let alert = UIAlertController(
-			title: "Удалалить файл?",
+			title: "Delete file?",
 			message: fileURL.lastPathComponent,
 			preferredStyle: .alert
 		)
-		alert.addAction(.init(title: "Отмена", style: .cancel))
-		alert.addAction(.init(title: "Удалить", style: .destructive, handler: { _ in
+		alert.addAction(.init(title: "Cancel", style: .cancel))
+		alert.addAction(.init(title: "Delete", style: .destructive, handler: { _ in
 			self.viewModel.deleteLogFile(fileURL)
 		}))
 		self.navigationService.present(alert, animated: true, completion: nil)
@@ -86,9 +86,11 @@ private class LogFileDetailsViewModel: ObservableObject {
 		case ready(String)
 		case error(Error)
 	}
+
 	var fileName: String {
 		self.logFileURL.lastPathComponent
 	}
+
 	@Published var state: State
 
 	private let logFileURL: URL
@@ -128,18 +130,18 @@ private struct LogFileDetailsView: View {
 			VStack {
 				switch self.viewModel.state {
 					case .loading:
-						Text("Читаем файл...")
+						Text("Reading file...")
 					case .ready(let content):
 						if #available(iOS 15.0, *) {
 							Text(content)
-							.textSelection(.enabled)
-							.font(.system(size: 10))
+								.textSelection(.enabled)
+								.font(.system(size: 10))
 						} else {
 							Text(content)
-							.font(.system(size: 10))
+								.font(.system(size: 10))
 						}
 					case .error(let error):
-						Text("Не удалось прочитать файл: \(error.localizedDescription)")
+						Text("Failed to read file: \(error.localizedDescription)")
 				}
 			}
 			.padding(8)

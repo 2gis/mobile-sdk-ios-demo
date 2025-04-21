@@ -9,8 +9,6 @@ extension CGRect {
 		self.init(origin: origin, size: size)
 	}
 
-	// Используется в частности после вызова метода boundingRect.
-	//
 	// This method returns fractional sizes (in the size component of the returned CGRect);
 	// to use a returned size to size views, you must raise its value to the nearest higher integer
 	// using the ceil function.

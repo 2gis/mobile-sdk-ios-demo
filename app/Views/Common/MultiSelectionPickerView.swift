@@ -13,11 +13,11 @@ struct MultiSelectionPickerView<T: PickerViewOption>: View {
 		VStack(alignment: .leading) {
 			HStack {
 				if self.selection.count == self.options.count {
-					Button("Снять выделение") {
+					Button("Deselect") {
 						self.selection.removeAll()
 					}
 				} else {
-					Button("Выбрать все") {
+					Button("Select all") {
 						self.selection = self.options
 					}
 				}
@@ -25,18 +25,18 @@ struct MultiSelectionPickerView<T: PickerViewOption>: View {
 			ForEach(self.options) { option in
 				HStack {
 					Text(option.name)
-					.fixedSize(horizontal: false, vertical: true)
+						.fixedSize(horizontal: false, vertical: true)
 					Spacer()
 					if self.selection.contains(option) {
 						Image(systemName: "checkmark.circle")
-						.resizable()
-						.frame(width: 20, height: 20)
-						.foregroundColor(.blue)
+							.resizable()
+							.frame(width: 20, height: 20)
+							.foregroundColor(.blue)
 					} else {
 						Image(systemName: "circle")
-						.resizable()
-						.frame(width: 20, height: 20)
-						.foregroundColor(.blue)
+							.resizable()
+							.frame(width: 20, height: 20)
+							.foregroundColor(.blue)
 					}
 				}
 				.contentShape(Rectangle())

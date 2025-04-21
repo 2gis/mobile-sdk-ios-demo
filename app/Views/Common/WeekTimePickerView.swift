@@ -2,9 +2,11 @@ import SwiftUI
 import DGis
 
 struct WeekTimePickerView: View {
+	typealias State = SwiftUI.State
+
 	@Binding private var weekTime: WeekTime
-	@SwiftUI.State private var isWeekDayPopoverShown: Bool = false
-	@SwiftUI.State private var isDayTimePopoverShown: Bool = false
+	@State private var isWeekDayPopoverShown: Bool = false
+	@State private var isDayTimePopoverShown: Bool = false
 
 	init(weekTime: Binding<WeekTime>) {
 		self._weekTime = weekTime
@@ -23,7 +25,7 @@ struct WeekTimePickerView: View {
 					options: WeekDay.availableValues,
 					pickerStyle: .wheel
 				)
-				.modifier(EmbedInNavigationView(title: "День недели", isPresented: self.$isWeekDayPopoverShown))
+				.modifier(EmbedInNavigationView(title: "Week day", isPresented: self.$isWeekDayPopoverShown))
 			}
 			.padding(.trailing, 10)
 			Button("\(self.weekTime.time.hours) : \(self.weekTime.time.minutes)") {
@@ -41,7 +43,7 @@ struct WeekTimePickerView: View {
 					displayedComponents: [.hourAndMinute]
 				)
 				.datePickerStyle(.wheel)
-				.modifier(EmbedInNavigationView(title:"Время", isPresented: self.$isDayTimePopoverShown))
+				.modifier(EmbedInNavigationView(title: "DayTime", isPresented: self.$isDayTimePopoverShown))
 			}
 		}
 	}
@@ -55,7 +57,7 @@ private struct EmbedInNavigationView: ViewModifier {
 		NavigationView {
 			content
 			.navigationBarTitle(self.title)
-			.navigationBarItems(leading: Button("Закрыть", action: {
+			.navigationBarItems(leading: Button("Close", action: {
 				self.isPresented = false
 			}))
 		}
