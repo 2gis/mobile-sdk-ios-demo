@@ -2,9 +2,11 @@ import SwiftUI
 import DGis
 
 struct WeekTimePickerView: View {
+	typealias State = SwiftUI.State
+
 	@Binding private var weekTime: WeekTime
-	@SwiftUI.State private var isWeekDayPopoverShown: Bool = false
-	@SwiftUI.State private var isDayTimePopoverShown: Bool = false
+	@State private var isWeekDayPopoverShown: Bool = false
+	@State private var isDayTimePopoverShown: Bool = false
 
 	init(weekTime: Binding<WeekTime>) {
 		self._weekTime = weekTime
@@ -41,7 +43,7 @@ struct WeekTimePickerView: View {
 					displayedComponents: [.hourAndMinute]
 				)
 				.datePickerStyle(.wheel)
-				.modifier(EmbedInNavigationView(title: "Time", isPresented: self.$isDayTimePopoverShown))
+				.modifier(EmbedInNavigationView(title: "DayTime", isPresented: self.$isDayTimePopoverShown))
 			}
 		}
 	}
@@ -114,7 +116,7 @@ extension WeekDay: PickerViewOption {
 				return "Sunday"
 			@unknown default:
 				assertionFailure("Unsupported WeekDay \(self)")
-				return "Unsupported week day \(self.rawValue)"
+				return "Unsupported WeekDay \(self.rawValue)"
 		}
 	}
 	static let availableValues: [WeekDay] = [.monday, .tuesday, .wednesday, .thursday, .friday, .saturday, .sunday]

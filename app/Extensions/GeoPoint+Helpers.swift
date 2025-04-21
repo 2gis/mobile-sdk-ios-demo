@@ -1,13 +1,13 @@
 import DGis
 
-extension GeoPoint: CustomStringConvertible {
+extension GeoPoint {
 
 	public var description: String {
 		"Latitude: \(self.latitude.value)\nLongitude: \(self.longitude.value)"
 	}
 }
 
-extension GeoPointWithElevation: CustomStringConvertible {
+extension GeoPointWithElevation {
 
 	public var description: String {
 		"Latitude: \(self.latitude.value)\nLongitude: \(self.longitude.value)\nElevation: \(self.elevation.value)"

@@ -4,7 +4,7 @@ extension Button where Label == AnyView {
 	static func makeCircleButton(
 		iconName: String,
 		iconSize: CGSize = .init(width: 40, height: 40),
-		backgroundColor: Color = Color(.systemBackground),
+		backgroundColor: Color = .white,
 		shadowRadius: CGFloat = 3,
 		action: @escaping () -> Void
 	) -> Button {

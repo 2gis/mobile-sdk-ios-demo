@@ -5,12 +5,15 @@ import DGis
 final class SettingsViewModel: ObservableObject {
 	typealias MapDataSourceChangedCallback = (MapDataSource) -> Void
 
-	let fileManager: FileManager
 	let navigatorThemes: [NavigatorTheme]
+	let navigatorControlsList: [NavigatorControls]
+	let navigatorDashboardButtons: [NavigatorDashboardButton]
 	let mapDataSources: [MapDataSource]
 	let logLevels: [DGis.LogLevel]
 	let mapThemes: [MapTheme]
+	let geolocationMarkerTypes: [GeolocationMarkerType]
 	let graphicsOptions: [GraphicsOption]
+	let fileManager: FileManager
 	var mapDataSourceChangedCallback: MapDataSourceChangedCallback?
 	@Published var mapDataSource: MapDataSource {
 		didSet {
@@ -34,6 +37,13 @@ final class SettingsViewModel: ObservableObject {
 			}
 		}
 	}
+	@Published var httpTimeout: Double {
+		didSet {
+			if oldValue != self.httpTimeout {
+				self.settingsService.httpTimeout = self.httpTimeout
+			}
+		}
+	}
 	@Published var muteOtherSounds: Bool {
 		didSet {
 			if oldValue != self.muteOtherSounds {
@@ -52,7 +62,7 @@ final class SettingsViewModel: ObservableObject {
 	@Published var logLevel: DGis.LogLevel {
 		didSet {
 			if oldValue != self.logLevel {
-				self.settingsService.logLevel = logLevel
+				self.settingsService.logLevel = self.logLevel
 			}
 		}
 	}
@@ -81,6 +91,15 @@ final class SettingsViewModel: ObservableObject {
 			}
 		}
 	}
+	
+	@Published var geolocationMarkerType: GeolocationMarkerType {
+		didSet {
+			if oldValue != self.geolocationMarkerType {
+				self.settingsService.geolocationMarkerType = self.geolocationMarkerType
+			}
+		}
+	}
+
 	@Published var graphicsOption: GraphicsOption {
 		didSet {
 			if oldValue != self.graphicsOption {
@@ -102,33 +121,61 @@ final class SettingsViewModel: ObservableObject {
 			}
 		}
 	}
+	@Published var navigatorControls: NavigatorControls {
+		didSet {
+			if oldValue != self.navigatorControls {
+				self.settingsService.navigatorControls = self.navigatorControls
+			}
+		}
+	}
+	@Published var navigatorDashboardButton: NavigatorDashboardButton {
+		didSet {
+			if oldValue != self.navigatorDashboardButton {
+				self.settingsService.navigatorDashboardButton = self.navigatorDashboardButton
+			}
+		}
+	}
+	let logger: ILogger
 	private let settingsService: ISettingsService
 
 	init(
 		settingsService: ISettingsService,
 		mapDataSources: [MapDataSource] = MapDataSource.allCases,
 		navigatorThemes: [NavigatorTheme] = NavigatorTheme.allCases,
+		navigatorControlsList: [NavigatorControls] = NavigatorControls.allCases,
+		navigatorDashboardButtons: [NavigatorDashboardButton] = NavigatorDashboardButton.allCases,
 		logLevels: [DGis.LogLevel] = DGis.LogLevel.availableLevels,
 		mapThemes: [MapTheme] = MapTheme.allCases,
+		geolocationMarkerTypes: [GeolocationMarkerType] = GeolocationMarkerType.allCases,
+		logger: ILogger,
+		customStyleUrl: URL?,
 		graphicsOptions:[GraphicsOption] = GraphicsOption.allCases
 	) {
 		self.settingsService = settingsService
 		self.mapDataSources = mapDataSources
 		self.mapDataSource = settingsService.mapDataSource
-		self.language = settingsService.language
 		self.navigatorThemes = navigatorThemes
 		self.navigatorTheme = settingsService.navigatorTheme
+		self.navigatorControlsList = navigatorControlsList
+		self.navigatorControls = settingsService.navigatorControls
+        self.navigatorDashboardButtons = navigatorDashboardButtons
+        self.navigatorDashboardButton = settingsService.navigatorDashboardButton
 		self.navigatorVoiceVolume = Double(settingsService.navigatorVoiceVolume)
 		self.httpCacheEnabled = settingsService.httpCacheEnabled
+		self.httpTimeout = settingsService.httpTimeout
 		self.muteOtherSounds = settingsService.muteOtherSounds
 		self.addRoadEventSourceInNavigationView = settingsService.addRoadEventSourceInNavigationView
 		self.logLevel = settingsService.logLevel
 		self.logLevels = logLevels
 		self.mapTheme = settingsService.mapTheme
 		self.mapThemes = mapThemes
+		self.geolocationMarkerType = settingsService.geolocationMarkerType
+		self.geolocationMarkerTypes = geolocationMarkerTypes
+		self.logger = logger
+		self.language = settingsService.language
+		self.customStyleUrl = settingsService.customStyleUrl
 		self.graphicsOption = settingsService.graphicsOption
 		self.graphicsOptions = graphicsOptions
-		self.customStyleUrl = settingsService.customStyleUrl
 		self.fileManager = FileManager.default
 		self.loadStyles()
 	}
@@ -160,7 +207,7 @@ final class SettingsViewModel: ObservableObject {
 			try self.fileManager.removeItem(at: style)
 			self.loadStyles()
 		} catch {
-			print("Error deleting style: \(error)")
+			self.logger.error("Error deleting style: \(error)")
 		}
 	}
 
@@ -171,7 +218,7 @@ final class SettingsViewModel: ObservableObject {
 			let styleFiles = try self.fileManager.contentsOfDirectory(at: stylesDirectory, includingPropertiesForKeys: nil, options: [])
 			self.styles += styleFiles
 		} catch {
-			print("Error loading styles: \(error)")
+			self.logger.error("Error loading styles: \(error)")
 		}
 		if let styleUrl = self.settingsService.customStyleUrl {
 			self.selectedStyle = styleUrl
@@ -188,13 +235,13 @@ final class SettingsViewModel: ObservableObject {
 			do {
 				try self.fileManager.createDirectory(at: stylesDirectory, withIntermediateDirectories: true, attributes: nil)
 			} catch {
-				print("Error creating Styles directory: \(error)")
+				self.logger.error("Error creating Styles directory: \(error)")
 				return nil
 			}
 		}
 		return stylesDirectory
 	}
-	
+
 	private func addNewStyle(from url: URL) {
 		guard let stylesDirectory = getStylesDirectory() else { return }
 		let destinationURL = stylesDirectory.appendingPathComponent(url.lastPathComponent)
@@ -202,7 +249,7 @@ final class SettingsViewModel: ObservableObject {
 			try self.fileManager.copyItem(at: url, to: destinationURL)
 			self.loadStyles()
 		} catch {
-			print("Error copying style: \(error)")
+			self.logger.error("Error copying style: \(error)")
 		}
 	}
 }

@@ -9,13 +9,11 @@ protocol IMapSnapshotterProvider: AnyObject {
 	var snapshotter: IMapSnapshotter { get }
 }
 
-enum MapGesturesType: CaseIterable, Equatable, Hashable, Identifiable {
+enum MapGesturesType: CaseIterable, Equatable {
 	enum ScalingCenter {
 		case camera, event
 	}
 	case `default`(ScalingCenter), custom
-
-	var id: MapGesturesType { self }
 
 	static let allCases: [MapGesturesType] = [.default(.camera), .default(.event), custom]
 
