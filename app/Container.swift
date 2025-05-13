@@ -16,15 +16,10 @@ final class Container {
 			customSink: nil
 		)
 		let httpOptions = HTTPOptions(timeout: 15, cacheOptions: cacheOptions)
-		let audioOptions = AudioOptions(
-			muteOtherSounds: self.settingsService.muteOtherSounds,
-			audioVolume: AudioVolume(self.settingsService.navigatorVoiceVolumeSource)
-		)
 		return DGis.Container(
 			apiKeyOptions: .default,
 			logOptions: logOptions,
-			httpOptions: httpOptions,
-			audioOptions: audioOptions
+			httpOptions: httpOptions
 		)
 	}()
 
@@ -38,12 +33,6 @@ final class Container {
 		let service = SettingsService(
 			storage: self.settingsStorage
 		)
-		service.onMuteOtherSoundsDidChange = { [weak self] value in
-			self?.sdk.audioSettings.muteOtherSounds = value
-		}
-		service.onNavigatorVoiceVolumeSourceDidChange = { [weak self] value in
-			self?.sdk.audioSettings.audioVolume = value
-		}
 		return service
 	}()
 

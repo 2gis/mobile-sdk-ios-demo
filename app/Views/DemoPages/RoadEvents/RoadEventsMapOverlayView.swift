@@ -15,7 +15,6 @@ class RoadEventsMapOverlayView: UIView, IMapOverlayView {
 	var visibleAreaEdgeInsetsChangedCallback: ((UIEdgeInsets) -> Void)?
 
 	private let map: Map
-	private let roadEventCardPresenter: IRoadEventCardPresenter
 	private var roadEventFormPresenter: IRoadEventFormPresenter
 	private let roadEventCardViewFactory: IRoadEventCardViewFactory
 
@@ -25,12 +24,10 @@ class RoadEventsMapOverlayView: UIView, IMapOverlayView {
 	init(
 		frame: CGRect = .zero,
 		map: Map,
-		roadEventCardPresenter: IRoadEventCardPresenter,
 		roadEventFormPresenter: IRoadEventFormPresenter,
 		roadEventCardViewFactory: IRoadEventCardViewFactory
 	) {
 		self.map = map
-		self.roadEventCardPresenter = roadEventCardPresenter
 		self.roadEventFormPresenter = roadEventFormPresenter
 		self.roadEventCardViewFactory = roadEventCardViewFactory
 		super.init(frame: frame)
@@ -61,11 +58,10 @@ class RoadEventsMapOverlayView: UIView, IMapOverlayView {
 	}
 
 	private func setup() {
-		self.roadEventCardPresenter.delegate = self
 		self.roadEventFormPresenter.delegate = self
 	}
 
-	private func show(_ roadEvent: RoadEvent, outputCallback: ((RoadEventCardPresenterOutput) -> Void)?) {
+	private func show(_ roadEvent: RoadEvent, outputCallback: (() -> Void)?) {
 		if let cardView = self.roadEventCardView {
 			cardView.setRoadEvent(roadEvent)
 		} else {
@@ -79,15 +75,6 @@ class RoadEventsMapOverlayView: UIView, IMapOverlayView {
 				cardView.rightAnchor.constraint(equalTo: self.rightAnchor)
 			])
 			self.roadEventCardView = cardView
-			cardView.closeButtonCallback = {
-				outputCallback?(.cardCloseRequested)
-			}
-			cardView.roadEventActionResultCallback = { result in
-				outputCallback?(.roadEventActionCompleted(result))
-			}
-			cardView.removeRoadEventActionResultCallback = { result in
-				outputCallback?(.roadEventRemoved(result))
-			}
 		}
 	}
 
@@ -141,20 +128,6 @@ class RoadEventsMapOverlayView: UIView, IMapOverlayView {
 		guard let createRoadEventView = self.createRoadEventView else { return }
 		createRoadEventView.removeFromSuperview()
 		self.createRoadEventView = nil
-	}
-}
-
-extension RoadEventsMapOverlayView: RoadEventCardPresenterDelegate {
-	func roadEventCardPresenter(
-		_ presenter: IRoadEventCardPresenter,
-		didRequestToPresent roadEvent: RoadEvent,
-		outputCallback: ((RoadEventCardPresenterOutput) -> Void)?
-	) {
-		self.show(roadEvent, outputCallback: outputCallback)
-	}
-
-	func roadEventCardPresenterDidRequestToHideRoadEventCard(_ presenter: IRoadEventCardPresenter) {
-		self.hideRoadEventCard()
 	}
 }
 

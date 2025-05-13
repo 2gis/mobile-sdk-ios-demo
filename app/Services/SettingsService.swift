@@ -9,8 +9,6 @@ protocol ISettingsService: AnyObject {
 	var muteOtherSounds: Bool { get set }
 	var addRoadEventSourceInNavigationView: Bool { get set }
 	var logLevel: DGis.LogLevel { get set }
-	var navigatorVoiceVolumeSource: NavigatorVoiceVolumeSource { get set }
-	var navigatorTheme: NavigatorTheme { get set }
 }
 
 final class SettingsService: ISettingsService {
@@ -67,19 +65,6 @@ final class SettingsService: ISettingsService {
 		}
 	}
 	var onMuteOtherSoundsDidChange: ((Bool) -> Void)?
-
-	var navigatorVoiceVolumeSource: NavigatorVoiceVolumeSource {
-		get {
-			let rawValue: String? = self.storage.value(forKey: Keys.navigatorVoiceVolumeSource)
-			return rawValue.flatMap { NavigatorVoiceVolumeSource(rawValue: $0) } ?? .high
-		}
-		set {
-			self.storage.set(newValue.rawValue, forKey: Keys.navigatorVoiceVolumeSource)
-			let volume = AudioVolume(newValue)
-			self.onNavigatorVoiceVolumeSourceDidChange?(volume)
-		}
-	}
-	var onNavigatorVoiceVolumeSourceDidChange: ((AudioVolume) -> Void)?
 
 	var navigatorTheme: NavigatorTheme {
 		get {

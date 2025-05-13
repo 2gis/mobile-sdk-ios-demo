@@ -52,12 +52,6 @@ struct RootViewFactory {
 				self.makeClusteringDemoPage()
 			case .customGestures:
 				self.makeCustomGesturesDemoPage()
-			case .territoryManager:
-				self.makeTerritoryManagerDemoView()
-			case .routeSearch:
-				self.makeRouteSearchDemoPage()
-			case .navigator:
-				try self.makeNavigatorDemoPage()
 		}
 	}
 
@@ -188,51 +182,6 @@ struct RootViewFactory {
 		)
 	}
 
-	private func makeTerritoryManagerDemoView() -> some View {
-		let mapFactory = self.makeMapFactory()
-		let viewModel = TerritoryManagerDemoViewModel(
-			packageManager: getPackageManager(context: self.context),
-			territoryManager: getTerritoryManager(context: self.context)
-		)
-		return TerritoryManagerDemoView(
-			viewModel: viewModel,
-			viewFactory: self.makeDemoPageComponentsFactory(mapFactory: mapFactory)
-		)
-	}
-
-	private func makeRouteSearchDemoPage() -> some View {
-		let mapFactory = self.makeMapFactory()
-		let viewModel = RouteSearchDemoViewModel(
-			map: mapFactory.map,
-			mapSourceFactory: MapSourceFactory(context: self.context)
-		)
-		return RouteSearchDemoView(
-			viewModel: viewModel,
-			viewFactory: self.makeDemoPageComponentsFactory(mapFactory: mapFactory)
-		)
-	}
-
-	private func makeNavigatorDemoPage() throws -> some View {
-		let mapFactory = self.makeMapFactory()
-		let viewModel = try NavigatorDemoViewModel(
-			map: mapFactory.map,
-			trafficRouter: TrafficRouter(context: self.sdk.context),
-			navigationManager: NavigationManager(platformContext: self.sdk.context),
-			locationService: self.locationManagerFactory(),
-			voiceManager: getVoiceManager(context: self.sdk.context),
-			applicationIdleTimerService: self.applicationIdleTimerService,
-			navigatorSettings: self.navigatorSettings,
-			mapSourceFactory: MapSourceFactory(context: self.sdk.context),
-			roadEventCardPresenter: RoadEventCardPresenter(),
-			settingsService: self.settingsService,
-			imageFactory: self.makeImageFactory()
-		)
-		return NavigatorDemoView(
-			viewModel: viewModel,
-			viewFactory: self.makeDemoPageComponentsFactory(mapFactory: mapFactory)
-		)
-	}
-
 	private func makeDemoPageComponentsFactory(mapFactory: IMapFactory) -> DemoPageComponentsFactory {
 		DemoPageComponentsFactory(
 			sdk: self.sdk,
@@ -284,10 +233,10 @@ struct RootViewFactory {
 		switch settingsService.mapDataSource {
 			case .online:
 				return try SearchManager.createOnlineManager(context: self.context)
-			case .hybrid:
-				return try SearchManager.createSmartManager(context: self.context)
-			case .offline:
-				return try SearchManager.createOfflineManager(context: self.context)
+		case .hybrid:
+			return try SearchManager.createOnlineManager(context: self.context)
+		case .offline:
+			return try SearchManager.createOnlineManager(context: self.context)
 		}
 	}
 
@@ -322,9 +271,9 @@ private extension MapDataSource {
 			case .online:
 				return .dgisOnlineSource
 			case .hybrid:
-				return .dgisHybridSource
+				return .dgisOnlineSource
 			case .offline:
-				return .dgisOfflineSource
+				return .dgisOnlineSource
 		}
 	}
 }

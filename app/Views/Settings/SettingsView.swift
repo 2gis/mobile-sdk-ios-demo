@@ -116,34 +116,12 @@ struct SettingsView: View {
 		VStack(alignment: .leading) {
 			self.makeTitle("Navigator settings:")
 			.padding(.bottom)
-			self.navigatorVoiceVolumePicker()
-			.padding(.bottom, 8)
 			self.muteOtherSoundsSwitch()
 			.padding(.bottom, 8)
 			self.addRoadEventSourceInNavigationViewSwitch()
-			.padding(.bottom, 8)
-			self.navigatorThemePicker()
 		}
 	}
-
-	private func navigatorThemePicker() -> some View {
-		PickerView(
-			title: "Navigator theme",
-			selection: self.$viewModel.navigatorTheme,
-			options: self.viewModel.navigatorThemes,
-			pickerStyle: SegmentedPickerStyle()
-		)
-	}
-
-	private func navigatorVoiceVolumePicker() -> some View {
-		PickerView(
-			title: "Sound level",
-			selection: self.$viewModel.navigatorVoiceVolumeSource,
-			options: self.viewModel.navigatorVoiceVolumeSources,
-			pickerStyle: SegmentedPickerStyle()
-		)
-	}
-
+	
 	private func closeButton() -> some View {
 		Button {
 			self.show = false

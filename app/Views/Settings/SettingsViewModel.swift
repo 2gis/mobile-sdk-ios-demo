@@ -5,7 +5,6 @@ import DGis
 final class SettingsViewModel: ObservableObject {
 	typealias MapDataSourceChangedCallback = (MapDataSource) -> Void
 
-	let navigatorVoiceVolumeSources: [NavigatorVoiceVolumeSource]
 	let navigatorThemes: [NavigatorTheme]
 	let mapDataSources: [MapDataSource]
 	let logLevels: [DGis.LogLevel]
@@ -54,26 +53,11 @@ final class SettingsViewModel: ObservableObject {
 			}
 		}
 	}
-	@Published var navigatorVoiceVolumeSource: NavigatorVoiceVolumeSource {
-		didSet {
-			if oldValue != self.navigatorVoiceVolumeSource {
-				self.settingsService.navigatorVoiceVolumeSource = self.navigatorVoiceVolumeSource
-			}
-		}
-	}
-	@Published var navigatorTheme: NavigatorTheme {
-		didSet {
-			if oldValue != self.navigatorTheme {
-				self.settingsService.navigatorTheme = self.navigatorTheme
-			}
-		}
-	}
 	private let settingsService: ISettingsService
 
 	init(
 		settingsService: ISettingsService,
 		mapDataSources: [MapDataSource] = MapDataSource.allCases,
-		navigatorVoiceVolumeSources: [NavigatorVoiceVolumeSource] = NavigatorVoiceVolumeSource.allCases,
 		navigatorThemes: [NavigatorTheme] = NavigatorTheme.allCases,
 		logLevels: [DGis.LogLevel] = DGis.LogLevel.availableLevels
 	) {
@@ -81,10 +65,7 @@ final class SettingsViewModel: ObservableObject {
 		self.mapDataSources = mapDataSources
 		self.mapDataSource = settingsService.mapDataSource
 		self.language = settingsService.language
-		self.navigatorVoiceVolumeSources = navigatorVoiceVolumeSources
 		self.navigatorThemes = navigatorThemes
-		self.navigatorTheme = settingsService.navigatorTheme
-		self.navigatorVoiceVolumeSource = settingsService.navigatorVoiceVolumeSource
 		self.httpCacheEnabled = settingsService.httpCacheEnabled
 		self.muteOtherSounds = settingsService.muteOtherSounds
 		self.addRoadEventSourceInNavigationView = settingsService.addRoadEventSourceInNavigationView

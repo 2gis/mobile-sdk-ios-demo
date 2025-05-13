@@ -10,9 +10,6 @@ enum DemoPage: String, CaseIterable {
 	case fps
 	case clustering
 	case customGestures
-	case territoryManager
-	case routeSearch
-	case navigator
 
 	var name: String {
 		switch self {
@@ -38,12 +35,6 @@ enum DemoPage: String, CaseIterable {
 				return "Clustering"
 			case .customGestures:
 				return "Custom map control gestures"
-			case .territoryManager:
-				return "Download territories"
-			case .routeSearch:
-				return "Route editor"
-			case .navigator:
-				return "Navigator"
 		}
 	}
 }
