@@ -1,8 +1,6 @@
 import UIKit
 import DGis
 
-/// Демо для проверки отключения интерактивности карты.
-/// Не переносить в демо-проект.
 class MapInteractionDemoViewController: UIViewController {
 	private let mapFactory: () throws -> IMapFactory
 	private let tableView = UITableView()
