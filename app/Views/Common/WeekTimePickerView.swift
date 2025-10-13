@@ -1,12 +1,10 @@
-import SwiftUI
 import DGis
+import SwiftUI
 
 struct WeekTimePickerView: View {
-	typealias State = SwiftUI.State
-
 	@Binding private var weekTime: WeekTime
-	@State private var isWeekDayPopoverShown: Bool = false
-	@State private var isDayTimePopoverShown: Bool = false
+	@SwiftUI.State private var isWeekDayPopoverShown: Bool = false
+	@SwiftUI.State private var isDayTimePopoverShown: Bool = false
 
 	init(weekTime: Binding<WeekTime>) {
 		self._weekTime = weekTime
@@ -25,7 +23,7 @@ struct WeekTimePickerView: View {
 					options: WeekDay.availableValues,
 					pickerStyle: .wheel
 				)
-				.modifier(EmbedInNavigationView(title: "Week day", isPresented: self.$isWeekDayPopoverShown))
+				.modifier(EmbedInNavigationView(title: "День недели", isPresented: self.$isWeekDayPopoverShown))
 			}
 			.padding(.trailing, 10)
 			Button("\(self.weekTime.time.hours) : \(self.weekTime.time.minutes)") {
@@ -43,7 +41,7 @@ struct WeekTimePickerView: View {
 					displayedComponents: [.hourAndMinute]
 				)
 				.datePickerStyle(.wheel)
-				.modifier(EmbedInNavigationView(title: "DayTime", isPresented: self.$isDayTimePopoverShown))
+				.modifier(EmbedInNavigationView(title: "Время", isPresented: self.$isDayTimePopoverShown))
 			}
 		}
 	}
@@ -56,10 +54,10 @@ private struct EmbedInNavigationView: ViewModifier {
 	func body(content: Content) -> some View {
 		NavigationView {
 			content
-			.navigationBarTitle(self.title)
-			.navigationBarItems(leading: Button("Close", action: {
-				self.isPresented = false
-			}))
+				.navigationBarTitle(self.title)
+				.navigationBarItems(leading: Button("Close", action: {
+					self.isPresented = false
+				}))
 		}
 	}
 }
@@ -68,7 +66,7 @@ extension Date {
 	var weekTime: WeekTime {
 		let calendar = Calendar.current
 		let components = calendar.dateComponents([.weekday, .hour, .minute], from: self)
-		let weekDay: WeekDay = components.weekday.flatMap { WeekDay(rawValue: UInt32($0 - 1) )} ?? .monday
+		let weekDay: WeekDay = components.weekday.flatMap { WeekDay(rawValue: UInt32($0 - 1)) } ?? .monday
 		let hours = UInt8(components.hour ?? 0)
 		let minutes = UInt8(components.minute ?? 0)
 		return WeekTime(
@@ -95,29 +93,32 @@ extension Date {
 	}
 }
 
+extension WeekDay: @retroactive Identifiable {}
+
 extension WeekDay: PickerViewOption {
 	public var id: WeekDay { self }
 
 	var name: String {
 		switch self {
-			case .monday:
-				return "Monday"
-			case .tuesday:
-				return "Tuesday"
-			case .wednesday:
-				return "Wednesday"
-			case .thursday:
-				return "Thursday"
-			case .friday:
-				return "Friday"
-			case .saturday:
-				return "Saturday"
-			case .sunday:
-				return "Sunday"
-			@unknown default:
-				assertionFailure("Unsupported WeekDay \(self)")
-				return "Unsupported WeekDay \(self.rawValue)"
+		case .monday:
+			return "Monday"
+		case .tuesday:
+			return "Tuesday"
+		case .wednesday:
+			return "Wednesday"
+		case .thursday:
+			return "Thursday"
+		case .friday:
+			return "Friday"
+		case .saturday:
+			return "Saturday"
+		case .sunday:
+			return "Sunday"
+		@unknown default:
+			assertionFailure("Unsupported WeekDay \(self)")
+			return "Unsupported WeekDay \(self.rawValue)"
 		}
 	}
+
 	static let availableValues: [WeekDay] = [.monday, .tuesday, .wednesday, .thursday, .friday, .saturday, .sunday]
 }

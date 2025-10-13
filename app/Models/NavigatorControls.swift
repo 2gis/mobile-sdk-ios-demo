@@ -12,10 +12,12 @@ extension NavigatorControls: PickerViewOption {
 
 	var name: String {
 		switch self {
-			case .default:
-				return "Default"
-			case .customControls:
-				return "Custom"
+		case .default:
+			return "Default"
+		case .customControls:
+			return "Custom"
+		@unknown default:
+			assertionFailure("Unknown value for NavigatorControls")
 		}
 	}
 }

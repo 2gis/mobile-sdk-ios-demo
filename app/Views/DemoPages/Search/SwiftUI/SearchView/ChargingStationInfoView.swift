@@ -1,5 +1,5 @@
-import SwiftUI
 import DGis
+import SwiftUI
 
 struct ChargingStationInfoView: View {
 	@SwiftUI.State private var isExpanded = false
@@ -11,40 +11,40 @@ struct ChargingStationInfoView: View {
 				self.isExpanded.toggle()
 			}) {
 				HStack {
-					Text("Charging Station")
-					.font(.headline)
-					.foregroundColor(.primary)
+					Text("Charging station")
+						.font(.headline)
+						.foregroundColor(.primary)
 					Spacer()
-					Text("\(station.aggregate.connectorsFree)/\(station.aggregate.connectorsTotal) free")
-					.font(.subheadline)
-					.foregroundColor(station.aggregate.isBusy ? .red : .green)
+					Text("\(self.station.aggregate.connectorsFree)/\(self.station.aggregate.connectorsTotal) free")
+						.font(.subheadline)
+						.foregroundColor(self.station.aggregate.isBusy ? .red : .green)
 					Image(systemName: self.isExpanded ? "chevron.up" : "chevron.down")
-					.foregroundColor(.primary)
+						.foregroundColor(.primary)
 				}
 			}
-			if isExpanded {
+			if self.isExpanded {
 				HStack {
 					Text("Status:")
-					Text(station.aggregate.isActive ? "Active" : "Inactive")
-					.foregroundColor(station.aggregate.isActive ? .green : .gray)
+					Text(self.station.aggregate.isActive ? "Active" : "Inactive")
+						.foregroundColor(self.station.aggregate.isActive ? .green : .gray)
 				}
 
 				HStack {
-					Text("Max Power:")
+					Text("Max power:")
 					Spacer()
-					Text("\(station.aggregate.power) kW")
+					Text("\(self.station.aggregate.power) kW")
 						.font(.subheadline)
 				}
 				VStack(alignment: .leading) {
 					Text("Connectors:")
-					.font(.headline)
-					ForEach(station.connectors, id: \.self) { connector in
+						.font(.headline)
+					ForEach(self.station.connectors, id: \.self) { connector in
 						VStack(alignment: .leading) {
 							Divider()
 							Text("Type: \(connector.type)")
 							Text("Power: \(connector.power) kW")
 							Text("Price: \(connector.price)₽ per kWh")
-							Text("Status: ") + Text(connector.status.name).foregroundColor(connector.status.color)
+							Text("Status:") + Text(connector.status.name).foregroundColor(connector.status.color)
 						}
 					}
 				}
@@ -54,7 +54,7 @@ struct ChargingStationInfoView: View {
 		.cornerRadius(10)
 		.overlay(
 			RoundedRectangle(cornerRadius: 10)
-			.stroke(Color.secondary, lineWidth: 1)
+				.stroke(Color.secondary, lineWidth: 1)
 		)
 	}
 }

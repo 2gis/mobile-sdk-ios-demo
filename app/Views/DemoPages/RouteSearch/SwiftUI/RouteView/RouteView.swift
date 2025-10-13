@@ -1,5 +1,5 @@
-import SwiftUI
 import DGis
+import SwiftUI
 
 struct RouteView: View {
 	@Binding var show: Bool
@@ -19,7 +19,7 @@ struct RouteView: View {
 				HStack {
 					Spacer()
 					self.showStatusMessage()
-					.padding(.top)
+						.padding(.top)
 					Spacer()
 				}
 				Spacer()
@@ -44,7 +44,8 @@ struct RouteView: View {
 						}, primaryText: "Calculate route")
 					}
 					if self.viewModel.showRouteListOption,
-					   let routeInfo = self.viewModel.routeEditorRoutesInfo {
+					   let routeInfo = self.viewModel.routeEditorRoutesInfo
+					{
 						DetailsActionView(action: {
 							self.showRouteObjectList(routeInfo: routeInfo)
 						}, primaryText: "Show routes list")
@@ -90,6 +91,8 @@ struct RouteView: View {
 					RoundedRectangle(cornerRadius: 5)
 						.fill(Color.white)
 				)
+		@unknown default:
+			fatalError("Unknown type: \(self.viewModel.state)")
 		}
 	}
 

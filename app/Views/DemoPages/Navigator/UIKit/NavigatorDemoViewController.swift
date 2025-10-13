@@ -3,16 +3,16 @@ import UIKit
 
 class NavigatorDemoViewController: UIViewController {
 	private let mapFactory: IMapFactory
-	private let mapControlFactory: IMapControlFactory
-	private var mapView: UIView & IMapView
+	private let mapControlsFactory: IMapUIControlsFactory
+	private var mapView: UIView & IMapUIView
 	private var viewModel: NavigatorDemoViewModel
 
-	private var navigationView: (UIView & INavigationView)!
-	private var trafficControl: TrafficControl!
-	private var zoomControl: ZoomControl!
-	private var compassControl: CompassControl!
-	private var currentLocationControl: CurrentLocationControl!
-	private var indoorControl: IndoorControl!
+	private var navigationView: (UIView & INavigationUIView)!
+	private var trafficControl: TrafficUIControl!
+	private var zoomControl: ZoomUIControl!
+	private var compassControl: CompassUIControl!
+	private var currentLocationControl: CurrentLocationUIControl!
+	private var indoorControl: IndoorUIControl!
 	private var goButton: UIButton!
 	private var crosshair: UIImageView!
 	private var settingsView: UIView!
@@ -22,21 +22,21 @@ class NavigatorDemoViewController: UIViewController {
 	init(
 		mapFactory: IMapFactory,
 		viewModel: NavigatorDemoViewModel,
-		navigationFactory: @escaping (NavigationViewOptions) throws -> INavigationViewFactory
+		navigationFactory: @escaping (NavigationViewOptions) throws -> INavigationUIViewFactory
 	) {
 		self.mapFactory = mapFactory
-		self.mapControlFactory = mapFactory.mapControlFactory
-		self.mapView = mapFactory.mapView
+		self.mapControlsFactory = mapFactory.mapUIControlsFactory
+		self.mapView = mapFactory.mapUIView
 		self.viewModel = viewModel
 
 		super.init(nibName: nil, bundle: nil)
 
 		self.navigationView = self.makeNavigationView(factory: navigationFactory)
-		self.trafficControl = self.mapControlFactory.makeTrafficControl()
-		self.zoomControl = self.mapControlFactory.makeZoomControl()
-		self.compassControl = self.mapControlFactory.makeCompassControl()
-		self.currentLocationControl = self.mapControlFactory.makeCurrentLocationControl()
-		self.indoorControl = self.mapControlFactory.makeIndoorControl()
+		self.trafficControl = self.mapControlsFactory.makeTrafficUIControl()
+		self.zoomControl = self.mapControlsFactory.makeZoomUIControl()
+		self.compassControl = self.mapControlsFactory.makeCompassUIControl()
+		self.currentLocationControl = self.mapControlsFactory.makeCurrentLocationUIControl()
+		self.indoorControl = self.mapControlsFactory.makeIndoorUIControl()
 		self.goButton = self.makeGoButton()
 		self.crosshair = self.makeCrosshair()
 		self.settingsView = NavigatorSettingsUIView(
@@ -74,24 +74,29 @@ class NavigatorDemoViewController: UIViewController {
 		self.setupUI()
 		self.mapView.showsAPIVersion = true
 		self.mapView.addObjectTappedCallback(callback: .init(callback: { [viewModel = self.viewModel] objectInfo in
-			viewModel.tap(objectInfo)
+			Task { @MainActor in
+				viewModel.tap(objectInfo)
+			}
 		}))
 		self.mapView.addObjectLongPressCallback(callback: .init(callback: { [viewModel = self.viewModel] objectInfo in
-			viewModel.longPress(objectInfo)
+			Task { @MainActor in
+				viewModel.longPress(objectInfo)
+			}
 		}))
 		self.navigationView.finishButtonCallback = { [viewModel = self.viewModel] in
 			viewModel.stopNavigation()
 		}
 	}
 
+	@MainActor
 	private func makeNavigationView(
-		factory: @escaping (NavigationViewOptions) throws -> INavigationViewFactory
-	) -> UIView & INavigationView {
+		factory: @escaping (NavigationViewOptions) throws -> INavigationUIViewFactory
+	) -> UIView & INavigationUIView {
 		var options = NavigationViewOptions.default
 		if self.viewModel.settingsService.navigatorDashboardButton == .exitButton {
 			var settings = DashboardButtonSettings.default
 			settings.icon = UIImage(named: "svg/exit_button_dashboard")
-			settings.callback = { [weak self] in self?.presentCloseMenuAlert() }
+			settings.callback = { Task { @MainActor [weak self] in self?.presentCloseMenuAlert() } }
 			options.dashboardButtonSettings = settings
 		}
 		if self.viewModel.settingsService.navigatorTheme == .custom {
@@ -99,20 +104,23 @@ class NavigatorDemoViewController: UIViewController {
 		}
 		let navigationFactory = try! factory(options)
 		switch self.viewModel.settingsService.navigatorControls {
-			case .default:
-			let navigationView = navigationFactory.makeNavigationView(
+		case .default:
+			let navigationView = navigationFactory.makeNavigationUIView(
 				map: self.mapFactory.map,
 				navigationManager: self.viewModel.navigationManager
 			)
 			return navigationView
-			case .customControls:
-			let navigationViewControlsFactory = navigationFactory.makeNavigationViewControlsFactory()
-			let navigationView = navigationFactory.makeNavigationView(
+		case .customControls:
+			let navigationViewControlsFactory = navigationFactory.makeNavigationUIControlsFactory()
+			let navigationView = navigationFactory.makeNavigationUIView(
 				map: self.mapFactory.map,
 				navigationManager: self.viewModel.navigationManager,
-				navigationViewControlsFactory: CustomNavigationViewControlsFactory(navigationViewControlsFactory: navigationViewControlsFactory),
-				navigationMapControlsFactory: CustomNavigationMapControlsFactory(mapFactory: self.mapFactory, navigationViewFactory: navigationFactory))
+				navigationUIControlsFactory: CustomNavigationViewControlsFactory(navigationViewControlsFactory: navigationViewControlsFactory),
+				navigationMapUIControlsFactory: CustomNavigationMapUIControlsFactory(mapFactory: self.mapFactory, navigationViewFactory: navigationFactory)
+			)
 			return navigationView
+		@unknown default:
+			fatalError("Unknown type: \(self.viewModel.settingsService.navigatorControls)")
 		}
 	}
 
@@ -292,7 +300,7 @@ class NavigatorDemoViewController: UIViewController {
 				self.compassControl,
 				self.currentLocationControl,
 				self.crosshair,
-				self.goButton
+				self.goButton,
 			]
 			if hide {
 				elements.forEach { $0.removeFromSuperview() }

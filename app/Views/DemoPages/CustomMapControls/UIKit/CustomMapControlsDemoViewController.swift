@@ -32,7 +32,7 @@ class CustomMapControlsDemoViewController: UIViewController {
 	private func setupMapView() {
 		self.view.backgroundColor = .systemBackground
 		// Map
-		let mapView = self.mapFactory.mapView
+		let mapView = self.mapFactory.mapUIView
 		mapView.showsAPIVersion = true
 		mapView.translatesAutoresizingMaskIntoConstraints = false
 		self.view.addSubview(mapView)
@@ -76,7 +76,7 @@ class CustomMapControlsDemoViewController: UIViewController {
 
 		let zoomControl: UIView
 		if self.viewModel.controlsType == .default {
-			zoomControl = self.mapFactory.mapControlFactory.makeZoomControl()
+			zoomControl = self.mapFactory.mapUIControlsFactory.makeZoomUIControl()
 		} else {
 			zoomControl = CustomZoomControl(map: self.mapFactory.map)
 		}

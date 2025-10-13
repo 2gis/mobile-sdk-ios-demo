@@ -1,8 +1,9 @@
-import SwiftUI
+import Combine
 import DGis
+import SwiftUI
 
+@MainActor
 final class MarkerViewModel: ObservableObject {
-
 	enum ImageOrData {
 		case image(UIImage?)
 		case data(Data?)
@@ -23,35 +24,38 @@ final class MarkerViewModel: ObservableObject {
 
 		var text: String {
 			switch self {
-				case .camera: return "Camera"
-				case .water: return "Water"
-				case .shelter: return "Shelter"
-				case .text: return "Text object"
-				case .emptyObject: return "Empty object"
-				case .droneLottie: return "Animated drone"
-				case .batLottie: return "Animated bat"
+			case .camera: "Camera"
+			case .water: "Water"
+			case .shelter: "Shelter"
+			case .text: "Text object"
+			case .emptyObject: "Empty object"
+			case .droneLottie: "Animated drone"
+			case .batLottie: "Animated bat"
+			@unknown default: fatalError("Unknown type: \(self)")
 			}
 		}
 
 		var imageData: ImageOrData {
 			switch self {
-				case .camera:
-					return .image(UIImage(systemName: "camera.fill")?
-						.withTintColor(.systemGray))
-				case .water:
-					return .image(UIImage(systemName: "drop.fill")?
-						.withTintColor(.systemTeal))
-				case .shelter:
-					return .image(UIImage(systemName: "umbrella.fill")?
-						.withTintColor(.systemRed))
-				case .text:
-					return .image(nil)
-				case .emptyObject:
-					return .image(UIImage())
-				case .droneLottie:
-					return .data(NSDataAsset(name: "lottie/drone")?.data)
-				case .batLottie:
-					return .data(NSDataAsset(name: "lottie/bat")?.data)
+			case .camera:
+				.image(UIImage(systemName: "camera.fill")?
+					.withTintColor(.systemGray))
+			case .water:
+				.image(UIImage(systemName: "drop.fill")?
+					.withTintColor(.systemTeal))
+			case .shelter:
+				.image(UIImage(systemName: "umbrella.fill")?
+					.withTintColor(.systemRed))
+			case .text:
+				.image(nil)
+			case .emptyObject:
+				.image(UIImage())
+			case .droneLottie:
+				.data(NSDataAsset(name: "lottie/drone")?.data)
+			case .batLottie:
+				.data(NSDataAsset(name: "lottie/bat")?.data)
+			@unknown default:
+				fatalError("Unknown type: \(self)")
 			}
 		}
 	}
@@ -67,17 +71,19 @@ final class MarkerViewModel: ObservableObject {
 
 		var text: String {
 			switch self {
-				case .small: return "Small"
-				case .medium: return "Medium"
-				case .big: return "Big"
+			case .small: "Small"
+			case .medium: "Medium"
+			case .big: "Big"
+			@unknown default: fatalError("Unknown type: \(self)")
 			}
 		}
 
 		var pixel: DGis.LogicalPixel {
 			switch self {
-				case .small: return .init(value: 20)
-				case .medium: return .init(value: 60)
-				case .big: return .init(value: 120)
+			case .small: .init(value: 20)
+			case .medium: .init(value: 60)
+			case .big: .init(value: 120)
+			@unknown default: fatalError("Unknown type: \(self)")
 			}
 		}
 	}
@@ -159,12 +165,13 @@ final class MarkerViewModel: ObservableObject {
 			return icon
 		}
 
-		let icon: DGis.Image?
-		switch self.type.imageData {
-			case .image(let image):
-				icon = image.map { self.imageFactory.make(image: $0) }
-			case .data(let data):
-				icon = data.map { self.imageFactory.make(lottieData: $0, size: .zero) }
+		let icon: DGis.Image? = switch self.type.imageData {
+		case let .image(image):
+			image.map { self.imageFactory.make(image: $0) }
+		case let .data(data):
+			data.map { self.imageFactory.make(lottieData: $0, size: .zero) }
+		@unknown default:
+			fatalError("Unknown type: \(self.type.imageData)")
 		}
 
 		self.icons[typeSize] = icon
@@ -185,8 +192,8 @@ extension AnimationMode {
 
 	var text: String {
 		switch self {
-			case .normal: return "Normal"
-			case .loop: return "Loop"
+		case .normal: return "Normal"
+		case .loop: return "Loop"
 		@unknown default:
 			assertionFailure("Unsupported AnimationMode \(self)")
 			return "Unsupported AnimationMode \(self.rawValue)"

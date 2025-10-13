@@ -1,3 +1,4 @@
+import Combine
 import SwiftUI
 
 struct LogFileListView: View {
@@ -11,7 +12,7 @@ struct LogFileListView: View {
 	var body: some View {
 		List {
 			if self.viewModel.logFileURLs.isEmpty {
-				Text("No logs")
+				Text("No log files found")
 			} else {
 				ForEach(self.viewModel.logFileURLs, id: \.self) { url in
 					VStack(alignment: .leading) {
@@ -68,7 +69,7 @@ struct LogFileListView: View {
 
 	private func deleteLogFile(_ fileURL: URL) {
 		let alert = UIAlertController(
-			title: "Delete file?",
+			title: "Delete log file?",
 			message: fileURL.lastPathComponent,
 			preferredStyle: .alert
 		)
@@ -80,7 +81,7 @@ struct LogFileListView: View {
 	}
 }
 
-private class LogFileDetailsViewModel: ObservableObject {
+private class LogFileDetailsViewModel: ObservableObject, @unchecked Sendable {
 	enum State {
 		case loading
 		case ready(String)
@@ -129,19 +130,16 @@ private struct LogFileDetailsView: View {
 		ScrollView {
 			VStack {
 				switch self.viewModel.state {
-					case .loading:
-						Text("Reading file...")
-					case .ready(let content):
-						if #available(iOS 15.0, *) {
-							Text(content)
-								.textSelection(.enabled)
-								.font(.system(size: 10))
-						} else {
-							Text(content)
-								.font(.system(size: 10))
-						}
-					case .error(let error):
-						Text("Failed to read file: \(error.localizedDescription)")
+				case .loading:
+					Text("Reading file...")
+				case let .ready(content):
+					Text(content)
+						.textSelection(.enabled)
+						.font(.system(size: 10))
+				case let .error(error):
+					Text("Can't read file: \(error.localizedDescription)")
+				@unknown default:
+					fatalError("Unknown type: \(self.viewModel.state)")
 				}
 			}
 			.padding(8)

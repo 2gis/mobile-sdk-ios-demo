@@ -1,6 +1,6 @@
-import UIKit
 import CarPlay
 import DGis
+import UIKit
 
 final class CarPlayController: UIViewController {
 	private enum Constants {
@@ -11,27 +11,29 @@ final class CarPlayController: UIViewController {
 			bearing: .init(value: 0)
 		)
 	}
+
 	private let interfaceController: CPInterfaceController
 	private lazy var carPlayGestureViewFactory = CarPlayGestureViewFactory(carPlayMapEventsProvider: carPlayMapEventsProvider)
 	private lazy var mapOptions: MapOptions = {
 		var options = MapOptions.default
 		options.position = Constants.defaultCameraPosition
-		options.gestureViewFactory = carPlayGestureViewFactory
-		let nativeScale: Float = Float(view.window?.screen.nativeScale ?? 1)
+		options.gestureUIViewFactory = self.carPlayGestureViewFactory
+		let nativeScale = Float(view.window?.screen.nativeScale ?? 1)
 		let ppi: Float = 60 * nativeScale + 10
 		options.devicePPI = DevicePpi(value: ppi)
 		options.deviceDensity = DeviceDensity(value: nativeScale)
 		return options
 	}()
+
 	private lazy var carPlayMapEventsProvider = CarPlayMapEventsProvider()
 	private lazy var mapFactory = try! Container.shared.sdk.makeMapFactory(options: self.mapOptions)
-	private lazy var mapView: UIView & DGis.IMapView = mapFactory.mapView
+	private lazy var mapView: UIView & DGis.IMapUIView = mapFactory.mapUIView
 	private lazy var mapTemplate: CPMapTemplate = {
 		let mapTemplate = CPMapTemplate()
-		let zoomInButton = CPMapButton.zoomIn(handler: { [weak self] button in
+		let zoomInButton = CPMapButton.zoomIn(handler: { [weak self] _ in
 			self?.carPlayMapEventsProvider.zoomIn()
 		})
-		let zoomOutButton = CPMapButton.zoomOut(handler: { [weak self] button in
+		let zoomOutButton = CPMapButton.zoomOut(handler: { [weak self] _ in
 			self?.carPlayMapEventsProvider.zoomOut()
 		})
 		mapTemplate.mapButtons = [
@@ -40,6 +42,7 @@ final class CarPlayController: UIViewController {
 		]
 		return mapTemplate
 	}()
+
 	private var isMapShown = false
 
 	init(
@@ -48,24 +51,24 @@ final class CarPlayController: UIViewController {
 		self.interfaceController = interfaceController
 		super.init(nibName: nil, bundle: nil)
 	}
-	
-	required init?(coder: NSCoder) {
+
+	@available(*, unavailable)
+	required init?(coder _: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
 	}
-	
+
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		self.mapTemplate.automaticallyHidesNavigationBar = false
-		self.interfaceController.setRootTemplate(mapTemplate, animated: false, completion: nil)
-		self.view.addSubview(mapView)
-		self.showMap()
+		self.interfaceController.setRootTemplate(self.mapTemplate, animated: false, completion: nil)
+		self.view.addSubview(self.mapView)
 	}
 
 	func showMap() {
-		guard !isMapShown else { return }
+		guard !self.isMapShown else { return }
 		self.isMapShown = true
 		self.mapView.translatesAutoresizingMaskIntoConstraints = false
-		self.view.addSubview(mapView)
+		self.view.addSubview(self.mapView)
 		NSLayoutConstraint.activate([
 			self.mapView.topAnchor.constraint(equalTo: view.topAnchor),
 			self.mapView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
@@ -82,35 +85,36 @@ final class CarPlayMapEventsProvider {
 	var onZoomOut: (() -> Void)?
 
 	func zoomIn() {
-		onZoomIn?()
+		self.onZoomIn?()
 	}
+
 	func zoomOut() {
-		onZoomOut?()
+		self.onZoomOut?()
 	}
 }
 
-final class CarPlayGestureViewFactory: IMapGestureViewFactory {
+final class CarPlayGestureViewFactory: IMapGestureUIViewFactory, @unchecked Sendable {
 	private let carPlayMapEventsProvider: CarPlayMapEventsProvider
 
 	init(carPlayMapEventsProvider: CarPlayMapEventsProvider) {
 		self.carPlayMapEventsProvider = carPlayMapEventsProvider
 	}
 
+	@MainActor
 	func makeGestureView(
-		map: Map,
+		map _: Map,
 		eventProcessor: IMapEventProcessor,
 		coordinateSpace: IMapCoordinateSpace
-	) -> UIView & IMapGestureView {
+	) -> UIView & IMapGestureUIView {
 		CarPlayGestureView(
 			mapEventProcessor: eventProcessor,
 			mapCoordinateSpace: coordinateSpace,
-			carPlayMapEventsProvider: carPlayMapEventsProvider
+			carPlayMapEventsProvider: self.carPlayMapEventsProvider
 		)
 	}
 }
 
-
-final class CarPlayGestureView: UIView, IMapGestureView {
+final class CarPlayGestureView: UIView, IMapGestureUIView {
 	private let mapEventProcessor: IMapEventProcessor
 	private let mapCoordinateSpace: IMapCoordinateSpace
 	private let carPlayMapEventsProvider: CarPlayMapEventsProvider
@@ -133,7 +137,8 @@ final class CarPlayGestureView: UIView, IMapGestureView {
 		}
 	}
 
-	required init?(coder: NSCoder) {
+	@available(*, unavailable)
+	required init?(coder _: NSCoder) {
 		fatalError("Use init(mapEventProcessor:)")
 	}
 }

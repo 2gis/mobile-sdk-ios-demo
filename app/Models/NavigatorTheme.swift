@@ -11,10 +11,12 @@ extension NavigatorTheme: PickerViewOption {
 
 	var name: String {
 		switch self {
-			case .default:
-				return "Default"
-			case .custom:
-				return "Custom"
+		case .default:
+			return "Default"
+		case .custom:
+			return "Custom"
+		@unknown default:
+			assertionFailure("Unknown value for NavigatorTheme")
 		}
 	}
 }

@@ -1,45 +1,47 @@
-import Foundation
 import DGis
+import Foundation
 
 enum Language: String, CaseIterable, Identifiable {
 	case system, ru, en, ar
 
 	var id: String {
-		return self.rawValue
+		self.rawValue
 	}
 }
 
 extension Language {
-	static let `default`: Language = {
-		return .system
-	}()
+	static let `default`: Language = .system
 
 	var name: String {
 		switch self {
-			case .system:
-				return "System"
-			case .ru:
-				return "Russian"
-			case .en:
-				return "English"
-			case .ar:
-				return "Arabic"
+		case .system:
+			return "System"
+		case .ru:
+			return "Russian"
+		case .en:
+			return "English"
+		case .ar:
+			return "Arabic"
+		@unknown default:
+			fatalError("Unknown type: \(self)")
 		}
 	}
 
 	var locale: DGis.Locale? {
 		switch self {
-			case .system:
-				return nil
-			case .ru:
-				return .init(language: "ru", region: "RU")
-			case .en:
-				return .init(language: "en", region: "US")
-			case .ar:
-				return .init(language: "ar", region: "SA")
+		case .system:
+			return nil
+		case .ru:
+			return .init(language: "ru", region: "RU")
+		case .en:
+			return .init(language: "en", region: "US")
+		case .ar:
+			return .init(language: "ar", region: "SA")
+		@unknown default:
+			fatalError("Unknown type: \(self)")
 		}
 	}
-	
+
 	func next() -> Language {
 		guard let index = Language.allCases.firstIndex(of: self) else {
 			return Language.allCases[0]

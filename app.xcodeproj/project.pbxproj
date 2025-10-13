@@ -28,6 +28,36 @@
 		64685DCD26A1BBE900BA5D46 /* FpsRestrictionsDemoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64685DCC26A1BBE900BA5D46 /* FpsRestrictionsDemoViewModel.swift */; };
 		64749CC228513AD100BBDAF3 /* CGRect+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64749CC128513AD100BBDAF3 /* CGRect+Helpers.swift */; };
 		64749CC728513AE000BBDAF3 /* String+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64749CC628513AE000BBDAF3 /* String+Helpers.swift */; };
+		648B300F2E9D3AB400C8D7A8 /* PositioningServicesSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 648B300E2E9D3AB400C8D7A8 /* PositioningServicesSource.swift */; };
+		648B30102E9D3AB400C8D7A8 /* PositioningServicesSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 648B300E2E9D3AB400C8D7A8 /* PositioningServicesSource.swift */; };
+		648B301B2E9D3B3200C8D7A8 /* TerritoryManagerSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 648B30112E9D3B3200C8D7A8 /* TerritoryManagerSettingsView.swift */; };
+		648B301C2E9D3B3200C8D7A8 /* TerritoryManagerDemoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 648B30152E9D3B3200C8D7A8 /* TerritoryManagerDemoViewModel.swift */; };
+		648B301D2E9D3B3200C8D7A8 /* TerritoryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 648B30182E9D3B3200C8D7A8 /* TerritoryViewModel.swift */; };
+		648B301E2E9D3B3200C8D7A8 /* TerritoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 648B30172E9D3B3200C8D7A8 /* TerritoryView.swift */; };
+		648B301F2E9D3B3200C8D7A8 /* TerritoryManagerDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 648B30142E9D3B3200C8D7A8 /* TerritoryManagerDemoView.swift */; };
+		648B30202E9D3B3200C8D7A8 /* TerritoryManagerSettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 648B30122E9D3B3200C8D7A8 /* TerritoryManagerSettingsViewModel.swift */; };
+		648B30212E9D3B3200C8D7A8 /* TerritoryManagerListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 648B30162E9D3B3200C8D7A8 /* TerritoryManagerListView.swift */; };
+		648B30222E9D3B3200C8D7A8 /* TerritoryManagerSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 648B30112E9D3B3200C8D7A8 /* TerritoryManagerSettingsView.swift */; };
+		648B30232E9D3B3200C8D7A8 /* TerritoryManagerDemoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 648B30152E9D3B3200C8D7A8 /* TerritoryManagerDemoViewModel.swift */; };
+		648B30242E9D3B3200C8D7A8 /* TerritoryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 648B30182E9D3B3200C8D7A8 /* TerritoryViewModel.swift */; };
+		648B30252E9D3B3200C8D7A8 /* TerritoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 648B30172E9D3B3200C8D7A8 /* TerritoryView.swift */; };
+		648B30262E9D3B3200C8D7A8 /* TerritoryManagerDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 648B30142E9D3B3200C8D7A8 /* TerritoryManagerDemoView.swift */; };
+		648B30272E9D3B3200C8D7A8 /* TerritoryManagerSettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 648B30122E9D3B3200C8D7A8 /* TerritoryManagerSettingsViewModel.swift */; };
+		648B30282E9D3B3200C8D7A8 /* TerritoryManagerListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 648B30162E9D3B3200C8D7A8 /* TerritoryManagerListView.swift */; };
+		648B302D2E9D3BE000C8D7A8 /* RoadEventsDisplayFilterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 648B302B2E9D3BE000C8D7A8 /* RoadEventsDisplayFilterView.swift */; };
+		648B302E2E9D3BE000C8D7A8 /* RoadEventsDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 648B30292E9D3BE000C8D7A8 /* RoadEventsDemoView.swift */; };
+		648B302F2E9D3BE000C8D7A8 /* RoadEventsDemoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 648B302A2E9D3BE000C8D7A8 /* RoadEventsDemoViewModel.swift */; };
+		648B30302E9D3BE000C8D7A8 /* RoadEventsDisplayFilterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 648B302B2E9D3BE000C8D7A8 /* RoadEventsDisplayFilterView.swift */; };
+		648B30312E9D3BE000C8D7A8 /* RoadEventsDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 648B30292E9D3BE000C8D7A8 /* RoadEventsDemoView.swift */; };
+		648B30322E9D3BE000C8D7A8 /* RoadEventsDemoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 648B302A2E9D3BE000C8D7A8 /* RoadEventsDemoViewModel.swift */; };
+		648B30342E9D3D6A00C8D7A8 /* NavigatorWithMiniMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 648B30332E9D3D6A00C8D7A8 /* NavigatorWithMiniMapView.swift */; };
+		648B30352E9D3D6A00C8D7A8 /* NavigatorWithMiniMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 648B30332E9D3D6A00C8D7A8 /* NavigatorWithMiniMapView.swift */; };
+		648B303E2E9D3DC900C8D7A8 /* Zones.swift in Sources */ = {isa = PBXBuildFile; fileRef = 648B303D2E9D3DC900C8D7A8 /* Zones.swift */; };
+		648B303F2E9D3DC900C8D7A8 /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = 648B303C2E9D3DC900C8D7A8 /* Location.swift */; };
+		648B30402E9D3DC900C8D7A8 /* Zones.swift in Sources */ = {isa = PBXBuildFile; fileRef = 648B303D2E9D3DC900C8D7A8 /* Zones.swift */; };
+		648B30412E9D3DC900C8D7A8 /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = 648B303C2E9D3DC900C8D7A8 /* Location.swift */; };
+		648B30432E9D3E7800C8D7A8 /* NavigatorBetterRouteSettingsUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 648B30422E9D3E7800C8D7A8 /* NavigatorBetterRouteSettingsUIView.swift */; };
+		648B30442E9D3E7800C8D7A8 /* NavigatorBetterRouteSettingsUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 648B30422E9D3E7800C8D7A8 /* NavigatorBetterRouteSettingsUIView.swift */; };
 		648C35EB2A4492ED000733CC /* SearchState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 648C35EA2A4492ED000733CC /* SearchState.swift */; };
 		649008DB2A58946600ABED24 /* CustomZoomControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 649008D22A58946500ABED24 /* CustomZoomControl.swift */; };
 		649008F02A5894EF00ABED24 /* MapObjectsDemoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 649008E02A5894EF00ABED24 /* MapObjectsDemoViewModel.swift */; };
@@ -168,10 +198,6 @@
 		B78B8C1326A6E690005F06AB /* NavigatorSettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B78B8C0E26A6E690005F06AB /* NavigatorSettingsViewModel.swift */; };
 		B794FD7627089D8D005C4B3C /* CopyrightSettingsDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B794FD7527089D8D005C4B3C /* CopyrightSettingsDemoView.swift */; };
 		B794FD792709AE89005C4B3C /* CopyrightSettingsDemoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B794FD782709AE89005C4B3C /* CopyrightSettingsDemoViewModel.swift */; };
-		B7A1D55327B668DB00F0500C /* PackageManagerDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7A1D55227B668DB00F0500C /* PackageManagerDemoView.swift */; };
-		B7A1D55627B668EA00F0500C /* PackageManagerDemoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7A1D55527B668EA00F0500C /* PackageManagerDemoViewModel.swift */; };
-		B7A1D55927B668FC00F0500C /* PackageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7A1D55827B668FC00F0500C /* PackageView.swift */; };
-		B7A1D55C27B6691200F0500C /* PackageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7A1D55B27B6691200F0500C /* PackageViewModel.swift */; };
 		B7AB00EA26EE5D27007C3E9E /* Color+Palette.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7AB00E926EE5D27007C3E9E /* Color+Palette.swift */; };
 		B7ABA9F527F316A7008D3EFC /* NavigatorBetterRouteSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7ABA9F427F316A7008D3EFC /* NavigatorBetterRouteSettingsView.swift */; };
 		B7ABA9FA27F33D98008D3EFC /* SettingsFormDisclosureButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7ABA9F927F33D98008D3EFC /* SettingsFormDisclosureButton.swift */; };
@@ -216,18 +242,10 @@
 		C430A3482C19E4AE000B44E6 /* StyleRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = C430A3472C19E4AE000B44E6 /* StyleRow.swift */; };
 		C430A34C2C19E4AE000B44E6 /* StyleRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = C430A3472C19E4AE000B44E6 /* StyleRow.swift */; };
 		C43ADB632B7B6C0300D36640 /* SnapshotView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C43ADB622B7B6C0300D36640 /* SnapshotView.swift */; };
-		C442D7332D76D814005F53A7 /* RoadEventFormPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C442D72C2D76D814005F53A7 /* RoadEventFormPresenter.swift */; };
 		C442D7342D76D814005F53A7 /* RoadEventsFilterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C442D72F2D76D814005F53A7 /* RoadEventsFilterViewController.swift */; };
 		C442D7352D76D814005F53A7 /* RoadEventsDemoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C442D72D2D76D814005F53A7 /* RoadEventsDemoViewController.swift */; };
-		C442D7362D76D814005F53A7 /* RoadEventsMapOverlayFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = C442D7302D76D814005F53A7 /* RoadEventsMapOverlayFactory.swift */; };
-		C442D7372D76D814005F53A7 /* RoadEventsDemoUIViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C442D72E2D76D814005F53A7 /* RoadEventsDemoUIViewModel.swift */; };
-		C442D7382D76D814005F53A7 /* RoadEventsMapOverlayUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C442D7312D76D814005F53A7 /* RoadEventsMapOverlayUIView.swift */; };
-		C442D7392D76D814005F53A7 /* RoadEventFormPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C442D72C2D76D814005F53A7 /* RoadEventFormPresenter.swift */; };
 		C442D73A2D76D814005F53A7 /* RoadEventsFilterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C442D72F2D76D814005F53A7 /* RoadEventsFilterViewController.swift */; };
 		C442D73B2D76D814005F53A7 /* RoadEventsDemoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C442D72D2D76D814005F53A7 /* RoadEventsDemoViewController.swift */; };
-		C442D73C2D76D814005F53A7 /* RoadEventsMapOverlayFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = C442D7302D76D814005F53A7 /* RoadEventsMapOverlayFactory.swift */; };
-		C442D73D2D76D814005F53A7 /* RoadEventsDemoUIViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C442D72E2D76D814005F53A7 /* RoadEventsDemoUIViewModel.swift */; };
-		C442D73E2D76D814005F53A7 /* RoadEventsMapOverlayUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C442D7312D76D814005F53A7 /* RoadEventsMapOverlayUIView.swift */; };
 		C4467E8C2B70FA8800763123 /* CalcPositionWays.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4467E8B2B70FA8800763123 /* CalcPositionWays.swift */; };
 		C448BB022C1AEBD3005011D3 /* GeolocationMarkerType.swift in Sources */ = {isa = PBXBuildFile; fileRef = C448BB012C1AEBD3005011D3 /* GeolocationMarkerType.swift */; };
 		C448BB062C1AEBD3005011D3 /* GeolocationMarkerType.swift in Sources */ = {isa = PBXBuildFile; fileRef = C448BB012C1AEBD3005011D3 /* GeolocationMarkerType.swift */; };
@@ -276,7 +294,6 @@
 		C47FB8AD2DB2278500FA8603 /* NavigatorSettingsUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C49F1BAA2D9FB25000256D17 /* NavigatorSettingsUIView.swift */; };
 		C47FB8AE2DB2279000FA8603 /* CustomNavigationMapControlsFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64EAF78F292CB9EA00921CC6 /* CustomNavigationMapControlsFactory.swift */; };
 		C47FB8AF2DB2279C00FA8603 /* MinimapDemoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B74F474627BBEFB6008CBC34 /* MinimapDemoViewModel.swift */; };
-		C47FB8B02DB227A300FA8603 /* PackageManagerDemoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7A1D55527B668EA00F0500C /* PackageManagerDemoViewModel.swift */; };
 		C47FB8B12DB227AA00FA8603 /* RouteSearchDemoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64A239F1269F70F3007385DA /* RouteSearchDemoViewModel.swift */; };
 		C47FB8B22DB227AF00FA8603 /* RouteSearchDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64A239EF269F70A5007385DA /* RouteSearchDemoView.swift */; };
 		C47FB8B32DB227B900FA8603 /* RouteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64A239F5269F7123007385DA /* RouteView.swift */; };
@@ -285,9 +302,6 @@
 		C47FB8B62DB227D300FA8603 /* CustomNavigationViewControlsFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D33D56929A647380099D50B /* CustomNavigationViewControlsFactory.swift */; };
 		C47FB8B72DB227DB00FA8603 /* RouteSearchSettingsDatePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7B7CA5F27A94CEE006159BC /* RouteSearchSettingsDatePicker.swift */; };
 		C47FB8B82DB227E400FA8603 /* MinimapDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B74F474727BBEFB6008CBC34 /* MinimapDemoView.swift */; };
-		C47FB8B92DB227EA00FA8603 /* PackageManagerDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7A1D55227B668DB00F0500C /* PackageManagerDemoView.swift */; };
-		C47FB8BA2DB227F400FA8603 /* PackageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7A1D55827B668FC00F0500C /* PackageView.swift */; };
-		C47FB8BB2DB2280300FA8603 /* PackageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7A1D55B27B6691200F0500C /* PackageViewModel.swift */; };
 		C47FB8BC2DB2282400FA8603 /* RoutePreviewListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7DDE4DF27663DF000401D7B /* RoutePreviewListVC.swift */; };
 		C47FB8BD2DB2282F00FA8603 /* RouteDetailsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7DDE50B2769F9B200401D7B /* RouteDetailsVC.swift */; };
 		C47FB8C22DB23CE400FA8603 /* dgissdk.key in Resources */ = {isa = PBXBuildFile; fileRef = C47FB8C12DB23CE400FA8603 /* dgissdk.key */; };
@@ -554,6 +568,21 @@
 		64685DCC26A1BBE900BA5D46 /* FpsRestrictionsDemoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FpsRestrictionsDemoViewModel.swift; sourceTree = "<group>"; };
 		64749CC128513AD100BBDAF3 /* CGRect+Helpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CGRect+Helpers.swift"; sourceTree = "<group>"; };
 		64749CC628513AE000BBDAF3 /* String+Helpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+Helpers.swift"; sourceTree = "<group>"; };
+		648B300E2E9D3AB400C8D7A8 /* PositioningServicesSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PositioningServicesSource.swift; sourceTree = "<group>"; };
+		648B30112E9D3B3200C8D7A8 /* TerritoryManagerSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TerritoryManagerSettingsView.swift; sourceTree = "<group>"; };
+		648B30122E9D3B3200C8D7A8 /* TerritoryManagerSettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TerritoryManagerSettingsViewModel.swift; sourceTree = "<group>"; };
+		648B30142E9D3B3200C8D7A8 /* TerritoryManagerDemoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TerritoryManagerDemoView.swift; sourceTree = "<group>"; };
+		648B30152E9D3B3200C8D7A8 /* TerritoryManagerDemoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TerritoryManagerDemoViewModel.swift; sourceTree = "<group>"; };
+		648B30162E9D3B3200C8D7A8 /* TerritoryManagerListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TerritoryManagerListView.swift; sourceTree = "<group>"; };
+		648B30172E9D3B3200C8D7A8 /* TerritoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TerritoryView.swift; sourceTree = "<group>"; };
+		648B30182E9D3B3200C8D7A8 /* TerritoryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TerritoryViewModel.swift; sourceTree = "<group>"; };
+		648B30292E9D3BE000C8D7A8 /* RoadEventsDemoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoadEventsDemoView.swift; sourceTree = "<group>"; };
+		648B302A2E9D3BE000C8D7A8 /* RoadEventsDemoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoadEventsDemoViewModel.swift; sourceTree = "<group>"; };
+		648B302B2E9D3BE000C8D7A8 /* RoadEventsDisplayFilterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoadEventsDisplayFilterView.swift; sourceTree = "<group>"; };
+		648B30332E9D3D6A00C8D7A8 /* NavigatorWithMiniMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigatorWithMiniMapView.swift; sourceTree = "<group>"; };
+		648B303C2E9D3DC900C8D7A8 /* Location.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Location.swift; sourceTree = "<group>"; };
+		648B303D2E9D3DC900C8D7A8 /* Zones.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Zones.swift; sourceTree = "<group>"; };
+		648B30422E9D3E7800C8D7A8 /* NavigatorBetterRouteSettingsUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigatorBetterRouteSettingsUIView.swift; sourceTree = "<group>"; };
 		648C35EA2A4492ED000733CC /* SearchState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchState.swift; sourceTree = "<group>"; };
 		649008D22A58946500ABED24 /* CustomZoomControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomZoomControl.swift; sourceTree = "<group>"; };
 		649008E02A5894EF00ABED24 /* MapObjectsDemoViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapObjectsDemoViewModel.swift; sourceTree = "<group>"; };
@@ -688,10 +717,6 @@
 		B78B8C0E26A6E690005F06AB /* NavigatorSettingsViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigatorSettingsViewModel.swift; sourceTree = "<group>"; };
 		B794FD7527089D8D005C4B3C /* CopyrightSettingsDemoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CopyrightSettingsDemoView.swift; sourceTree = "<group>"; };
 		B794FD782709AE89005C4B3C /* CopyrightSettingsDemoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CopyrightSettingsDemoViewModel.swift; sourceTree = "<group>"; };
-		B7A1D55227B668DB00F0500C /* PackageManagerDemoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PackageManagerDemoView.swift; sourceTree = "<group>"; };
-		B7A1D55527B668EA00F0500C /* PackageManagerDemoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PackageManagerDemoViewModel.swift; sourceTree = "<group>"; };
-		B7A1D55827B668FC00F0500C /* PackageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PackageView.swift; sourceTree = "<group>"; };
-		B7A1D55B27B6691200F0500C /* PackageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PackageViewModel.swift; sourceTree = "<group>"; };
 		B7AB00E926EE5D27007C3E9E /* Color+Palette.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Palette.swift"; sourceTree = "<group>"; };
 		B7ABA9F427F316A7008D3EFC /* NavigatorBetterRouteSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigatorBetterRouteSettingsView.swift; sourceTree = "<group>"; };
 		B7ABA9F927F33D98008D3EFC /* SettingsFormDisclosureButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsFormDisclosureButton.swift; sourceTree = "<group>"; };
@@ -728,12 +753,8 @@
 		C42DFC882C57B22F005B00FB /* GraphicsOptionsDemoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphicsOptionsDemoViewModel.swift; sourceTree = "<group>"; };
 		C430A3472C19E4AE000B44E6 /* StyleRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StyleRow.swift; sourceTree = "<group>"; };
 		C43ADB622B7B6C0300D36640 /* SnapshotView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotView.swift; sourceTree = "<group>"; };
-		C442D72C2D76D814005F53A7 /* RoadEventFormPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoadEventFormPresenter.swift; sourceTree = "<group>"; };
 		C442D72D2D76D814005F53A7 /* RoadEventsDemoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoadEventsDemoViewController.swift; sourceTree = "<group>"; };
-		C442D72E2D76D814005F53A7 /* RoadEventsDemoUIViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoadEventsDemoUIViewModel.swift; sourceTree = "<group>"; };
 		C442D72F2D76D814005F53A7 /* RoadEventsFilterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoadEventsFilterViewController.swift; sourceTree = "<group>"; };
-		C442D7302D76D814005F53A7 /* RoadEventsMapOverlayFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoadEventsMapOverlayFactory.swift; sourceTree = "<group>"; };
-		C442D7312D76D814005F53A7 /* RoadEventsMapOverlayUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoadEventsMapOverlayUIView.swift; sourceTree = "<group>"; };
 		C4467E8B2B70FA8800763123 /* CalcPositionWays.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalcPositionWays.swift; sourceTree = "<group>"; };
 		C448BB012C1AEBD3005011D3 /* GeolocationMarkerType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeolocationMarkerType.swift; sourceTree = "<group>"; };
 		C44B26F42B8DAECA00DD5362 /* CameraRestrictionsDemoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraRestrictionsDemoView.swift; sourceTree = "<group>"; };
@@ -902,6 +923,46 @@
 			path = FpsRestrictions;
 			sourceTree = "<group>";
 		};
+		648B30132E9D3B3200C8D7A8 /* TerritoryManagerSettings */ = {
+			isa = PBXGroup;
+			children = (
+				648B30112E9D3B3200C8D7A8 /* TerritoryManagerSettingsView.swift */,
+				648B30122E9D3B3200C8D7A8 /* TerritoryManagerSettingsViewModel.swift */,
+			);
+			path = TerritoryManagerSettings;
+			sourceTree = "<group>";
+		};
+		648B30192E9D3B3200C8D7A8 /* SwiftUI */ = {
+			isa = PBXGroup;
+			children = (
+				648B30132E9D3B3200C8D7A8 /* TerritoryManagerSettings */,
+				648B30142E9D3B3200C8D7A8 /* TerritoryManagerDemoView.swift */,
+				648B30152E9D3B3200C8D7A8 /* TerritoryManagerDemoViewModel.swift */,
+				648B30162E9D3B3200C8D7A8 /* TerritoryManagerListView.swift */,
+				648B30172E9D3B3200C8D7A8 /* TerritoryView.swift */,
+				648B30182E9D3B3200C8D7A8 /* TerritoryViewModel.swift */,
+			);
+			path = SwiftUI;
+			sourceTree = "<group>";
+		};
+		648B301A2E9D3B3200C8D7A8 /* TerritoryManager */ = {
+			isa = PBXGroup;
+			children = (
+				648B30192E9D3B3200C8D7A8 /* SwiftUI */,
+			);
+			path = TerritoryManager;
+			sourceTree = "<group>";
+		};
+		648B302C2E9D3BE000C8D7A8 /* SwiftUI */ = {
+			isa = PBXGroup;
+			children = (
+				648B30292E9D3BE000C8D7A8 /* RoadEventsDemoView.swift */,
+				648B302A2E9D3BE000C8D7A8 /* RoadEventsDemoViewModel.swift */,
+				648B302B2E9D3BE000C8D7A8 /* RoadEventsDisplayFilterView.swift */,
+			);
+			path = SwiftUI;
+			sourceTree = "<group>";
+		};
 		649008CE2A58946500ABED24 /* CustomMapControls */ = {
 			isa = PBXGroup;
 			children = (
@@ -1042,6 +1103,7 @@
 				64EAF792292CCC0E00921CC6 /* NavigatorControls.swift */,
 				64490EE62C681F3E00600FBB /* NavigatorDashboardButton.swift */,
 				B7227B432704A98200021395 /* NavigatorTheme.swift */,
+				648B300E2E9D3AB400C8D7A8 /* PositioningServicesSource.swift */,
 				64B772DE2718613200EBCD4C /* ValueAnimator.swift */,
 			);
 			path = Models;
@@ -1134,13 +1196,13 @@
 				B74F474527BBEFB6008CBC34 /* Minimap */,
 				C46F161D2C297CEB00F5A7F0 /* MultiViewPorts */,
 				B72EF94126A5259C00ECC013 /* Navigator */,
-				B7A1D55127B668CA00F0500C /* PackageManager */,
 				B74F472D27BA7ADC008CBC34 /* Parkings */,
 				C463A1F52BD78F4E00C77BC4 /* RasterTiles */,
 				C442D7322D76D814005F53A7 /* RoadEvents */,
 				64A239EE269F7092007385DA /* RouteSearch */,
 				64A2398D269EFE77007385DA /* Search */,
 				C466E45B2B7247180052F77A /* StaticMaps */,
+				648B301A2E9D3B3200C8D7A8 /* TerritoryManager */,
 				64A2D01726DE5C1B00530808 /* TrafficControl */,
 				64A23982269EFE77007385DA /* VisibleAreaDetection */,
 				C40422D22B31C523009CAD81 /* VisibleRectVisibleArea */,
@@ -1277,6 +1339,8 @@
 			isa = PBXGroup;
 			children = (
 				B712C97127F40D6A00DCBDEA /* PropertyWrappers */,
+				648B303C2E9D3DC900C8D7A8 /* Location.swift */,
+				648B303D2E9D3DC900C8D7A8 /* Zones.swift */,
 			);
 			path = Tools;
 			sourceTree = "<group>";
@@ -1345,14 +1409,6 @@
 				C41699CE2D7890BB0050EA44 /* SwiftUI */,
 			);
 			path = CopyrightSettings;
-			sourceTree = "<group>";
-		};
-		B7A1D55127B668CA00F0500C /* PackageManager */ = {
-			isa = PBXGroup;
-			children = (
-				C41699DA2D7891490050EA44 /* SwiftUI */,
-			);
-			path = PackageManager;
 			sourceTree = "<group>";
 		};
 		B7B62C1C26B8F93800D8DCF7 /* Settings */ = {
@@ -1590,19 +1646,9 @@
 				B72EF94226A5259C00ECC013 /* NavigatorDemoPageView.swift */,
 				B72EF94426A5259C00ECC013 /* NavigatorDemoViewModel.swift */,
 				B72EF94526A5259C00ECC013 /* NavigatorTargetPointSearchOverlayView.swift */,
+				648B30332E9D3D6A00C8D7A8 /* NavigatorWithMiniMapView.swift */,
 				649D374527188176004341D0 /* PlatformStyleZoomFollowController.swift */,
 				B78AE33F27192CD900E3A939 /* RoadEventCardPresenter.swift */,
-			);
-			path = SwiftUI;
-			sourceTree = "<group>";
-		};
-		C41699DA2D7891490050EA44 /* SwiftUI */ = {
-			isa = PBXGroup;
-			children = (
-				B7A1D55227B668DB00F0500C /* PackageManagerDemoView.swift */,
-				B7A1D55527B668EA00F0500C /* PackageManagerDemoViewModel.swift */,
-				B7A1D55827B668FC00F0500C /* PackageView.swift */,
-				B7A1D55B27B6691200F0500C /* PackageViewModel.swift */,
 			);
 			path = SwiftUI;
 			sourceTree = "<group>";
@@ -1689,12 +1735,8 @@
 		C41699E32D7891820050EA44 /* UIKit */ = {
 			isa = PBXGroup;
 			children = (
-				C442D72C2D76D814005F53A7 /* RoadEventFormPresenter.swift */,
 				C442D72D2D76D814005F53A7 /* RoadEventsDemoViewController.swift */,
-				C442D72E2D76D814005F53A7 /* RoadEventsDemoUIViewModel.swift */,
 				C442D72F2D76D814005F53A7 /* RoadEventsFilterViewController.swift */,
-				C442D7302D76D814005F53A7 /* RoadEventsMapOverlayFactory.swift */,
-				C442D7312D76D814005F53A7 /* RoadEventsMapOverlayUIView.swift */,
 			);
 			path = UIKit;
 			sourceTree = "<group>";
@@ -1720,6 +1762,7 @@
 			isa = PBXGroup;
 			children = (
 				C41699E32D7891820050EA44 /* UIKit */,
+				648B302C2E9D3BE000C8D7A8 /* SwiftUI */,
 			);
 			path = RoadEvents;
 			sourceTree = "<group>";
@@ -1759,6 +1802,7 @@
 		C49F1BA32D9D205C00256D17 /* UIKit */ = {
 			isa = PBXGroup;
 			children = (
+				648B30422E9D3E7800C8D7A8 /* NavigatorBetterRouteSettingsUIView.swift */,
 				C49F1BAA2D9FB25000256D17 /* NavigatorSettingsUIView.swift */,
 				C49F1BA42D9D20C500256D17 /* NavigatorDemoViewController.swift */,
 			);
@@ -2016,18 +2060,27 @@
 				64A239C4269EFE78007385DA /* CameraMovesDemoView.swift in Sources */,
 				C4467E8C2B70FA8800763123 /* CalcPositionWays.swift in Sources */,
 				B74F473527BAAC5D008CBC34 /* ObjectType.swift in Sources */,
+				648B30342E9D3D6A00C8D7A8 /* NavigatorWithMiniMapView.swift in Sources */,
 				6490668829F6C52100CBCBA2 /* ErrorViewController.swift in Sources */,
 				B745F3D426E5C9D9003984BA /* ClusterCardViewModel.swift in Sources */,
 				B794FD792709AE89005C4B3C /* CopyrightSettingsDemoViewModel.swift in Sources */,
 				C42DFC832C57B22A005B00FB /* GraphicsOptionsDemoView.swift in Sources */,
 				4B27063524A3F24C00F12B48 /* AppDelegate.swift in Sources */,
 				64A239C9269EFE78007385DA /* SearchDemoView.swift in Sources */,
+				648B30222E9D3B3200C8D7A8 /* TerritoryManagerSettingsView.swift in Sources */,
+				648B30232E9D3B3200C8D7A8 /* TerritoryManagerDemoViewModel.swift in Sources */,
+				648B30242E9D3B3200C8D7A8 /* TerritoryViewModel.swift in Sources */,
+				648B30252E9D3B3200C8D7A8 /* TerritoryView.swift in Sources */,
+				648B30262E9D3B3200C8D7A8 /* TerritoryManagerDemoView.swift in Sources */,
+				648B30272E9D3B3200C8D7A8 /* TerritoryManagerSettingsViewModel.swift in Sources */,
+				648B30282E9D3B3200C8D7A8 /* TerritoryManagerListView.swift in Sources */,
 				64A239D6269EFE78007385DA /* FormattedAddressView.swift in Sources */,
 				B7227B462704AAAA00021395 /* NavigationViewTheme+Custom.swift in Sources */,
 				B7FB3A0A26A5B36700EBE5DA /* LazyView.swift in Sources */,
 				64BBCDE32A71C329003689BE /* SearchRubric.swift in Sources */,
 				B7ABA9F527F316A7008D3EFC /* NavigatorBetterRouteSettingsView.swift in Sources */,
 				649009182A5894EF00ABED24 /* MarkerViewModel.swift in Sources */,
+				648B30102E9D3AB400C8D7A8 /* PositioningServicesSource.swift in Sources */,
 				64CFA1EF290946F1009AF855 /* Meter+Helpers.swift in Sources */,
 				B768F2612BBE99C60041019B /* CarPlayController.swift in Sources */,
 				64670E942B828C9100432227 /* MapObjectViewModel.swift in Sources */,
@@ -2037,7 +2090,6 @@
 				B74DFFCF27B56C8B000A73E8 /* GeoPointPickerView.swift in Sources */,
 				64749CC228513AD100BBDAF3 /* CGRect+Helpers.swift in Sources */,
 				B7227B442704A98200021395 /* NavigatorTheme.swift in Sources */,
-				B7A1D55627B668EA00F0500C /* PackageManagerDemoViewModel.swift in Sources */,
 				64A239CA269EFE78007385DA /* SearchDemoViewModel.swift in Sources */,
 				649008F02A5894EF00ABED24 /* MapObjectsDemoViewModel.swift in Sources */,
 				B78B8C1226A6E690005F06AB /* VoiceRowViewModel.swift in Sources */,
@@ -2063,6 +2115,9 @@
 				64A23956269EFBDE007385DA /* GeoPoint+Helpers.swift in Sources */,
 				C4FE2FA22B3959290045BBA9 /* CalcPositionDemoView.swift in Sources */,
 				64A239DA269EFE78007385DA /* MapThemeDemoView.swift in Sources */,
+				648B302D2E9D3BE000C8D7A8 /* RoadEventsDisplayFilterView.swift in Sources */,
+				648B302E2E9D3BE000C8D7A8 /* RoadEventsDemoView.swift in Sources */,
+				648B302F2E9D3BE000C8D7A8 /* RoadEventsDemoViewModel.swift in Sources */,
 				C466E45D2B7247530052F77A /* StaticMapsView.swift in Sources */,
 				7484B5C52CAD4080001939C2 /* SearchHistoryView.swift in Sources */,
 				648C35EB2A4492ED000733CC /* SearchState.swift in Sources */,
@@ -2093,7 +2148,6 @@
 				C40422D92B31C582009CAD81 /* VisibleRectVisibleAreaDemoViewModel.swift in Sources */,
 				C49F1BAB2D9FB25C00256D17 /* NavigatorSettingsUIView.swift in Sources */,
 				64C859ED2B81621E00F9CF2C /* RenderedObjectInfoViewModel.swift in Sources */,
-				B7A1D55C27B6691200F0500C /* PackageViewModel.swift in Sources */,
 				64A23934269EF9FE007385DA /* SearchAction.swift in Sources */,
 				64A239BC269EFE78007385DA /* CustomGestureViewFactory.swift in Sources */,
 				C48F5CB12CABCCAE00278DF8 /* StatusType.swift in Sources */,
@@ -2165,13 +2219,13 @@
 				64A239CB269EFE78007385DA /* SuggestResultView.swift in Sources */,
 				C463A1F72BD78F7300C77BC4 /* RasterTilesDemoView.swift in Sources */,
 				B7D1C49726C3DBFE00ADADB0 /* MapInteractionDemoView.swift in Sources */,
+				648B30432E9D3E7800C8D7A8 /* NavigatorBetterRouteSettingsUIView.swift in Sources */,
 				64A239D9269EFE78007385DA /* DirectoryObjectView.swift in Sources */,
 				0D1DAFBB2A1B4457004309D3 /* CacheDemoView.swift in Sources */,
 				B74DFFCC27B4F349000A73E8 /* WeekTimePickerView.swift in Sources */,
 				7484B5C32CA437D1001939C2 /* SearchHistoryService.swift in Sources */,
 				64A239CF269EFE78007385DA /* DirectoryObjectViewModel.swift in Sources */,
 				0D2A67CF2A2864BA00C7B4C9 /* LocaleDemoView.swift in Sources */,
-				B7A1D55927B668FC00F0500C /* PackageView.swift in Sources */,
 				64A239F6269F7123007385DA /* RouteView.swift in Sources */,
 				64A239F0269F70A5007385DA /* RouteSearchDemoView.swift in Sources */,
 				B78B8C1026A6E690005F06AB /* VoiceRowView.swift in Sources */,
@@ -2184,6 +2238,8 @@
 				B72EF94826A5259C00ECC013 /* NavigatorOptions.swift in Sources */,
 				0D190C5D2A98837B001F9CBC /* CustomStylePickerView.swift in Sources */,
 				7484B5CB2CB50251001939C2 /* SearchHistoryItemView.swift in Sources */,
+				648B30402E9D3DC900C8D7A8 /* Zones.swift in Sources */,
+				648B30412E9D3DC900C8D7A8 /* Location.swift in Sources */,
 				B74DFFC627B4BFA2000A73E8 /* MultiSelectionPickerView.swift in Sources */,
 				C4F31F4F2D82B30300E0C3A6 /* AnchorPoint.swift in Sources */,
 				B7D4D7F026E6312F00A5FF60 /* GeneratorLocationService.swift in Sources */,
@@ -2217,7 +2273,6 @@
 				6490091C2A5894EF00ABED24 /* MarkerView.swift in Sources */,
 				B745F3C826E5C98B003984BA /* PackageInfo+Helpers.swift in Sources */,
 				C448BB022C1AEBD3005011D3 /* GeolocationMarkerType.swift in Sources */,
-				B7A1D55327B668DB00F0500C /* PackageManagerDemoView.swift in Sources */,
 				C47F1B6E2B1DA721004B00B9 /* BenchmarkPolygons.swift in Sources */,
 				64A239D4269EFE78007385DA /* SuggestResultViewModel.swift in Sources */,
 				64A239ED269F296E007385DA /* TrafficRoute+Helpers.swift in Sources */,
@@ -2234,12 +2289,8 @@
 				64749CC728513AE000BBDAF3 /* String+Helpers.swift in Sources */,
 				C4B854FD2B04961900864E5B /* FPSGraphView.swift in Sources */,
 				64A23933269EF9FE007385DA /* SearchStore.swift in Sources */,
-				C442D7332D76D814005F53A7 /* RoadEventFormPresenter.swift in Sources */,
 				C442D7342D76D814005F53A7 /* RoadEventsFilterViewController.swift in Sources */,
 				C442D7352D76D814005F53A7 /* RoadEventsDemoViewController.swift in Sources */,
-				C442D7362D76D814005F53A7 /* RoadEventsMapOverlayFactory.swift in Sources */,
-				C442D7372D76D814005F53A7 /* RoadEventsDemoUIViewModel.swift in Sources */,
-				C442D7382D76D814005F53A7 /* RoadEventsMapOverlayUIView.swift in Sources */,
 				B72EF94926A5259C00ECC013 /* NavigatorDemoViewModel.swift in Sources */,
 				7484B5C72CAD409D001939C2 /* SearchHistoryViewModel.swift in Sources */,
 				649008F82A5894EF00ABED24 /* PolylineView.swift in Sources */,
@@ -2290,6 +2341,9 @@
 				C47FB8A02DB2277500FA8603 /* PlatformStyleZoomFollowController.swift in Sources */,
 				C47FB8A12DB2277500FA8603 /* NavigatorTargetPointSearchOverlayView.swift in Sources */,
 				C4AB88752C06031200FF713C /* CircleViewModel.swift in Sources */,
+				648B300F2E9D3AB400C8D7A8 /* PositioningServicesSource.swift in Sources */,
+				648B303E2E9D3DC900C8D7A8 /* Zones.swift in Sources */,
+				648B303F2E9D3DC900C8D7A8 /* Location.swift in Sources */,
 				C4AB88762C06031200FF713C /* RelationPoint.swift in Sources */,
 				C4AB88772C06031200FF713C /* UIWindow+Helpers.swift in Sources */,
 				C41699ED2D78972A0050EA44 /* SwiftUIDemoFactory.swift in Sources */,
@@ -2314,6 +2368,7 @@
 				C4AB88882C06031200FF713C /* SearchOptionsView.swift in Sources */,
 				C4AB888A2C06031200FF713C /* DetailsActionView.swift in Sources */,
 				C4AB888B2C06031200FF713C /* CalcPositionDemoViewModel.swift in Sources */,
+				648B30442E9D3E7800C8D7A8 /* NavigatorBetterRouteSettingsUIView.swift in Sources */,
 				C4F31F6C2D83041F00E0C3A6 /* MapInteractionDemoViewController.swift in Sources */,
 				C4AB888C2C06031200FF713C /* Color+Palette.swift in Sources */,
 				C4C0A5542CA33EF4000FC69B /* StarRatingView.swift in Sources */,
@@ -2327,6 +2382,9 @@
 				C4AB88922C06031200FF713C /* LanguageSettings.swift in Sources */,
 				7468DD292D20438C00D2C23B /* SearchHistoryItemView.swift in Sources */,
 				C4AB88932C06031200FF713C /* ConsoleLogSink.swift in Sources */,
+				648B30302E9D3BE000C8D7A8 /* RoadEventsDisplayFilterView.swift in Sources */,
+				648B30312E9D3BE000C8D7A8 /* RoadEventsDemoView.swift in Sources */,
+				648B30322E9D3BE000C8D7A8 /* RoadEventsDemoViewModel.swift in Sources */,
 				C4AB88942C06031200FF713C /* GeoPointPickerView.swift in Sources */,
 				C4AB88952C06031200FF713C /* ClusteringSettingsView.swift in Sources */,
 				C4AB88962C06031200FF713C /* CalcPositionWays.swift in Sources */,
@@ -2339,7 +2397,6 @@
 				C4AB889D2C06031200FF713C /* StaticMapsRoutes.swift in Sources */,
 				C4AB88A02C06031200FF713C /* MapSnapshotDemoView.swift in Sources */,
 				C448BB062C1AEBD3005011D3 /* GeolocationMarkerType.swift in Sources */,
-				C47FB8B02DB227A300FA8603 /* PackageManagerDemoViewModel.swift in Sources */,
 				C42DFC872C57B22A005B00FB /* GraphicsOptionsDemoView.swift in Sources */,
 				C4AB88A12C06031200FF713C /* PaddingRect.swift in Sources */,
 				C4AB88A22C06031200FF713C /* MapThemeDemoView.swift in Sources */,
@@ -2384,8 +2441,16 @@
 				C4AB88B72C06031200FF713C /* CustomGestureViewFactory.swift in Sources */,
 				C4AB88B82C06031200FF713C /* VisibleRectVisibleAreaInfoView.swift in Sources */,
 				C4AB88B92C06031200FF713C /* FeedbackGenerator.swift in Sources */,
+				648B30352E9D3D6A00C8D7A8 /* NavigatorWithMiniMapView.swift in Sources */,
 				C4AB88BA2C06031200FF713C /* RootView.swift in Sources */,
 				C4AB88BC2C06031200FF713C /* RootViewModel.swift in Sources */,
+				648B301B2E9D3B3200C8D7A8 /* TerritoryManagerSettingsView.swift in Sources */,
+				648B301C2E9D3B3200C8D7A8 /* TerritoryManagerDemoViewModel.swift in Sources */,
+				648B301D2E9D3B3200C8D7A8 /* TerritoryViewModel.swift in Sources */,
+				648B301E2E9D3B3200C8D7A8 /* TerritoryView.swift in Sources */,
+				648B301F2E9D3B3200C8D7A8 /* TerritoryManagerDemoView.swift in Sources */,
+				648B30202E9D3B3200C8D7A8 /* TerritoryManagerSettingsViewModel.swift in Sources */,
+				648B30212E9D3B3200C8D7A8 /* TerritoryManagerListView.swift in Sources */,
 				C4AB88BD2C06031200FF713C /* GeneratorLocationService.swift in Sources */,
 				C4AB88BE2C06031200FF713C /* SearchResultItemView.swift in Sources */,
 				C4AB88BF2C06031200FF713C /* SnapshotView.swift in Sources */,
@@ -2405,20 +2470,15 @@
 				C4AB88CC2C06031200FF713C /* GeneratorLocationProvider.swift in Sources */,
 				C4AB88CD2C06031200FF713C /* CameraRestrictionsDemoViewModel.swift in Sources */,
 				C4AB88CF2C06031200FF713C /* CustomMapGestureView.swift in Sources */,
-				C47FB8B92DB227EA00FA8603 /* PackageManagerDemoView.swift in Sources */,
 				C4AB88D02C06031200FF713C /* MapThemeDemoViewModel.swift in Sources */,
 				7468DD212D20438100D2C23B /* SearchHistoryViewModel.swift in Sources */,
 				C4AB88D52C06031200FF713C /* CarPlayDelegate.swift in Sources */,
 				C47FB8982DB226FF00FA8603 /* NavigatorTheme.swift in Sources */,
-				C442D7392D76D814005F53A7 /* RoadEventFormPresenter.swift in Sources */,
 				C442D73A2D76D814005F53A7 /* RoadEventsFilterViewController.swift in Sources */,
 				C442D73B2D76D814005F53A7 /* RoadEventsDemoViewController.swift in Sources */,
 				C47FB89C2DB2273600FA8603 /* TrafficRoute+Helpers.swift in Sources */,
 				C41699F22D7897380050EA44 /* UIKitDemoFactory.swift in Sources */,
 				C47FB8992DB2270C00FA8603 /* NavigatorControls.swift in Sources */,
-				C442D73C2D76D814005F53A7 /* RoadEventsMapOverlayFactory.swift in Sources */,
-				C442D73D2D76D814005F53A7 /* RoadEventsDemoUIViewModel.swift in Sources */,
-				C442D73E2D76D814005F53A7 /* RoadEventsMapOverlayUIView.swift in Sources */,
 				C4AB88D62C06031200FF713C /* CGRect+Helpers.swift in Sources */,
 				C4AB88D72C06031200FF713C /* CalcPositionInfoView.swift in Sources */,
 				C47FB89B2DB2273000FA8603 /* SettingsFormTextField+RouteDistance.swift in Sources */,
@@ -2429,7 +2489,6 @@
 				C47FB8B42DB227BF00FA8603 /* RouteViewModel.swift in Sources */,
 				C4AB88DC2C06031200FF713C /* CalcPositionDemoView.swift in Sources */,
 				7468DD1D2D20437D00D2C23B /* SearchHistoryView.swift in Sources */,
-				C47FB8BA2DB227F400FA8603 /* PackageView.swift in Sources */,
 				C4AB88DF2C06031200FF713C /* SearchResultViewModel.swift in Sources */,
 				C4AB88E02C06031200FF713C /* FormattedAddressViewModel.swift in Sources */,
 				C4AB88E12C06031200FF713C /* SearchReducer.swift in Sources */,
@@ -2481,7 +2540,6 @@
 				C4F31F532D82B72400E0C3A6 /* MapViewMarkersDemoViewController.swift in Sources */,
 				C4AB89072C06031200FF713C /* MarkedUpTextView.swift in Sources */,
 				C4AB89082C06031200FF713C /* PackageInfo+Helpers.swift in Sources */,
-				C47FB8BB2DB2280300FA8603 /* PackageViewModel.swift in Sources */,
 				C4AB89092C06031200FF713C /* ClusteringDemoView.swift in Sources */,
 				C4AB890B2C06031200FF713C /* WeekTimePickerView.swift in Sources */,
 				C4AB890C2C06031200FF713C /* LocationService.swift in Sources */,
@@ -2591,13 +2649,14 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 6.0;
 			};
 			name = Debug;
 		};
@@ -2646,12 +2705,13 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 6.0;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -2666,7 +2726,7 @@
 				DEVELOPMENT_TEAM = YBQ9YAY5XL;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = app/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -2676,7 +2736,7 @@
 				PRODUCT_NAME = NativeApp;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SUPPORTS_MACCATALYST = NO;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -2690,7 +2750,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = YBQ9YAY5XL;
 				INFOPLIST_FILE = app/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -2702,7 +2762,7 @@
 				PRODUCT_NAME = NativeApp;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SUPPORTS_MACCATALYST = NO;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -2716,7 +2776,7 @@
 				DEVELOPMENT_TEAM = YBQ9YAY5XL;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = app/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -2725,7 +2785,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = ru.mobile.sdk.app;
 				PRODUCT_NAME = NativeApp;
 				SUPPORTS_MACCATALYST = NO;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 				SYMROOT = build;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -2740,7 +2800,7 @@
 				DEVELOPMENT_TEAM = YBQ9YAY5XL;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = app/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -2751,7 +2811,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = ru.mobile.sdk.app;
 				PRODUCT_NAME = NativeApp;
 				SUPPORTS_MACCATALYST = NO;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 				SYMROOT = build;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -2803,7 +2863,7 @@
 			repositoryURL = "https://github.com/2gis/mobile-sdk-full-swift-package.git";
 			requirement = {
 				kind = exactVersion;
-				version = 12.7.0;
+				version = 13.0.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */

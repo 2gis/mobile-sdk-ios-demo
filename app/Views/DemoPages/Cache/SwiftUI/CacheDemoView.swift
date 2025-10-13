@@ -23,10 +23,10 @@ struct CacheDemoView: View {
 	var body: some View {
 		GeometryReader { geometry in
 			ZStack(alignment: .bottomTrailing) {
-				self.mapFactory.mapViewOverlay
-				.mapViewOverlayShowsAPIVersion(true)
-				.mapViewOverlayCopyrightAlignment(.bottomLeft)
-				.mapViewOverlayCopyrightInsets(
+				self.mapFactory.mapView
+				.showsAPIVersion(true)
+				.copyrightAlignment(.bottomLeft)
+				.copyrightInsets(
 					EdgeInsets(
 						top: 0,
 						leading: 0,

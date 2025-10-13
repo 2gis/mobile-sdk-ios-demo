@@ -1,5 +1,5 @@
-import SwiftUI
 import DGis
+import SwiftUI
 
 struct CopyrightSettingsDemoView: View {
 	@ObservedObject private var viewModel: CopyrightSettingsDemoViewModel
@@ -15,14 +15,14 @@ struct CopyrightSettingsDemoView: View {
 
 	var body: some View {
 		ZStack(alignment: .trailing) {
-			self.mapFactory.mapViewOverlay
-				.mapViewOverlayCopyrightAlignment(self.viewModel.alignment)
-				.mapViewOverlayCopyrightInsets(self.viewModel.insets)
-				.mapViewOverlayShowsAPIVersion(self.viewModel.showsAPIVersion)
+			self.mapFactory.mapView
+				.copyrightAlignment(self.viewModel.alignment)
+				.copyrightInsets(self.viewModel.insets)
+				.showsAPIVersion(self.viewModel.showsAPIVersion)
 				.edgesIgnoringSafeArea(.all)
 			VStack {
 				Spacer()
-				self.mapFactory.mapControlViewFactory.makeZoomView()
+				self.mapFactory.mapViewsFactory.makeZoomView()
 				Spacer()
 			}
 		}
@@ -43,9 +43,9 @@ struct CopyrightSettingsDemoView: View {
 			self.viewModel.showSettings = true
 		} label: {
 			Image(systemName: "gear")
-			.resizable()
-			.aspectRatio(contentMode: .fit)
-			.frame(width: 30)
+				.resizable()
+				.aspectRatio(contentMode: .fit)
+				.frame(width: 30)
 		}
 	}
 }
@@ -63,7 +63,7 @@ private struct CopyrightSettingsView: View {
 		.bottomLeft,
 		.bottomRight,
 		.topLeft,
-		.topRight
+		.topRight,
 	]
 
 	init(
@@ -86,9 +86,9 @@ private struct CopyrightSettingsView: View {
 			ZStack {
 				List {
 					self.makeApiVersionSwitch()
-					.padding(.bottom)
+						.padding(.bottom)
 					self.makeAlignmentPicker()
-					.padding(.bottom)
+						.padding(.bottom)
 					self.makeTitle("Insets:")
 					self.makeInsetsSlider(
 						title: "Top",
@@ -156,35 +156,34 @@ private struct CopyrightSettingsView: View {
 	) -> some View {
 		HStack {
 			self.makeTitle("\(title) \(value.wrappedValue)")
-			Slider(value: value, in: 0...maxValue, step: 1)
+			Slider(value: value, in: 0 ... maxValue, step: 1)
 		}
 	}
 
 	private func makeTitle(_ text: String) -> Text {
 		Text(text)
-		.fontWeight(.bold)
-		.foregroundColor(.black)
+			.fontWeight(.bold)
+			.foregroundColor(.black)
 	}
-
 }
 
-extension CopyrightAlignment: Identifiable {
+extension CopyrightAlignment: @retroactive Identifiable {
 	public var id: CopyrightAlignment {
 		self
 	}
 
 	fileprivate var title: String {
 		switch self {
-			case .bottomLeft:
-				return "BottomLeft"
-			case .bottomRight:
-				return "BottomRight"
-			case .topLeft:
-				return "TopLeft"
-			case .topRight:
-				return "TopRight"
-			@unknown default:
-				return "BottomLeft"
+		case .bottomLeft:
+			return "BottomLeft"
+		case .bottomRight:
+			return "BottomRight"
+		case .topLeft:
+			return "TopLeft"
+		case .topRight:
+			return "TopRight"
+		@unknown default:
+			return "BottomLeft"
 		}
 	}
 }

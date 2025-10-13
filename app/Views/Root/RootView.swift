@@ -68,7 +68,7 @@ struct RootView: View {
 		}
 		.navigationViewStyle(StackNavigationViewStyle())
 		.navigationBarHidden(false)
-		.navigationTitle("Demo app")
+		.navigationTitle("TestApp")
 		.navigationBarItems(
 			leading: self.makefilterButton(),
 			trailing: self.makeSettingsButton()
@@ -105,7 +105,7 @@ struct RootView: View {
 	}
 
 	private func makeTabLabel(category: DemoCategory) -> some View {
-		let demoPageCount: Int = self.viewModel.demos(for: category).filter { $0.framework.contains(self.selectedFramework) }.count
+		let demoPageCount: Int = self.viewModel.demos(for: category).count(where: { $0.framework.contains(self.selectedFramework) })
 		let title = "\(category.displayName) " + "(\(demoPageCount))"
 		return Label(title, systemImage: category.iconName)
 	}
@@ -130,6 +130,8 @@ struct DemoListView: View {
 						try self.navigationService.push(self.destinationView(for: demo), animated: true)
 					case .uiKit:
 						try self.navigationService.push(self.destinationUIViewController(for: demo), animated: true)
+					@unknown default:
+						assertionFailure("Unknown type: \(self)")
 					}
 				} catch let error as DGis.SDKError {
 					self.viewModel.errorMessage = error.description

@@ -15,7 +15,7 @@ struct CustomMapViewsDemoView: View {
 
 	var body: some View {
 		ZStack(alignment: .top) {
-			self.mapFactory.mapViewOverlay
+			self.mapFactory.mapView
 				.edgesIgnoringSafeArea(.all)
 			Picker("", selection: self.$viewModel.controlsType) {
 				ForEach(self.viewModel.controlTypes) { type in
@@ -37,11 +37,13 @@ struct CustomMapViewsDemoView: View {
 	private func zoomControls() -> some View {
 		switch self.viewModel.controlsType {
 		case .default:
-			self.mapFactory.mapControlViewFactory.makeZoomView()
+			self.mapFactory.mapViewsFactory.makeZoomView()
 				.fixedSize()
 		case .custom:
 			CustomZoomView(map: self.mapFactory.map)
 				.fixedSize()
+		@unknown default:
+			fatalError("Unknown type: \(self.viewModel.controlsType)")
 		}
 	}
 }

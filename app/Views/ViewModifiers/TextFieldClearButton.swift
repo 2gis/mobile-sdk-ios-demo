@@ -12,11 +12,11 @@ struct TextFieldClearButton: ViewModifier {
 			content
 			Spacer()
 			Image(systemName: "multiply.circle.fill")
-				.foregroundColor(.secondary)
-				.opacity(text == "" ? 0 : 1)
-				.onTapGesture {
-					self.text = ""
-				}
+			.foregroundColor(.secondary)
+			.opacity(text == "" ? 0 : 1)
+			.onTapGesture {
+				self.text = ""
+			}
 		}
 	}
 }

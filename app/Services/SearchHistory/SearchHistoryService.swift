@@ -1,18 +1,12 @@
 import Combine
 import DGis
 
-final class SearchHistoryService {
+final class SearchHistoryService: @unchecked Sendable {
 	private let searchHistory: SearchHistory
 	private var historyCancellable: ICancellable = NoopCancellable()
 
-	private let schedule: (@escaping () -> Void) -> Void
-
-	init<S: Scheduler>(
-		searchHistory: SearchHistory,
-		scheduler: S
-	) {
+	init(searchHistory: SearchHistory) {
 		self.searchHistory = searchHistory
-		self.schedule = scheduler.schedule
 	}
 
 	func addItem(item: SearchHistoryItem) {
@@ -27,14 +21,13 @@ final class SearchHistoryService {
 
 	func items() -> Thunk {
 		Thunk { [weak self] dispatcher in
-			guard let self = self else { return }
+			guard let self else { return }
 
 			self.historyCancellable.cancel()
 
 			let future = self.searchHistory.items(page: SearchHistoryPage())
-			self.historyCancellable = future.sink(receiveValue: {
-				[schedule = self.schedule] result in
-				schedule {
+			self.historyCancellable = future.sinkOnMainThread(receiveValue: { result in
+				Task { @MainActor in
 					dispatcher(.setHistoryResult(SearchHistoryViewModel(items: result.items)))
 				}
 			}, failure: { _ in })

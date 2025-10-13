@@ -1,5 +1,5 @@
-import SwiftUI
 import DGis
+import SwiftUI
 
 struct SearchDemoView: View {
 	@Environment(\.presentationMode) private var presentationMode
@@ -21,20 +21,34 @@ struct SearchDemoView: View {
 	var body: some View {
 		ZStack {
 			ZStack(alignment: .bottom) {
-				self.mapFactory.mapViewOverlay
-				.mapViewOverlayObjectTappedCallback(callback: .init(
-					callback: { [viewModel = self.viewModel] objectInfo in
-						viewModel.getMarkerItemInfo(objectInfo: objectInfo)
-					}
-				))
+				self.mapFactory.mapView
+					.objectTappedCallback(callback: .init(
+						callback: { [viewModel = self.viewModel] objectInfo in
+							Task { @MainActor in
+								viewModel.getMarkerItemInfo(objectInfo: objectInfo)
+							}
+						}
+					))
 				if self.viewModel.showInfo {
 					self.infoView()
 						.frame(height: 250)
 						.background(Color(UIColor.systemBackground))
 				}
 			}
+			.edgesIgnoringSafeArea(.all)
 			if self.viewModel.showCloseMenu {
 				self.closeMenu
+			}
+			HStack {
+				Spacer()
+				VStack {
+					Spacer()
+					self.mapFactory.mapViewsFactory.makeZoomView()
+					Spacer()
+					self.mapFactory.mapViewsFactory.makeCurrentLocationView()
+						.padding(.bottom, 40)
+				}
+				.padding(.trailing, 4)
 			}
 		}
 		.navigationBarItems(
@@ -44,14 +58,13 @@ struct SearchDemoView: View {
 					self.viewModel.restoreState()
 				} label: {
 					Image(systemName: "arrow.triangle.2.circlepath.circle.fill")
-					.resizable()
-					.aspectRatio(contentMode: .fit)
-					.frame(minWidth: 32, minHeight: 32)
+						.resizable()
+						.aspectRatio(contentMode: .fit)
+						.frame(minWidth: 32, minHeight: 32)
 				}
 				self.navigationBarTrailingItem()
 			}
 		)
-		.edgesIgnoringSafeArea(.all)
 		.navigationBarBackButtonHidden(true)
 	}
 
@@ -59,30 +72,31 @@ struct SearchDemoView: View {
 		NavigationLink(destination: SearchView(
 			store: self.viewModel.searchStore,
 			logger: self.viewModel.logger,
-			directoryViewsFactory: directoryViewsFactory)) {
-				Image(systemName: "magnifyingglass.circle.fill")
-					.resizable()
-					.frame(minWidth: 32, minHeight: 32)
-			}
+			directoryViewsFactory: self.directoryViewsFactory
+		)) {
+			Image(systemName: "magnifyingglass.circle.fill")
+				.resizable()
+				.frame(minWidth: 32, minHeight: 32)
+		}
 	}
 
-	private var backButton : some View {
+	private var backButton: some View {
 		Button(action: {
 			self.viewModel.showCloseMenu = true
 		}) {
 			HStack {
-				Image(systemName: "arrow.left.circle")
+				Image(systemName: "chevron.left")
 				Text("Back")
 			}
 		}
 	}
 
-	private var closeMenu : some View {
+	private var closeMenu: some View {
 		VStack {
 			Text("Save search parameters?")
-			.foregroundColor(.primary)
-			.fontWeight(.bold)
-			.padding([.leading, .trailing, .top], 20)
+				.foregroundColor(.primary)
+				.fontWeight(.bold)
+				.padding([.leading, .trailing, .top], 20)
 
 			HStack(spacing: 30) {
 				Button("Save and exit") {
@@ -101,7 +115,7 @@ struct SearchDemoView: View {
 		.shadow(radius: 3)
 		.padding([.leading, .trailing], 20)
 	}
-	
+
 	private func infoView() -> some View {
 		VStack(alignment: .leading, spacing: 10) {
 			HStack {

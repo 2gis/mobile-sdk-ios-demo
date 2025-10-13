@@ -1,5 +1,6 @@
-import SwiftUI
+import Combine
 import DGis
+import SwiftUI
 
 final class ModelViewModel: ObservableObject {
 	enum ModelType: UInt {
@@ -13,23 +14,24 @@ final class ModelViewModel: ObservableObject {
 
 		var text: String {
 			switch self {
-			case .airplane: return "Airplane"
-			case .cubesFly: return "Cubes Fly"
-			case .cubesFall: return "Cubes Fall"
+			case .airplane: "Airplane"
+			case .cubesFly: "Cubes Fly"
+			case .cubesFall: "Cubes Fall"
+			@unknown default: fatalError("Unknown type: \(self)")
 			}
 		}
 
 		var modelData: Data? {
-			var name: String
-			switch self {
-				case .airplane: name = "models/airplane"
-				case .cubesFly: name = "models/cubes_fly"
-				case .cubesFall: name = "models/cubes_fall"
+			let name = switch self {
+			case .airplane: "models/airplane"
+			case .cubesFly: "models/cubes_fly"
+			case .cubesFall: "models/cubes_fall"
+			@unknown default: fatalError("Unknown type: \(self)")
 			}
 			return NSDataAsset(name: name)?.data
 		}
 	}
-	
+
 	@Published var type: ModelType = .airplane
 	@Published var modelSize: String = "50"
 	@Published var scaleEnabled: Bool = false
@@ -45,6 +47,7 @@ final class ModelViewModel: ObservableObject {
 			self.isErrorAlertShown = self.errorMessage != nil
 		}
 	}
+
 	private var modelCache: [ModelType: ModelData] = [:]
 
 	init(
@@ -92,7 +95,7 @@ final class ModelViewModel: ObservableObject {
 		}
 		guard let data = self.type.modelData else { return nil }
 		let model = self.modelFactory.make(modelData: data)
-		modelCache[self.type] = model
+		self.modelCache[self.type] = model
 		return model
 	}
 

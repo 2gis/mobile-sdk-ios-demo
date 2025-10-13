@@ -16,8 +16,8 @@ struct CameraMovesDemoView: View {
 
 	var body: some View {
 		ZStack(alignment: .bottomTrailing) {
-			self.mapFactory.mapViewOverlay
-				.mapViewOverlayCopyrightAlignment(.bottomLeft)
+			self.mapFactory.mapView
+				.copyrightAlignment(.bottomLeft)
 		}
 		.edgesIgnoringSafeArea(.all)
 		.actionSheet(isPresented: self.$viewModel.showActionSheet) { self.cameraMoveMenu }

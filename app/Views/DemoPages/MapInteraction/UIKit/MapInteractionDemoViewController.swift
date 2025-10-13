@@ -97,13 +97,13 @@ private class MapTableViewCell: UITableViewCell {
 
 	private func setupMap() {
 		guard let mapFactory = self.mapHolder?.mapFactory else { return }
-		mapFactory.mapView.translatesAutoresizingMaskIntoConstraints = false
-		self.contentView.addSubview(mapFactory.mapView)
+		mapFactory.mapUIView.translatesAutoresizingMaskIntoConstraints = false
+		self.contentView.addSubview(mapFactory.mapUIView)
 		NSLayoutConstraint.activate([
-			mapFactory.mapView.topAnchor.constraint(equalTo: self.contentView.topAnchor),
-			mapFactory.mapView.leftAnchor.constraint(equalTo: self.contentView.leftAnchor),
-			mapFactory.mapView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor),
-			mapFactory.mapView.rightAnchor.constraint(equalTo: self.contentView.rightAnchor)
+			mapFactory.mapUIView.topAnchor.constraint(equalTo: self.contentView.topAnchor),
+			mapFactory.mapUIView.leftAnchor.constraint(equalTo: self.contentView.leftAnchor),
+			mapFactory.mapUIView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor),
+			mapFactory.mapUIView.rightAnchor.constraint(equalTo: self.contentView.rightAnchor)
 		])
 
 		self.contentView.addSubview(self.mapInteractionButton)

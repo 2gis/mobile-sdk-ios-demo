@@ -23,15 +23,15 @@ extension NavigationViewTheme {
 			)
 		)
 
-		theme.dashboardTheme.backgroundColor = UIColor(rgb: 0xD7C1C1)
+		theme.dashboardControlTheme.backgroundColor = UIColor(rgb: 0xD7C1C1)
 
-		theme.dashboardTheme.finishButtonTheme.backgroundColor = UIColor(rgb: 0xFF4D00)
-		theme.dashboardTheme.finishButtonTheme.textColor = UIColor(rgb: 0xF6EECD)
-		theme.dashboardTheme.finishButtonTheme.textFont = UIFont(name: "AmericanTypewriter-Semibold", size: 16)!
+		theme.dashboardControlTheme.finishButtonTheme.backgroundColor = UIColor(rgb: 0xFF4D00)
+		theme.dashboardControlTheme.finishButtonTheme.textColor = UIColor(rgb: 0xF6EECD)
+		theme.dashboardControlTheme.finishButtonTheme.textFont = UIFont(name: "AmericanTypewriter-Semibold", size: 16)!
 
-		theme.dashboardTheme.contentControlTheme.voiceInstructionsTitleFont = UIFont(name: "AmericanTypewriter", size: 16)!
-		theme.dashboardTheme.contentControlTheme.voiceInstructionsSubtitleFont = UIFont(name: "AmericanTypewriter-Light", size: 14)!
-		theme.dashboardTheme.contentControlTheme.actionTitleFont = UIFont(name: "AmericanTypewriter-Light", size: 14)!
+		theme.dashboardControlTheme.contentControlTheme.voiceInstructionsTitleFont = UIFont(name: "AmericanTypewriter", size: 16)!
+		theme.dashboardControlTheme.contentControlTheme.voiceInstructionsSubtitleFont = UIFont(name: "AmericanTypewriter-Light", size: 14)!
+		theme.dashboardControlTheme.contentControlTheme.actionTitleFont = UIFont(name: "AmericanTypewriter-Light", size: 14)!
 
 		theme.speedControlTheme.currentSpeedFont = UIFont(name: "AmericanTypewriter-Semibold", size: 28)!
 		theme.speedControlTheme.speedLimitSmallFont = UIFont(name: "AmericanTypewriter-Semibold", size: 22)!
@@ -46,23 +46,23 @@ extension NavigationViewTheme {
 
 		theme.betterRouteControlTheme.labelFont = UIFont(name: "AmericanTypewriter-Semibold", size: 16)!
 
-		theme.dashboardTheme.contentControlTheme.rightIconBackgroundColor = .white
-		theme.dashboardTheme.contentControlTheme.backgroundColor = UIColor(rgb: 0xF1E9E9)
-		theme.dashboardTheme.contentControlTheme.disclosureIndicatorColor = .red
+		theme.dashboardControlTheme.contentControlTheme.rightIconBackgroundColor = .white
+		theme.dashboardControlTheme.contentControlTheme.backgroundColor = UIColor(rgb: 0xF1E9E9)
+		theme.dashboardControlTheme.contentControlTheme.disclosureIndicatorColor = .red
 
-		theme.dashboardTheme.parkingButtonTheme.textColor = .brown
-		theme.dashboardTheme.parkingButtonTheme.icon = UIImage(named: "svg/parking")?.withRenderingMode(.alwaysTemplate)
-		theme.dashboardTheme.parkingButtonTheme.activeIconColor = .darkGray
-		theme.dashboardTheme.parkingButtonTheme.iconColor = .magenta
-		theme.dashboardTheme.parkingButtonTheme.textFont = UIFont(name: "AmericanTypewriter-Semibold", size: 13)!
+		theme.dashboardControlTheme.parkingButtonTheme.textColor = .brown
+		theme.dashboardControlTheme.parkingButtonTheme.icon = UIImage(named: "svg/parking")?.withRenderingMode(.alwaysTemplate)
+		theme.dashboardControlTheme.parkingButtonTheme.activeIconColor = .darkGray
+		theme.dashboardControlTheme.parkingButtonTheme.iconColor = .magenta
+		theme.dashboardControlTheme.parkingButtonTheme.textFont = UIFont(name: "AmericanTypewriter-Semibold", size: 13)!
 		
-		theme.dashboardTheme.indoorNavigationControlTheme.textFont = UIFont(name: "AmericanTypewriter-Semibold", size: 13)!
-		theme.dashboardTheme.indoorNavigationControlTheme.textColor = .green
+		theme.dashboardControlTheme.indoorNavigationControlTheme.textFont = UIFont(name: "AmericanTypewriter-Semibold", size: 13)!
+		theme.dashboardControlTheme.indoorNavigationControlTheme.textColor = .green
 		
-		theme.dashboardTheme.navigatorFinishRouteDashboardTheme.titleColor = .blue
-		theme.dashboardTheme.navigatorFinishRouteDashboardTheme.titleFont = UIFont(name: "AmericanTypewriter-Semibold", size: 18)!
-		theme.dashboardTheme.navigatorFinishRouteDashboardTheme.subtitleColor = .green
-		theme.dashboardTheme.navigatorFinishRouteDashboardTheme.subtitleFont = UIFont(name: "AmericanTypewriter", size: 15)!
+		theme.dashboardControlTheme.finishRouteControlTheme.titleColor = .blue
+		theme.dashboardControlTheme.finishRouteControlTheme.titleFont = UIFont(name: "AmericanTypewriter-Semibold", size: 18)!
+		theme.dashboardControlTheme.finishRouteControlTheme.subtitleColor = .green
+		theme.dashboardControlTheme.finishRouteControlTheme.subtitleFont = UIFont(name: "AmericanTypewriter", size: 15)!
 
 		theme.cameraControlTheme.trackColor = .black
 		theme.cameraControlTheme.progressColor = .white
@@ -78,29 +78,31 @@ extension NavigationViewTheme {
 
 		theme.betterRouteControlTheme.progressBarColor = .purple
 
-		theme.thermometerTheme.progressColor = .black
-		theme.thermometerTheme.startPositionColor = .black
-		theme.thermometerTheme.trafficLineDeepRedColor = .purple
-		theme.thermometerTheme.trafficLineRedColor = .red
-		theme.thermometerTheme.trafficLineYellowColor = .yellow
-		theme.thermometerTheme.trafficLineGreenColor = .green
-		theme.thermometerTheme.trafficLineNoDataColor = .blue
-		theme.thermometerTheme.trafficLineUndefinedColor = .gray
+		theme.thermometerControlTheme.progressColor = .black
+		theme.thermometerControlTheme.startPositionColor = .black
+		theme.thermometerControlTheme.trafficLineDeepRedColor = .purple
+		theme.thermometerControlTheme.trafficLineRedColor = .red
+		theme.thermometerControlTheme.trafficLineOrangeColor = .orange
+		theme.thermometerControlTheme.trafficLineYellowColor = .yellow
+		theme.thermometerControlTheme.trafficLineGreenColor = .green
+		theme.thermometerControlTheme.trafficLineDeepGreenColor = .green
+		theme.thermometerControlTheme.trafficLineNoDataColor = .blue
+		theme.thermometerControlTheme.trafficLineUndefinedColor = .gray
 
-		theme.thermometerTheme.cursorTheme.iconColor = .black
-		theme.thermometerTheme.cursorTheme.iconBackgroundColor = .orange
+		theme.thermometerControlTheme.cursorTheme.iconColor = .black
+		theme.thermometerControlTheme.cursorTheme.iconBackgroundColor = .orange
 
-		theme.thermometerTheme.crashPointTheme.backgroundColor = .black
-		theme.thermometerTheme.crashPointTheme.contentColor = .blue
-		theme.thermometerTheme.crashPointTheme.foregroundColor = .red
+		theme.thermometerControlTheme.crashPointTheme.backgroundColor = .black
+		theme.thermometerControlTheme.crashPointTheme.contentColor = .blue
+		theme.thermometerControlTheme.crashPointTheme.foregroundColor = .red
 
-		theme.thermometerTheme.roadWorksPointTheme.backgroundColor = .black
-		theme.thermometerTheme.roadWorksPointTheme.contentColor = .red
-		theme.thermometerTheme.roadWorksPointTheme.foregroundColor = .yellow
+		theme.thermometerControlTheme.roadWorksPointTheme.backgroundColor = .black
+		theme.thermometerControlTheme.roadWorksPointTheme.contentColor = .red
+		theme.thermometerControlTheme.roadWorksPointTheme.foregroundColor = .yellow
 
-		theme.thermometerTheme.intermediatePointTheme.backgroundColor = .black
-		theme.thermometerTheme.intermediatePointTheme.contentColor = .white
-		theme.thermometerTheme.intermediatePointTheme.foregroundColor = .blue
+		theme.thermometerControlTheme.intermediatePointTheme.backgroundColor = .black
+		theme.thermometerControlTheme.intermediatePointTheme.contentColor = .white
+		theme.thermometerControlTheme.intermediatePointTheme.foregroundColor = .blue
 
 		theme.nextManeuverControlTheme.iconColor = .red
 		theme.nextManeuverControlTheme.additionalManeuverIconColor = .brown

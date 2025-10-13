@@ -1,7 +1,8 @@
-import SwiftUI
+import Combine
 import DGis
+import SwiftUI
 
-final class GraphicsOptionsDemoViewModel: ObservableObject {
+final class GraphicsOptionsDemoViewModel: ObservableObject, @unchecked Sendable {
 	@Published var selectedOption: GraphicsOption {
 		didSet {
 			if oldValue != self.selectedOption {
@@ -10,11 +11,12 @@ final class GraphicsOptionsDemoViewModel: ObservableObject {
 			}
 		}
 	}
+
 	@Published var recommendedOption: String = ""
 	private let map: Map
 	private let settingsService: ISettingsService
-	private var mapGraphicsPresetHintCancellable: Cancellable?
-	
+	private var mapGraphicsPresetHintCancellable: ICancellable?
+
 	init(
 		map: Map,
 		settingsService: ISettingsService
@@ -25,7 +27,7 @@ final class GraphicsOptionsDemoViewModel: ObservableObject {
 		self.setupMapGraphicsPresetHintChannel()
 		self.setupCameraPosition()
 	}
-	
+
 	private func setupCameraPosition() {
 		do {
 			try self.map.camera.setPosition(
@@ -40,12 +42,12 @@ final class GraphicsOptionsDemoViewModel: ObservableObject {
 			return
 		}
 	}
-	
+
 	private func setupMapGraphicsPresetHintChannel() {
 		self.mapGraphicsPresetHintCancellable = self.map.graphicsPresetHintChannel.sinkOnMainThread(
 			{
 				[weak self] preset in
-				guard let self = self else { return }
+				guard let self else { return }
 				if let option = GraphicsOption.allCases.first(where: { $0.preset == preset }) {
 					self.recommendedOption = option.name
 				}

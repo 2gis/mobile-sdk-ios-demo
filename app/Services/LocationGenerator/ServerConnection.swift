@@ -1,6 +1,7 @@
 import Foundation
 import Network
 
+@MainActor
 final class ServerConnection {
 	let connection: NWConnection
 	let id: Int
@@ -22,7 +23,9 @@ final class ServerConnection {
 
 	func start() {
 		self.connection.stateUpdateHandler = { [weak self] state in
-			self?.stateDidChange(to: state)
+			Task { @MainActor [weak self] in
+				self?.stateDidChange(to: state)
+			}
 		}
 		self.setupReceive()
 		self.connection.start(queue: self.queue)
@@ -35,30 +38,32 @@ final class ServerConnection {
 
 	private func stateDidChange(to state: NWConnection.State) {
 		switch state {
-			case .ready:
-				break
-			case .waiting(let error):
-				self.connectionDidFail(error: error)
-			case .failed(let error):
-				self.connectionDidFail(error: error)
-			default:
-				break
+		case .ready:
+			break
+		case let .waiting(error):
+			self.connectionDidFail(error: error)
+		case let .failed(error):
+			self.connectionDidFail(error: error)
+		default:
+			break
 		}
 	}
 
 	private func setupReceive() {
 		self.connection.receiveMessage(completion: {
 			[weak self] data, _, isComplete, error in
-			guard let self = self else { return }
-			if let data = data, !data.isEmpty, let didReceiveData = self.didReceiveData {
-				didReceiveData(data)
-			}
-			if isComplete {
-				self.connectionDidEnd()
-			} else if let error = error {
-				self.connectionDidFail(error: error)
-			} else {
-				self.setupReceive()
+			Task { @MainActor [weak self] in
+				guard let self else { return }
+				if let data, !data.isEmpty, let didReceiveData = self.didReceiveData {
+					didReceiveData(data)
+				}
+				if isComplete {
+					self.connectionDidEnd()
+				} else if let error {
+					self.connectionDidFail(error: error)
+				} else {
+					self.setupReceive()
+				}
 			}
 		})
 	}

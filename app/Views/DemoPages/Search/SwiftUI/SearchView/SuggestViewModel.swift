@@ -1,6 +1,6 @@
+import DGis
 import Foundation
 import SwiftUI
-import DGis
 
 struct SuggestViewModel: Identifiable, Hashable {
 	let id = UUID()
@@ -18,7 +18,7 @@ struct SuggestViewModel: Identifiable, Hashable {
 		self.object = suggest.handler.object.map { DirectoryObjectViewModel(object: $0, lastLocation: lastLocation) }
 	}
 
-	static func ==(_ lhs: Self, rhs: Self) -> Bool {
+	static func == (_ lhs: Self, rhs: Self) -> Bool {
 		lhs.id == rhs.id
 	}
 
@@ -30,14 +30,14 @@ struct SuggestViewModel: Identifiable, Hashable {
 private func makeIcon(for handler: SuggestHandler) -> SwiftUI.Image {
 	let icon: SwiftUI.Image
 	switch handler {
-		case .objectHandler:
-			icon = Image(systemName: "map")
-		case .performSearchHandler:
-			icon = Image(systemName: "magnifyingglass")
-		case .incompleteTextHandler:
-			icon = Image(systemName: "text.insert")
-		@unknown default:
-			fatalError()
+	case .objectHandler:
+		icon = Image(systemName: "map")
+	case .performSearchHandler:
+		icon = Image(systemName: "magnifyingglass")
+	case .incompleteTextHandler:
+		icon = Image(systemName: "text.insert")
+	@unknown default:
+		fatalError()
 	}
 	return icon
 }
@@ -45,10 +45,10 @@ private func makeIcon(for handler: SuggestHandler) -> SwiftUI.Image {
 private extension SuggestHandler {
 	var object: DirectoryObject? {
 		switch self {
-			case .objectHandler(let handler):
-				return handler?.item
-			default:
-				return nil
+		case let .objectHandler(handler):
+			handler.item
+		default:
+			nil
 		}
 	}
 }

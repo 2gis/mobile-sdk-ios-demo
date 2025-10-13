@@ -1,5 +1,6 @@
-import SwiftUI
+import Combine
 import DGis
+import SwiftUI
 
 enum GroupingType: String, CaseIterable {
 	case clustering, generalization, noGrouping
@@ -16,6 +17,8 @@ enum ClusterMapObjectType: String, CaseIterable {
 			"lottie/animated_marker_blue"
 		case .model:
 			"models/cubes_with_scenes"
+		@unknown default:
+			fatalError("Unknown type: \(self)")
 		}
 	}
 
@@ -27,6 +30,8 @@ enum ClusterMapObjectType: String, CaseIterable {
 			"lottie/animated_marker_green"
 		case .model:
 			"models/cubes_fly"
+		@unknown default:
+			fatalError("Unknown type: \(self)")
 		}
 	}
 
@@ -38,11 +43,13 @@ enum ClusterMapObjectType: String, CaseIterable {
 			LogicalPixel(15.0)
 		case .model:
 			LogicalPixel(10.0)
+		@unknown default:
+			fatalError("Unknown type: \(self)")
 		}
 	}
 }
 
-final class ClusteringDemoViewModel: ObservableObject {
+final class ClusteringDemoViewModel: ObservableObject, @unchecked Sendable {
 	@Published var groupingType: GroupingType = .clustering {
 		didSet {
 			if oldValue != self.groupingType {
@@ -78,7 +85,7 @@ final class ClusteringDemoViewModel: ObservableObject {
 	@Published var isMapObjectsVisible: Bool = true {
 		didSet {
 			if oldValue != self.isMapObjectsVisible {
-				self.mapObjects.forEach { object in
+				for object in self.mapObjects {
 					object.isVisible = self.isMapObjectsVisible
 				}
 			}
@@ -122,11 +129,10 @@ final class ClusteringDemoViewModel: ObservableObject {
 	private var selectedCameraPosition: CameraPosition?
 
 	private var mapObjects: [SimpleMapObject] = []
-	private lazy var secondSelectedSearchMarker = {
-		self.imageFactory.make(
-			image: UIImage(named: "svg/marker_search_selected_2")!
-		)
-	}()
+	private lazy var secondSelectedSearchMarker = self.imageFactory.make(
+		image: UIImage(named: "svg/marker_search_selected_2")!
+	)
+
 	private lazy var mapObjectManager: MapObjectManager? = self.makeMapObjectManager()
 	private lazy var cache: [String: ImageOrData] = [:]
 	private var objectCounter = 0
@@ -155,14 +161,14 @@ final class ClusteringDemoViewModel: ObservableObject {
 		let newMapObjects = self.makeNewMapObjects(count: Int(self.objectsCount))
 		self.mapObjectManager?.addObjects(objects: newMapObjects)
 	}
-	
+
 	func removeMapObjects() {
 		guard self.objectsCount < self.mapObjects.count else {
 			self.removeAll()
 			return
 		}
 
-		self.mapObjectManager?.removeObjects(objects: Array(self.mapObjects[0..<Int(self.objectsCount)]))
+		self.mapObjectManager?.removeObjects(objects: Array(self.mapObjects[0 ..< Int(self.objectsCount)]))
 		self.mapObjects.removeFirst(Int(self.objectsCount))
 	}
 
@@ -172,7 +178,7 @@ final class ClusteringDemoViewModel: ObservableObject {
 			count = self.mapObjects.count
 		}
 
-		let objectsToRemove = Array(self.mapObjects[0..<count])
+		let objectsToRemove = Array(self.mapObjects[0 ..< count])
 		self.mapObjects.removeFirst(count)
 
 		let newObjects = self.makeNewMapObjects(count: count)
@@ -189,7 +195,7 @@ final class ClusteringDemoViewModel: ObservableObject {
 	}
 
 	func moveObjectsAndDeleteThem() {
-		let pt1 = GeoPoint(latitude:55.817026, longitude: 37.507916)
+		let pt1 = GeoPoint(latitude: 55.817026, longitude: 37.507916)
 		let pt2 = GeoPoint(latitude: 54.817026, longitude: 37.507916)
 
 		let polylineOptions = PolylineOptions(
@@ -235,7 +241,7 @@ final class ClusteringDemoViewModel: ObservableObject {
 	func reinitMapObjectManager() {
 		/// Есть проблема, что если у вновь добавленного маркера поменять позицию, а потом удалить MapObjectManager, то будет краш.
 		if !self.mapObjects.isEmpty, let marker = self.mapObjects[0] as? Marker {
-			marker.position = generateGeoPoint()
+			marker.position = self.generateGeoPoint()
 		}
 
 		DispatchQueue.main.async {
@@ -248,8 +254,8 @@ final class ClusteringDemoViewModel: ObservableObject {
 	}
 
 	func moveAllMapObjects() {
-		self.mapObjects.forEach { object in
-			let position = generateGeoPoint()
+		for object in self.mapObjects {
+			let position = self.generateGeoPoint()
 
 			switch object {
 			case let marker as Marker:
@@ -257,7 +263,7 @@ final class ClusteringDemoViewModel: ObservableObject {
 			case let model as ModelMapObject:
 				model.position = position
 			default:
-				return
+				continue
 			}
 		}
 	}
@@ -269,7 +275,7 @@ final class ClusteringDemoViewModel: ObservableObject {
 
 	func longPress(objectInfo: RenderedObjectInfo) {
 		guard let marker = objectInfo.item.item as? Marker else { return }
-		marker.position = generateGeoPoint()
+		marker.position = self.generateGeoPoint()
 	}
 
 	private func generateGeoPoint() -> GeoPointWithElevation {
@@ -281,8 +287,8 @@ final class ClusteringDemoViewModel: ObservableObject {
 		if minLongitude > maxLongitude {
 			maxLongitude = max(maxLongitude + 180, 180)
 		}
-		let latitude = Double.random(in: minPoint.latitude.value...maxPoint.latitude.value)
-		let longitude = Double.random(in: minLongitude...maxLongitude)
+		let latitude = Double.random(in: minPoint.latitude.value ... maxPoint.latitude.value)
+		let longitude = Double.random(in: minLongitude ... maxLongitude)
 		return GeoPointWithElevation(
 			latitude: latitude,
 			longitude: longitude,
@@ -461,14 +467,16 @@ final class ClusteringDemoViewModel: ObservableObject {
 			)
 		case .noGrouping:
 			return MapObjectManager(map: self.map)
+		@unknown default:
+			fatalError("Unknown type: \(self.groupingType)")
 		}
 	}
 
 	private func makeNewMapObjects(count: Int) -> [SimpleMapObject] {
 		var newObjects: [SimpleMapObject] = []
-		for _ in 0..<count {
+		for _ in 0 ..< count {
 			do {
-				let position = generateGeoPoint()
+				let position = self.generateGeoPoint()
 				let index = self.objectCounter
 				self.objectCounter += 1
 				guard let mapObject = self.makeNewMapObject(position: position, index: index) else {
@@ -504,6 +512,8 @@ final class ClusteringDemoViewModel: ObservableObject {
 				mapObjectType: .model,
 				index: index
 			)
+		@unknown default:
+			fatalError("Unknown type: \(self.mapObjectType)")
 		}
 	}
 
@@ -519,7 +529,7 @@ final class ClusteringDemoViewModel: ObservableObject {
 			iconWidth: mapObjectType.width,
 			userData: index
 		)
-		if (self.useTextInCluster) {
+		if self.useTextInCluster {
 			options.text = "Marker #\(index)"
 			options.textStyle = Constants.textStyle
 		}
@@ -582,9 +592,11 @@ final class ClusteringDemoViewModel: ObservableObject {
 				modelData: NSDataAsset(name: dataName)!.data
 			)
 			imageOrData = .data(modelData)
+		@unknown default:
+			fatalError("Unknown type: \(self.mapObjectType)")
 		}
 
-		cache[dataName] = imageOrData
+		self.cache[dataName] = imageOrData
 		return imageOrData
 	}
 }
@@ -595,19 +607,23 @@ private enum ImageOrData {
 
 	var image: DGis.Image {
 		switch self {
-		case .image(let image):
-			return image
-		case .data(_):
+		case let .image(image):
+			image
+		case .data:
 			fatalError("Unable to get image")
+		@unknown default:
+			fatalError("Unknown type: \(self)")
 		}
 	}
 
 	var data: DGis.ModelData {
 		switch self {
-		case .image(_):
+		case .image:
 			fatalError("Unable to get model data")
-		case .data(let data):
-			return data
+		case let .data(data):
+			data
+		@unknown default:
+			fatalError("Unknown type: \(self)")
 		}
 	}
 }
@@ -637,7 +653,7 @@ private final class SimpleClusterRendererImpl: SimpleClusterRenderer {
 			userData: self.userDataCreator(),
 			zIndex: ZIndex(value: 6)
 		)
-		if (self.useTextInCluster) {
+		if self.useTextInCluster {
 			let textStyle = TextStyle(
 				fontSize: LogicalPixel(15.0),
 				textPlacement: TextPlacement.rightTop

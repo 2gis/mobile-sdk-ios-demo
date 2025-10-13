@@ -1,7 +1,7 @@
 import Combine
 import CoreLocation
-import SwiftUI
 import DGis
+import SwiftUI
 
 struct SearchOptions {
 	struct Filter {
@@ -12,42 +12,40 @@ struct SearchOptions {
 	let minPageSize: Int32 = 1
 	let maxPageSize: Int32 = 50
 	var pageSize: Int32 = 10
-	
+
 	var sortingType: SortingType = .byRelevance
-	var filter: Filter = Filter(allowedResultTypes: ObjectType.defaultTypes)
+	var filter: Filter = .init(allowedResultTypes: ObjectType.defaultTypes)
 }
 
-final class SearchService {
-	var lastSearchQuery: SearchQuery? = nil
+final class SearchService: @unchecked Sendable {
+	var lastSearchQuery: SearchQuery?
 
-	private let searchManager: ISearchManager
-    private let searchHistory: SearchHistoryService
+	private let searchManager: SearchManager
+	private let searchHistory: SearchHistoryService
 	private let map: Map
 	private let objectManager: MapObjectManager
 	private let imageFactory: IImageFactory
 	private let logger: ILogger
 	private let locationService: DGis.LocationService
-	private let schedule: (@escaping () -> Void) -> Void
 	private var suggestDebouncer = PassthroughSubject<AppliedThunk, Never>()
 	private var suggestCancellable: ICancellable = NoopCancellable()
 	private var searchCancellable: ICancellable?
 	private var searchMarkersCancellable: ICancellable?
 	private var cancellables: [AnyCancellable] = []
-	private var searchMarkers: [DgisObjectId:Marker] = [:]
+	private var searchMarkers: [DgisObjectId: Marker] = [:]
 	private var markerInfoCancellable: [DGis.Cancellable] = []
-    private var isDebouncerActive: Bool = true
+	private var isDebouncerActive: Bool = true
 
-	init<S: Scheduler>(
-		searchManager: ISearchManager,
-        searchHistory: SearchHistoryService,
+	init(
+		searchManager: SearchManager,
+		searchHistory: SearchHistoryService,
 		map: Map,
 		imageFactory: IImageFactory,
 		logger: ILogger,
-		locationService: DGis.LocationService,
-		scheduler: S
+		locationService: DGis.LocationService
 	) {
 		self.searchManager = searchManager
-        self.searchHistory = searchHistory
+		self.searchHistory = searchHistory
 		self.map = map
 		self.imageFactory = imageFactory
 		self.logger = logger
@@ -55,15 +53,15 @@ final class SearchService {
 			map: self.map,
 			logicalPixel: 80.0,
 			maxZoom: self.map.camera.zoomRestrictions.maxZoom,
-			minZoom: self.map.camera.zoomRestrictions.minZoom)
+			minZoom: self.map.camera.zoomRestrictions.minZoom
+		)
 
 		self.locationService = locationService
-		self.schedule = scheduler.schedule
 
 		self.suggestDebouncer
-			.debounce(for: .milliseconds(250), scheduler: scheduler)
-            .filter { [weak self] _ in self?.isDebouncerActive == true }
-			.receive(on: scheduler)
+			.debounce(for: .milliseconds(250), scheduler: DispatchQueue.main)
+			.filter { [weak self] _ in self?.isDebouncerActive == true }
+			.receive(on: DispatchQueue.main)
 			.sink(receiveValue: { appliedThunk in appliedThunk() })
 			.store(in: &self.cancellables)
 	}
@@ -71,61 +69,61 @@ final class SearchService {
 	func apply(suggest: SuggestViewModel) -> Thunk {
 		Thunk { dispatcher in
 			switch suggest.applyHandler {
-				case .objectHandler(let handler):
-					debugPrint(handler!)
-					dispatcher(.applyObjectSuggest(suggest))
-				case .performSearchHandler(let handler):
-                    dispatcher(.searchQuery(handler!.searchQuery, suggest.title.text, suggest.subtitle.text))
-				case .incompleteTextHandler(let handler):
-					dispatcher(.setQueryText(handler!.queryText))
-				@unknown default:
-					fatalError()
+			case let .objectHandler(handler):
+				debugPrint(handler)
+				dispatcher(.applyObjectSuggest(suggest))
+			case let .performSearchHandler(handler):
+				dispatcher(.searchQuery(handler.searchQuery, suggest.title.text, suggest.subtitle.text))
+			case let .incompleteTextHandler(handler):
+				dispatcher(.setQueryText(handler.queryText))
+			@unknown default:
+				fatalError()
 			}
 		}
 	}
 
 	func suggestIfNeeded(queryText: String) -> Thunk {
 		Thunk { [weak self] dispatcher in
-			guard let self = self else { return }
+			guard let self else { return }
 			if queryText.isEmpty {
 				dispatcher(.resetSuggestions)
 				return
 			}
 			let appliedThunk = self.suggest(queryText: queryText)
 				.bind(dispatcher)
-            self.isDebouncerActive = true
+			self.isDebouncerActive = true
 			self.suggestDebouncer.send(appliedThunk)
 		}
 	}
 
-    func cancelSuggest() {
-        self.suggestCancellable.cancel()
-        self.isDebouncerActive = false
-    }
+	func cancelSuggest() {
+		self.suggestCancellable.cancel()
+		self.isDebouncerActive = false
+	}
 
+	@MainActor
 	func search(
 		queryText: String,
 		rubricIds: [RubricId],
 		searchOptions: SearchOptions?
 	) -> Thunk {
 		Thunk { [weak self] dispatcher in
-			guard let self = self else { return }
+			guard let self else { return }
 
 			guard !queryText.isEmpty || !rubricIds.isEmpty else { return }
 
 			let queryText = queryText
-			let builder: SearchQueryBuilder
-			if !rubricIds.isEmpty {
+			let builder: SearchQueryBuilder = if !rubricIds.isEmpty {
 				if !queryText.isEmpty {
-					builder = .fromQueryTextAndRubricIds(
+					.fromQueryTextAndRubricIds(
 						queryText: queryText,
 						rubricIds: rubricIds
 					)
 				} else {
-					builder = .fromRubricIds(rubricIds: rubricIds)
+					.fromRubricIds(rubricIds: rubricIds)
 				}
 			} else {
-				builder = .fromQueryText(queryText: queryText)
+				.fromQueryText(queryText: queryText)
 			}
 
 			let query = builder
@@ -133,37 +131,41 @@ final class SearchService {
 				.apply(searchOptions: searchOptions)
 				.build()
 			self.lastSearchQuery = query
-            self.search(query: query, title: queryText, subtitle: "", addToHistory: true)(dispatcher)
+			Task { @MainActor [weak self] in
+				self?.search(query: query, title: queryText, subtitle: "", addToHistory: true)(dispatcher)
+			}
 		}
 	}
 
-    func search(query: SearchQuery, title: String, subtitle: String, addToHistory: Bool) -> Thunk {
+	@MainActor
+	func search(query: SearchQuery, title: String, subtitle: String, addToHistory: Bool) -> Thunk {
 		Thunk { [weak self] dispatcher in
-			guard let self = self else { return }
+			guard let self else { return }
 			self.searchCancellable?.cancel()
-            self.cancelSuggest()
+			self.cancelSuggest()
 
-            if addToHistory {
-                let titledQuery = SearchQueryWithInfo(searchQuery: query, title: title, subtitle: subtitle)
-                self.searchHistory.addItem(item: SearchHistoryItem.searchQuery(titledQuery))
-            }
+			if addToHistory {
+				let titledQuery = SearchQueryWithInfo(searchQuery: query, title: title, subtitle: subtitle)
+				self.searchHistory.addItem(item: SearchHistoryItem.searchQuery(titledQuery))
+			}
 
 			let future = self.searchManager.search(query: query)
-			self.searchCancellable = future.sink(receiveValue: {
-				[schedule = self.schedule, locationService = self.locationService] result in
+			self.searchCancellable = future.sinkOnMainThread(receiveValue: {
+				[locationService = self.locationService] result in
 				self.searchCancellable = nil
-				schedule {
+				Task { @MainActor [weak self] in
+					guard let self else { return }
 					self.getSearchMarkers(result: result)
 					let resultViewModel = self.makeSearchResultViewModel(
 						result: result,
-						lastPosition: locationService.lastLocation.map({ CLLocation(location: $0) })
+						lastPosition: locationService.lastLocation.map { CLLocation(location: $0) }
 					)
 					dispatcher(.setSearchResult(resultViewModel))
 				}
 			}, failure: {
-				[schedule = self.schedule] error in
-				self.searchCancellable = nil
-				schedule {
+				[weak self] error in
+				self?.searchCancellable = nil
+				Task { @MainActor in
 					let message = "Search failed [\(error.description)]"
 					dispatcher(.setError(message))
 				}
@@ -173,7 +175,7 @@ final class SearchService {
 
 	private func suggest(queryText: String) -> Thunk {
 		Thunk { [weak self] dispatcher in
-			guard let self = self else { return }
+			guard let self else { return }
 
 			// Предыдущий поиск должен быть завершен.
 			guard self.searchCancellable == nil else { return }
@@ -191,23 +193,23 @@ final class SearchService {
 
 	private func suggest(query: SuggestQuery) -> Thunk {
 		Thunk { [weak self] dispatcher in
-			guard let self = self else { return }
+			guard let self else { return }
 
 			self.suggestCancellable.cancel()
 
 			let future = self.searchManager.suggest(query: query)
-			self.suggestCancellable = future.sink(receiveValue: {
-				[schedule = self.schedule, locationService = self.locationService] result in
-				schedule {
+			self.suggestCancellable = future.sinkOnMainThread(receiveValue: {
+				[locationService = self.locationService] result in
+				Task { @MainActor [weak self] in
+					guard let self else { return }
 					let suggestResultViewModel = self.makeSuggestResultViewModel(
 						result: result,
-						lastPosition: locationService.lastLocation.map({ CLLocation(location: $0) })
+						lastPosition: locationService.lastLocation.map { CLLocation(location: $0) }
 					)
 					dispatcher(.setSuggestResult(suggestResultViewModel))
 				}
-			}, failure: {
-				[schedule = self.schedule] error in
-				schedule {
+			}, failure: { error in
+				Task { @MainActor in
 					let message = "Search failed [\(error.description)]"
 					dispatcher(.setError(message))
 				}
@@ -215,11 +217,12 @@ final class SearchService {
 		}
 	}
 
+	@MainActor
 	private func makeSearchResultViewModel(
 		result: SearchResult,
 		lastPosition: CLLocation?
 	) -> SearchResultViewModel {
-		return SearchResultViewModel(
+		SearchResultViewModel(
 			result: result,
 			lastPosition: lastPosition
 		)
@@ -229,16 +232,16 @@ final class SearchService {
 		result: SuggestResult,
 		lastPosition: CLLocation?
 	) -> SuggestResultViewModel {
-		return SuggestResultViewModel(
+		SuggestResultViewModel(
 			result: result,
 			lastPosition: lastPosition
 		)
 	}
 
 	private func getSearchMarkers(result: SearchResult) {
-		self.searchMarkersCancellable = result.itemMarkerInfos.sink { [weak self] markers in
-			guard let self = self,
-				  let markersInfo = markers
+		self.searchMarkersCancellable = result.itemMarkerInfos.sinkOnMainThread { [weak self] markers in
+			guard let self,
+			      let markersInfo = markers
 			else { return }
 			self.deleteOldMarkersAndAddNew(markersInfo: markersInfo)
 		} failure: { error in
@@ -258,7 +261,7 @@ final class SearchService {
 			MarkerOptions(
 				position: markerInfo.geoPoint,
 				icon: icon,
-                text: markerInfo.title,
+				text: markerInfo.title,
 				textStyle: .init(
 					fontSize: 12.0,
 					color: .init(.label)!,
@@ -272,15 +275,15 @@ final class SearchService {
 			)
 		}
 		self.searchMarkers.removeAll()
-		self.createMarkers(options: markerOptions).forEach { marker in
+		for marker in self.createMarkers(options: markerOptions) {
 			self.searchMarkers[marker.userData as! DgisObjectId] = marker
 		}
-		self.objectManager.addObjects(objects: searchMarkers.map {$0.value})
+		self.objectManager.addObjects(objects: self.searchMarkers.map(\.value))
 	}
 
 	private func createMarkers(options: [MarkerOptions]) -> [Marker] {
 		var markers: [Marker] = []
-		options.forEach { option in
+		for option in options {
 			do {
 				let marker = try Marker(options: option)
 				markers.append(marker)
@@ -301,7 +304,7 @@ final class SearchService {
 private extension SearchQueryBuilder {
 	func apply(searchOptions: SearchOptions?) -> SearchQueryBuilder {
 		var builder = self
-		if let searchOptions = searchOptions {
+		if let searchOptions {
 			if let directoryFilter = searchOptions.filter.directoryFilter {
 				builder = builder.setDirectoryFilter(filter: directoryFilter)
 			}

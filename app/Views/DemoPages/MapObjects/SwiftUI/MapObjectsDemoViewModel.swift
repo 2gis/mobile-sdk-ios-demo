@@ -1,8 +1,9 @@
-import SwiftUI
 import Combine
 import DGis
+import SwiftUI
 
-final class MapObjectsDemoViewModel: ObservableObject {
+@MainActor
+final class MapObjectsDemoViewModel: ObservableObject, @unchecked Sendable {
 	@Published var mapObjectType: MapObjectType = .marker
 	@Published var showObjects: Bool = false
 	@Published var selectedMapObject: RenderedObjectInfoViewModel?
@@ -73,6 +74,7 @@ final class MapObjectsDemoViewModel: ObservableObject {
 		self.handle(selectedObject: objectInfo)
 	}
 
+	@MainActor
 	func removeAll() {
 		self.viewModels.forEach { $0.removeAll() }
 	}
@@ -87,4 +89,3 @@ final class MapObjectsDemoViewModel: ObservableObject {
 		)
 	}
 }
-

@@ -1,8 +1,8 @@
-import SwiftUI
 import Combine
 import DGis
+import SwiftUI
 
-final class VisibleAreaDetectionDemoViewModel: ObservableObject {
+final class VisibleAreaDetectionDemoViewModel: ObservableObject, @unchecked Sendable {
 	private enum Constants {
 		static let minRectExpansionRatio = 1.0
 		static let initialRectExpansionRatio = 1.5
@@ -22,18 +22,22 @@ final class VisibleAreaDetectionDemoViewModel: ObservableObject {
 	@Published var rectExpansionRatio: Double
 	@Published var isErrorAlertShown: Bool = false
 	var isTrackingActive: Bool {
-		return self.trackingState != .inactive
+		self.trackingState != .inactive
 	}
+
 	var visibleAreaIndicatorState: VisibleAreaState? {
 		guard case let .active(state) = self.trackingState else { return nil }
 		return state
 	}
+
 	var minRectExpansionRatio: Double {
 		Constants.minRectExpansionRatio
 	}
+
 	var maxRectExpansionRatio: Double {
 		Constants.initialRectExpansionRatio
 	}
+
 	private let map: Map
 	private let mapObjectManager: MapObjectManager
 	private let mapSourceFactory: IMapSourceFactory
@@ -42,11 +46,13 @@ final class VisibleAreaDetectionDemoViewModel: ObservableObject {
 			self.updateVisibleAreaPolygon()
 		}
 	}
+
 	private(set) var errorMessage: String? {
 		didSet {
 			self.isErrorAlertShown = self.errorMessage != nil
 		}
 	}
+
 	private var initialRectCancellable: DGis.Cancellable?
 
 	init(
@@ -64,10 +70,11 @@ final class VisibleAreaDetectionDemoViewModel: ObservableObject {
 	}
 
 	func detectExtendedVisibleRectChange() {
-		let visibleRectChannel = self.map.camera.visibleRectChannel
-		self.formInitialVisibleRect(from: visibleRectChannel.value)
-		self.initialRectCancellable = visibleRectChannel.sinkOnMainThread{ [weak self] rect in
-			self?.updateVisibleRect(rect)
+		self.formInitialVisibleRect(from: self.map.camera.visibleRect)
+		self.initialRectCancellable = self.map.camera.sinkOnStatefulChangesOnMainThread(reason: .visibleRect) {
+			[weak self] (visibleRect: GeoRect) in
+			guard let self else { return }
+			self.updateVisibleRect(visibleRect)
 		}
 	}
 
@@ -89,7 +96,8 @@ final class VisibleAreaDetectionDemoViewModel: ObservableObject {
 
 	private func updateVisibleRect(_ rect: GeoRect) {
 		if let initialRect = self.initialRect,
-			initialRect.contains(rect) {
+		   initialRect.contains(rect)
+		{
 			// Current visible rect is within the initial expanded rect.
 			self.trackingState = .active(.inside)
 		} else {
@@ -107,7 +115,7 @@ final class VisibleAreaDetectionDemoViewModel: ObservableObject {
 					rect.northEastPoint,
 					southEastPoint,
 					rect.southWestPoint,
-					northWestPoint
+					northWestPoint,
 				]],
 				color: Color(red: 0, green: 1, blue: 0, alpha: 0.3)
 			)
@@ -129,15 +137,14 @@ final class VisibleAreaDetectionDemoViewModel: ObservableObject {
 }
 
 extension VisibleAreaDetectionDemoViewModel.VisibleAreaTrackingState: Equatable {
-
 	static func == (lhs: Self, rhs: Self) -> Bool {
 		switch (lhs, rhs) {
-			case (.inactive, .inactive):
-				return true
-			case (.active(let lhs), .active(let rhs)):
-				return lhs == rhs
-			default:
-				return false
+		case (.inactive, .inactive):
+			true
+		case let (.active(lhs), .active(rhs)):
+			lhs == rhs
+		default:
+			false
 		}
 	}
 }

@@ -1,64 +1,61 @@
-import SwiftUI
 import DGis
+import SwiftUI
 
 struct MinimapDemoView: View {
 	@Environment(\.presentationMode) private var presentationMode
 
 	private enum Constants {
-		static let miniMapTheme = Theme(name: "night")
 		static let miniMapOpacity: CGFloat = 0.8
 	}
+
 	@ObservedObject private var viewModel: MinimapDemoViewModel
-	private let miniMapSize: CGFloat = min(UIScreen.main.bounds.width, UIScreen.main.bounds.height) / 3
+	private let miniMapSize: CGSize = .init(width: 140, height: 140)
 	private let mapFactory: IMapFactory
 	private let miniMapFactory: IMapFactory
 	private let targetMiniMapFactory: IMapFactory
+	private let mapViewsFactory: IMapViewsFactory
+	private let miniMapViewModel: NavigationMiniMapViewModel
 
 	init(
 		viewModel: MinimapDemoViewModel,
 		mapFactory: IMapFactory,
 		miniMapFactory: IMapFactory,
 		targetMiniMapFactory: IMapFactory
-	) {
+	) throws {
 		self.viewModel = viewModel
 		self.mapFactory = mapFactory
 		self.miniMapFactory = miniMapFactory
 		self.targetMiniMapFactory = targetMiniMapFactory
+		self.mapViewsFactory = mapFactory.mapViewsFactory
+		self.miniMapViewModel = try NavigationMiniMapViewModel(
+			navigationManager: viewModel.navigationManager,
+			mapFactory: self.miniMapFactory
+		)
 	}
 
 	var body: some View {
 		ZStack(alignment: .top) {
-			self.mapFactory.mapViewOverlay
-				.mapViewOverlayCopyrightAlignment(.bottomRight)
-				.mapViewOverlayShowsAPIVersion(true)
+			self.mapFactory.mapView
+				.copyrightAlignment(.bottomRight)
+				.showsAPIVersion(true)
 				.edgesIgnoringSafeArea(.all)
 			self.makeStatusView()
 			VStack {
 				Spacer()
-				self.mapFactory.mapControlViewFactory.makeZoomView()
-				self.mapFactory.mapControlViewFactory.makeCurrentLocationView()
+				self.mapViewsFactory.makeZoomView()
+				self.mapViewsFactory.makeCurrentLocationView()
 				Spacer()
 			}
 			.frame(maxWidth: .infinity, alignment: .trailing)
 			VStack {
 				Spacer()
-				self.targetMiniMapFactory.mapViewOverlay
-					.mapViewOverlayCopyrightAlignment(.bottomRight)
-					.mapViewOverlayShowsAPIVersion(false)
-					.mapViewOverlayAppearance(.universal(Constants.miniMapTheme))
-					.frame(width: self.miniMapSize, height: self.miniMapSize)
-					.clipShape(Circle())
+				try! self.mapViewsFactory.makeMiniMapView(mapFactory: self.targetMiniMapFactory)
+					.frame(width: self.miniMapSize.width, height: self.miniMapSize.height)
 					.opacity(Constants.miniMapOpacity)
-					.shadow(color: Color(.black), radius: 2)
+					.shadow(radius: 2)
 				Spacer()
-				self.miniMapFactory.mapViewOverlay
-					.mapViewOverlayCopyrightAlignment(.bottomRight)
-					.mapViewOverlayShowsAPIVersion(false)
-					.mapViewOverlayAppearance(.universal(Constants.miniMapTheme))
-					.frame(width: self.miniMapSize, height: self.miniMapSize)
-					.clipShape(Circle())
-					.opacity(Constants.miniMapOpacity)
-					.shadow(color: Color(.black), radius: 2)
+				NavigationMiniMapView(viewModel: self.miniMapViewModel)
+					.frame(width: self.miniMapSize.width, height: self.miniMapSize.height)
 			}
 			.padding()
 			.frame(maxWidth: .infinity, alignment: .leading)
@@ -73,51 +70,52 @@ struct MinimapDemoView: View {
 	@ViewBuilder
 	private func makeStatusView() -> some View {
 		switch self.viewModel.state {
-			case .navigation, .initial:
-				EmptyView()
-			case .routeSearch:
-				VStack {
-					HStack {
-						Text("Route Searching")
+		case .navigation, .initial:
+			EmptyView()
+		case .routeSearch:
+			VStack {
+				HStack {
+					Text("Route searching")
 						.fontWeight(.bold)
 						.padding()
-					}
-					.background(
-						RoundedRectangle(cornerRadius: 5)
-						.fill(Color(.systemBackground))
-					)
-					Spacer()
 				}
-			case .error(let message):
+				.background(
+					RoundedRectangle(cornerRadius: 5)
+						.fill(Color(.systemBackground))
+				)
+				Spacer()
+			}
+		case let .error(message):
+			VStack {
 				VStack {
-					VStack {
-						Text(message)
+					Text(message)
 						.fontWeight(.bold)
-						Button {
-							self.viewModel.startNavigation()
-						} label: {
-							Text("Try again")
+					Button {
+						self.viewModel.startNavigation()
+					} label: {
+						Text("Try again")
 							.fontWeight(.medium)
 							.foregroundColor(.white)
 							.padding()
-						}
-						.background(
-							RoundedRectangle(cornerRadius: 5)
-							.fill(Color(.red))
-						)
 					}
-					.padding()
 					.background(
 						RoundedRectangle(cornerRadius: 5)
-						.fill(Color(.systemBackground))
+							.fill(Color(.red))
 					)
-					Spacer()
 				}
-
+				.padding()
+				.background(
+					RoundedRectangle(cornerRadius: 5)
+						.fill(Color(.systemBackground))
+				)
+				Spacer()
+			}
+		@unknown default:
+			fatalError("Unknown type: \(self.viewModel.state)")
 		}
 	}
-	
-	private var backButton : some View {
+
+	private var backButton: some View {
 		Button(action: {
 			self.viewModel.stopNavigation()
 			self.presentationMode.wrappedValue.dismiss()

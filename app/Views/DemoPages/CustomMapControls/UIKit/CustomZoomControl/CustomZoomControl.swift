@@ -65,9 +65,8 @@ private final class ZoomButton: UIButton {
 
 		// Реагируем на отключение действия — выключаем кнопку.
 		// Такое возможно при достижении предела изменения масштаба.
-		self.connection = self.model.isEnabled(button: self.direction).sink {
-			[weak self] isEnabled in
-			DispatchQueue.main.async {
+		self.connection = self.model.isEnabled(button: self.direction).sinkOnMainThread { [weak self] isEnabled in
+			Task { @MainActor [weak self] in
 				self?.isEnabled = isEnabled
 			}
 		}

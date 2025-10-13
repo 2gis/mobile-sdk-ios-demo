@@ -16,12 +16,12 @@ struct RasterTilesDemoView: View {
 	var body: some View {
 		ZStack(alignment: .bottomTrailing) {
 			ZStack(alignment: .trailing) {
-				self.mapFactory.mapViewOverlay
-				.mapViewOverlayCopyrightAlignment(.bottomLeft)
+				self.mapFactory.mapView
+				.copyrightAlignment(.bottomLeft)
 				.edgesIgnoringSafeArea(.all)
 				VStack {
 					Spacer()
-					self.mapFactory.mapControlViewFactory.makeZoomView()
+					self.mapFactory.mapViewsFactory.makeZoomView()
 					Spacer()
 				}
 			}

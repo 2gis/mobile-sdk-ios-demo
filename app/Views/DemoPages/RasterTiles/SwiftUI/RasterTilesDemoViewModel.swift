@@ -1,3 +1,4 @@
+import Combine
 import DGis
 import SwiftUI
 
@@ -14,7 +15,7 @@ enum TileSource: String, CaseIterable, Identifiable {
 final class RasterTilesDemoViewModel: ObservableObject {
 	@Published var selectedSource: TileSource = .terrestris {
 		didSet {
-			switch selectedSource {
+			switch self.selectedSource {
 			case .dgis:
 				self.changeRasterSource(source: self.make2GisSource())
 			case .mapBox:
@@ -25,6 +26,8 @@ final class RasterTilesDemoViewModel: ObservableObject {
 				self.changeRasterSource(source: self.makeOpenStreetMapSource())
 			case .terrestris:
 				self.changeRasterSource(source: self.makeTerrestrisSource())
+			@unknown default:
+				assertionFailure("Unknown selectedSource type: \(self)")
 			}
 			self.rasterTileSource?.setOpacity(opacity: Opacity(value: self.opacity))
 		}
@@ -32,8 +35,8 @@ final class RasterTilesDemoViewModel: ObservableObject {
 
 	@Published var opacity: Float = 0.3 {
 		didSet {
-			if oldValue != opacity {
-				self.rasterTileSource?.setOpacity(opacity: Opacity(value: opacity))
+			if oldValue != self.opacity {
+				self.rasterTileSource?.setOpacity(opacity: Opacity(value: self.opacity))
 			}
 		}
 	}
