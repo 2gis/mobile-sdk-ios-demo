@@ -1,17 +1,21 @@
-import SwiftUI
+import Combine
 import DGis
+import SwiftUI
 
+@MainActor
 final class CameraRestrictionsDemoViewModel: ObservableObject {
 	private enum Constants {
-		static let defaultMinZoom : Float = 0.0
+		static let defaultMinZoom: Float = 0.0
 		static let defaultMaxZoom: Float = 20.0
 		static let defultMapTiltRelationPoints: [RelationPoint] = [
 			.init(zoom: 14.0, tilt: 30.0),
-			.init(zoom: 16.0, tilt: 70.0)]
+			.init(zoom: 16.0, tilt: 70.0),
+		]
 		static let defaultZoomToTiltRelationPoints: [RelationPoint] = [
 			.init(zoom: 15.6, tilt: 0.0),
 			.init(zoom: 16.7, tilt: 17.0),
-			.init(zoom: 17.3, tilt: 24.0)]
+			.init(zoom: 17.3, tilt: 24.0),
+		]
 	}
 
 	@Published var cameraPosition: String = ""
@@ -24,7 +28,7 @@ final class CameraRestrictionsDemoViewModel: ObservableObject {
 	private let map: Map
 	private let logger: ILogger
 	private var followController: FollowController
-	private var cameraPositionCancellable: Cancellable?
+	private var cameraPositionCancellable: ICancellable?
 
 	private(set) var errorMessage: String? {
 		didSet {
@@ -57,18 +61,18 @@ final class CameraRestrictionsDemoViewModel: ObservableObject {
 	}
 
 	private func setupCameraPositionChannel() {
-		self.cameraPositionCancellable = self.map.camera.positionChannel.sinkOnMainThread(
-			{
-				[weak self] position in
-				guard let self = self else { return }
+		self.cameraPositionCancellable = self.map.camera.sinkOnStatefulChangesOnMainThread(reason: .position) {
+			[weak self] (position: CameraPosition) in
+			Task { @MainActor [weak self] in
+				guard let self else { return }
 				self.cameraPosition =
-				String(format: "lat: %.6f ", position.point.latitude.value) +
-				String(format: "lon: %.6f\n", position.point.longitude.value) +
-				String(format: "zoom: %.2f ", position.zoom.value) +
-				String(format: "tilt: %.2f ", position.tilt.value) +
-				String(format: "bearing: %.2f", position.bearing.value)
+					String(format: "lat: %.6f ", position.point.latitude.value) +
+					String(format: "lon: %.6f\n", position.point.longitude.value) +
+					String(format: "zoom: %.2f ", position.zoom.value) +
+					String(format: "tilt: %.2f ", position.tilt.value) +
+					String(format: "bearing: %.2f", position.bearing.value)
 			}
-		)
+		}
 	}
 
 	private func setZoomToTiltRestrictions() {
@@ -76,11 +80,11 @@ final class CameraRestrictionsDemoViewModel: ObservableObject {
 			self.map.camera.maxTiltRestriction = .none
 			return
 		}
-		guard isValid(points: self.maxTiltRelationPoints) else {
+		guard self.isValid(points: self.maxTiltRelationPoints) else {
 			self.errorMessage = "Error:\nTilt sequence must be ordered"
 			return
 		}
-		let points = self.maxTiltRelationPoints.reduce(into: [StyleZoom: Tilt]()) { (relation, point) in
+		let points = self.maxTiltRelationPoints.reduce(into: [StyleZoom: Tilt]()) { relation, point in
 			let zoom = StyleZoom(floatLiteral: point.zoom)
 			let tiltValue = Tilt(value: point.tilt)
 			relation[zoom] = tiltValue
@@ -89,7 +93,7 @@ final class CameraRestrictionsDemoViewModel: ObservableObject {
 	}
 
 	private func setStyleZoomToTiltRelation() {
-		guard isValid(points: self.zoomToTiltRelationPoints) else {
+		guard self.isValid(points: self.zoomToTiltRelationPoints) else {
 			self.errorMessage = "Error:\nTilt sequence must be ordered"
 			return
 		}
@@ -100,7 +104,7 @@ final class CameraRestrictionsDemoViewModel: ObservableObject {
 				self.zoomToTiltRelationPoints = Constants.defaultZoomToTiltRelationPoints
 			}
 		}
-		let points = self.zoomToTiltRelationPoints.reduce(into: [StyleZoom: Tilt]()) { (relation, point) in
+		let points = self.zoomToTiltRelationPoints.reduce(into: [StyleZoom: Tilt]()) { relation, point in
 			let zoom = StyleZoom(floatLiteral: point.zoom)
 			let tiltValue = Tilt(value: point.tilt)
 			relation[zoom] = tiltValue
@@ -125,7 +129,7 @@ final class CameraRestrictionsDemoViewModel: ObservableObject {
 
 	private func isValid(points: [RelationPoint]) -> Bool {
 		let sortedPoints = points.sorted { $0.zoom < $1.zoom }
-		for i in 1..<sortedPoints.count {
+		for i in 1 ..< sortedPoints.count {
 			if sortedPoints[i].tilt < sortedPoints[i - 1].tilt {
 				return false
 			}

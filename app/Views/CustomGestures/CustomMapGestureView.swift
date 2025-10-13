@@ -1,7 +1,7 @@
 import UIKit
 import DGis
 
-class CustomMapGestureView: UIView, IMapGestureView {
+class CustomMapGestureView: UIView, IMapGestureUIView {
 	private(set) var panGestureRecognizer: UIPanGestureRecognizer?
 	private(set) var pinchGestureRecognizer: UIPinchGestureRecognizer?
 

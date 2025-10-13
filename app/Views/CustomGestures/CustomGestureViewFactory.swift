@@ -1,12 +1,13 @@
-import UIKit
 import DGis
+import UIKit
 
-class CustomGestureViewFactory: IMapGestureViewFactory {
+class CustomGestureViewFactory: IMapGestureUIViewFactory, @unchecked Sendable {
+	@MainActor
 	func makeGestureView(
-		map: Map,
+		map _: Map,
 		eventProcessor: IMapEventProcessor,
 		coordinateSpace: IMapCoordinateSpace
-	) -> UIView & IMapGestureView {
+	) -> UIView & IMapGestureUIView {
 		CustomMapGestureView(mapEventProcessor: eventProcessor, mapCoordinateSpace: coordinateSpace)
 	}
 }

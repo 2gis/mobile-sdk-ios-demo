@@ -1,24 +1,9 @@
-import SwiftUI
 import Combine
 import DGis
+import SwiftUI
 
-final class SearchViewModel: ObservableObject {
-	/*var queryText: Binding<String> {
-		self.$store.queryText
-	}
-	var selection: Binding<SuggestViewModel?> {
-		self.$store.selection
-	}
-	var suggestion: SuggestResultViewModel {
-		self.store.suggestion
-	}
-	var result: SearchResultViewModel {
-		self.store.result
-	}
-	var navigation: Binding<SearchNavigation?> {
-		self.$store.navigation
-	}*/
-
+@MainActor
+final class SearchViewModel: @preconcurrency ObservableObject, @unchecked Sendable {
 	@ObservedObject private var store: SearchStore
 	private let searchService: SearchService
 	private(set) var objectWillChange: ObservableObjectPublisher
@@ -30,11 +15,7 @@ final class SearchViewModel: ObservableObject {
 		self.store = searchStore
 		self.searchService = searchService
 		self.objectWillChange = searchStore.objectWillChange
-        
-        self.store.dispatch(.getHistory)
-	}
 
-	/*func search() {
-		self.searchService.search()
-	}*/
+		self.store.dispatch(.getHistory)
+	}
 }

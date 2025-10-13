@@ -1,6 +1,6 @@
-import Foundation
 import Combine
 import DGis
+import Foundation
 
 final class NavigatorSettingsViewModel: ObservableObject {
 	private enum Constants {
@@ -20,23 +20,29 @@ final class NavigatorSettingsViewModel: ObservableObject {
 
 		var name: String {
 			switch self {
-				case .car:
-					return "Car"
-				case .bicycle:
-					return "Bicycle"
-				case .pedestrian:
-					return "Pedestrian"
+			case .car:
+				return "Car"
+			case .bicycle:
+				return "Bicycle"
+			case .pedestrian:
+				return "Pedestrian"
+			@unknown default:
+				assertionFailure("Unknown type: \(self)")
+				return "Unknown type: \(self)"
 			}
 		}
 
 		var routeSearchOptions: RouteSearchOptions {
 			switch self {
-				case .car:
-					return RouteSearchOptions.car(CarRouteSearchOptions())
-				case .bicycle:
-					return RouteSearchOptions.bicycle(BicycleRouteSearchOptions())
-				case .pedestrian:
-					return RouteSearchOptions.pedestrian(PedestrianRouteSearchOptions())
+			case .car:
+				return RouteSearchOptions.car(CarRouteSearchOptions())
+			case .bicycle:
+				return RouteSearchOptions.bicycle(BicycleRouteSearchOptions())
+			case .pedestrian:
+				return RouteSearchOptions.pedestrian(PedestrianRouteSearchOptions())
+			@unknown default:
+				assertionFailure("Unknown type: \(self)")
+				return RouteSearchOptions.car(CarRouteSearchOptions())
 			}
 		}
 	}
@@ -49,13 +55,7 @@ final class NavigatorSettingsViewModel: ObservableObject {
 	@Published var simulationSpeedKmH: Double
 	@Published var allowableSpeedExcessKmH: Float
 	@Published private(set) var voiceRows: [VoiceRowViewModel] = []
-	@Published var currentVoice: Voice? {
-		didSet {
-			if oldValue != self.currentVoice {
-				self.navigatorSettings.voiceId = self.currentVoice?.id
-			}
-		}
-	}
+	@Published var currentVoice: Voice?
 	let routeTypeSources: [DemoRouteType]
 	@Published var routeType: DemoRouteType = .car
 	var navigatorOptions: NavigatorOptions {
@@ -66,6 +66,7 @@ final class NavigatorSettingsViewModel: ObservableObject {
 			allowableSpeedExcessKmH: self.allowableSpeedExcessKmH
 		)
 	}
+
 	var navigationState: PackedNavigationState? = nil
 	@Published var styleZoomFollowControllerType: StyleZoomFollowControllerType
 	@Published var showBetterRouteSettings: Bool = false
@@ -89,7 +90,7 @@ final class NavigatorSettingsViewModel: ObservableObject {
 		maxAllowableSpeedExcessKmH: Float = Constants.defaultMaxAllowableSpeedExcessKmH,
 		routeTypeSources: [DemoRouteType] = DemoRouteType.allCases,
 		styleZoomFollowControllerType: StyleZoomFollowControllerType,
-		styleZoomFollowControllerTypes: [StyleZoomFollowControllerType] =  StyleZoomFollowControllerType.allCases,
+		styleZoomFollowControllerTypes: [StyleZoomFollowControllerType] = StyleZoomFollowControllerType.allCases,
 		betterRouteSettings: NavigatorBetterRouteSettings,
 		freeRoamSettings: FreeRoamSettings
 	) {
@@ -114,6 +115,7 @@ final class NavigatorSettingsViewModel: ObservableObject {
 	func select(_ row: VoiceRowViewModel) {
 		if row.voice.isReadyToUse {
 			self.currentVoice = row.voice
+			self.navigatorSettings.voiceId = row.voice.id
 			self.updateSelectedVoiceRow()
 			_ = row.voice.playWelcome()
 		} else {
@@ -132,7 +134,8 @@ final class NavigatorSettingsViewModel: ObservableObject {
 
 	private func restoreNavigationState() {
 		if let navigationRawValue: String = self.storage.value(forKey: Constants.navigationState),
-		   let storedNavigationState = Data(base64Encoded: navigationRawValue) {
+		   let storedNavigationState = Data(base64Encoded: navigationRawValue)
+		{
 			self.navigationState = try? PackedNavigationState.fromBytes(data: storedNavigationState)
 		}
 
@@ -152,25 +155,24 @@ final class NavigatorSettingsViewModel: ObservableObject {
 
 	private func didUninstallVoice(_ voice: Voice) {
 		if voice == self.currentVoice {
-			self.currentVoice = self.voiceManager.firstPreinstalledVoice
+			self.currentVoice = self.voiceManager.defaultVoice ?? self.voiceManager.firstPreinstalledVoice
+			self.navigatorSettings.voiceId = self.currentVoice?.id
 			self.updateSelectedVoiceRow()
 		}
 		self.updateVoiceRows()
 	}
-	
+
 	private func updateVoiceRows() {
-		self.voiceRows = self.voiceRows.map { $0 }
+		self.voiceRows = self.voiceRows.map(\.self)
 	}
 
 	private func setupNavigationVoice(initialVoiceId: String?) {
-		guard let preinstalledVoice = self.voiceManager.firstPreinstalledVoice else { return }
-
 		if let userVoice = self.voiceManager.voices.first(where: { $0.id == initialVoiceId }) {
 			self.currentVoice = userVoice
-		} else {
-			// Конфигурируем навигатор первым установленным голосом.
+		} else if let defaultVoice = self.voiceManager.defaultVoice {
+			self.currentVoice = defaultVoice
+		} else if let preinstalledVoice = self.voiceManager.firstPreinstalledVoice {
 			self.currentVoice = preinstalledVoice
-			self.navigatorSettings.voiceId = preinstalledVoice.id
 		}
 
 		self.voiceRows = self.voiceManager.voices.map {
@@ -196,13 +198,12 @@ private extension NavigatorOptions {
 		simulationSpeedKmH: Double,
 		allowableSpeedExcessKmH: Float
 	) {
-		let mode: Mode
-		if isFreeRoam {
-			mode = .freeRoam
+		let mode: Mode = if isFreeRoam {
+			.freeRoam
 		} else if isSimulation {
-			mode = .simulation
+			.simulation
 		} else {
-			mode = .default
+			.default
 		}
 		self.init(
 			mode: mode,

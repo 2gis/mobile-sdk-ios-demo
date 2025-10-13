@@ -1,7 +1,7 @@
-import Foundation
 import CoreLocation
-import SwiftUI
 import DGis
+import Foundation
+import SwiftUI
 
 struct SuggestResultViewModel {
 	let suggests: [SuggestViewModel]
@@ -15,10 +15,10 @@ struct SuggestResultViewModel {
 		lastPosition: CLLocation? = nil
 	) {
 		let lastPositionPoint = lastPosition.map { GeoPoint(coordinate: $0.coordinate) }
-		self.suggests = result?.suggests.compactMap({ ($0, lastPositionPoint) }).map(SuggestViewModel.init) ?? []
+		self.suggests = result?.suggests.compactMap { ($0, lastPositionPoint) }.map(SuggestViewModel.init) ?? []
 	}
 }
 
 extension SuggestResultViewModel {
-	static var empty = Self()
+	static let empty = Self()
 }

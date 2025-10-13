@@ -1,6 +1,6 @@
+import DGis
 import Foundation
 import SwiftUI
-import DGis
 
 struct SearchHistoryItemViewModel: Identifiable {
 	let id = UUID()
@@ -11,20 +11,20 @@ struct SearchHistoryItemViewModel: Identifiable {
 	let objectViewModel: DirectoryObjectViewModel?
 
 	init(item: SearchHistoryItem) {
-		switch (item) {
-		case .searchQuery(let query):
+		switch item {
+		case let .searchQuery(query):
 			if query.title.isEmpty {
-				self.title = query.rubrics.map{
-					SearchRubric.init(rubricId: $0)?.name ?? "Unknown"
+				self.title = query.rubrics.map {
+					SearchRubric(rubricId: $0)?.name ?? "Unknown"
 				}.joined(separator: ", ")
-				self.subtitle = "search by rubric";
+				self.subtitle = "search by rubric"
 			} else {
 				self.title = query.title
 				self.subtitle = query.subtitle
 			}
 			self.icon = Image(systemName: "magnifyingglass")
 			self.objectViewModel = nil
-		case .directoryObject(let object):
+		case let .directoryObject(object):
 			self.objectViewModel = DirectoryObjectViewModel(object: object, lastLocation: nil)
 			self.title = object.title
 
@@ -35,6 +35,8 @@ struct SearchHistoryItemViewModel: Identifiable {
 
 			self.subtitle = sub
 			self.icon = Image(systemName: "map")
+		@unknown default:
+			fatalError("Unknown type: \(item)")
 		}
 		self.item = item
 	}

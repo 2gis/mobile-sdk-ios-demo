@@ -16,6 +16,7 @@ enum AnchorPoint {
 		case .topLeading: Anchor(x: -0.5, y: -0.5)
 		case .topTrailing: Anchor(x: 0.5, y: -0.5)
 		case .trailing: Anchor(x: 0.5, y: 0)
+		@unknown default: fatalError("Unknown type: \(self)")
 		}
 	}
 }

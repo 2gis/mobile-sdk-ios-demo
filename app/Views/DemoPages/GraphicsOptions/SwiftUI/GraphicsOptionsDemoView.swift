@@ -15,9 +15,9 @@ struct GraphicsOptionsDemoView: View {
 	
 	var body: some View {
 		ZStack(alignment: .bottomLeading) {
-			self.mapFactory.mapViewOverlay
-			.mapViewOverlayCopyrightAlignment(.bottomLeft)
-			.edgesIgnoringSafeArea(.all)
+			self.mapFactory.mapView
+				.copyrightAlignment(.bottomLeft)
+				.edgesIgnoringSafeArea(.all)
 			VStack {
 				Picker("Graphics Preset", selection: $viewModel.selectedOption) {
 					ForEach(GraphicsOption.allCases) { source in

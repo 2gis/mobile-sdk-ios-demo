@@ -1,38 +1,38 @@
 import UIKit
 import DGis
 
-class CustomNavigationViewControlsFactory: INavigationViewControlsFactory {
-	let navigationViewControlsFactory: INavigationViewControlsFactory
+class CustomNavigationViewControlsFactory: INavigationUIControlsFactory {
+	let navigationViewControlsFactory: INavigationUIControlsFactory
 
-	init(navigationViewControlsFactory: INavigationViewControlsFactory) {
+	init(navigationViewControlsFactory: INavigationUIControlsFactory) {
 		self.navigationViewControlsFactory = navigationViewControlsFactory
 	}
 
 	/// UI element with information about the next maneuver and additional maneuver.
 	/// See `RouteInstruction`, `RouteInstruction.extraInstructionInfo`, `getInstructionManeuver`.
-	func makeNextManeuverControl(uiModel: DGis.Model) -> UIView & DGis.INextManeuverControlView {
-		return navigationViewControlsFactory.makeNextManeuverControl(uiModel: uiModel)
+	func makeNextManeuverUIControl(uiModel: DGis.Model) -> UIView & DGis.INextManeuverUIControl {
+		return self.navigationViewControlsFactory.makeNextManeuverUIControl(uiModel: uiModel)
 	}
 
 	/// UI element with information about the current speed, speed limit on the current route segment, and camera zone warning.
 	/// See `Model.currentSpeed`, `Model.maxSpeedLimit`, and `Model.cameraProgress`.
-	func makeSpeedControl(uiModel: DGis.Model) -> (UIView & DGis.INavigationControlView) {
-		return navigationViewControlsFactory.makeSpeedControl(uiModel: uiModel)
+	func makeSpeedUIControl(uiModel: DGis.Model) -> (UIView & DGis.INavigationUIControl) {
+		return navigationViewControlsFactory.makeSpeedUIControl(uiModel: uiModel)
 	}
 
 	/// UI element with information about the remaining distance and estimated time of arrival/remaining travel time.
 	/// See `Model.duration`, `Model.routeDuration`, and `DistanceCounters`.
-	func makeRemainingRouteInfoControl(navigationManager: DGis.NavigationManager) -> UIView & DGis.INavigationControlView {
-		return navigationViewControlsFactory.makeRemainingRouteInfoControl(navigationManager: navigationManager)
+	func makeRemainingRouteInfoUIControl(navigationManager: DGis.NavigationManager) -> UIView & DGis.INavigationUIControl {
+		return navigationViewControlsFactory.makeRemainingRouteInfoUIControl(navigationManager: navigationManager)
 	}
 
 	/// UI element for displaying navigation status messages, such as route searching and GPS signal loss.
 	/// See `Model.state` and `Model.badLocation`.
-	func makeMessageBarControl(uiModel: DGis.Model) -> UIView & DGis.INavigationControlView {
-		let control = navigationViewControlsFactory.makeMessageBarControl(uiModel: uiModel)
+	func makeMessageBarUIControl(uiModel: DGis.Model) -> UIView & DGis.INavigationUIControl {
+		let control = navigationViewControlsFactory.makeMessageBarUIControl(uiModel: uiModel)
 
 		if !uiModel.locationAvailable {
-			let badLocationView = BadLocationView(frame: .zero)
+			let badLocationView = BadLocationUIView(frame: .zero)
 			badLocationView.backgroundColor = .magenta
 			return badLocationView
 		} else {
@@ -42,18 +42,18 @@ class CustomNavigationViewControlsFactory: INavigationViewControlsFactory {
 
 	/// UI element for switching to a route with a shorter estimated arrival time.
 	/// See `Model.betterRoute`.
-	func makeBetterRouteControl(uiModel: DGis.Model) -> UIView & DGis.INavigationControlView {
-		return navigationViewControlsFactory.makeBetterRouteControl(uiModel: uiModel)
+	func makeBetterRouteUIControl(uiModel: DGis.Model) -> UIView & DGis.INavigationUIControl {
+		return navigationViewControlsFactory.makeBetterRouteUIControl(uiModel: uiModel)
 	}
 
 	/// UI element for displaying vehicle speeds and road events along the route.
 	/// See `Model.dynamicRouteInfo`.
-	func makeThermometerControl(uiModel: DGis.Model) -> UIView & DGis.IThermometerControlView {
-		return navigationViewControlsFactory.makeThermometerControl(uiModel: uiModel)
+	func makeThermometerUIControl(uiModel: DGis.Model) -> UIView & DGis.IThermometerUIControl {
+		return navigationViewControlsFactory.makeThermometerUIControl(uiModel: uiModel)
 	}
 }
 
-class BadLocationView: UIView & DGis.INavigationControlView {
+class BadLocationUIView: UIView & DGis.INavigationUIControl {
 	/// Visibility of the element.
 	public var isVisible = true
 	/// Signal for visibility change.

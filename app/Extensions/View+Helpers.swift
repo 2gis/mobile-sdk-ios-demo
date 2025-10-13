@@ -12,38 +12,30 @@ extension UIApplication {
 }
 
 extension View {
-
 	func followKeyboard(_ offset: Binding<CGFloat>) -> some View {
+		let willShow = NotificationCenter.default.publisher(for: UIResponder.keyboardWillShowNotification)
+		let willHide = NotificationCenter.default.publisher(for: UIResponder.keyboardWillHideNotification)
 
 		return self
-			.padding(.bottom, offset.wrappedValue)
-			.animation(.easeInOut)
-			.onAppear {
-
-				NotificationCenter.default.addObserver(
-					forName: UIResponder.keyboardWillShowNotification,
-					object: nil,
-					queue: .main
-				) {
-					guard let keyboardFrame = $0.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect else { return }
+			.onReceive(willShow) { note in
+				Task { @MainActor in
+					guard let keyboardFrame = note.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect else { return }
 					let keyboardHeight = keyboardFrame.height
 					let bottomInset = UIApplication.shared.keyWindow?.safeAreaInsets.bottom ?? 0
 					offset.wrappedValue = keyboardHeight - bottomInset
 				}
-
-				NotificationCenter.default.addObserver(
-					forName: UIResponder.keyboardWillHideNotification,
-					object: nil, queue: .main
-				) { _ in
-					offset.wrappedValue = 0
-				}
 			}
+			.onReceive(willHide) { _ in
+				offset.wrappedValue = 0
+			}
+			.animation(.easeInOut, value: offset.wrappedValue)
+			.padding(.bottom, offset.wrappedValue)
 	}
 
-	#if canImport(UIKit)
-	//Sometimes you need to force close the keyboard and unfocus all text fields. This simple function does just that
+#if canImport(UIKit)
+	// Sometimes you need to force close the keyboard and unfocus all text fields. This simple function does just that
 	func hideKeyboard() {
 		UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
 	}
-	#endif
+#endif
 }

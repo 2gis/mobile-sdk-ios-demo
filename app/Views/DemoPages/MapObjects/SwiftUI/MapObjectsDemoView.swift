@@ -1,10 +1,10 @@
-import SwiftUI
 import DGis
+import SwiftUI
 
 struct MapObjectsDemoView: View {
 	@ObservedObject private var viewModel: MapObjectsDemoViewModel
 	private let mapFactory: IMapFactory
-	
+
 	init(
 		viewModel: MapObjectsDemoViewModel,
 		mapFactory: IMapFactory
@@ -16,12 +16,14 @@ struct MapObjectsDemoView: View {
 	var body: some View {
 		ZStack {
 			ZStack(alignment: .bottomTrailing) {
-				self.mapFactory.mapViewOverlay
-					.mapViewOverlayShowsAPIVersion(true)
-					.mapViewOverlayCopyrightAlignment(.bottomLeft)
-					.mapViewOverlayObjectTappedCallback(callback: .init(
+				self.mapFactory.mapView
+					.showsAPIVersion(true)
+					.copyrightAlignment(.bottomLeft)
+					.objectTappedCallback(callback: .init(
 						callback: { [viewModel = self.viewModel] objectInfo in
-							viewModel.tap(objectInfo: objectInfo)
+							Task { @MainActor in
+								viewModel.tap(objectInfo: objectInfo)
+							}
 						}
 					))
 				VStack(spacing: 12.0) {
@@ -40,6 +42,8 @@ struct MapObjectsDemoView: View {
 							self.makePolygonView()
 						case .polyline:
 							self.makePolylineView()
+						@unknown default:
+							fatalError("Unknown type: \(self.viewModel.mapObjectType)")
 						}
 					}
 					DetailsActionView(
@@ -75,39 +79,39 @@ struct MapObjectsDemoView: View {
 	}
 
 	private func makeRenderedObjectInfoView(_ viewModel: RenderedObjectInfoViewModel) -> some View {
-		return RenderedObjectInfoView(viewModel: viewModel)
+		RenderedObjectInfoView(viewModel: viewModel)
 	}
 
 	private func makeCircleView() -> some View {
-		return CircleView(
+		CircleView(
 			viewModel: self.viewModel.circleViewModel,
 			show: self.$viewModel.showObjects
 		)
 	}
 
 	private func makeMarkerView() -> some View {
-		return MarkerView(
+		MarkerView(
 			viewModel: self.viewModel.markerViewModel,
 			show: self.$viewModel.showObjects
 		)
 	}
 
 	private func makeModelView() -> some View {
-		return ModelView(
+		ModelView(
 			viewModel: self.viewModel.modelViewModel,
 			show: self.$viewModel.showObjects
 		)
 	}
 
 	private func makePolygonView() -> some View {
-		return PolygonView(
+		PolygonView(
 			viewModel: self.viewModel.polygonViewModel,
 			show: self.$viewModel.showObjects
 		)
 	}
 
 	private func makePolylineView() -> some View {
-		return PolylineView(
+		PolylineView(
 			viewModel: self.viewModel.polylineViewModel,
 			show: self.$viewModel.showObjects
 		)

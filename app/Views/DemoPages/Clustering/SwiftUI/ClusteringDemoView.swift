@@ -17,14 +17,14 @@ struct ClusteringDemoView: View {
 		ZStack {
 			ZStack(alignment: .bottom) {
 				ZStack(alignment: .trailing) {
-					self.mapFactory.mapViewOverlay
-						.mapViewOverlayCopyrightAlignment(.bottomLeft)
-						.mapViewOverlayObjectTappedCallback(callback: .init(
+					self.mapFactory.mapView
+						.copyrightAlignment(.bottomLeft)
+						.objectTappedCallback(callback: .init(
 							callback: { [viewModel = self.viewModel] objectInfo in
 								viewModel.tap(objectInfo: objectInfo)
 							}
 						))
-						.mapViewOverlayObjectLongPressCallback(callback: .init(
+						.objectLongPressCallback(callback: .init(
 							callback: { [viewModel = self.viewModel] objectInfo in
 								viewModel.tap(objectInfo: objectInfo)
 							}
@@ -33,7 +33,7 @@ struct ClusteringDemoView: View {
 					VStack {
 						Spacer()
 
-						self.mapFactory.mapControlViewFactory.makeZoomView()
+						self.mapFactory.mapViewsFactory.makeZoomView()
 
 						Spacer()
 					}

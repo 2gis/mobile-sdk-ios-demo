@@ -1,8 +1,8 @@
-import SwiftUI
+import Combine
 import DGis
+import SwiftUI
 
-final class BenchmarkViewModel: ObservableObject {
-
+final class BenchmarkViewModel: ObservableObject, @unchecked Sendable {
 	private enum Constants {
 		static let firstCsvString: String = "Index,FPS\n"
 	}
@@ -12,7 +12,7 @@ final class BenchmarkViewModel: ObservableObject {
 	@Published var showActionSheet = false
 	@Published var showMenuButton = true
 	@Published var fpsValues: [(timestamp: TimeInterval, fps: Double)] = []
-	@Published var maxRefreshRate = UIScreen.main.maximumFramesPerSecond
+	let maxRefreshRate: Int
 
 	private let map: Map
 	private let logger: ILogger
@@ -20,15 +20,23 @@ final class BenchmarkViewModel: ObservableObject {
 	private let imageFactory: IImageFactory
 	private let dateFormatter: DateFormatter
 	private let objectManager: MapObjectManager
+	private let geometryMapObjectSource: GeometryMapObjectSource
+	private var geometryObjects: [GeometryMapObject] = []
 	private var moveCameraCancellable: DGis.Cancellable?
+	private lazy var cameraMoveQueue: DispatchQueue = .init(
+		label: "ru.mobile.sdk.app-swiftui.camera-move-queue",
+		qos: .default
+	)
 
+	@MainActor
 	init(
 		map: Map,
+		geometryMapObjectSource: GeometryMapObjectSource,
 		energyConsumption: IEnergyConsumption,
 		imageFactory: IImageFactory,
 		logger: ILogger
-		
 	) {
+		self.maxRefreshRate = UIScreen.main.maximumFramesPerSecond
 		self.dateFormatter = DateFormatter()
 		self.dateFormatter.dateFormat = "yyyy-MM-dd_HH-mm-ss"
 		self.map = map
@@ -36,29 +44,66 @@ final class BenchmarkViewModel: ObservableObject {
 		self.imageFactory = imageFactory
 		self.logger = logger
 		self.objectManager = MapObjectManager(map: self.map)
+		self.geometryMapObjectSource = geometryMapObjectSource
+		self.map.addSource(source: self.geometryMapObjectSource)
 		self.energyConsumption.setFpsCallback { [weak self] fps in
-			DispatchQueue.main.async {
-				let currentTime = Date().timeIntervalSince1970
-				self?.fpsValues.append((timestamp: currentTime, fps: fps))
-			}
+			let currentTime = Date().timeIntervalSince1970
+			self?.fpsValues.append((timestamp: currentTime, fps: fps))
 		}
 	}
-	
+
 	func runTest(benchmarkPath: BenchmarkPath) {
 		self.map.interactive = false
 		switch benchmarkPath {
-			case .spbAnimatedMarkerFlight:
-				self.createAnimatedMarkers()
-			case .spbStaticMarkerFlight:
-				self.createStaticMarkers()
-			case .polygonsFlight:
-				self.createTestPolygons()
-			default:
-				break
+		case .moscowGeoJson:
+			self.showMoscowGeoJsonZones()
+		case .moscowJsonPolygons:
+			self.showMoscowJsonPolygons()
+		case .spbAnimatedMarkerFlight:
+			self.createAnimatedMarkers()
+		case .spbStaticMarkerFlight:
+			self.createStaticMarkers()
+		case .polygonsFlight:
+			self.createTestPolygons()
+		default:
+			break
 		}
 		self.setCameraPosition(position: benchmarkPath.cameraPath[0].position)
 		self.move(at: 0, path: benchmarkPath.cameraPath, reportName: benchmarkPath.reportName)
 		self.fpsValues = []
+	}
+
+	private func move(at index: Int, path: cameraPath, reportName: String) {
+		guard index < path.count else {
+			self.saveToCSVFile(fileName: "\(reportName)_\(self.dateFormatter.string(from: Date())).csv")
+			self.cleanUp()
+			self.map.interactive = true
+			DispatchQueue.main.async {
+				self.showMenuButton = true
+			}
+			return
+		}
+		let tuple = path[index]
+		self.cameraMoveQueue.async {
+			self.moveCameraCancellable?.cancel()
+			self.moveCameraCancellable = self.map
+				.camera
+				.move(
+					position: tuple.position,
+					time: tuple.time,
+					animationType: tuple.type
+				).sink(on: self.cameraMoveQueue) { [weak self] _ in
+					self?.move(at: index + 1, path: path, reportName: reportName)
+				} failure: { error in
+					print("Something went wrong: \(error.localizedDescription)")
+				}
+		}
+	}
+
+	private func cleanUp() {
+		self.objectManager.removeAll()
+		self.geometryMapObjectSource.removeObjects(objects: self.geometryObjects)
+		self.geometryObjects.removeAll()
 	}
 
 	private func createAnimatedMarkers() {
@@ -85,11 +130,11 @@ final class BenchmarkViewModel: ObservableObject {
 		self.createMarker(firstMarkerOptions)
 		self.createMarker(secondMarkerOptions)
 	}
-	
+
 	private func createStaticMarkers() {
-		for i in 1...150 {
+		for i in 1 ... 150 {
 			let randomColor = UIColor(hue: CGFloat(drand48()), saturation: 1, brightness: 1, alpha: 0.8)
-			let staticMarkerImage = self.imageFactory.make(image: createColoredImage(systemName: "paperplane.fill", color: randomColor)!)
+			let staticMarkerImage = self.imageFactory.make(image: self.createColoredImage(systemName: "paperplane.fill", color: randomColor)!)
 			let randomLatitude = Double.random(in: 59.93340961436914 ... 59.940455518313314)
 			let randomLongitude = Double.random(in: 30.298198582604527 ... 30.314302733168006)
 			let staticMarkerOptions = MarkerOptions(
@@ -103,35 +148,10 @@ final class BenchmarkViewModel: ObservableObject {
 			self.createMarker(staticMarkerOptions)
 		}
 	}
-	
+
 	private func createTestPolygons() {
 		let polygonOptions = PolygonOptions.testPolygons
 		polygonOptions.forEach { self.createPolygon($0) }
-	}
-
-	private func move(at index: Int, path: cameraPath, reportName: String) {
-		guard index < path.count else {
-			self.objectManager.removeAll()
-			self.saveToCSVFile(fileName: "\(reportName)_\(dateFormatter.string(from: Date())).csv")
-			self.map.interactive = true
-			DispatchQueue.main.async {
-				self.showMenuButton = true
-			}
-			return
-		}
-		let tuple = path[index]
-		self.moveCameraCancellable?.cancel()
-		self.moveCameraCancellable = self.map
-			.camera
-			.move(
-				position: tuple.position,
-				time: tuple.time,
-				animationType: tuple.type
-			).sink { [weak self] _ in
-				self?.move(at: index + 1, path: path, reportName: reportName)
-			} failure: { error in
-				print("Something went wrong: \(error.localizedDescription)")
-			}
 	}
 
 	private func createColoredImage(systemName: String, color: UIColor) -> UIImage? {
@@ -145,17 +165,17 @@ final class BenchmarkViewModel: ObservableObject {
 		)
 		return image
 	}
-	
+
 	private func exportToCSV() -> String {
 		var csvString = Constants.firstCsvString
-		for dataPoint in fpsValues {
+		for dataPoint in self.fpsValues {
 			csvString += "\(dataPoint.timestamp),\(dataPoint.fps)\n"
 		}
 		return csvString
 	}
 
 	private func saveToCSVFile(fileName: String) {
-		let csvString = exportToCSV()
+		let csvString = self.exportToCSV()
 		if let path = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first {
 			let url = path.appendingPathComponent("logs/\(fileName)")
 			do {
@@ -176,24 +196,87 @@ final class BenchmarkViewModel: ObservableObject {
 			self.logger.error("Failed to set default camera state: \(error)")
 		}
 	}
-	
+
 	private func createMarker(_ options: MarkerOptions) {
 		do {
-			self.objectManager.addObject(item: try Marker(options: options))
+			try self.objectManager.addObject(item: Marker(options: options))
 		} catch let error as SimpleError {
 			self.logger.error("Failed to create marker: \(error.description)")
 		} catch {
 			self.logger.error("Failed to create marker: \(error.localizedDescription)")
 		}
 	}
-	
+
 	private func createPolygon(_ options: PolygonOptions) {
 		do {
-			self.objectManager.addObject(item: try Polygon(options: options))
+			try self.objectManager.addObject(item: Polygon(options: options))
 		} catch let error as SimpleError {
 			self.logger.error("Failed to create polygon: \(error.description)")
 		} catch {
 			self.logger.error("Failed to create polygon: \(error.localizedDescription)")
 		}
+	}
+
+	private func showMoscowGeoJsonZones() {
+		guard
+			let url = Bundle.main.url(forResource: "moscow_geo_json", withExtension: "json"),
+			let data = try? Data(contentsOf: url)
+		else {
+			fatalError("No zone file")
+		}
+
+		guard let geoJson = String(data: data, encoding: .utf8) else {
+			fatalError("Error creating Geo JSON")
+		}
+		self.geometryObjects = parseGeoJson(geoJsonData: geoJson)
+		self.geometryMapObjectSource.addObjects(objects: self.geometryObjects)
+	}
+
+	private func showMoscowJsonPolygons() {
+		guard
+			let fillColor = Color(UIColor(hex: "#21233D").withAlphaComponent(0.1)),
+			let strokeColor = Color(UIColor(hex: "#2FC25D"))
+		else { fatalError("Could not cast colors") }
+		let strokeWith = LogicalPixel(value: 2)
+		guard let url = Bundle.main.url(forResource: "moscow_zone", withExtension: "json"),
+		      let data = try? Data(contentsOf: url)
+		else {
+			fatalError("No zone file")
+		}
+
+		let zones: Zones = try! JSONDecoder().decode(Zones.self, from: data)
+		let polygons = zones.polygons(areaId: "moscow")
+		var zoneToShow: [Polygon] = []
+
+		for coordinates in polygons {
+			guard !coordinates.isEmpty else { continue }
+			let contours = coordinates.map { GeoPoint(coordinate: $0) }
+			let polygon = try! Polygon(
+				options: PolygonOptions(
+					contours: [contours],
+					color: fillColor,
+					strokeWidth: strokeWith,
+					strokeColor: strokeColor,
+					visible: true,
+					zIndex: ZIndex(value: 0)
+				)
+			)
+			zoneToShow.append(polygon)
+		}
+		self.objectManager.addObjects(objects: zoneToShow)
+	}
+
+	func printCameraPosition() {
+		let position = self.map.camera.position
+		print(
+			"""
+			(.init(
+				point: .init(latitude: .init(value: \(position.point.latitude.value)), longitude: .init(value: \(position.point.longitude.value))),
+				zoom: .init(value: \(position.zoom.value)),
+				tilt: .init(value: \(position.tilt.value)),
+				bearing: .init(value: \(position.bearing.value))
+			), 4, .linear),
+			"""
+		)
 	}
 }

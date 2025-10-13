@@ -13,15 +13,15 @@ struct FreeRoamSettingsView: View {
 		NavigationView {
 			ScrollView {
 				VStack {
-					SettingsFormTextField(
+					SettingsFormTextFieldView(
 						title: "Cache distance on route, m",
 						value: self.$settings.cacheDistanceOnRoute
 					)
-					SettingsFormTextField(
+					SettingsFormTextFieldView(
 						title: "Cache radius on route, m",
 						value: self.$settings.cacheRadiusOnRoute
 					)
-					SettingsFormTextField(
+					SettingsFormTextFieldView(
 						title: "Cache radius in free roam, m",
 						value: self.$settings.cacheRadiusInFreeRoam
 					)

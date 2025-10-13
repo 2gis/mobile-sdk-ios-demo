@@ -4,7 +4,7 @@ import DGis
 struct SwiftUIControlsDemoView: View {
 	@ObservedObject private var viewModel: MapControlsDemoViewModel
 	private let mapFactory: IMapFactory
-	private let mapControlViewFactory: IMapControlViewFactory
+	private let mapViewsFactory: IMapViewsFactory
 
 	init(
 		viewModel: MapControlsDemoViewModel,
@@ -12,24 +12,24 @@ struct SwiftUIControlsDemoView: View {
 	) {
 		self.viewModel = viewModel
 		self.mapFactory = mapFactory
-		self.mapControlViewFactory = self.mapFactory.mapControlViewFactory
+		self.mapViewsFactory = self.mapFactory.mapViewsFactory
 	}
 
 	var body: some View {
 		ZStack(alignment: .bottomTrailing) {
 			ZStack {
-				self.mapFactory.mapViewOverlay
-				.mapViewOverlayShowsAPIVersion(true)
-				.mapViewOverlayObjectTappedCallback(callback: .init(
-					callback: { [viewModel = self.viewModel] objectInfo in
-						viewModel.tap(objectInfo: objectInfo)
-					}
-				))
+				self.mapFactory.mapView
+					.showsAPIVersion(true)
+					.objectTappedCallback(callback: .init(
+						callback: { [viewModel = self.viewModel] objectInfo in
+							viewModel.tap(objectInfo: objectInfo)
+						}
+					))
 				.edgesIgnoringSafeArea(.all)
 				HStack {
 					VStack {
 						Spacer()
-						self.mapControlViewFactory.makeIndoorView()
+						self.mapViewsFactory.makeIndoorView()
 						.frame(width: 38, height: 119)
 						.fixedSize()
 						Spacer()
@@ -37,18 +37,18 @@ struct SwiftUIControlsDemoView: View {
 					.padding(10)
 					Spacer()
 					VStack {
-						self.mapControlViewFactory.makeTrafficView(colors: .default)
+						self.mapViewsFactory.makeTrafficView(colors: .default)
 						.frame(width: 48)
 						.fixedSize()
 						Spacer()
-						self.mapControlViewFactory.makeZoomView()
+						self.mapViewsFactory.makeZoomView()
 						.frame(width: 48, height: 102)
 						.fixedSize()
 						Spacer()
-						self.mapControlViewFactory.makeCompassView()
+						self.mapViewsFactory.makeCompassView()
 						.frame(width: 48)
 						.fixedSize()
-						self.mapControlViewFactory.makeCurrentLocationView()
+						self.mapViewsFactory.makeCurrentLocationView()
 						.frame(width: 48)
 						.fixedSize()
 					}

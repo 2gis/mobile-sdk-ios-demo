@@ -22,16 +22,16 @@ struct BenchmarkView: View {
 		GeometryReader { geometry in
 			ZStack {
 				ZStack(alignment: .bottomTrailing) {
-					self.mapFactory.mapViewOverlay
-					.mapViewOverlayShowsAPIVersion(true)
-					.mapViewOverlayCopyrightAlignment(.bottomRight)
-					.mapViewOverlayCopyrightInsets(
-						EdgeInsets(
-							top: 0,
-							leading: 0,
-							bottom: Constants.graphHeight - geometry.safeAreaInsets.bottom,
-							trailing: 0
-						)
+					self.mapFactory.mapView
+						.showsAPIVersion(true)
+						.copyrightAlignment(.bottomRight)
+						.copyrightInsets(
+							EdgeInsets(
+								top: 0,
+								leading: 0,
+								bottom: Constants.graphHeight - geometry.safeAreaInsets.bottom,
+								trailing: 0
+							)
 					)
 					FPSGraphView(viewModel: viewModel)
 					.frame(height: Constants.graphHeight)

@@ -17,6 +17,7 @@ final class NavigatorSettingsUIView: UIView {
 	private var speedExcessStack: UIStackView!
 	private var routeTypeStack: UIStackView!
 	private var followControllerTypeStack: UIStackView!
+	private var alternativeRoutesStack: UIStackView!
 
 	private let freeRoamSwitch = UISwitch()
 	private let freeRoamLabel: UILabel = {
@@ -48,6 +49,19 @@ final class NavigatorSettingsUIView: UIView {
 		stepper.minimumValue = 0
 		stepper.maximumValue = self.viewModel.maxSimulationSpeedKmH
 		return stepper
+	}()
+
+	private lazy var alternativeRoutesLabel: UILabel = {
+		let label = UILabel()
+		label.text = "Alternative routes settings"
+		label.font = .systemFont(ofSize: 18)
+		return label
+	}()
+
+	private lazy var nextIcon: UIImageView = {
+		let imageView = UIImageView(image: UIImage(systemName: "chevron.right"))
+		imageView.contentMode = .scaleAspectFit
+		return imageView
 	}()
 
 	private lazy var routeTypeLabel: UILabel = {
@@ -124,6 +138,10 @@ final class NavigatorSettingsUIView: UIView {
 		self.speedExcessStack = self.createStackView(label: self.speedExcessLabel, control: self.speedExcessStepper, axis: .horizontal)
 		self.routeTypeStack = self.createStackView(label: self.routeTypeLabel, control: self.routeTypeSegmentedControl, axis: .vertical)
 		self.followControllerTypeStack = self.createStackView(label: self.followControllerTypeLabel, control: self.followControllerTypeSegmentedControl, axis: .vertical)
+		self.alternativeRoutesStack = self.createStackView(label: self.alternativeRoutesLabel, control: self.nextIcon, axis: .horizontal)
+		let alternativeRoutesTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.alternativeRoutesTapped))
+		self.alternativeRoutesStack.isUserInteractionEnabled = true
+		self.alternativeRoutesStack.addGestureRecognizer(alternativeRoutesTapRecognizer)
 
 		self.setupUI()
 		self.setupActions()
@@ -153,11 +171,12 @@ final class NavigatorSettingsUIView: UIView {
 			simulationStack,
 			simulationSpeedStack,
 			speedExcessStack,
+			alternativeRoutesStack,
 			routeTypeStack,
 			followControllerTypeStack,
 		].compactMap { $0 } + [self.createButtonRow()])
 		stackView.axis = .vertical
-		stackView.spacing = 10
+		stackView.spacing = 12
 		stackView.translatesAutoresizingMaskIntoConstraints = false
 		scrollView.addSubview(stackView)
 
@@ -228,6 +247,10 @@ final class NavigatorSettingsUIView: UIView {
 	@objc private func simulationSpeedChanged() {
 		self.viewModel.simulationSpeedKmH = self.simulationSpeedStepper.value
 		self.simulationSpeedLabel.text = "Speed \(Int(self.viewModel.simulationSpeedKmH)) km/h"
+	}
+
+	@objc private func alternativeRoutesTapped() {
+		NavigationService().present(NavigatorBetterRouteSettingsVC(settings: self.viewModel.betterRouteSettings))
 	}
 
 	private func createStackView(label: UILabel, control: UIView, axis: NSLayoutConstraint.Axis) -> UIStackView {

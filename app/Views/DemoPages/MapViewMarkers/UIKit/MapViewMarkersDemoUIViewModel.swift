@@ -1,10 +1,11 @@
+import Combine
 import DGis
 import UIKit
 
-final class MapViewMarkersDemoUIViewModel: ObservableObject {
+final class MapViewMarkersDemoUIViewModel: ObservableObject, @unchecked Sendable {
 	var selectedMapObject: MapObjectCardViewModel?
 
-	private var searchCancellable: Cancellable?
+	private var searchCancellable: ICancellable?
 	private let searchManager: SearchManager
 	let mapMarkerPresenter: MapMarkerPresenter
 	private let map: Map
@@ -28,6 +29,7 @@ final class MapViewMarkersDemoUIViewModel: ObservableObject {
 		self.map.addSource(source: locationSource)
 	}
 
+	@MainActor
 	func tap(objectInfo: RenderedObjectInfo) {
 		self.selectedMapObject = MapObjectCardViewModel(
 			objectInfo: objectInfo,

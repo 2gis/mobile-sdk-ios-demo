@@ -1,27 +1,22 @@
 import SwiftUI
 
 struct NavigatorBetterRouteSettingsView: View {
-	@Binding private var isPresented: Bool
-	@Binding private var settings: NavigatorBetterRouteSettings
-
-	init(settings: Binding<NavigatorBetterRouteSettings>, isPresented: Binding<Bool>) {
-		self._settings = settings
-		self._isPresented = isPresented
-	}
+	@Binding var settings: NavigatorBetterRouteSettings
+	@Binding var isPresented: Bool
 
 	var body: some View {
 		NavigationView {
 			ScrollView {
 				VStack(alignment: .leading) {
-					SettingsFormTextField(
+					SettingsFormTextFieldView(
 						title: "Minimum time gain for an alternative route, seconds",
 						value: self.$settings.betterRouteTimeCostThreshold
 					)
-					SettingsFormTextField(
+					SettingsFormTextFieldView(
 						title: "Minimum length gain for an alternative route, meters",
 						value: self.$settings.betterRouteLengthThreshold
 					)
-					SettingsFormTextField(
+					SettingsFormTextFieldView(
 						title: "Timeout for alternative route search. Must be at least 5 seconds",
 						value: self.$settings.routeSearchDefaultDelay
 					)

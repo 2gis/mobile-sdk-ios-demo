@@ -1,7 +1,8 @@
-import SwiftUI
 import DGis
+import SwiftUI
 
 struct StaticMapsView: View {
+	@Environment(\.colorScheme) var colorScheme
 	@ObservedObject private var viewModel: StaticMapsViewModel
 	private let mapFactory: IMapFactory
 
@@ -29,33 +30,13 @@ struct StaticMapsView: View {
 					.padding(5)
 				}
 				if self.viewModel.needMapViewToExist {
-					self.mapFactory.mapViewOverlay
-					.frame(height: Constants.snapshotHeight)
-					.opacity(0)
+					self.mapFactory.mapView
+						.frame(height: Constants.snapshotHeight)
+						.opacity(0)
 				}
 			}
 		}
 		.onAppear(perform: self.viewModel.makeMapSnapshots)
-		.modifier(
-			OnChangeModifier(
-				action: {
-					self.viewModel.makeMapSnapshots()
-				}
-			)
-		)
-	}
-}
-
-private struct OnChangeModifier: ViewModifier {
-	@Environment(\.colorScheme) var colorScheme
-	let action: () -> Void
-
-	func body(content: Content) -> some View {
-		// Checking if it is available .onChange
-		if #available(iOS 14.0, *) {
-			content.onChange(of: colorScheme, perform: { _ in action() })
-		} else {
-			content
-		}
+		.onChange(of: self.colorScheme, perform: { _ in self.viewModel.makeMapSnapshots() })
 	}
 }

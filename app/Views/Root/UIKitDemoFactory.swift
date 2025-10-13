@@ -58,50 +58,14 @@ final class UIKitDemoFactory: RootViewFactory {
 
 	private func makeRoadEventsDemoPage() throws -> UIViewController {
 		let mapFactory = try self.makeMapFactory()
-		let roadEventCardPresenter = RoadEventCardPresenter()
-		let roadEventFormPresenter = RoadEventFormPresenter()
 		let viewModel = RoadEventsDemoViewModel(
 			map: mapFactory.map,
-			mapSourceFactory: MapSourceFactory(context: self.context, settingsService: self.settingsService),
-			roadEventCardPresenter: roadEventCardPresenter,
-			roadEventFormPresenter: roadEventFormPresenter
+			mapSourceFactory: MapSourceFactory(context: self.context, settingsService: self.settingsService)
 		)
-		let mapOverlayFactory = RoadEventsMapOverlayFactory(
-			map: mapFactory.map,
-			roadEventCardPresenter: roadEventCardPresenter,
-			roadEventFormPresenter: roadEventFormPresenter,
-			roadEventCardViewFactory: self.makeRoadEventCardViewFactory()
-		)
-		return RoadEventsDemoUIViewController(
+		return try RoadEventsDemoViewController(
 			viewModel: viewModel,
 			mapFactory: mapFactory,
-			mapOverlayFactory: mapOverlayFactory
-		)
-	}
-
-	func makeNavigatorDemoPage() throws -> UIViewController {
-		let mapFactory = try self.makeMapFactory()
-		let mapSourceFactory = MapSourceFactory(
-			context: self.context,
-			settingsService: self.settingsService
-		)
-		let viewModel = try NavigatorDemoViewModel(
-			map: mapFactory.map,
-			trafficRouter: TrafficRouter(context: self.context),
-			navigationManager: NavigationManager(platformContext: self.context),
-			locationService: LocationService(),
-			voiceManager: self.sdk.voiceManager,
-			applicationIdleTimerService: self.applicationIdleTimerService,
-			navigatorSettings: self.navigatorSettings,
-			mapSourceFactory: mapSourceFactory,
-			settingsService: self.settingsService,
-			logger: self.logger,
-			imageFactory: self.makeImageFactory()
-		)
-		return NavigatorDemoViewController(
-			mapFactory: mapFactory,
-			viewModel: viewModel,
-			navigationFactory: self.sdk.makeNavigationViewFactory
+			roadEventUIViewFactory: self.sdk.makeRoadEventUIViewFactory()
 		)
 	}
 
@@ -124,5 +88,34 @@ final class UIKitDemoFactory: RootViewFactory {
 		])
 
 		return viewController
+	}
+}
+
+extension UIKitDemoFactory {
+	func makeNavigatorDemoPage() throws -> UIViewController {
+		let mapFactory = try self.makeMapFactory()
+		let mapSourceFactory = MapSourceFactory(
+			context: self.context,
+			settingsService: self.settingsService
+		)
+		let viewModel = try NavigatorDemoViewModel(
+			map: mapFactory.map,
+			mainMapEnergyConsumption: mapFactory.energyConsumption,
+			trafficRouter: TrafficRouter(context: self.context),
+			navigationManager: NavigationManager(platformContext: self.context),
+			locationService: self.locationManagerFactory(),
+			voiceManager: self.sdk.voiceManager,
+			applicationIdleTimerService: self.applicationIdleTimerService,
+			navigatorSettings: self.navigatorSettings,
+			mapSourceFactory: mapSourceFactory,
+			settingsService: self.settingsService,
+			logger: self.logger,
+			imageFactory: self.makeImageFactory()
+		)
+		return NavigatorDemoViewController(
+			mapFactory: mapFactory,
+			viewModel: viewModel,
+			navigationFactory: self.sdk.makeNavigationUIViewFactory
+		)
 	}
 }

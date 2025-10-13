@@ -1,28 +1,31 @@
-import class QuartzCore.CADisplayLink
-import func QuartzCore.CACurrentMediaTime
 import Foundation
+import func QuartzCore.CACurrentMediaTime
+import class QuartzCore.CADisplayLink
 
-fileprivate var defaultFunction: (CFTimeInterval, CFTimeInterval) -> (Double) = { time, duration in
+@MainActor
+private let defaultFunction: @Sendable (CFTimeInterval, CFTimeInterval) -> Double = {
+	time, duration in guard duration > 0 else { return 1 }
 	return time / duration
 }
 
 /// Удобная реализация для анимации.
+@MainActor
 class ValueAnimator {
 	private let from: Double
 	private let to: Double
 
 	private var duration: CFTimeInterval = 0
-	private var startTime: CFTimeInterval? = nil
+	private var startTime: CFTimeInterval?
 	private var displayLink: CADisplayLink?
-	private var animationCurveFunction: (CFTimeInterval, CFTimeInterval) -> (Double)
+	private let animationCurveFunction: @Sendable (CFTimeInterval, CFTimeInterval) -> Double
 	private var valueUpdater: (Double) -> Void
 
-	init (
+	init(
 		from: Double,
 		to: Double,
 		duration: TimeInterval,
-		animationCurveFunction: @escaping (TimeInterval, TimeInterval) -> (Double) = defaultFunction,
-		valueUpdater: @escaping (Double) -> Void
+		animationCurveFunction: @escaping @Sendable (TimeInterval, TimeInterval) -> Double = defaultFunction,
+		valueUpdater: @escaping @Sendable (Double) -> Void
 	) {
 		self.from = from
 		self.to = to
@@ -37,6 +40,7 @@ class ValueAnimator {
 	}
 
 	@objc
+	@MainActor
 	private func update() {
 		guard let startTime = self.startTime else {
 			self.startTime = CACurrentMediaTime()
@@ -58,6 +62,7 @@ class ValueAnimator {
 		}
 	}
 
+	@MainActor
 	private func updateValue(startTime: CFTimeInterval) {
 		self.valueUpdater(self.from + (self.to - self.from) * self.animationCurveFunction(startTime, self.duration))
 	}

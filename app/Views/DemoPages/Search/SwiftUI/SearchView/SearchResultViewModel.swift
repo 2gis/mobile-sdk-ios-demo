@@ -1,14 +1,18 @@
+import Combine
 import CoreLocation
 import DGis
 
+@MainActor
 class SearchResultViewModel: ObservableObject {
-	@Published var items: [SearchResultItemViewModel] = []
 	var isEmpty: Bool {
-		self.items.isEmpty
+		self.objects.isEmpty
 	}
-	static var empty = SearchResultViewModel()
+
+	static let empty = SearchResultViewModel()
+
+	@Published var objects: [DirectoryObject] = []
 	private var currentPage: Page? = nil
-	private var lastPosition: CLLocation? = nil
+	private(set) var lastPosition: GeoPoint? = nil
 	private var isLoadingNextPage = false
 	private var nextPageCancellable: DGis.Cancellable?
 
@@ -16,13 +20,17 @@ class SearchResultViewModel: ObservableObject {
 		result: SearchResult? = nil,
 		lastPosition: CLLocation? = nil
 	) {
-		self.lastPosition = lastPosition
+		self.lastPosition = lastPosition.map {
+			GeoPoint(
+				latitude: $0.coordinate.latitude,
+				longitude: $0.coordinate.longitude
+			)
+		}
 		self.loadFirstPage(result: result)
 	}
 
 	func loadFirstPage(result: SearchResult?) {
-		let lastPositionPoint = lastPosition.map { GeoPoint(coordinate: $0.coordinate) }
-		self.items = result?.firstPage?.items.compactMap({ ($0, lastPositionPoint) }).map(SearchResultItemViewModel.init) ?? []
+		self.objects = result?.firstPage?.items ?? []
 		self.currentPage = result?.firstPage
 	}
 
@@ -31,19 +39,23 @@ class SearchResultViewModel: ObservableObject {
 		self.isLoadingNextPage = true
 		self.nextPageCancellable = currentPage.fetchNextPage().sinkOnMainThread(
 			receiveValue: { result in
-				self.isLoadingNextPage = false
-				switch result {
-				case .some(let nextPage):
-					let lastPositionPoint = self.lastPosition.map { GeoPoint(coordinate: $0.coordinate) }
-					let newItems = nextPage.items.compactMap { ($0, lastPositionPoint) }.map(SearchResultItemViewModel.init)
-					self.items.append(contentsOf: newItems)
-					self.currentPage = nextPage
-				case .none:
-					return
+				Task { @MainActor in
+					self.isLoadingNextPage = false
+					switch result {
+					case let .some(nextPage):
+						let newObjects = nextPage.items
+						self.objects.append(contentsOf: newObjects)
+						self.currentPage = nextPage
+					case .none:
+						return
+					@unknown default:
+						assertionFailure("Unknown value for fetchNextPage Futute result")
+					}
 				}
 			},
 			failure: { error in
 				print("Failed to load next page: \(error)")
-			})
-		}
+			}
+		)
+	}
 }

@@ -1,6 +1,5 @@
 import SwiftUI
 
-@available(iOS 15, *)
 struct RelationPointsView: View {
 	@Binding var relationPoints: [RelationPoint]
 	let sectionName: String
@@ -8,40 +7,40 @@ struct RelationPointsView: View {
 	@State private var editingField: UUID?
 
 	var body: some View {
-		Section(header: Text(sectionName)) {
-			ForEach($relationPoints) { point in
+		Section(header: Text(self.sectionName)) {
+			ForEach(self.$relationPoints) { point in
 				HStack {
 					Text("Zoom: ")
 					TextField("Zoom", value: point.zoom, formatter: .zoomFormatter)
-					.id(point.id)
-					.keyboardType(.numbersAndPunctuation)
-					.textFieldStyle(RoundedBorderTextFieldStyle())
-					.frame(width: textFieldFrameWidth)
-					.disabled(self.editingField != point.id)
+						.id(point.id)
+						.keyboardType(.numbersAndPunctuation)
+						.textFieldStyle(RoundedBorderTextFieldStyle())
+						.frame(width: self.textFieldFrameWidth)
+						.disabled(self.editingField != point.id)
 					Spacer()
 					Text("Tilt: ")
 					TextField("Tilt", value: point.tilt, formatter: .tiltFormatter)
-					.id(point.id)
-					.keyboardType(.numbersAndPunctuation)
-					.textFieldStyle(RoundedBorderTextFieldStyle())
-					.frame(width: textFieldFrameWidth)
-					.disabled(self.editingField != point.id)
+						.id(point.id)
+						.keyboardType(.numbersAndPunctuation)
+						.textFieldStyle(RoundedBorderTextFieldStyle())
+						.frame(width: self.textFieldFrameWidth)
+						.disabled(self.editingField != point.id)
 					if self.editingField == point.id {
 						Button(action: {
 							self.editingField = nil
 						}) {
 							Image(systemName: "checkmark.circle")
-							.foregroundColor(.green)
-							.font(.title2)
+								.foregroundColor(.green)
+								.font(.title2)
 						}
 						.transition(.scale)
 					}
 				}
 				.swipeActions(edge: .trailing, allowsFullSwipe: true) {
-					if editingField != point.id {
+					if self.editingField != point.id {
 						Button {
 							guard let index = relationPoints.firstIndex(where: { $0.id == point.id }) else { return }
-							relationPoints.remove(at: index)
+							self.relationPoints.remove(at: index)
 						} label: {
 							Label("Delete", systemImage: "trash.fill")
 						}
@@ -49,7 +48,7 @@ struct RelationPointsView: View {
 					}
 				}
 				.swipeActions(edge: .leading, allowsFullSwipe: true) {
-					if editingField != point.id {
+					if self.editingField != point.id {
 						Button {
 							self.editingField = point.id
 						} label: {
@@ -64,9 +63,9 @@ struct RelationPointsView: View {
 					self.relationPoints.append(.init(zoom: 0.0, tilt: 0.0))
 				}
 			}, label: {
-				HStack{
+				HStack {
 					Image(systemName: "plus.circle.fill")
-					.foregroundColor(.accentColor)
+						.foregroundColor(.accentColor)
 					Text("Add relation point")
 				}
 			})

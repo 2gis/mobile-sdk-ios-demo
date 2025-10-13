@@ -1,5 +1,6 @@
 import DGis
 
+@MainActor
 struct SearchState {
 	var queryText = ""
 	var selection = SuggestViewModel?.none
@@ -7,10 +8,10 @@ struct SearchState {
 	var isErrorAlertShown = false
 	var result = SearchResultViewModel.empty
 	var suggestion = SuggestResultViewModel.empty
-    var history = SearchHistoryViewModel.empty
+	var history = SearchHistoryViewModel.empty
 	var navigation: SearchNavigation?
 	var searchOptions: SearchOptions?
 	var rubricIds: [RubricId] = []
 
-	init() { }
+	init() {}
 }

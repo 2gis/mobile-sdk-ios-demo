@@ -1,5 +1,5 @@
-import SwiftUI
 import DGis
+import SwiftUI
 
 struct MapSnapshotDemoView: View {
 	@Environment(\.presentationMode) private var presentationMode
@@ -19,8 +19,8 @@ struct MapSnapshotDemoView: View {
 
 	var body: some View {
 		ZStack(alignment: .bottomTrailing) {
-			self.mapFactory.mapViewOverlay
-			.mapViewOverlayCopyrightAlignment(.bottomLeft)
+			self.mapFactory.mapView
+				.copyrightAlignment(.bottomLeft)
 			VStack(spacing: 6.0) {
 				self.settingsButton().frame(width: 100, height: 100, alignment: .bottomTrailing)
 				self.mapSnapshotButton().frame(width: 100, height: 100, alignment: .bottomTrailing)
@@ -41,7 +41,9 @@ struct MapSnapshotDemoView: View {
 				object: nil,
 				queue: nil
 			) { _ in
-				self.showMapSnapshotView()
+				Task { @MainActor in
+					self.showMapSnapshotView()
+				}
 			}
 		}
 	}
@@ -56,7 +58,7 @@ struct MapSnapshotDemoView: View {
 		self.navigationService.push(self.viewModel.makeMapSnapshotView())
 	}
 
-	private var backButton : some View {
+	private var backButton: some View {
 		Button(action: {
 			self.removeObserver()
 			self.presentationMode.wrappedValue.dismiss()

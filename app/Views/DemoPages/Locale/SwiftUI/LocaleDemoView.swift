@@ -16,8 +16,8 @@ struct LocaleDemoView: View {
 	var body: some View {
 		ZStack {
 			ZStack(alignment: .bottomTrailing) {
-				self.mapFactory.mapViewOverlay
-				.mapViewOverlayCopyrightAlignment(.bottomLeft)
+				self.mapFactory.mapView
+					.copyrightAlignment(.bottomLeft)
 				VStack(spacing: 12.0) {
 					DetailsActionView(
 						action: {

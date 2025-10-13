@@ -1,5 +1,5 @@
-import SwiftUI
 import DGis
+import SwiftUI
 
 enum MapObjectColor: UInt {
 	case transparent
@@ -15,23 +15,25 @@ enum MapObjectColor: UInt {
 
 	var text: String {
 		switch self {
-			case .transparent: return "Transparent"
-			case .black: return "Black"
-			case .white: return "White"
-			case .red: return "Red"
-			case .green: return "Green"
-			case .blue: return "Blue"
+		case .transparent: return "Transparent"
+		case .black: return "Black"
+		case .white: return "White"
+		case .red: return "Red"
+		case .green: return "Green"
+		case .blue: return "Blue"
+		@unknown default: fatalError("Unknown type: \(self)")
 		}
 	}
 
 	var value: DGis.Color {
 		switch self {
-			case .transparent: return .init(UIColor.clear)!
-			case .black: return .init(UIColor.black)!
-			case .white: return .init(UIColor.white)!
-			case .red: return .init(UIColor.red)!
-			case .green: return .init(UIColor.green)!
-			case .blue: return .init(UIColor.blue)!
+		case .transparent: return .init(UIColor.clear)!
+		case .black: return .init(UIColor.black)!
+		case .white: return .init(UIColor.white)!
+		case .red: return .init(UIColor.red)!
+		case .green: return .init(UIColor.green)!
+		case .blue: return .init(UIColor.blue)!
+		@unknown default: fatalError("Unknown type: \(self)")
 		}
 	}
 }
@@ -47,17 +49,19 @@ enum StrokeWidth: UInt {
 
 	var text: String {
 		switch self {
-			case .thin: return "Thin"
-			case .medium: return "Medium"
-			case .thick: return "Thick"
+		case .thin: return "Thin"
+		case .medium: return "Medium"
+		case .thick: return "Thick"
+		@unknown default: fatalError("Unknown type: \(self)")
 		}
 	}
 
 	var pixel: DGis.LogicalPixel {
 		switch self {
-			case .thin: return .init(value: 1)
-			case .medium: return .init(value: 3)
-			case .thick: return .init(value: 5)
+		case .thin: return .init(value: 1)
+		case .medium: return .init(value: 3)
+		case .thick: return .init(value: 5)
+		@unknown default: fatalError("Unknown type: \(self)")
 		}
 	}
 }
@@ -66,32 +70,34 @@ enum PolylineFillType: UInt {
 	case solid
 	case dashed
 	case gradient
-	
+
 	mutating func next() {
 		self = PolylineFillType(rawValue: self.rawValue + 1) ?? .solid
 	}
-	
+
 	var text: String {
 		switch self {
-			case .solid: return "Solid"
-			case .dashed: return "Dashed"
-			case .gradient: return "Gradient"
+		case .solid: return "Solid"
+		case .dashed: return "Dashed"
+		case .gradient: return "Gradient"
+		@unknown default: fatalError("Unknown type: \(self)")
 		}
 	}
-	
+
 	var dashedOptions: DashedPolylineOptions? {
 		switch self {
-			case .solid: return nil
+		case .solid: return nil
 		case .dashed: return .init(dashLength: 4.0, dashSpaceLength: 2.0)
-			case .gradient: return nil
+		case .gradient: return nil
+		@unknown default: fatalError("Unknown type: \(self)")
 		}
 	}
-	
+
 	var gradientOptions: GradientPolylineOptions? {
 		switch self {
-			case .solid: return nil
-			case .dashed: return nil
-			case .gradient: return .init(
+		case .solid: return nil
+		case .dashed: return nil
+		case .gradient: return .init(
 				borderWidth: 1.0,
 				secondBorderWidth: 1.0,
 				gradientLength: 4000.0,
@@ -100,6 +106,7 @@ enum PolylineFillType: UInt {
 				colors: [.init(.red)!, .init(.yellow)!, .init(.green)!, .init(.blue)!, .init(.magenta)!],
 				colorIndices: Data([])
 			)
+		@unknown default: fatalError("Unknown type: \(self)")
 		}
 	}
 }
@@ -107,22 +114,24 @@ enum PolylineFillType: UInt {
 enum CircleStrokeType: UInt {
 	case solid
 	case dashed
-	
+
 	mutating func next() {
 		self = CircleStrokeType(rawValue: self.rawValue + 1) ?? .solid
 	}
-	
+
 	var text: String {
 		switch self {
-			case .solid: return "Solid"
-			case .dashed: return "Dashed"
+		case .solid: return "Solid"
+		case .dashed: return "Dashed"
+		@unknown default: fatalError("Unknown type: \(self)")
 		}
 	}
-	
+
 	var dashedOptions: DashedStrokeCircleOptions? {
 		switch self {
-			case .solid: return nil
-			case .dashed: return DashedStrokeCircleOptions(dashLength: 4.0, dashSpaceLength: 2.0)
+		case .solid: return nil
+		case .dashed: return DashedStrokeCircleOptions(dashLength: 4.0, dashSpaceLength: 2.0)
+		@unknown default: fatalError("Unknown type: \(self)")
 		}
 	}
 }
@@ -145,6 +154,7 @@ enum MapObjectType: UInt {
 		case .model: return "Model"
 		case .polygon: return "Polygon"
 		case .polyline: return "Polyline"
+		@unknown default: fatalError("Unknown type: \(self)")
 		}
 	}
 }

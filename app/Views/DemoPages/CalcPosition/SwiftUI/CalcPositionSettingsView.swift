@@ -40,21 +40,21 @@ struct CalcPositionSettingsView: View {
 				if self.padding.top != 0 {
 					self.clearButton(for: self.$padding.top)
 				}
-				TextField("0", value: self.$padding.top, formatter: self.verticalFormatter)
-				.textFieldStyle(.roundedBorder)
-				.keyboardType(.numbersAndPunctuation)
-				.frame(width: Constants.textFieldFrameWidth)
+				TextField("Enter a value", value: self.$padding.top, formatter: self.verticalFormatter)
+					.textFieldStyle(.roundedBorder)
+					.keyboardType(.numbersAndPunctuation)
+					.frame(width: Constants.textFieldFrameWidth)
 			}
 			HStack {
 				Text("Bottom Padding:")
 				Spacer()
 				if self.padding.bottom != 0 {
-					clearButton(for: self.$padding.bottom)
+					self.clearButton(for: self.$padding.bottom)
 				}
-				TextField("0", value: self.$padding.bottom, formatter: self.verticalFormatter)
-				.textFieldStyle(.roundedBorder)
-				.keyboardType(.numbersAndPunctuation)
-				.frame(width: Constants.textFieldFrameWidth)
+				TextField("Enter a value", value: self.$padding.bottom, formatter: self.verticalFormatter)
+					.textFieldStyle(.roundedBorder)
+					.keyboardType(.numbersAndPunctuation)
+					.frame(width: Constants.textFieldFrameWidth)
 			}
 			HStack {
 				Text("Left Padding:")
@@ -62,10 +62,10 @@ struct CalcPositionSettingsView: View {
 				if self.padding.left != 0 {
 					self.clearButton(for: self.$padding.left)
 				}
-				TextField("0", value: self.$padding.left, formatter: self.horizontalFormatter)
-				.textFieldStyle(.roundedBorder)
-				.keyboardType(.numbersAndPunctuation)
-				.frame(width: Constants.textFieldFrameWidth)
+				TextField("Enter a value", value: self.$padding.left, formatter: self.horizontalFormatter)
+					.textFieldStyle(.roundedBorder)
+					.keyboardType(.numbersAndPunctuation)
+					.frame(width: Constants.textFieldFrameWidth)
 			}
 			HStack {
 				Text("Right Padding:")
@@ -73,10 +73,10 @@ struct CalcPositionSettingsView: View {
 				if self.padding.right != 0 {
 					self.clearButton(for: self.$padding.right)
 				}
-				TextField("0", value: self.$padding.right, formatter: self.horizontalFormatter)
-				.textFieldStyle(.roundedBorder)
-				.keyboardType(.numbersAndPunctuation)
-				.frame(width: Constants.textFieldFrameWidth)
+				TextField("Enter a value", value: self.$padding.right, formatter: self.horizontalFormatter)
+					.textFieldStyle(.roundedBorder)
+					.keyboardType(.numbersAndPunctuation)
+					.frame(width: Constants.textFieldFrameWidth)
 			}
 			HStack {
 				Text("Tilt:")
@@ -84,10 +84,10 @@ struct CalcPositionSettingsView: View {
 				if self.tilt != 0 {
 					self.clearButton(for: self.$tilt)
 				}
-				TextField("0", value: self.$tilt, formatter: .tiltFormatter)
-				.textFieldStyle(.roundedBorder)
-				.keyboardType(.numbersAndPunctuation)
-				.frame(width: Constants.textFieldFrameWidth)
+				TextField("Enter a value", value: self.$tilt, formatter: .tiltFormatter)
+					.textFieldStyle(.roundedBorder)
+					.keyboardType(.numbersAndPunctuation)
+					.frame(width: Constants.textFieldFrameWidth)
 			}
 			HStack {
 				Text("Bearing:")
@@ -95,17 +95,17 @@ struct CalcPositionSettingsView: View {
 				if self.bearing != 0 {
 					self.clearButton(for: self.$bearing)
 				}
-				TextField("0", value: self.$bearing, formatter: .bearingFormatter)
-				.textFieldStyle(.roundedBorder)
-				.keyboardType(.numbersAndPunctuation)
-				.frame(width: Constants.textFieldFrameWidth)
+				TextField("Enter a value", value: self.$bearing, formatter: .bearingFormatter)
+					.textFieldStyle(.roundedBorder)
+					.keyboardType(.numbersAndPunctuation)
+					.frame(width: Constants.textFieldFrameWidth)
 			}
 			HStack {
 				Text("Use:")
 				Spacer()
 				Picker(
 					"Choose way to use calcPosition",
-					selection: $calcPositionWay
+					selection: self.$calcPositionWay
 				) {
 					ForEach(CalcPositionWays.allCases) { way in
 						Text(way.displayName).tag(way)
@@ -118,9 +118,9 @@ struct CalcPositionSettingsView: View {
 			}
 			) {
 				Text("Calculate camera position")
-				.foregroundColor(.white)
-				.padding()
-				.frame(maxWidth: .infinity)
+					.foregroundColor(.white)
+					.padding()
+					.frame(maxWidth: .infinity)
 			}
 			.background(Color.green)
 			.cornerRadius(10)
@@ -137,7 +137,7 @@ struct CalcPositionSettingsView: View {
 			binding.wrappedValue = 0
 		}) {
 			Image(systemName: "multiply.circle.fill")
-			.foregroundColor(.gray)
+				.foregroundColor(.gray)
 		}
 	}
 
@@ -146,7 +146,7 @@ struct CalcPositionSettingsView: View {
 			binding.wrappedValue = 0
 		}) {
 			Image(systemName: "multiply.circle.fill")
-			.foregroundColor(.gray)
+				.foregroundColor(.gray)
 		}
 	}
 
@@ -155,7 +155,7 @@ struct CalcPositionSettingsView: View {
 			binding.wrappedValue = 0
 		}) {
 			Image(systemName: "multiply.circle.fill")
-			.foregroundColor(.gray)
+				.foregroundColor(.gray)
 		}
 	}
 }

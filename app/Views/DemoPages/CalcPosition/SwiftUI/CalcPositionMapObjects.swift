@@ -10,13 +10,13 @@ class CalcPositionMapObjectsFactory {
 	}
 
 	private let imageFactory: IImageFactory
-	
+
 	init(imageFactory: IImageFactory) {
 		self.imageFactory = imageFactory
 	}
 
 	private lazy var markerIcon: DGis.Image = self.imageFactory.make(
-		image:(createColoredImage(
+		image: (createColoredImage(
 			systemName: "plus.circle.fill",
 			color: .blue.withAlphaComponent(0.7)
 		)?.resized(
@@ -32,147 +32,147 @@ class CalcPositionMapObjectsFactory {
 	)
 
 	lazy var markers: [Marker] =
-	[
-		self.createMarker(
-			options: MarkerOptions(
-				position: .init(latitude: 25.071997, longitude: 55.140214),
-				icon: self.markerIcon
-			)
-		),
-		self.createMarker(
-			options: MarkerOptions(
-				position: .init(latitude: 25.071997, longitude: 55.143005),
-				icon: self.markerIcon
-			)
-		),
-		self.createMarker(
-			options: MarkerOptions(
-				position: .init(latitude: 25.068618, longitude: 55.143005),
-				icon: self.markerIcon
-			)
-		),
-		self.createMarker(
-			options: MarkerOptions(
-				position: .init(latitude: 25.068618, longitude: 55.140214),
-				icon: self.markerIcon
-			)
-		)
-	]
+		[
+			self.createMarker(
+				options: MarkerOptions(
+					position: .init(latitude: 25.071997, longitude: 55.140214),
+					icon: self.markerIcon
+				)
+			),
+			self.createMarker(
+				options: MarkerOptions(
+					position: .init(latitude: 25.071997, longitude: 55.143005),
+					icon: self.markerIcon
+				)
+			),
+			self.createMarker(
+				options: MarkerOptions(
+					position: .init(latitude: 25.068618, longitude: 55.143005),
+					icon: self.markerIcon
+				)
+			),
+			self.createMarker(
+				options: MarkerOptions(
+					position: .init(latitude: 25.068618, longitude: 55.140214),
+					icon: self.markerIcon
+				)
+			),
+		]
 
 	lazy var markersOn180: [Marker] =
-	[
-		self.createMarker(
-			options: MarkerOptions(
-				position: .init(latitude: 63.744213, longitude: 170.624631),
-				icon: self.markerIcon
-			)
-		),
-		self.createMarker(
-			options: MarkerOptions(
-				position: .init(latitude: 63.744213, longitude: -170.627422),
-				icon: self.markerIcon
-			)
-		),
-		self.createMarker(
-			options: MarkerOptions(
-				position: .init(latitude: 67.740861, longitude: -177.627422),
-				icon: self.markerIcon
-			)
-		),
-		self.createMarker(
-			options: MarkerOptions(
-				position: .init(latitude: 67.740861, longitude: 175.624631),
-				icon: self.markerIcon
-			)
-		)
-	]
+		[
+			self.createMarker(
+				options: MarkerOptions(
+					position: .init(latitude: 63.744213, longitude: 170.624631),
+					icon: self.markerIcon
+				)
+			),
+			self.createMarker(
+				options: MarkerOptions(
+					position: .init(latitude: 63.744213, longitude: -170.627422),
+					icon: self.markerIcon
+				)
+			),
+			self.createMarker(
+				options: MarkerOptions(
+					position: .init(latitude: 67.740861, longitude: -177.627422),
+					icon: self.markerIcon
+				)
+			),
+			self.createMarker(
+				options: MarkerOptions(
+					position: .init(latitude: 67.740861, longitude: 175.624631),
+					icon: self.markerIcon
+				)
+			),
+		]
 
 	lazy var rectMarkersOn180: [Marker] =
-	[
-		self.createMarker(
-			options: MarkerOptions(
-				position: .init(latitude: -53.744213, longitude: 175.624631),
-				icon: self.markerIcon
-			)
-		),
-		self.createMarker(
-			options: MarkerOptions(
-				position: .init(latitude: -53.744213, longitude: -177.627422),
-				icon: self.markerIcon
-			)
-		),
-		self.createMarker(
-			options: MarkerOptions(
-				position: .init(latitude: -57.740861, longitude: -177.627422),
-				icon: self.markerIcon
-			)
-		),
-		self.createMarker(
-			options: MarkerOptions(
-				position: .init(latitude: -57.740861, longitude: 175.624631),
-				icon: self.markerIcon
-			)
-		)
-	]
+		[
+			self.createMarker(
+				options: MarkerOptions(
+					position: .init(latitude: -53.744213, longitude: 175.624631),
+					icon: self.markerIcon
+				)
+			),
+			self.createMarker(
+				options: MarkerOptions(
+					position: .init(latitude: -53.744213, longitude: -177.627422),
+					icon: self.markerIcon
+				)
+			),
+			self.createMarker(
+				options: MarkerOptions(
+					position: .init(latitude: -57.740861, longitude: -177.627422),
+					icon: self.markerIcon
+				)
+			),
+			self.createMarker(
+				options: MarkerOptions(
+					position: .init(latitude: -57.740861, longitude: 175.624631),
+					icon: self.markerIcon
+				)
+			),
+		]
 
 	lazy var rectMarkersOn0: [Marker] =
-	[
-		self.createMarker(
-			options: MarkerOptions(
-				position: .init(latitude: -53.744213, longitude: 25.624631),
-				icon: self.markerIcon
-			)
-		),
-		self.createMarker(
-			options: MarkerOptions(
-				position: .init(latitude: -53.744213, longitude: -27.627422),
-				icon: self.markerIcon
-			)
-		),
-		self.createMarker(
-			options: MarkerOptions(
-				position: .init(latitude: -57.740861, longitude: -27.627422),
-				icon: self.markerIcon
-			)
-		),
-		self.createMarker(
-			options: MarkerOptions(
-				position: .init(latitude: -57.740861, longitude: 25.624631),
-				icon: self.markerIcon
-			)
-		)
-	]
+		[
+			self.createMarker(
+				options: MarkerOptions(
+					position: .init(latitude: -53.744213, longitude: 25.624631),
+					icon: self.markerIcon
+				)
+			),
+			self.createMarker(
+				options: MarkerOptions(
+					position: .init(latitude: -53.744213, longitude: -27.627422),
+					icon: self.markerIcon
+				)
+			),
+			self.createMarker(
+				options: MarkerOptions(
+					position: .init(latitude: -57.740861, longitude: -27.627422),
+					icon: self.markerIcon
+				)
+			),
+			self.createMarker(
+				options: MarkerOptions(
+					position: .init(latitude: -57.740861, longitude: 25.624631),
+					icon: self.markerIcon
+				)
+			),
+		]
 
 	lazy var markersOn0: [Marker] =
-	[
-		self.createMarker(
-			options: MarkerOptions(
-				position: .init(latitude: 63.744213, longitude: 20.624631),
-				icon: self.markerIcon
-			)
-		),
-		self.createMarker(
-			options: MarkerOptions(
-				position: .init(latitude: 63.744213, longitude: -20.627422),
-				icon: self.markerIcon
-			)
-		),
-		self.createMarker(
-			options: MarkerOptions(
-				position: .init(latitude: 67.740861, longitude: -27.627422),
-				icon: self.markerIcon
-			)
-		),
-		self.createMarker(
-			options: MarkerOptions(
-				position: .init(latitude: 67.740861, longitude: 25.624631),
-				icon: self.markerIcon
-			)
-		)
-	]
+		[
+			self.createMarker(
+				options: MarkerOptions(
+					position: .init(latitude: 63.744213, longitude: 20.624631),
+					icon: self.markerIcon
+				)
+			),
+			self.createMarker(
+				options: MarkerOptions(
+					position: .init(latitude: 63.744213, longitude: -20.627422),
+					icon: self.markerIcon
+				)
+			),
+			self.createMarker(
+				options: MarkerOptions(
+					position: .init(latitude: 67.740861, longitude: -27.627422),
+					icon: self.markerIcon
+				)
+			),
+			self.createMarker(
+				options: MarkerOptions(
+					position: .init(latitude: 67.740861, longitude: 25.624631),
+					icon: self.markerIcon
+				)
+			),
+		]
 
 	lazy var circle: DGis.Circle = self.createCircle(
-		options: CircleOptions (
+		options: CircleOptions(
 			position: GeoPoint(latitude: 25.086884, longitude: 55.164197),
 			radius: 1000.0,
 			color: Constants.blueTransparent,
@@ -196,7 +196,7 @@ class CalcPositionMapObjectsFactory {
 				GeoPoint(latitude: 25.227086, longitude: 55.204184),
 				GeoPoint(latitude: 25.257787, longitude: 55.195266),
 				GeoPoint(latitude: 25.263029, longitude: 55.17577),
-				GeoPoint(latitude: 25.253017, longitude: 55.141074)
+				GeoPoint(latitude: 25.253017, longitude: 55.141074),
 			]],
 			color: Constants.redTransparent,
 			strokeWidth: LogicalPixel(2.0),
@@ -264,6 +264,7 @@ enum CalcPositionMapObjects: String, CaseIterable {
 		case .polygon: return "Polygon"
 		case .circle: return "Circle"
 		case .markersAndCircle: return "Markers and Circle"
+		@unknown default: fatalError("Unknown type: \(self)")
 		}
 	}
 
@@ -278,15 +279,15 @@ enum CalcPositionMapObjects: String, CaseIterable {
 		case .polygon: return [factory.polygon]
 		case .circle: return [factory.circle]
 		case .markersAndCircle: return factory.markers + [factory.circle]
+		@unknown default: fatalError("Unknown type: \(self)")
 		}
 	}
 }
 
 private extension UIImage {
 	func resized(to newSize: CGSize) -> UIImage {
-		return UIGraphicsImageRenderer(size: newSize).image { _ in
+		UIGraphicsImageRenderer(size: newSize).image { _ in
 			self.draw(in: CGRect(origin: .zero, size: newSize))
 		}
 	}
 }
-

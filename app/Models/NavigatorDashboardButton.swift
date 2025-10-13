@@ -11,10 +11,12 @@ extension NavigatorDashboardButton: PickerViewOption {
 
 	var name: String {
 		switch self {
-			case .default:
-				return "Default"
-			case .exitButton:
-				return "Exit button"
+		case .default:
+			return "Default"
+		case .exitButton:
+			return "Exit button"
+		@unknown default:
+			assertionFailure("Unknown value for NavigatorDashboardButton")
 		}
 	}
 }
