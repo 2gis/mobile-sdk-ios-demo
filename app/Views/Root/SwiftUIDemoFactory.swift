@@ -203,7 +203,7 @@ final class SwiftUIDemoFactory: RootViewFactory {
 		return SearchDemoView(
 			viewModel: viewModel,
 			mapFactory: mapFactory,
-			directoryViewsFactory: self.sdk.makeDirectoryViewsFactory()
+			directoryViewsFactory: try self.sdk.makeDirectoryViewsFactory()
 		)
 	}
 
