@@ -8,6 +8,7 @@ struct RootView: View {
 	@State private var selectedFramework: DemoFramework = .swiftUI
 	let swiftUIFactory: SwiftUIDemoFactory
 	let uiKitFactory: UIKitDemoFactory
+    let reinitializeSdkFunction: () -> Void
 
 	private var filteredCategories: [DemoCategory] {
 		DemoCategory.allCases.filter { category in
@@ -70,7 +71,10 @@ struct RootView: View {
 		.navigationBarHidden(false)
 		.navigationTitle("TestApp")
 		.navigationBarItems(
-			leading: self.makefilterButton(),
+			leading: HStack(spacing: 6) {
+                self.makefilterButton()
+                self.makeReinitializeSdkButton()
+            },
 			trailing: self.makeSettingsButton()
 		)
 	}
@@ -93,6 +97,19 @@ struct RootView: View {
 				.foregroundColor(self.viewModel.isFiltering ? .gray : .accentColor)
 		}
 	}
+
+    private func makeReinitializeSdkButton() -> some View {
+        Button(action: {
+            self.reinitializeSdkFunction()
+        }) {
+            Image(systemName: "arrow.clockwise")
+                .renderingMode(.template)
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(width: 24, height: 24)
+                .foregroundColor(.accentColor)
+        }
+    }
 
 	private func makeSettingsButton() -> some View {
 		Button(action: {

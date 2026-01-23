@@ -6,8 +6,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/2gis/mobile-sdk-full-swift-package.git",
       "state" : {
-        "revision" : "4d9e2674620847d3b87a909818c8229c6ddb60fd",
-        "version" : "13.1.0"
+        "revision" : "a0c82f90745571f78bac2b2d133cffba519ea0fa",
+        "version" : "13.2.0"
       }
     },
     {

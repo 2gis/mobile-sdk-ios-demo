@@ -33,6 +33,8 @@ final class SwiftUIDemoFactory: RootViewFactory {
 			try self.makeLocaleDemoPage()
 		case .mapControls:
 			try self.makeMapControlsDemoPage()
+        case .mapGestureSettings:
+            try self.makeMapGestureSettingsDemoPage()
 		case .mapInteraction:
 			try self.makeMapInteractionDemoPage()
 		case .mapObjects:
@@ -69,6 +71,8 @@ final class SwiftUIDemoFactory: RootViewFactory {
 			try self.makeTerritoryManagerDemoView()
 		case .routeEditor:
 			try self.makeRouteSearchDemoPage()
+        case .routeEditorControl:
+            try self.makeRouteSearchDemoWithBuiltinUIComponentView()
 		default: Text("Unsupported demo page")
 		}
 	}
@@ -190,6 +194,18 @@ final class SwiftUIDemoFactory: RootViewFactory {
 			mapFactory: mapFactory
 		)
 	}
+
+    private func makeMapGestureSettingsDemoPage() throws -> some View {
+        let mapFactory = try self.makeMapFactory()
+        let viewModel = MapGestureSettingsDemoViewModel(
+            mapFactory: mapFactory,
+            imageFactory: self.makeImageFactory()
+        )
+        return MapGestureSettingsDemoView(
+            viewModel: viewModel,
+            mapFactory: mapFactory
+        )
+    }
 
 	private func makeDirectorySearchDemoPage() throws -> some View {
 		let mapFactory = try self.makeMapFactory()
@@ -547,9 +563,13 @@ extension SwiftUIDemoFactory {
 			sourceFactory: { [sdk = self.sdk] in
 				try! sdk.sourceFactory
 			},
-			routeEditorSourceFactory: { [context = self.context] routeEditor in
-				return RouteEditorSource(context: context, routeEditor: routeEditor)
-			},
+            routeEditorSourceFactory: { [context = self.context] routeEditor in
+                return RouteEditorSource(
+                    context: context,
+                    routeEditor: routeEditor,
+                    activeCalloutLabelFlags: [.duration, .length]
+                )
+            },
 			routeEditorFactory: { [context = self.context] in
 				return RouteEditor(context: context)
 			},
@@ -561,4 +581,30 @@ extension SwiftUIDemoFactory {
 			mapFactory: mapFactory
 		)
 	}
+    
+    private func makeRouteSearchDemoWithBuiltinUIComponentView() throws -> some View {
+        let mapFactory = try self.makeMapFactory()
+        let routingViewsFactory = try self.sdk.makeRoutingViewsFactory()
+        let viewModel = try RouteSearchNGDemoViewModel(
+            map: mapFactory.map,
+            routeEditorSourceFactory: { [context = self.context] routeEditor in
+                return RouteEditorSource(
+                    context: context,
+                    routeEditor: routeEditor,
+                    activeCalloutLabelFlags: [.duration, .length]
+                )
+            },
+            routeEditorFactory: { [context = self.context] in
+                return RouteEditor(context: context)
+            },
+            searchManager: self.makeSearchManager(),
+            geometrySource: self.makeGeometrySource()
+        )
+        return RouteSearchNGDemoView(
+            mapFactory: mapFactory,
+            routeEditorViewFactory: routingViewsFactory.makeRouteEditorViewFactory(),
+            trafficRouter: self.makeTrafficRouter(),
+            viewModel: viewModel
+        )
+    }
 }

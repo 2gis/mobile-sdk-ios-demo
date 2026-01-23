@@ -25,36 +25,7 @@ final class Container {
 	private var keySource: KeySource = .default
 
 	@MainActor
-	private(set) lazy var sdk: DGis.Container = {
-		let locationProvider: ILocationProvider? = switch self.settingsService.positioningServicesSource {
-		case .default:
-			nil
-		case .generator:
-			self.generatorLocationProvider
-		@unknown default:
-			nil
-		}
-
-		let logOptions = LogOptions(
-			systemLevel: self.settingsService.logLevel,
-			customLevel: self.settingsService.logLevel,
-			customSink: self.customLogSink
-		)
-		let httpOptions = HttpOptions(
-			timeout: self.settingsService.httpTimeout,
-			useCache: self.settingsService.httpCacheEnabled
-		)
-		let vendorConfigFile = Bundle.main.path(forResource: "vendor-config", ofType: "jsonx").map {
-			VendorConfig.fromFile(VendorConfigFromFile(path: $0))
-		}
-		return DGis.Container(
-			keySource: self.keySource,
-			logOptions: logOptions,
-			httpOptions: httpOptions,
-			locationProvider: locationProvider,
-			vendorConfig: vendorConfigFile ?? .none
-		)
-	}()
+    private(set) lazy var sdk: DGis.Container = self.makeDgisContainer()
 
 	@MainActor
 	private var applicationIdleTimerService: IApplicationIdleTimerService {
@@ -91,7 +62,11 @@ final class Container {
 		return RootView(
 			viewModel: viewModel,
 			swiftUIFactory: swiftUIFactory,
-			uiKitFactory: uiKitFactory
+			uiKitFactory: uiKitFactory,
+            reinitializeSdkFunction: { [weak self] in
+                guard let self else { return }
+                self.sdk = self.makeDgisContainer()
+            }
 		)
 		.environmentObject(self.navigationService)
 	}
@@ -156,4 +131,36 @@ final class Container {
 		)
 		return viewFactory
 	}
+
+    @MainActor
+    private func makeDgisContainer() -> DGis.Container {
+        let locationProvider: ILocationProvider? = switch self.settingsService.positioningServicesSource {
+        case .default:
+            nil
+        case .generator:
+            self.generatorLocationProvider
+        @unknown default:
+            nil
+        }
+
+        let logOptions = LogOptions(
+            systemLevel: self.settingsService.logLevel,
+            customLevel: self.settingsService.logLevel,
+            customSink: self.customLogSink
+        )
+        let httpOptions = HttpOptions(
+            timeout: self.settingsService.httpTimeout,
+            useCache: self.settingsService.httpCacheEnabled
+        )
+        let vendorConfigFile = Bundle.main.path(forResource: "vendor-config", ofType: "jsonx").map {
+            VendorConfig.fromFile(VendorConfigFromFile(path: $0))
+        }
+        return DGis.Container(
+            keySource: self.keySource,
+            logOptions: logOptions,
+            httpOptions: httpOptions,
+            locationProvider: locationProvider,
+            vendorConfig: vendorConfigFile ?? .none
+        )
+    }
 }
