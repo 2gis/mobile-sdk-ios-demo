@@ -162,6 +162,15 @@ class RootViewFactory: ObservableObject {
 		}
 	}
 
+    func makeTrafficRouter() -> TrafficRouter {
+        let routerType: RouterType = switch self.settingsService.mapDataSource {
+        case .online: .online
+        case .hybrid: .hybrid
+        case .offline: .offline
+        }
+        return TrafficRouter(context: self.context, routerType: routerType)
+    }
+
 	func makeSearchHistory() -> SearchHistory {
 		SearchHistory.instance(context: self.context)
 	}

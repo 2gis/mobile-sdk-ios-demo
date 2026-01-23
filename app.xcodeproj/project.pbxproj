@@ -153,6 +153,42 @@
 		7484B5C72CAD409D001939C2 /* SearchHistoryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7484B5C62CAD409D001939C2 /* SearchHistoryViewModel.swift */; };
 		7484B5C92CAD429C001939C2 /* SearchHistoryItemViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7484B5C82CAD429C001939C2 /* SearchHistoryItemViewModel.swift */; };
 		7484B5CB2CB50251001939C2 /* SearchHistoryItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7484B5CA2CB50251001939C2 /* SearchHistoryItemView.swift */; };
+		A24473D32F23B5CA0065489F /* MapGestureType.swift in Sources */ = {isa = PBXBuildFile; fileRef = A24473D02F23B5CA0065489F /* MapGestureType.swift */; };
+		A24473D42F23B5CA0065489F /* PlatformGestureSettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A24473C52F23B5CA0065489F /* PlatformGestureSettingsViewModel.swift */; };
+		A24473D52F23B5CA0065489F /* ScalingGestureSettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A24473C92F23B5CA0065489F /* ScalingGestureSettingsViewModel.swift */; };
+		A24473D62F23B5CA0065489F /* MultiTouchGestureSettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A24473C32F23B5CA0065489F /* MultiTouchGestureSettingsViewModel.swift */; };
+		A24473D72F23B5CA0065489F /* TiltGestureSettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A24473CB2F23B5CA0065489F /* TiltGestureSettingsViewModel.swift */; };
+		A24473D82F23B5CA0065489F /* CommonGestureSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A24473C02F23B5CA0065489F /* CommonGestureSettingsView.swift */; };
+		A24473D92F23B5CA0065489F /* ScalingGestureSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A24473C82F23B5CA0065489F /* ScalingGestureSettingsView.swift */; };
+		A24473DA2F23B5CA0065489F /* TiltGestureSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A24473CA2F23B5CA0065489F /* TiltGestureSettingsView.swift */; };
+		A24473DB2F23B5CA0065489F /* RotationGestureSettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A24473C72F23B5CA0065489F /* RotationGestureSettingsViewModel.swift */; };
+		A24473DC2F23B5CA0065489F /* Utility.swift in Sources */ = {isa = PBXBuildFile; fileRef = A24473CC2F23B5CA0065489F /* Utility.swift */; };
+		A24473DD2F23B5CA0065489F /* RotationGestureSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A24473C62F23B5CA0065489F /* RotationGestureSettingsView.swift */; };
+		A24473DE2F23B5CA0065489F /* MapGestureSettingsDemoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A24473CF2F23B5CA0065489F /* MapGestureSettingsDemoViewModel.swift */; };
+		A24473DF2F23B5CA0065489F /* CommonGestureSettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A24473C12F23B5CA0065489F /* CommonGestureSettingsViewModel.swift */; };
+		A24473E02F23B5CA0065489F /* MultiTouchGestureSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A24473C22F23B5CA0065489F /* MultiTouchGestureSettingsView.swift */; };
+		A24473E12F23B5CA0065489F /* PlatformGestureSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A24473C42F23B5CA0065489F /* PlatformGestureSettingsView.swift */; };
+		A24473E22F23B5CA0065489F /* MapGestureSettingsDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A24473CE2F23B5CA0065489F /* MapGestureSettingsDemoView.swift */; };
+		A24473E32F23B5CA0065489F /* MapGestureType.swift in Sources */ = {isa = PBXBuildFile; fileRef = A24473D02F23B5CA0065489F /* MapGestureType.swift */; };
+		A24473E42F23B5CA0065489F /* PlatformGestureSettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A24473C52F23B5CA0065489F /* PlatformGestureSettingsViewModel.swift */; };
+		A24473E52F23B5CA0065489F /* ScalingGestureSettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A24473C92F23B5CA0065489F /* ScalingGestureSettingsViewModel.swift */; };
+		A24473E62F23B5CA0065489F /* MultiTouchGestureSettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A24473C32F23B5CA0065489F /* MultiTouchGestureSettingsViewModel.swift */; };
+		A24473E72F23B5CA0065489F /* TiltGestureSettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A24473CB2F23B5CA0065489F /* TiltGestureSettingsViewModel.swift */; };
+		A24473E82F23B5CA0065489F /* CommonGestureSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A24473C02F23B5CA0065489F /* CommonGestureSettingsView.swift */; };
+		A24473E92F23B5CA0065489F /* ScalingGestureSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A24473C82F23B5CA0065489F /* ScalingGestureSettingsView.swift */; };
+		A24473EA2F23B5CA0065489F /* TiltGestureSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A24473CA2F23B5CA0065489F /* TiltGestureSettingsView.swift */; };
+		A24473EB2F23B5CA0065489F /* RotationGestureSettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A24473C72F23B5CA0065489F /* RotationGestureSettingsViewModel.swift */; };
+		A24473EC2F23B5CA0065489F /* Utility.swift in Sources */ = {isa = PBXBuildFile; fileRef = A24473CC2F23B5CA0065489F /* Utility.swift */; };
+		A24473ED2F23B5CA0065489F /* RotationGestureSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A24473C62F23B5CA0065489F /* RotationGestureSettingsView.swift */; };
+		A24473EE2F23B5CA0065489F /* MapGestureSettingsDemoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A24473CF2F23B5CA0065489F /* MapGestureSettingsDemoViewModel.swift */; };
+		A24473EF2F23B5CA0065489F /* CommonGestureSettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A24473C12F23B5CA0065489F /* CommonGestureSettingsViewModel.swift */; };
+		A24473F02F23B5CA0065489F /* MultiTouchGestureSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A24473C22F23B5CA0065489F /* MultiTouchGestureSettingsView.swift */; };
+		A24473F12F23B5CA0065489F /* PlatformGestureSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A24473C42F23B5CA0065489F /* PlatformGestureSettingsView.swift */; };
+		A24473F22F23B5CA0065489F /* MapGestureSettingsDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A24473CE2F23B5CA0065489F /* MapGestureSettingsDemoView.swift */; };
+		A24473F72F23B7E10065489F /* RouteSearchNGDemoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A24473F32F23B7E10065489F /* RouteSearchNGDemoViewModel.swift */; };
+		A24473F82F23B7E10065489F /* RouteSearchNGDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A24473F42F23B7E10065489F /* RouteSearchNGDemoView.swift */; };
+		A24473F92F23B7E10065489F /* RouteSearchNGDemoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A24473F32F23B7E10065489F /* RouteSearchNGDemoViewModel.swift */; };
+		A24473FA2F23B7E10065489F /* RouteSearchNGDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A24473F42F23B7E10065489F /* RouteSearchNGDemoView.swift */; };
 		B712C96C27F4077100DCBDEA /* TextFieldClearButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = B712C96B27F4077100DCBDEA /* TextFieldClearButton.swift */; };
 		B712C97327F40D7E00DCBDEA /* Clamping.swift in Sources */ = {isa = PBXBuildFile; fileRef = B712C97227F40D7E00DCBDEA /* Clamping.swift */; };
 		B712C97827F40E7D00DCBDEA /* NavigatorBetterRouteSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = B712C97727F40E7D00DCBDEA /* NavigatorBetterRouteSettings.swift */; };
@@ -671,6 +707,24 @@
 		7484B5C62CAD409D001939C2 /* SearchHistoryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchHistoryViewModel.swift; sourceTree = "<group>"; };
 		7484B5C82CAD429C001939C2 /* SearchHistoryItemViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchHistoryItemViewModel.swift; sourceTree = "<group>"; };
 		7484B5CA2CB50251001939C2 /* SearchHistoryItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchHistoryItemView.swift; sourceTree = "<group>"; };
+		A24473C02F23B5CA0065489F /* CommonGestureSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonGestureSettingsView.swift; sourceTree = "<group>"; };
+		A24473C12F23B5CA0065489F /* CommonGestureSettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonGestureSettingsViewModel.swift; sourceTree = "<group>"; };
+		A24473C22F23B5CA0065489F /* MultiTouchGestureSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiTouchGestureSettingsView.swift; sourceTree = "<group>"; };
+		A24473C32F23B5CA0065489F /* MultiTouchGestureSettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiTouchGestureSettingsViewModel.swift; sourceTree = "<group>"; };
+		A24473C42F23B5CA0065489F /* PlatformGestureSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlatformGestureSettingsView.swift; sourceTree = "<group>"; };
+		A24473C52F23B5CA0065489F /* PlatformGestureSettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlatformGestureSettingsViewModel.swift; sourceTree = "<group>"; };
+		A24473C62F23B5CA0065489F /* RotationGestureSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RotationGestureSettingsView.swift; sourceTree = "<group>"; };
+		A24473C72F23B5CA0065489F /* RotationGestureSettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RotationGestureSettingsViewModel.swift; sourceTree = "<group>"; };
+		A24473C82F23B5CA0065489F /* ScalingGestureSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScalingGestureSettingsView.swift; sourceTree = "<group>"; };
+		A24473C92F23B5CA0065489F /* ScalingGestureSettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScalingGestureSettingsViewModel.swift; sourceTree = "<group>"; };
+		A24473CA2F23B5CA0065489F /* TiltGestureSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TiltGestureSettingsView.swift; sourceTree = "<group>"; };
+		A24473CB2F23B5CA0065489F /* TiltGestureSettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TiltGestureSettingsViewModel.swift; sourceTree = "<group>"; };
+		A24473CC2F23B5CA0065489F /* Utility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utility.swift; sourceTree = "<group>"; };
+		A24473CE2F23B5CA0065489F /* MapGestureSettingsDemoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapGestureSettingsDemoView.swift; sourceTree = "<group>"; };
+		A24473CF2F23B5CA0065489F /* MapGestureSettingsDemoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapGestureSettingsDemoViewModel.swift; sourceTree = "<group>"; };
+		A24473D02F23B5CA0065489F /* MapGestureType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapGestureType.swift; sourceTree = "<group>"; };
+		A24473F32F23B7E10065489F /* RouteSearchNGDemoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteSearchNGDemoViewModel.swift; sourceTree = "<group>"; };
+		A24473F42F23B7E10065489F /* RouteSearchNGDemoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteSearchNGDemoView.swift; sourceTree = "<group>"; };
 		B712C96B27F4077100DCBDEA /* TextFieldClearButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldClearButton.swift; sourceTree = "<group>"; };
 		B712C97227F40D7E00DCBDEA /* Clamping.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Clamping.swift; sourceTree = "<group>"; };
 		B712C97727F40E7D00DCBDEA /* NavigatorBetterRouteSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigatorBetterRouteSettings.swift; sourceTree = "<group>"; };
@@ -1206,6 +1260,8 @@
 				64A2D01726DE5C1B00530808 /* TrafficControl */,
 				64A23982269EFE77007385DA /* VisibleAreaDetection */,
 				C40422D22B31C523009CAD81 /* VisibleRectVisibleArea */,
+				A24473D22F23B5CA0065489F /* MapGestureSettings */,
+				A24473F62F23B7E10065489F /* RouteSearchNG */,
 			);
 			path = DemoPages;
 			sourceTree = "<group>";
@@ -1333,6 +1389,62 @@
 				7484B5C22CA437D1001939C2 /* SearchHistoryService.swift */,
 			);
 			path = SearchHistory;
+			sourceTree = "<group>";
+		};
+		A24473CD2F23B5CA0065489F /* GestureSettings */ = {
+			isa = PBXGroup;
+			children = (
+				A24473C02F23B5CA0065489F /* CommonGestureSettingsView.swift */,
+				A24473C12F23B5CA0065489F /* CommonGestureSettingsViewModel.swift */,
+				A24473C22F23B5CA0065489F /* MultiTouchGestureSettingsView.swift */,
+				A24473C32F23B5CA0065489F /* MultiTouchGestureSettingsViewModel.swift */,
+				A24473C42F23B5CA0065489F /* PlatformGestureSettingsView.swift */,
+				A24473C52F23B5CA0065489F /* PlatformGestureSettingsViewModel.swift */,
+				A24473C62F23B5CA0065489F /* RotationGestureSettingsView.swift */,
+				A24473C72F23B5CA0065489F /* RotationGestureSettingsViewModel.swift */,
+				A24473C82F23B5CA0065489F /* ScalingGestureSettingsView.swift */,
+				A24473C92F23B5CA0065489F /* ScalingGestureSettingsViewModel.swift */,
+				A24473CA2F23B5CA0065489F /* TiltGestureSettingsView.swift */,
+				A24473CB2F23B5CA0065489F /* TiltGestureSettingsViewModel.swift */,
+				A24473CC2F23B5CA0065489F /* Utility.swift */,
+			);
+			path = GestureSettings;
+			sourceTree = "<group>";
+		};
+		A24473D12F23B5CA0065489F /* SwiftUI */ = {
+			isa = PBXGroup;
+			children = (
+				A24473CD2F23B5CA0065489F /* GestureSettings */,
+				A24473CE2F23B5CA0065489F /* MapGestureSettingsDemoView.swift */,
+				A24473CF2F23B5CA0065489F /* MapGestureSettingsDemoViewModel.swift */,
+				A24473D02F23B5CA0065489F /* MapGestureType.swift */,
+			);
+			path = SwiftUI;
+			sourceTree = "<group>";
+		};
+		A24473D22F23B5CA0065489F /* MapGestureSettings */ = {
+			isa = PBXGroup;
+			children = (
+				A24473D12F23B5CA0065489F /* SwiftUI */,
+			);
+			path = MapGestureSettings;
+			sourceTree = "<group>";
+		};
+		A24473F52F23B7E10065489F /* SwiftUI */ = {
+			isa = PBXGroup;
+			children = (
+				A24473F32F23B7E10065489F /* RouteSearchNGDemoViewModel.swift */,
+				A24473F42F23B7E10065489F /* RouteSearchNGDemoView.swift */,
+			);
+			path = SwiftUI;
+			sourceTree = "<group>";
+		};
+		A24473F62F23B7E10065489F /* RouteSearchNG */ = {
+			isa = PBXGroup;
+			children = (
+				A24473F52F23B7E10065489F /* SwiftUI */,
+			);
+			path = RouteSearchNG;
 			sourceTree = "<group>";
 		};
 		B712C97027F40D5100DCBDEA /* Tools */ = {
@@ -2171,6 +2283,8 @@
 				C4C0A56E2CA44265000FC69B /* ChargingStationInfoView.swift in Sources */,
 				B74F474A27BBEFB6008CBC34 /* MinimapDemoView.swift in Sources */,
 				64A239D3269EFE78007385DA /* SearchResultItemViewModel.swift in Sources */,
+				A24473F92F23B7E10065489F /* RouteSearchNGDemoViewModel.swift in Sources */,
+				A24473FA2F23B7E10065489F /* RouteSearchNGDemoView.swift in Sources */,
 				C4FE2FAC2B3959990045BBA9 /* CalcPositionInfoView.swift in Sources */,
 				64A239C5269EFE78007385DA /* CameraMovesDemoViewModel.swift in Sources */,
 				B7B7CA5727A8E92E006159BC /* PickerView.swift in Sources */,
@@ -2207,6 +2321,22 @@
 				0D33D56A29A647380099D50B /* CustomNavigationViewControlsFactory.swift in Sources */,
 				7484B5C92CAD429C001939C2 /* SearchHistoryItemViewModel.swift in Sources */,
 				B745F3C226E5C973003984BA /* IKeyValueStorage.swift in Sources */,
+				A24473D32F23B5CA0065489F /* MapGestureType.swift in Sources */,
+				A24473D42F23B5CA0065489F /* PlatformGestureSettingsViewModel.swift in Sources */,
+				A24473D52F23B5CA0065489F /* ScalingGestureSettingsViewModel.swift in Sources */,
+				A24473D62F23B5CA0065489F /* MultiTouchGestureSettingsViewModel.swift in Sources */,
+				A24473D72F23B5CA0065489F /* TiltGestureSettingsViewModel.swift in Sources */,
+				A24473D82F23B5CA0065489F /* CommonGestureSettingsView.swift in Sources */,
+				A24473D92F23B5CA0065489F /* ScalingGestureSettingsView.swift in Sources */,
+				A24473DA2F23B5CA0065489F /* TiltGestureSettingsView.swift in Sources */,
+				A24473DB2F23B5CA0065489F /* RotationGestureSettingsViewModel.swift in Sources */,
+				A24473DC2F23B5CA0065489F /* Utility.swift in Sources */,
+				A24473DD2F23B5CA0065489F /* RotationGestureSettingsView.swift in Sources */,
+				A24473DE2F23B5CA0065489F /* MapGestureSettingsDemoViewModel.swift in Sources */,
+				A24473DF2F23B5CA0065489F /* CommonGestureSettingsViewModel.swift in Sources */,
+				A24473E02F23B5CA0065489F /* MultiTouchGestureSettingsView.swift in Sources */,
+				A24473E12F23B5CA0065489F /* PlatformGestureSettingsView.swift in Sources */,
+				A24473E22F23B5CA0065489F /* MapGestureSettingsDemoView.swift in Sources */,
 				64A239D7269EFE78007385DA /* FormattedAddressViewModel.swift in Sources */,
 				64A2393F269EF9FE007385DA /* SearchReducer.swift in Sources */,
 				64D90FBE26A6FB0200225ABD /* ClusteringDemoViewModel.swift in Sources */,
@@ -2348,6 +2478,22 @@
 				C4AB88772C06031200FF713C /* UIWindow+Helpers.swift in Sources */,
 				C41699ED2D78972A0050EA44 /* SwiftUIDemoFactory.swift in Sources */,
 				C4AB88782C06031200FF713C /* SettingsView.swift in Sources */,
+				A24473E32F23B5CA0065489F /* MapGestureType.swift in Sources */,
+				A24473E42F23B5CA0065489F /* PlatformGestureSettingsViewModel.swift in Sources */,
+				A24473E52F23B5CA0065489F /* ScalingGestureSettingsViewModel.swift in Sources */,
+				A24473E62F23B5CA0065489F /* MultiTouchGestureSettingsViewModel.swift in Sources */,
+				A24473E72F23B5CA0065489F /* TiltGestureSettingsViewModel.swift in Sources */,
+				A24473E82F23B5CA0065489F /* CommonGestureSettingsView.swift in Sources */,
+				A24473E92F23B5CA0065489F /* ScalingGestureSettingsView.swift in Sources */,
+				A24473EA2F23B5CA0065489F /* TiltGestureSettingsView.swift in Sources */,
+				A24473EB2F23B5CA0065489F /* RotationGestureSettingsViewModel.swift in Sources */,
+				A24473EC2F23B5CA0065489F /* Utility.swift in Sources */,
+				A24473ED2F23B5CA0065489F /* RotationGestureSettingsView.swift in Sources */,
+				A24473EE2F23B5CA0065489F /* MapGestureSettingsDemoViewModel.swift in Sources */,
+				A24473EF2F23B5CA0065489F /* CommonGestureSettingsViewModel.swift in Sources */,
+				A24473F02F23B5CA0065489F /* MultiTouchGestureSettingsView.swift in Sources */,
+				A24473F12F23B5CA0065489F /* PlatformGestureSettingsView.swift in Sources */,
+				A24473F22F23B5CA0065489F /* MapGestureSettingsDemoView.swift in Sources */,
 				C4AB88792C06031200FF713C /* SearchViewModel.swift in Sources */,
 				C4AB887A2C06031200FF713C /* UIColor+Hex.swift in Sources */,
 				C47FB8AE2DB2279000FA8603 /* CustomNavigationMapControlsFactory.swift in Sources */,
@@ -2451,6 +2597,8 @@
 				648B301F2E9D3B3200C8D7A8 /* TerritoryManagerDemoView.swift in Sources */,
 				648B30202E9D3B3200C8D7A8 /* TerritoryManagerSettingsViewModel.swift in Sources */,
 				648B30212E9D3B3200C8D7A8 /* TerritoryManagerListView.swift in Sources */,
+				A24473F72F23B7E10065489F /* RouteSearchNGDemoViewModel.swift in Sources */,
+				A24473F82F23B7E10065489F /* RouteSearchNGDemoView.swift in Sources */,
 				C4AB88BD2C06031200FF713C /* GeneratorLocationService.swift in Sources */,
 				C4AB88BE2C06031200FF713C /* SearchResultItemView.swift in Sources */,
 				C4AB88BF2C06031200FF713C /* SnapshotView.swift in Sources */,
@@ -2863,7 +3011,7 @@
 			repositoryURL = "https://github.com/2gis/mobile-sdk-full-swift-package.git";
 			requirement = {
 				kind = exactVersion;
-				version = 13.1.0;
+				version = 13.2.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
