@@ -7,13 +7,19 @@ final class RoadEventsDemoViewModel: ObservableObject, @unchecked Sendable {
 		static let tapRadius = ScreenDistance(value: 5)
 	}
 
+	private static var allVisibleEvents: RoadEventDisplayCategoryOptionSet {
+		RoadEventDisplayCategoryOptionSet.allValues.reduce(RoadEventDisplayCategoryOptionSet()) { $0.union($1) }
+	}
+
 	@Published var isRoadEventFormPresented: Bool = false
 	@Published var selectedRoadEvent: RoadEvent?
 	@Published var isAlertShowing: Bool = false
 	@Published var isFiltersShown: Bool = false
-	@Published var visibleEvents: RoadEventDisplayCategoryOptionSet {
+	@Published var visibleEvents: RoadEventDisplayCategoryOptionSet = RoadEventsDemoViewModel.allVisibleEvents {
 		didSet {
-			self.roadEventSource.visibleEvents = self.visibleEvents
+			self.roadEventSource.roadEventFilter = self.mapSourceFactory.makeRoadEventFilter(
+				displayCategories: self.visibleEvents
+			)
 		}
 	}
 
@@ -24,15 +30,19 @@ final class RoadEventsDemoViewModel: ObservableObject, @unchecked Sendable {
 	private var selectedMarker: Marker?
 	private lazy var mapObjectManager: MapObjectManager = .init(map: self.map)
 	private let roadEventSource: RoadEventSource
+	private let mapSourceFactory: IMapSourceFactory
 
 	init(
 		map: Map,
 		mapSourceFactory: IMapSourceFactory
-	) {
+	) throws {
 		self.map = map
-		let roadEventSource = mapSourceFactory.makeRoadEventSource()
+		self.mapSourceFactory = mapSourceFactory
+		let roadEventSource = try mapSourceFactory.makeRoadEventSource()
 		self.roadEventSource = roadEventSource
-		self.visibleEvents = roadEventSource.visibleEvents
+		self.roadEventSource.roadEventFilter = mapSourceFactory.makeRoadEventFilter(
+			displayCategories: self.visibleEvents
+		)
 
 		let locationSource = mapSourceFactory.makeMyLocationMapObjectSource(bearingSource: .auto)
 		self.map.addSource(source: locationSource)

@@ -29,7 +29,9 @@ struct RoadEventsDemoView: View {
 				.showsAPIVersion(true)
 				.objectTappedCallback(callback: .init(
 					callback: { [weak viewModel = self.viewModel] objectInfo in
-						viewModel?.tap(objectInfo: objectInfo)
+						Task { @MainActor in
+							viewModel?.tap(objectInfo: objectInfo)
+						}
 					}
 				))
 				.edgesIgnoringSafeArea(.all)
@@ -77,7 +79,7 @@ struct RoadEventsDemoView: View {
 							.frame(width: 48, height: 102)
 							.fixedSize()
 							.padding(.bottom, 20)
-						self.mapViewsFactory.makeCurrentLocationView()
+						self.mapViewsFactory.makeCurrentLocationView(permissionCallback: {})
 							.frame(width: 48, height: 48)
 							.fixedSize()
 						self.mapViewsFactory.makeRoadEventCreatorButtonView { [weak viewModel = self.viewModel] in

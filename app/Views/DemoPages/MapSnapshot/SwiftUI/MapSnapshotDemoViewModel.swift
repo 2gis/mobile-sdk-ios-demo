@@ -3,14 +3,14 @@ import DGis
 import SwiftUI
 
 final class MapSnapshotDemoViewModel: ObservableObject {
-	private let sdk: DGis.Container
+	private let mapFactoryProvider: () throws -> DGis.IMapFactory
 
-	init(sdk: DGis.Container) {
-		self.sdk = sdk
+	init(mapFactoryProvider: @escaping () throws -> DGis.IMapFactory) {
+		self.mapFactoryProvider = mapFactoryProvider
 	}
 
 	@MainActor
 	func makeMapSnapshotView() -> any View {
-		MapSnapshotView(mapFactory: try! self.sdk.makeMapFactory(options: .default))
+		MapSnapshotView(mapFactory: try! self.mapFactoryProvider())
 	}
 }

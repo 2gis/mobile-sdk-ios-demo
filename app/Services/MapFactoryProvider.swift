@@ -39,7 +39,7 @@ protocol IMapFactoryProvider: AnyObject {
 	func makeGestureView(mapGesturesType: MapGesturesType) -> (UIView & IMapGestureUIView)?
 }
 
-class MapFactoryProvider: @preconcurrency IMapFactoryProvider {
+class MapFactoryProvider: IMapFactoryProvider {
 	@MainActor
 	private(set) lazy var mapFactory: DGis.IMapFactory = self.makeMapFactory()
 
@@ -67,10 +67,18 @@ class MapFactoryProvider: @preconcurrency IMapFactoryProvider {
 
 	@MainActor
 	private func makeMapFactory() -> IMapFactory {
-		var options = MapOptions.default
-		options.gestureUIViewFactory = self.makeGestureViewFactory(mapGesturesType: self.mapGesturesType)
 		do {
-			return try self.sdkContainer.makeMapFactory(options: options)
+			let sourceFactory = try self.sdkContainer.sourceFactory
+			let mapControllerOptions = MapControllerOptions(sources: [
+				sourceFactory.createOnlineDGISSource(),
+				sourceFactory.createImmersiveDgisSource(),
+			])
+			var mapViewOptions = MapViewOptions.default
+			mapViewOptions.gestureUIViewFactory = self.makeGestureViewFactory(mapGesturesType: self.mapGesturesType)
+			return try self.sdkContainer.makeMapFactory(
+				options: mapControllerOptions,
+				mapViewOptions: mapViewOptions
+			)
 		} catch {
 			fatalError("IMapFactory initialization error: \(error)")
 		}

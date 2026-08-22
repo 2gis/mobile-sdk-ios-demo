@@ -62,7 +62,7 @@ struct RouteSearchDemoView: View {
 			}
 			HStack {
 				if self.viewModel.transportType == .pedestrian {
-					self.mapFactory.mapViewsFactory.makeIndoorView()
+					self.mapFactory.mapViewsFactory.makeIndoorView(showOverview: false)
 						.frame(width: 38, height: 119)
 						.fixedSize()
 						.padding(.leading, 20)
@@ -73,7 +73,7 @@ struct RouteSearchDemoView: View {
 						.frame(width: 48, height: 102)
 						.fixedSize()
 						.padding(20)
-					self.mapFactory.mapViewsFactory.makeCurrentLocationView()
+					self.mapFactory.mapViewsFactory.makeCurrentLocationView(permissionCallback: {})
 						.frame(width: 48, height: 48)
 						.fixedSize()
 						.padding(20)

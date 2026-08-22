@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "menswear.pdf",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

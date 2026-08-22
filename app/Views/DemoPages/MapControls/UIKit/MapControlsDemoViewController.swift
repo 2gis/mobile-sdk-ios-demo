@@ -38,11 +38,11 @@ class MapControlsDemoViewController: UIViewController {
         ])
 
         // Add Controls
-		let indoorControl = self.mapControlsFactory.makeIndoorUIControl()
+		let indoorControl = self.mapControlsFactory.makeIndoorUIControl(showOverview: false)
 		let trafficControl = self.mapControlsFactory.makeTrafficUIControl()
 		let zoomControl = self.mapControlsFactory.makeZoomUIControl()
 		let compassControl = self.mapControlsFactory.makeCompassUIControl()
-		let currentLocationControl = self.mapControlsFactory.makeCurrentLocationUIControl()
+		let currentLocationControl = self.mapControlsFactory.makeCurrentLocationUIControl(permissionCallback: {})
 
         [indoorControl, trafficControl, zoomControl, compassControl, currentLocationControl].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
@@ -82,4 +82,3 @@ class MapControlsDemoViewController: UIViewController {
 		])
     }
 }
-

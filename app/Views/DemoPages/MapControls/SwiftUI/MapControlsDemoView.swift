@@ -21,15 +21,17 @@ struct SwiftUIControlsDemoView: View {
 				self.mapFactory.mapView
 					.showsAPIVersion(true)
 					.objectTappedCallback(callback: .init(
-						callback: { [viewModel = self.viewModel] objectInfo in
-							viewModel.tap(objectInfo: objectInfo)
+						callback: { [weak viewModel = self.viewModel] objectInfo in
+							Task { @MainActor in
+								viewModel?.tap(objectInfo: objectInfo)
+							}
 						}
 					))
 				.edgesIgnoringSafeArea(.all)
 				HStack {
 					VStack {
 						Spacer()
-						self.mapViewsFactory.makeIndoorView()
+						self.mapViewsFactory.makeIndoorView(showOverview: false)
 						.frame(width: 38, height: 119)
 						.fixedSize()
 						Spacer()
@@ -37,7 +39,7 @@ struct SwiftUIControlsDemoView: View {
 					.padding(10)
 					Spacer()
 					VStack {
-						self.mapViewsFactory.makeTrafficView(colors: .default)
+						self.mapViewsFactory.makeTrafficView()
 						.frame(width: 48)
 						.fixedSize()
 						Spacer()
@@ -48,7 +50,7 @@ struct SwiftUIControlsDemoView: View {
 						self.mapViewsFactory.makeCompassView()
 						.frame(width: 48)
 						.fixedSize()
-						self.mapViewsFactory.makeCurrentLocationView()
+						self.mapViewsFactory.makeCurrentLocationView(permissionCallback: {})
 						.frame(width: 48)
 						.fixedSize()
 					}

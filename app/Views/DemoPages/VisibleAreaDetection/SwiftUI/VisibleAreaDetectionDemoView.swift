@@ -25,7 +25,7 @@ struct VisibleAreaDetectionDemoView: View {
 						self.mapFactory.mapViewsFactory.makeZoomView()
 							.frame(width: 48, height: 102)
 							.padding(.bottom, 10)
-						self.mapFactory.mapViewsFactory.makeCurrentLocationView()
+						self.mapFactory.mapViewsFactory.makeCurrentLocationView(permissionCallback: {})
 							.frame(width: 48, height: 48)
 						Spacer()
 					}

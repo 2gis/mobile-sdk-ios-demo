@@ -7,9 +7,9 @@ class RoadEventsDemoViewController: UIViewController, RoadEventsFilterViewContro
 	private let mapFactory: IMapFactory
 	private let roadEventUIViewFactory: IRoadEventUIViewFactory
 	private let mapControlsFactory: IMapUIControlsFactory
-	private let zoomControl: ZoomUIControl
-	private let currentLocationControl: CurrentLocationUIControl
-	private let createRoadEventControl: RoadEventCreatorButtonUIControl
+	private let zoomControl: UIControl
+	private let currentLocationControl: UIControl
+	private let createRoadEventControl: UIControl
 	private let createRoadEventUIView: IRoadEventCreatorUIView
 
 	private var roadEventInfoView: IRoadEventInfoUIView?
@@ -26,8 +26,8 @@ class RoadEventsDemoViewController: UIViewController, RoadEventsFilterViewContro
 		self.mapControlsFactory = self.mapFactory.mapUIControlsFactory
 
 		self.zoomControl = self.mapControlsFactory.makeZoomUIControl()
-		self.currentLocationControl = self.mapControlsFactory.makeCurrentLocationUIControl()
-		self.createRoadEventControl = self.mapControlsFactory.makeRoadEventCreatorButtonUIControl()
+		self.currentLocationControl = self.mapControlsFactory.makeCurrentLocationUIControl(permissionCallback: {})
+		self.createRoadEventControl = self.mapControlsFactory.makeRoadEventCreatorButtonUIControl(action: {})
 		self.createRoadEventUIView = self.roadEventUIViewFactory.makeRoadEventCreatorUIView(map: self.mapFactory.map)
 
 		super.init(nibName: nil, bundle: nil)
@@ -169,8 +169,10 @@ private extension RoadEventsDemoViewController {
 	private func setupUI() {
 		let mapView = self.mapFactory.mapUIView
 		mapView.addObjectTappedCallback(callback: .init(
-			callback: { [viewModel = self.viewModel] objectInfo in
-				viewModel.tap(objectInfo: objectInfo)
+			callback: { [weak viewModel = self.viewModel] objectInfo in
+				Task { @MainActor in
+					viewModel?.tap(objectInfo: objectInfo)
+				}
 			}
 		))
 		mapView.showsAPIVersion = true

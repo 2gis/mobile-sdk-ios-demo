@@ -65,7 +65,10 @@ final class StaticMapsViewModel: ObservableObject, @unchecked Sendable {
 		let route = staticMapRoutes.StaticMapsRoutes[counter]
 		let mapObjects = route.routeObjects
 		self.mapObjectManager.addObjects(objects: mapObjects)
-		let position = calcPosition(camera: self.map.camera, objects: mapObjects)
+		guard let position = try? calcPosition(camera: self.map.camera, objects: mapObjects) else {
+			self.logger.error("Failed to calcPosition in moveCameraAndTakeSnapshot")
+			return
+		}
 		let moveCancellable = self.map.camera.move(
 			position: position,
 			time: 0,
@@ -90,18 +93,22 @@ final class StaticMapsViewModel: ObservableObject, @unchecked Sendable {
 							}
 						},
 						failure: { [weak self] error in
-							guard let self else { return }
-							self.mapObjectManager.removeObjects(objects: mapObjects)
-							self.logger.error("Something went wrong with snapshot: \(error.localizedDescription)")
+							Task { @MainActor [weak self] in
+								guard let self else { return }
+								self.mapObjectManager.removeObjects(objects: mapObjects)
+								self.logger.error("Something went wrong with snapshot: \(error.localizedDescription)")
+							}
 						}
 					)
 					self.cancellables.append(snapshootCancellable)
 				}
 			},
 			failure: { [weak self] error in
-				guard let self else { return }
-				self.mapObjectManager.removeObjects(objects: mapObjects)
-				self.logger.error("Something went wrong with camera move: \(error.localizedDescription)")
+				Task { @MainActor [weak self] in
+					guard let self else { return }
+					self.mapObjectManager.removeObjects(objects: mapObjects)
+					self.logger.error("Something went wrong with camera move: \(error.localizedDescription)")
+				}
 			}
 		)
 		self.cancellables.append(moveCancellable)

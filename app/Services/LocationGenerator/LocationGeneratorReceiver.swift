@@ -3,7 +3,7 @@ import CoreLocation
 import Foundation
 import Network
 
-protocol ILocationGeneratorReceiver {
+protocol ILocationGeneratorReceiver: Sendable {
 	/// Последние данные о местоположении.
 	var locations: CurrentValueSubject<[CLLocation], Never> { get }
 
@@ -65,7 +65,9 @@ final class LocationGeneratorReceiver: NSObject, ILocationGeneratorReceiver, @un
 		}
 
 		listener.stateUpdateHandler = { [weak self] state in
-			self?.stateDidChange(to: state)
+			Task { @MainActor [weak self] in
+				self?.stateDidChange(to: state)
+			}
 		}
 		listener.newConnectionHandler = { [weak self] connection in
 			Task { @MainActor [weak self] in

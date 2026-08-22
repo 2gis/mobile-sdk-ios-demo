@@ -45,7 +45,7 @@ struct SearchDemoView: View {
 					Spacer()
 					self.mapFactory.mapViewsFactory.makeZoomView()
 					Spacer()
-					self.mapFactory.mapViewsFactory.makeCurrentLocationView()
+					self.mapFactory.mapViewsFactory.makeCurrentLocationView(permissionCallback: {})
 						.padding(.bottom, 40)
 				}
 				.padding(.trailing, 4)

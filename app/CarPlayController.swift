@@ -14,9 +14,9 @@ final class CarPlayController: UIViewController {
 
 	private let interfaceController: CPInterfaceController
 	private lazy var carPlayGestureViewFactory = CarPlayGestureViewFactory(carPlayMapEventsProvider: carPlayMapEventsProvider)
-	private lazy var mapOptions: MapOptions = {
-		var options = MapOptions.default
-		options.position = Constants.defaultCameraPosition
+	private lazy var mapControllerOptions = MapControllerOptions(position: Constants.defaultCameraPosition)
+	private lazy var mapViewOptions: MapViewOptions = {
+		var options = MapViewOptions.default
 		options.gestureUIViewFactory = self.carPlayGestureViewFactory
 		let nativeScale = Float(view.window?.screen.nativeScale ?? 1)
 		let ppi: Float = 60 * nativeScale + 10
@@ -26,7 +26,10 @@ final class CarPlayController: UIViewController {
 	}()
 
 	private lazy var carPlayMapEventsProvider = CarPlayMapEventsProvider()
-	private lazy var mapFactory = try! Container.shared.sdk.makeMapFactory(options: self.mapOptions)
+	private lazy var mapFactory = try! Container.shared.sdk.makeMapFactory(
+		options: self.mapControllerOptions,
+		mapViewOptions: self.mapViewOptions
+	)
 	private lazy var mapView: UIView & DGis.IMapUIView = mapFactory.mapUIView
 	private lazy var mapTemplate: CPMapTemplate = {
 		let mapTemplate = CPMapTemplate()

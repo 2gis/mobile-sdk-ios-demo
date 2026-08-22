@@ -5,12 +5,12 @@ enum SearchRubric: String, CaseIterable {
 	case cafe, restaurants, hotels, schools, mosque, gasStation, chargingStation
 }
 
-extension SearchRubric: PickerViewOption {
-	var id: SearchRubric {
+extension SearchRubric: @MainActor PickerViewOption {
+	nonisolated var id: SearchRubric {
 		self
 	}
 
-	var name: String {
+	nonisolated var name: String {
 		switch self {
 		case .cafe:
 			return "Cafe"

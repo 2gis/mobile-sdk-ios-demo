@@ -56,7 +56,7 @@ struct TerritoryManagerDemoView: View {
 		VStack {
 			Spacer()
 			HStack {
-				self.mapViewsFactory.makeIndoorView()
+				self.mapViewsFactory.makeIndoorView(showOverview: false)
 				Spacer()
 				self.mapViewsFactory.makeZoomView()
 			}
@@ -67,7 +67,7 @@ struct TerritoryManagerDemoView: View {
 			}
 			HStack {
 				Spacer()
-				self.mapViewsFactory.makeCurrentLocationView()
+				self.mapViewsFactory.makeCurrentLocationView(permissionCallback: {})
 			}
 		}
 	}

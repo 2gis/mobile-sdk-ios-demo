@@ -3,11 +3,11 @@ import CoreLocation
 import DGis
 import SwiftUI
 
-enum StyleZoomFollowControllerType: CaseIterable, PickerViewOption {
+enum StyleZoomFollowControllerType: CaseIterable, @MainActor PickerViewOption {
 	case `default`, custom
 
-	var id: StyleZoomFollowControllerType { self }
-	var name: String {
+	nonisolated var id: StyleZoomFollowControllerType { self }
+	nonisolated var name: String {
 		switch self {
 		case .default:
 			return "Default"
@@ -218,7 +218,7 @@ final class NavigatorDemoViewModel: ObservableObject, @unchecked Sendable {
 		)
 		self.map.addSource(source: locationSource)
 		if settingsService.addRoadEventSourceInNavigationView {
-			self.map.addSource(source: mapSourceFactory.makeRoadEventSource())
+			self.map.addSource(source: try mapSourceFactory.makeRoadEventSource())
 		}
 		self.setupCamera()
 		self.cameraStateCancellable = self.map.camera.sinkOnStatefulChangesOnMainThread(reason: .state) { [weak self] (state: CameraState) in
@@ -354,8 +354,8 @@ final class NavigatorDemoViewModel: ObservableObject, @unchecked Sendable {
 			self.miniMapEnergyConsumption?.maxFps = 20
 			self.miniMapEnergyConsumption?.powerSavingMaxFps = 10
 		default:
-			self.mainMapEnergyConsumption.maxFps = UIScreen.main.maximumFramesPerSecond
-			self.mainMapEnergyConsumption.powerSavingMaxFps = UIScreen.main.maximumFramesPerSecond / 2
+						self.mainMapEnergyConsumption.maxFps = Fps(value: UInt32(UIScreen.main.maximumFramesPerSecond))
+						self.mainMapEnergyConsumption.powerSavingMaxFps = Fps(value: UInt32(UIScreen.main.maximumFramesPerSecond / 2))
 			self.miniMapEnergyConsumption?.maxFps = 20
 			self.miniMapEnergyConsumption?.powerSavingMaxFps = 10
 		}
@@ -546,8 +546,8 @@ final class NavigatorDemoViewModel: ObservableObject, @unchecked Sendable {
 				abs(sin(time))
 			},
 			valueUpdater: { value in
-				let currentStyleZoom = Constants.minStyleZoom + value
 				Task { @MainActor [weak self] in
+					let currentStyleZoom = Constants.minStyleZoom + value
 					self?.styleZoomFollowController.setStyleZoom(styleZoom: StyleZoom(value: Float(currentStyleZoom)))
 				}
 			}

@@ -68,18 +68,25 @@ final class CameraMovesDemoViewModel: ObservableObject, @unchecked Sendable {
 	private func move(at index: Int) {
 		guard index < CameraPath.moscowDefault.count else { return }
 		let tuple = CameraPath.moscowDefault[index]
-		self.cameraMoveQueue.async {
-			self.moveCameraCancellable?.cancel()
-			self.moveCameraCancellable = self.map
-				.camera
-				.move(
-					position: tuple.position,
-					time: tuple.time,
-					animationType: tuple.type
-				).sink(on: self.cameraMoveQueue) { [weak self] _ in
-					self?.move(at: index + 1)
-				} failure: { [weak self] error in
-					self?.logger.error("Something went wrong: \(error.localizedDescription)")
+		self.cameraMoveQueue.async { [weak self] in
+			Task { @MainActor [weak self] in
+				guard let self else { return }
+				self.moveCameraCancellable?.cancel()
+				self.moveCameraCancellable = self.map
+					.camera
+					.move(
+						position: tuple.position,
+						time: tuple.time,
+						animationType: tuple.type
+					).sink(on: self.cameraMoveQueue) { [weak self] _ in
+						Task { @MainActor [weak self] in
+							self?.move(at: index + 1)
+						}
+					} failure: { [weak self] error in
+						Task { @MainActor [weak self] in
+							self?.logger.error("Something went wrong: \(error.localizedDescription)")
+						}
+					}
 				}
 		}
 	}

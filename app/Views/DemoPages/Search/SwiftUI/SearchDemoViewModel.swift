@@ -105,11 +105,11 @@ final class SearchDemoViewModel: ObservableObject, @unchecked Sendable {
 
 		if let areaOfInterest = directoryState.areaOfInterest {
 			let geometry = self.geoRectToPolygonGeometry(geoRect: areaOfInterest)
-			let cameraPosition = calcPosition(
-				camera: camera,
-				geometry: geometry
-			)
 			do {
+				let cameraPosition = try calcPosition(
+					camera: camera,
+					geometry: geometry
+				)
 				try camera.setPosition(position: cameraPosition)
 			} catch let error as SimpleError {
 				self.logger.error("Failed to restore state: \(error.description)")
@@ -138,12 +138,12 @@ final class SearchDemoViewModel: ObservableObject, @unchecked Sendable {
 	}
 
 	private func searchById(id: DgisObjectId) {
-		self.searchResultCancellable = self.searchManager.searchByDirectoryObjectId(
-			objectId: id
-		).sinkOnMainThread { [weak self] result in
+		self.searchResultCancellable = self.searchManager.searchByDirectoryObjectIds(
+			objectIds: [id]
+		).sinkOnMainThread { [weak self] results in
 			Task { @MainActor [weak self] in
 				guard let self,
-				      let object = result,
+				      let object = results.first,
 				      let id = object.id,
 				      let point = object.markerPosition?.point
 				else { return }

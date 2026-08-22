@@ -25,6 +25,8 @@ final class SwiftUIDemoFactory: RootViewFactory {
 			try self.makeCustomMapControlsDemoPage()
 		case .directorySearch:
 			try self.makeDirectorySearchDemoPage()
+		case .directorySearchControl:
+			try self.makeDirectorySearchControlDemoPage()
 		case .fpsRestrictions:
 			try self.makeFpsRestrictionsDemoPage()
 		case .graphicsOptions:
@@ -71,8 +73,8 @@ final class SwiftUIDemoFactory: RootViewFactory {
 			try self.makeTerritoryManagerDemoView()
 		case .routeEditor:
 			try self.makeRouteSearchDemoPage()
-        case .routeEditorControl:
-            try self.makeRouteSearchDemoWithBuiltinUIComponentView()
+		case .routeEditorControl:
+			try self.makeRouteSearchDemoWithBuiltinUIComponentView()
 		default: Text("Unsupported demo page")
 		}
 	}
@@ -133,7 +135,7 @@ final class SwiftUIDemoFactory: RootViewFactory {
 
 	private func makeCameraRestrictionsDemoPage() throws -> some View {
 		let mapFactory = try self.makeMapFactory()
-		let viewModel = CameraRestrictionsDemoViewModel(
+		let viewModel = try CameraRestrictionsDemoViewModel(
 			map: mapFactory.map,
 			logger: self.logger,
 			mapSourceFactory: MapSourceFactory(context: self.context, settingsService: self.settingsService)
@@ -225,6 +227,27 @@ final class SwiftUIDemoFactory: RootViewFactory {
 		)
 	}
 
+	private func makeDirectorySearchControlDemoPage() throws -> some View {
+		let mapFactory = try self.makeMapFactory()
+		let mapSourceFactory = MapSourceFactory(
+			context: self.context,
+			settingsService: self.settingsService
+		)
+		let myLocationMapObjectSource = mapSourceFactory.makeMyLocationMapObjectSource(bearingSource: .auto)
+		return try DirectorySearchControlDemoView(
+			mapFactory: mapFactory,
+			searchManager: self.makeSearchManager(),
+			searchHistory: self.makeSearchHistory(),
+			imageFactory: self.makeImageFactory(),
+			myLocationMapObjectSource: myLocationMapObjectSource,
+			defaultDirectoryViewsFactory: self.sdk.makeDirectoryViewsFactory(theme: .demoSearchResultsDefault),
+			customDirectoryViewsFactory: self.sdk.makeDirectoryViewsFactory(theme: .demoSearchResultsCustom),
+			logger: self.logger,
+			trafficRouter: self.makeTrafficRouter(),
+			locationService: self.sdk.locationService
+		)
+	}
+
 	private func makeFpsRestrictionsDemoPage() throws -> some View {
 		let mapFactory = try self.makeMapFactory()
 		let viewModel = FpsRestrictionsDemoViewModel(
@@ -310,7 +333,10 @@ final class SwiftUIDemoFactory: RootViewFactory {
 
 	private func makeMapSnapshotDemoPage() throws -> some View {
 		let mapFactory = try self.makeMapFactory()
-		let viewModel = MapSnapshotDemoViewModel(sdk: self.sdk)
+		let viewModel = MapSnapshotDemoViewModel(mapFactoryProvider: { [weak self] in
+			guard let self else { throw SimpleError(description: "Can't create map") }
+			return try self.makeMapFactory()
+		})
 		return MapSnapshotDemoView(
 			viewModel: viewModel,
 			mapFactory: mapFactory
@@ -319,7 +345,7 @@ final class SwiftUIDemoFactory: RootViewFactory {
 
 	private func makeMapThemeDemoPage() throws -> some View {
 		let mapFactory = try self.makeMapFactory()
-		let viewModel = MapThemeDemoViewModel()
+		let viewModel = MapThemeDemoViewModel(mapFactory: mapFactory, logger: self.logger)
 		return MapThemeDemoView(
 			viewModel: viewModel,
 			mapFactory: mapFactory
@@ -383,7 +409,7 @@ final class SwiftUIDemoFactory: RootViewFactory {
 
 	private func makeRoadEventsDemoPage() throws -> some View {
 		let mapFactory = try self.makeMapFactory()
-		let viewModel = RoadEventsDemoViewModel(
+		let viewModel = try RoadEventsDemoViewModel(
 			map: mapFactory.map,
 			mapSourceFactory: MapSourceFactory(context: self.context, settingsService: self.settingsService)
 		)
@@ -582,29 +608,35 @@ extension SwiftUIDemoFactory {
 		)
 	}
     
-    private func makeRouteSearchDemoWithBuiltinUIComponentView() throws -> some View {
-        let mapFactory = try self.makeMapFactory()
-        let routingViewsFactory = try self.sdk.makeRoutingViewsFactory()
-        let viewModel = try RouteSearchNGDemoViewModel(
-            map: mapFactory.map,
-            routeEditorSourceFactory: { [context = self.context] routeEditor in
-                return RouteEditorSource(
-                    context: context,
-                    routeEditor: routeEditor,
-                    activeCalloutLabelFlags: [.duration, .length]
-                )
-            },
-            routeEditorFactory: { [context = self.context] in
-                return RouteEditor(context: context)
-            },
-            searchManager: self.makeSearchManager(),
-            geometrySource: self.makeGeometrySource()
-        )
-        return RouteSearchNGDemoView(
-            mapFactory: mapFactory,
-            routeEditorViewFactory: routingViewsFactory.makeRouteEditorViewFactory(),
-            trafficRouter: self.makeTrafficRouter(),
-            viewModel: viewModel
-        )
-    }
+	private func makeRouteSearchDemoWithBuiltinUIComponentView() throws -> some View {
+		let mapFactory = try self.makeMapFactory()
+		let mapSourceFactory = MapSourceFactory(
+			context: self.context,
+			settingsService: self.settingsService
+		)
+		let routingViewsFactory = try self.sdk.makeRoutingViewsFactory()
+		let viewModel = try RouteEditorControlDemoViewModel(
+			mapFactory: mapFactory,
+			routeEditorSourceFactory: { [context = self.context] routeEditor in
+				return RouteEditorSource(
+					context: context,
+					routeEditor: routeEditor,
+					activeCalloutLabelFlags: [.duration, .length]
+				)
+			},
+			routeEditorFactory: { [context = self.context] in
+				return RouteEditor(context: context)
+			},
+			searchManager: self.makeSearchManager(),
+			geometrySource: self.makeGeometrySource(),
+			myLocationMapObjectSource: mapSourceFactory.makeSmoothMyLocationMapObjectSource(bearingSource: .auto),
+			locationService: self.sdk.locationService
+		)
+		return RouteEditorControlDemoView(
+			mapFactory: mapFactory,
+			routeEditorViewFactory: routingViewsFactory.makeRouteEditorViewFactory(),
+			trafficRouter: self.makeTrafficRouter(),
+			viewModel: viewModel
+		)
+	}
 }

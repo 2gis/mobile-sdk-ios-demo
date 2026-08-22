@@ -20,13 +20,17 @@ struct ClusteringDemoView: View {
 					self.mapFactory.mapView
 						.copyrightAlignment(.bottomLeft)
 						.objectTappedCallback(callback: .init(
-							callback: { [viewModel = self.viewModel] objectInfo in
-								viewModel.tap(objectInfo: objectInfo)
+							callback: { [weak viewModel = self.viewModel] objectInfo in
+								Task { @MainActor in
+									viewModel?.tap(objectInfo: objectInfo)
+								}
 							}
 						))
 						.objectLongPressCallback(callback: .init(
-							callback: { [viewModel = self.viewModel] objectInfo in
-								viewModel.tap(objectInfo: objectInfo)
+							callback: { [weak viewModel = self.viewModel] objectInfo in
+								Task { @MainActor in
+									viewModel?.tap(objectInfo: objectInfo)
+								}
 							}
 						))
 						.edgesIgnoringSafeArea(.all)

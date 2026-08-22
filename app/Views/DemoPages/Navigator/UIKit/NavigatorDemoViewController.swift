@@ -8,11 +8,11 @@ class NavigatorDemoViewController: UIViewController {
 	private var viewModel: NavigatorDemoViewModel
 
 	private var navigationView: (UIView & INavigationUIView)!
-	private var trafficControl: TrafficUIControl!
-	private var zoomControl: ZoomUIControl!
-	private var compassControl: CompassUIControl!
-	private var currentLocationControl: CurrentLocationUIControl!
-	private var indoorControl: IndoorUIControl!
+	private var trafficControl: UIControl!
+	private var zoomControl: UIControl!
+	private var compassControl: UIControl!
+	private var currentLocationControl: UIControl!
+	private var indoorControl: UIView!
 	private var goButton: UIButton!
 	private var crosshair: UIImageView!
 	private var settingsView: UIView!
@@ -35,8 +35,8 @@ class NavigatorDemoViewController: UIViewController {
 		self.trafficControl = self.mapControlsFactory.makeTrafficUIControl()
 		self.zoomControl = self.mapControlsFactory.makeZoomUIControl()
 		self.compassControl = self.mapControlsFactory.makeCompassUIControl()
-		self.currentLocationControl = self.mapControlsFactory.makeCurrentLocationUIControl()
-		self.indoorControl = self.mapControlsFactory.makeIndoorUIControl()
+		self.currentLocationControl = self.mapControlsFactory.makeCurrentLocationUIControl(permissionCallback: {})
+		self.indoorControl = self.mapControlsFactory.makeIndoorUIControl(showOverview: false)
 		self.goButton = self.makeGoButton()
 		self.crosshair = self.makeCrosshair()
 		self.settingsView = NavigatorSettingsUIView(
@@ -99,26 +99,27 @@ class NavigatorDemoViewController: UIViewController {
 			settings.callback = { Task { @MainActor [weak self] in self?.presentCloseMenuAlert() } }
 			options.dashboardButtonSettings = settings
 		}
-		if self.viewModel.settingsService.navigatorTheme == .custom {
-			options.theme = NavigationViewTheme.custom
-		}
+		options.theme = self.viewModel.settingsService.navigatorTheme.navigationViewTheme
 		let navigationFactory = try! factory(options)
 		switch self.viewModel.settingsService.navigatorControls {
 		case .default:
-			let navigationView = navigationFactory.makeNavigationUIView(
+			return navigationFactory.makeNavigationUIView(
 				map: self.mapFactory.map,
-				navigationManager: self.viewModel.navigationManager
+				navigationManager: self.viewModel.navigationManager,
+				locationPermissionCallback: {}
 			)
-			return navigationView
 		case .customControls:
 			let navigationViewControlsFactory = navigationFactory.makeNavigationUIControlsFactory()
-			let navigationView = navigationFactory.makeNavigationUIView(
+			return navigationFactory.makeNavigationUIView(
 				map: self.mapFactory.map,
 				navigationManager: self.viewModel.navigationManager,
 				navigationUIControlsFactory: CustomNavigationViewControlsFactory(navigationViewControlsFactory: navigationViewControlsFactory),
-				navigationMapUIControlsFactory: CustomNavigationMapUIControlsFactory(mapFactory: self.mapFactory, navigationViewFactory: navigationFactory)
+				mapUIControlsFactory: CustomNavigationMapUIControlsFactory(
+					mapFactory: self.mapFactory,
+					theme: options.theme.mapControlsTheme
+				),
+				locationPermissionCallback: {}
 			)
-			return navigationView
 		@unknown default:
 			fatalError("Unknown type: \(self.viewModel.settingsService.navigatorControls)")
 		}

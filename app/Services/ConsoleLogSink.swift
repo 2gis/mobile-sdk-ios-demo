@@ -1,13 +1,13 @@
 import DGis
 
 final class ConsoleLogSink: LogSink {
-	private let logger: ILogger
+	private nonisolated(unsafe) let logger: ILogger
 
 	init(logger: ILogger) {
 		self.logger = logger
 	}
 
-	func write(message: LogMessage) {
+	nonisolated func write(message: LogMessage) {
 		guard let level = LogLevel(dgisLogLevel: message.level) else { return }
 		self.logger.log(
 			message.text,
@@ -20,23 +20,23 @@ final class ConsoleLogSink: LogSink {
 }
 
 private extension LogLevel {
-	init?(dgisLogLevel: DGis.LogLevel) {
+	nonisolated init?(dgisLogLevel: DGis.LogLevel) {
 		switch dgisLogLevel {
-			case .verbose:
-				self = .verbose
-			case .info:
-				self = .info
-			case .warning:
-				self = .warning
-			case .error:
-				self = .error
-			case .fatal:
-				self = .fault
-			case .off:
-				return nil
-			@unknown default:
-				assertionFailure("Unsupported log level: \(dgisLogLevel)")
-				return nil
+		case .verbose:
+			self = .verbose
+		case .info:
+			self = .info
+		case .warning:
+			self = .warning
+		case .error:
+			self = .error
+		case .fatal:
+			self = .fault
+		case .off:
+			return nil
+		@unknown default:
+			assertionFailure("Unsupported log level: \(dgisLogLevel)")
+			return nil
 		}
 	}
 }

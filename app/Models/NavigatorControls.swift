@@ -5,12 +5,12 @@ enum NavigatorControls: String, CaseIterable {
 	case `default`, customControls
 }
 
-extension NavigatorControls: PickerViewOption {
-	var id: NavigatorControls {
+extension NavigatorControls: @MainActor PickerViewOption {
+	nonisolated var id: NavigatorControls {
 		self
 	}
 
-	var name: String {
+	nonisolated var name: String {
 		switch self {
 		case .default:
 			return "Default"

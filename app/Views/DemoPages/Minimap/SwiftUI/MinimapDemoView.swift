@@ -43,7 +43,7 @@ struct MinimapDemoView: View {
 			VStack {
 				Spacer()
 				self.mapViewsFactory.makeZoomView()
-				self.mapViewsFactory.makeCurrentLocationView()
+				self.mapViewsFactory.makeCurrentLocationView(permissionCallback: {})
 				Spacer()
 			}
 			.frame(maxWidth: .infinity, alignment: .trailing)

@@ -21,16 +21,17 @@ final class SearchHistoryService: @unchecked Sendable {
 
 	func items() -> Thunk {
 		Thunk { [weak self] dispatcher in
-			guard let self else { return }
+			Task { @MainActor [weak self] in
+				guard let self else { return }
+				self.historyCancellable.cancel()
 
-			self.historyCancellable.cancel()
-
-			let future = self.searchHistory.items(page: SearchHistoryPage())
-			self.historyCancellable = future.sinkOnMainThread(receiveValue: { result in
-				Task { @MainActor in
-					dispatcher(.setHistoryResult(SearchHistoryViewModel(items: result.items)))
-				}
-			}, failure: { _ in })
+				let future = self.searchHistory.items(page: SearchHistoryPage())
+				self.historyCancellable = future.sinkOnMainThread(receiveValue: { result in
+					Task { @MainActor in
+						dispatcher(.setHistoryResult(SearchHistoryViewModel(items: result.items)))
+					}
+				}, failure: { _ in })
+			}
 		}
 	}
 

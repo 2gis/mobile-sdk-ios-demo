@@ -22,7 +22,7 @@ struct TrafficControlDemoView: View {
 			ZStack(alignment: .top) {
 				VStack(alignment: .trailing) {
 					HStack {
-						self.mapFactory.mapViewsFactory.makeTrafficView(colors: .default)
+						self.mapFactory.mapViewsFactory.makeTrafficView()
 						.frame(width: 48, height: 102)
 						.fixedSize()
 						.padding(20)

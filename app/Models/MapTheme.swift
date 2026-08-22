@@ -7,25 +7,25 @@ enum MapTheme: String, CaseIterable {
 	var mapAppearance: MapAppearance {
 		switch self {
 		case .default:
-			return .default
+			return .fixed(.init(theme: .defaultTheme))
 		case .dark:
-			return .universal("night")
+			return .fixed(.init(theme: .defaultDarkTheme))
 		case .light:
-			return .universal("day")
+			return .fixed(.init(theme: .defaultTheme))
 		case .system:
-			return .automatic(light: "day", dark: "night")
+			return .bySystem(.init(light: .defaultTheme, dark: .defaultDarkTheme))
 		@unknown default:
 			assertionFailure("Unknown value for MapTheme")
 		}
 	}
 }
 
-extension MapTheme: PickerViewOption {
-	var id: MapTheme {
+extension MapTheme: @MainActor PickerViewOption {
+	nonisolated var id: MapTheme {
 		self
 	}
 
-	var name: String {
+	nonisolated var name: String {
 		switch self {
 		case .default:
 			return "Default"

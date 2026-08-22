@@ -50,9 +50,9 @@ final class MapViewMarkersDemoViewModel: ObservableObject, @unchecked Sendable {
 	}
 
 	private func makeViewMarker(object: DgisMapObject) {
-		self.searchCancellable = self.searchManager.searchByDirectoryObjectId(objectId: object.id).sinkOnMainThread(
-			receiveValue: { [weak self] result in
-				guard let self, let result, let position = result.markerPosition else { return }
+		self.searchCancellable = self.searchManager.searchByDirectoryObjectIds(objectIds: [object.id]).sinkOnMainThread(
+			receiveValue: { [weak self] results in
+				guard let self, let result = results.first, let position = result.markerPosition else { return }
 				Task { @MainActor [weak self] in
 					guard let self else { return }
 					let markerView = AnyView(ObjectMarkerView(

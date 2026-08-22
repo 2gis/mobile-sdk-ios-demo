@@ -94,7 +94,7 @@ struct CameraRestrictionsDemoView: View {
 	}
 
 	private var customCurrentLocationControl: some View {
-		self.mapViewsFactory.makeCurrentLocationView()
+		self.mapViewsFactory.makeCurrentLocationView(permissionCallback: {})
 			.simultaneousGesture(TapGesture().onEnded {
 				self.viewModel.followControllerButtonClick()
 			})

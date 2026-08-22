@@ -185,10 +185,18 @@
 		A24473F02F23B5CA0065489F /* MultiTouchGestureSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A24473C22F23B5CA0065489F /* MultiTouchGestureSettingsView.swift */; };
 		A24473F12F23B5CA0065489F /* PlatformGestureSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A24473C42F23B5CA0065489F /* PlatformGestureSettingsView.swift */; };
 		A24473F22F23B5CA0065489F /* MapGestureSettingsDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A24473CE2F23B5CA0065489F /* MapGestureSettingsDemoView.swift */; };
-		A24473F72F23B7E10065489F /* RouteSearchNGDemoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A24473F32F23B7E10065489F /* RouteSearchNGDemoViewModel.swift */; };
-		A24473F82F23B7E10065489F /* RouteSearchNGDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A24473F42F23B7E10065489F /* RouteSearchNGDemoView.swift */; };
-		A24473F92F23B7E10065489F /* RouteSearchNGDemoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A24473F32F23B7E10065489F /* RouteSearchNGDemoViewModel.swift */; };
-		A24473FA2F23B7E10065489F /* RouteSearchNGDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A24473F42F23B7E10065489F /* RouteSearchNGDemoView.swift */; };
+		A24473F72F23B7E10065489F /* RouteEditorControlDemoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A24473F32F23B7E10065489F /* RouteEditorControlDemoViewModel.swift */; };
+		A24473F82F23B7E10065489F /* RouteEditorControlDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A24473F42F23B7E10065489F /* RouteEditorControlDemoView.swift */; };
+		A24473F92F23B7E10065489F /* RouteEditorControlDemoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A24473F32F23B7E10065489F /* RouteEditorControlDemoViewModel.swift */; };
+		A24473FA2F23B7E10065489F /* RouteEditorControlDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A24473F42F23B7E10065489F /* RouteEditorControlDemoView.swift */; };
+		D1EC70112F90000100000001 /* CategoryIconProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1EC70012F90000100000001 /* CategoryIconProvider.swift */; };
+		D1EC70122F90000100000001 /* DirectorySearchControlDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1EC70022F90000100000001 /* DirectorySearchControlDemoView.swift */; };
+		D1EC70132F90000100000001 /* DirectorySearchControlDemoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1EC70032F90000100000001 /* DirectorySearchControlDemoViewModel.swift */; };
+		D1EC70142F90000100000001 /* DirectorySearchResultsSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1EC70042F90000100000001 /* DirectorySearchResultsSettingsView.swift */; };
+		D1EC70152F90000100000001 /* CategoryIconProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1EC70012F90000100000001 /* CategoryIconProvider.swift */; };
+		D1EC70162F90000100000001 /* DirectorySearchControlDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1EC70022F90000100000001 /* DirectorySearchControlDemoView.swift */; };
+		D1EC70172F90000100000001 /* DirectorySearchControlDemoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1EC70032F90000100000001 /* DirectorySearchControlDemoViewModel.swift */; };
+		D1EC70182F90000100000001 /* DirectorySearchResultsSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1EC70042F90000100000001 /* DirectorySearchResultsSettingsView.swift */; };
 		B712C96C27F4077100DCBDEA /* TextFieldClearButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = B712C96B27F4077100DCBDEA /* TextFieldClearButton.swift */; };
 		B712C97327F40D7E00DCBDEA /* Clamping.swift in Sources */ = {isa = PBXBuildFile; fileRef = B712C97227F40D7E00DCBDEA /* Clamping.swift */; };
 		B712C97827F40E7D00DCBDEA /* NavigatorBetterRouteSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = B712C97727F40E7D00DCBDEA /* NavigatorBetterRouteSettings.swift */; };
@@ -723,8 +731,12 @@
 		A24473CE2F23B5CA0065489F /* MapGestureSettingsDemoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapGestureSettingsDemoView.swift; sourceTree = "<group>"; };
 		A24473CF2F23B5CA0065489F /* MapGestureSettingsDemoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapGestureSettingsDemoViewModel.swift; sourceTree = "<group>"; };
 		A24473D02F23B5CA0065489F /* MapGestureType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapGestureType.swift; sourceTree = "<group>"; };
-		A24473F32F23B7E10065489F /* RouteSearchNGDemoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteSearchNGDemoViewModel.swift; sourceTree = "<group>"; };
-		A24473F42F23B7E10065489F /* RouteSearchNGDemoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteSearchNGDemoView.swift; sourceTree = "<group>"; };
+		A24473F32F23B7E10065489F /* RouteEditorControlDemoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteEditorControlDemoViewModel.swift; sourceTree = "<group>"; };
+		A24473F42F23B7E10065489F /* RouteEditorControlDemoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteEditorControlDemoView.swift; sourceTree = "<group>"; };
+		D1EC70012F90000100000001 /* CategoryIconProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryIconProvider.swift; sourceTree = "<group>"; };
+		D1EC70022F90000100000001 /* DirectorySearchControlDemoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectorySearchControlDemoView.swift; sourceTree = "<group>"; };
+		D1EC70032F90000100000001 /* DirectorySearchControlDemoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectorySearchControlDemoViewModel.swift; sourceTree = "<group>"; };
+		D1EC70042F90000100000001 /* DirectorySearchResultsSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectorySearchResultsSettingsView.swift; sourceTree = "<group>"; };
 		B712C96B27F4077100DCBDEA /* TextFieldClearButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldClearButton.swift; sourceTree = "<group>"; };
 		B712C97227F40D7E00DCBDEA /* Clamping.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Clamping.swift; sourceTree = "<group>"; };
 		B712C97727F40E7D00DCBDEA /* NavigatorBetterRouteSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigatorBetterRouteSettings.swift; sourceTree = "<group>"; };
@@ -1261,7 +1273,8 @@
 				64A23982269EFE77007385DA /* VisibleAreaDetection */,
 				C40422D22B31C523009CAD81 /* VisibleRectVisibleArea */,
 				A24473D22F23B5CA0065489F /* MapGestureSettings */,
-				A24473F62F23B7E10065489F /* RouteSearchNG */,
+				A24473F62F23B7E10065489F /* RouteEditorControl */,
+				D1EC70212F90000100000001 /* DirectorySearchControl */,
 			);
 			path = DemoPages;
 			sourceTree = "<group>";
@@ -1433,18 +1446,37 @@
 		A24473F52F23B7E10065489F /* SwiftUI */ = {
 			isa = PBXGroup;
 			children = (
-				A24473F32F23B7E10065489F /* RouteSearchNGDemoViewModel.swift */,
-				A24473F42F23B7E10065489F /* RouteSearchNGDemoView.swift */,
+				A24473F32F23B7E10065489F /* RouteEditorControlDemoViewModel.swift */,
+				A24473F42F23B7E10065489F /* RouteEditorControlDemoView.swift */,
 			);
 			path = SwiftUI;
 			sourceTree = "<group>";
 		};
-		A24473F62F23B7E10065489F /* RouteSearchNG */ = {
+		A24473F62F23B7E10065489F /* RouteEditorControl */ = {
 			isa = PBXGroup;
 			children = (
 				A24473F52F23B7E10065489F /* SwiftUI */,
 			);
-			path = RouteSearchNG;
+			path = RouteEditorControl;
+			sourceTree = "<group>";
+		};
+		D1EC70212F90000100000001 /* DirectorySearchControl */ = {
+			isa = PBXGroup;
+			children = (
+				D1EC70222F90000100000001 /* SwiftUI */,
+			);
+			path = DirectorySearchControl;
+			sourceTree = "<group>";
+		};
+		D1EC70222F90000100000001 /* SwiftUI */ = {
+			isa = PBXGroup;
+			children = (
+				D1EC70012F90000100000001 /* CategoryIconProvider.swift */,
+				D1EC70022F90000100000001 /* DirectorySearchControlDemoView.swift */,
+				D1EC70032F90000100000001 /* DirectorySearchControlDemoViewModel.swift */,
+				D1EC70042F90000100000001 /* DirectorySearchResultsSettingsView.swift */,
+			);
+			path = SwiftUI;
 			sourceTree = "<group>";
 		};
 		B712C97027F40D5100DCBDEA /* Tools */ = {
@@ -2283,8 +2315,12 @@
 				C4C0A56E2CA44265000FC69B /* ChargingStationInfoView.swift in Sources */,
 				B74F474A27BBEFB6008CBC34 /* MinimapDemoView.swift in Sources */,
 				64A239D3269EFE78007385DA /* SearchResultItemViewModel.swift in Sources */,
-				A24473F92F23B7E10065489F /* RouteSearchNGDemoViewModel.swift in Sources */,
-				A24473FA2F23B7E10065489F /* RouteSearchNGDemoView.swift in Sources */,
+				A24473F92F23B7E10065489F /* RouteEditorControlDemoViewModel.swift in Sources */,
+				A24473FA2F23B7E10065489F /* RouteEditorControlDemoView.swift in Sources */,
+				D1EC70152F90000100000001 /* CategoryIconProvider.swift in Sources */,
+				D1EC70162F90000100000001 /* DirectorySearchControlDemoView.swift in Sources */,
+				D1EC70172F90000100000001 /* DirectorySearchControlDemoViewModel.swift in Sources */,
+				D1EC70182F90000100000001 /* DirectorySearchResultsSettingsView.swift in Sources */,
 				C4FE2FAC2B3959990045BBA9 /* CalcPositionInfoView.swift in Sources */,
 				64A239C5269EFE78007385DA /* CameraMovesDemoViewModel.swift in Sources */,
 				B7B7CA5727A8E92E006159BC /* PickerView.swift in Sources */,
@@ -2597,8 +2633,12 @@
 				648B301F2E9D3B3200C8D7A8 /* TerritoryManagerDemoView.swift in Sources */,
 				648B30202E9D3B3200C8D7A8 /* TerritoryManagerSettingsViewModel.swift in Sources */,
 				648B30212E9D3B3200C8D7A8 /* TerritoryManagerListView.swift in Sources */,
-				A24473F72F23B7E10065489F /* RouteSearchNGDemoViewModel.swift in Sources */,
-				A24473F82F23B7E10065489F /* RouteSearchNGDemoView.swift in Sources */,
+				A24473F72F23B7E10065489F /* RouteEditorControlDemoViewModel.swift in Sources */,
+				A24473F82F23B7E10065489F /* RouteEditorControlDemoView.swift in Sources */,
+				D1EC70112F90000100000001 /* CategoryIconProvider.swift in Sources */,
+				D1EC70122F90000100000001 /* DirectorySearchControlDemoView.swift in Sources */,
+				D1EC70132F90000100000001 /* DirectorySearchControlDemoViewModel.swift in Sources */,
+				D1EC70142F90000100000001 /* DirectorySearchResultsSettingsView.swift in Sources */,
 				C4AB88BD2C06031200FF713C /* GeneratorLocationService.swift in Sources */,
 				C4AB88BE2C06031200FF713C /* SearchResultItemView.swift in Sources */,
 				C4AB88BF2C06031200FF713C /* SnapshotView.swift in Sources */,
@@ -2750,7 +2790,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -2803,6 +2842,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 6.0;
 			};
@@ -2812,7 +2852,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -2858,6 +2897,7 @@
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = 6.0;
 				VALIDATE_PRODUCT = YES;
@@ -2879,11 +2919,12 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				OTHER_SWIFT_FLAGS = "";
+				OTHER_SWIFT_FLAGS = "-D ROUTING_FEATURE_AVAILABLE";
 				PRODUCT_BUNDLE_IDENTIFIER = ru.mobile.sdk.app;
 				PRODUCT_NAME = NativeApp;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SUPPORTS_MACCATALYST = NO;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -2905,11 +2946,12 @@
 				);
 				LLVM_LTO = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				OTHER_SWIFT_FLAGS = "";
+				OTHER_SWIFT_FLAGS = "-D ROUTING_FEATURE_AVAILABLE";
 				PRODUCT_BUNDLE_IDENTIFIER = ru.mobile.sdk.app;
 				PRODUCT_NAME = NativeApp;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SUPPORTS_MACCATALYST = NO;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -2929,7 +2971,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				OTHER_SWIFT_FLAGS = "-D APP_CARPLAY";
+				OTHER_SWIFT_FLAGS = "-D APP_CARPLAY -D ROUTING_FEATURE_AVAILABLE";
 				PRODUCT_BUNDLE_IDENTIFIER = ru.mobile.sdk.app;
 				PRODUCT_NAME = NativeApp;
 				SUPPORTS_MACCATALYST = NO;
@@ -2955,7 +2997,7 @@
 				);
 				LLVM_LTO = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				OTHER_SWIFT_FLAGS = "-D APP_CARPLAY";
+				OTHER_SWIFT_FLAGS = "-D APP_CARPLAY -D ROUTING_FEATURE_AVAILABLE";
 				PRODUCT_BUNDLE_IDENTIFIER = ru.mobile.sdk.app;
 				PRODUCT_NAME = NativeApp;
 				SUPPORTS_MACCATALYST = NO;
@@ -3011,7 +3053,7 @@
 			repositoryURL = "https://github.com/2gis/mobile-sdk-full-swift-package.git";
 			requirement = {
 				kind = exactVersion;
-				version = 13.6.0;
+				version = 14.0.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */

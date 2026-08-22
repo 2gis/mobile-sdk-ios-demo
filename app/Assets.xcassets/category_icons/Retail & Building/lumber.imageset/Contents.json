@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "lumber.pdf",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

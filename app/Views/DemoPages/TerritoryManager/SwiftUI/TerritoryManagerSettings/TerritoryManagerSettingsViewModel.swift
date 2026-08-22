@@ -9,14 +9,14 @@ final class TerritoryManagerSettingsViewModel: ObservableObject {
 		static let defaultInstallFallbackRetryCount: UInt32 = 5
 	}
 
-	enum InstallFallbackType: String, CaseIterable, PickerViewOption {
+	enum InstallFallbackType: String, CaseIterable, @MainActor PickerViewOption {
 		case noOperation, retryOnError
 
-		var id: InstallFallbackType {
+		nonisolated var id: InstallFallbackType {
 			self
 		}
 
-		var name: String {
+		nonisolated var name: String {
 			switch self {
 			case .noOperation:
 				return "NoOperation"

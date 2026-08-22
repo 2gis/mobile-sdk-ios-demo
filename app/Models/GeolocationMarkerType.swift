@@ -15,12 +15,12 @@ enum GeolocationMarkerType: String, CaseIterable {
 	}
 }
 
-extension GeolocationMarkerType: PickerViewOption {
-	var id: GeolocationMarkerType {
+extension GeolocationMarkerType: @MainActor PickerViewOption {
+	nonisolated var id: GeolocationMarkerType {
 		self
 	}
 
-	var name: String {
+	nonisolated var name: String {
 		switch self {
 		case .model:
 			return "3D Model"

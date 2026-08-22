@@ -80,20 +80,26 @@ final class TerritoryManagerDemoViewModel: ObservableObject, @unchecked Sendable
 				self?.viewportTerritories = territories
 			}
 
-		self.lastLocationCancellable = locationService.lastLocationChannel.sinkOnMainThread { lastLocation in
-			guard let point = lastLocation?.coordinates.value else { return }
-			self.lastLocationSubject.send(point)
+		self.lastLocationCancellable = locationService.lastLocationChannel.sinkOnMainThread { [weak self] lastLocation in
+			Task { @MainActor [weak self] in
+				guard let self, let point = lastLocation?.coordinates.value else { return }
+				self.lastLocationSubject.send(point)
+			}
 		}
 
 		self.viewportCancellable = map.camera.sinkOnStatefulChangesOnMainThread(reason: .visibleRect) {
 			[weak self] (viewport: GeoRect) in
-			guard let self else { return }
-			self.visibleRectSubject.send(viewport)
+			Task { @MainActor [weak self] in
+				guard let self else { return }
+				self.visibleRectSubject.send(viewport)
+			}
 		}
 
 		self.territoriesCancellable = territoryManager.territoriesChannel.sinkOnMainThread {
 			[weak self] _ in
-			self?.updateTerritories()
+			Task { @MainActor [weak self] in
+				self?.updateTerritories()
+			}
 		}
 		self.searchStringCancellable = self.$searchString
 			.debounce(for: .seconds(Constants.searchDelay), scheduler: DispatchQueue.main)

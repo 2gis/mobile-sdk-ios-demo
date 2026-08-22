@@ -84,15 +84,17 @@ final class SearchService: @unchecked Sendable {
 
 	func suggestIfNeeded(queryText: String) -> Thunk {
 		Thunk { [weak self] dispatcher in
-			guard let self else { return }
-			if queryText.isEmpty {
-				dispatcher(.resetSuggestions)
-				return
+			Task { @MainActor [weak self] in
+				guard let self else { return }
+				if queryText.isEmpty {
+					dispatcher(.resetSuggestions)
+					return
+				}
+				let appliedThunk = self.suggest(queryText: queryText)
+					.bind(dispatcher)
+				self.isDebouncerActive = true
+				self.suggestDebouncer.send(appliedThunk)
 			}
-			let appliedThunk = self.suggest(queryText: queryText)
-				.bind(dispatcher)
-			self.isDebouncerActive = true
-			self.suggestDebouncer.send(appliedThunk)
 		}
 	}
 
@@ -108,31 +110,24 @@ final class SearchService: @unchecked Sendable {
 		searchOptions: SearchOptions?
 	) -> Thunk {
 		Thunk { [weak self] dispatcher in
-			guard let self else { return }
-
-			guard !queryText.isEmpty || !rubricIds.isEmpty else { return }
-
-			let queryText = queryText
-			let builder: SearchQueryBuilder = if !rubricIds.isEmpty {
-				if !queryText.isEmpty {
-					.fromQueryTextAndRubricIds(
-						queryText: queryText,
-						rubricIds: rubricIds
-					)
-				} else {
-					.fromRubricIds(rubricIds: rubricIds)
-				}
-			} else {
-				.fromQueryText(queryText: queryText)
-			}
-
-			let query = builder
-				.setAreaOfInterest(rect: self.map.camera.visibleRect)
-				.apply(searchOptions: searchOptions)
-				.build()
-			self.lastSearchQuery = query
 			Task { @MainActor [weak self] in
-				self?.search(query: query, title: queryText, subtitle: "", addToHistory: true)(dispatcher)
+				guard let self else { return }
+				guard !queryText.isEmpty || !rubricIds.isEmpty else { return }
+
+				var builder = SearchQueryBuilder()
+				if !rubricIds.isEmpty {
+					builder = builder.setRubricIds(rubricIds: rubricIds)
+				}
+				if !queryText.isEmpty {
+					builder = builder.setQueryText(queryText: queryText)
+				}
+
+				let query = builder
+					.setAreaOfInterest(rect: self.map.camera.visibleRect)
+					.apply(searchOptions: searchOptions)
+					.build()
+				self.lastSearchQuery = query
+				self.search(query: query, title: queryText, subtitle: "", addToHistory: true)(dispatcher)
 			}
 		}
 	}
@@ -140,80 +135,79 @@ final class SearchService: @unchecked Sendable {
 	@MainActor
 	func search(query: SearchQuery, title: String, subtitle: String, addToHistory: Bool) -> Thunk {
 		Thunk { [weak self] dispatcher in
-			guard let self else { return }
-			self.searchCancellable?.cancel()
-			self.cancelSuggest()
+			Task { @MainActor [weak self] in
+				guard let self else { return }
+				self.searchCancellable?.cancel()
+				self.cancelSuggest()
 
-			if addToHistory {
-				let titledQuery = SearchQueryWithInfo(searchQuery: query, title: title, subtitle: subtitle)
-				self.searchHistory.addItem(item: SearchHistoryItem.searchQuery(titledQuery))
-			}
+				if addToHistory {
+					let titledQuery = SearchQueryWithInfo(searchQuery: query, title: title, subtitle: subtitle)
+					self.searchHistory.addItem(item: SearchHistoryItem.searchQuery(titledQuery))
+				}
 
-			let future = self.searchManager.search(query: query)
-			self.searchCancellable = future.sinkOnMainThread(receiveValue: {
-				[locationService = self.locationService] result in
-				self.searchCancellable = nil
-				Task { @MainActor [weak self] in
-					guard let self else { return }
-					self.getSearchMarkers(result: result)
-					let resultViewModel = self.makeSearchResultViewModel(
-						result: result,
-						lastPosition: locationService.lastLocation.map { CLLocation(location: $0) }
-					)
-					dispatcher(.setSearchResult(resultViewModel))
+				let future = self.searchManager.search(query: query)
+				self.searchCancellable = future.sinkOnMainThread(receiveValue: {
+					[locationService = self.locationService] result in
+					Task { @MainActor [weak self] in
+						guard let self else { return }
+						self.searchCancellable = nil
+						self.getSearchMarkers(result: result)
+						let resultViewModel = self.makeSearchResultViewModel(
+							result: result,
+							lastPosition: locationService.lastLocation.map { CLLocation(location: $0) }
+						)
+						dispatcher(.setSearchResult(resultViewModel))
+					}
+				}, failure: { [weak self] error in
+					Task { @MainActor [weak self] in
+						self?.searchCancellable = nil
+						let message = "Search failed [\(error.description)]"
+						dispatcher(.setError(message))
+					}
+				})
 				}
-			}, failure: {
-				[weak self] error in
-				self?.searchCancellable = nil
-				Task { @MainActor in
-					let message = "Search failed [\(error.description)]"
-					dispatcher(.setError(message))
-				}
-			})
 		}
 	}
 
 	private func suggest(queryText: String) -> Thunk {
 		Thunk { [weak self] dispatcher in
-			guard let self else { return }
+			Task { @MainActor [weak self] in
+				guard let self else { return }
+				guard self.searchCancellable == nil else { return }
+				guard !queryText.isEmpty else { return }
 
-			// Предыдущий поиск должен быть завершен.
-			guard self.searchCancellable == nil else { return }
-
-			// Не подсказываем по пустому запросу.
-			guard !queryText.isEmpty else { return }
-
-			let query = SuggestQueryBuilder
-				.fromQueryText(queryText: queryText)
-				.setAreaOfInterest(rect: self.map.camera.visibleRect)
-				.build()
-			self.suggest(query: query)(dispatcher)
+				let query = SuggestQueryBuilder(queryText: queryText)
+					.setAreaOfInterest(rect: self.map.camera.visibleRect)
+					.build()
+				self.suggest(query: query)(dispatcher)
+			}
 		}
 	}
 
 	private func suggest(query: SuggestQuery) -> Thunk {
 		Thunk { [weak self] dispatcher in
-			guard let self else { return }
+			Task { @MainActor [weak self] in
+				guard let self else { return }
+				self.suggestCancellable.cancel()
 
-			self.suggestCancellable.cancel()
-
-			let future = self.searchManager.suggest(query: query)
-			self.suggestCancellable = future.sinkOnMainThread(receiveValue: {
-				[locationService = self.locationService] result in
-				Task { @MainActor [weak self] in
-					guard let self else { return }
-					let suggestResultViewModel = self.makeSuggestResultViewModel(
-						result: result,
-						lastPosition: locationService.lastLocation.map { CLLocation(location: $0) }
-					)
-					dispatcher(.setSuggestResult(suggestResultViewModel))
-				}
-			}, failure: { error in
-				Task { @MainActor in
-					let message = "Search failed [\(error.description)]"
-					dispatcher(.setError(message))
-				}
-			})
+				let future = self.searchManager.suggest(query: query)
+				self.suggestCancellable = future.sinkOnMainThread(receiveValue: {
+					[locationService = self.locationService] result in
+					Task { @MainActor [weak self] in
+						guard let self else { return }
+						let suggestResultViewModel = self.makeSuggestResultViewModel(
+							result: result,
+							lastPosition: locationService.lastLocation.map { CLLocation(location: $0) }
+						)
+						dispatcher(.setSuggestResult(suggestResultViewModel))
+					}
+				}, failure: { error in
+					Task { @MainActor in
+						let message = "Search failed [\(error.description)]"
+						dispatcher(.setError(message))
+					}
+				})
+			}
 		}
 	}
 
@@ -240,13 +234,16 @@ final class SearchService: @unchecked Sendable {
 
 	private func getSearchMarkers(result: SearchResult) {
 		self.searchMarkersCancellable = result.itemMarkerInfos.sinkOnMainThread { [weak self] markers in
-			guard let self,
-			      let markersInfo = markers
-			else { return }
-			self.deleteOldMarkersAndAddNew(markersInfo: markersInfo)
-		} failure: { error in
-			self.logger.error("Something went wrong: \(error.localizedDescription)")
-			self.searchCancellable = nil
+			Task { @MainActor [weak self] in
+				guard let self, let markersInfo = markers else { return }
+				self.deleteOldMarkersAndAddNew(markersInfo: markersInfo)
+			}
+		} failure: { [weak self] error in
+			Task { @MainActor [weak self] in
+				guard let self else { return }
+				self.logger.error("Something went wrong: \(error.localizedDescription)")
+				self.searchCancellable = nil
+			}
 		}
 	}
 
