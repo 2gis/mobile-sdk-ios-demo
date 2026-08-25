@@ -1,8 +1,9 @@
-import SwiftUI
+import Combine
 import DGis
 import Foundation
+import SwiftUI
 
-final class CacheDemoViewModel: ObservableObject {
+final class CacheDemoViewModel: ObservableObject, @unchecked Sendable {
 	@Published var combinedCacheSize: String = "0 MB / 300 MB"
 	@Published var cacheSize: Double {
 		didSet {
@@ -12,11 +13,12 @@ final class CacheDemoViewModel: ObservableObject {
 			}
 		}
 	}
+
 	let byteCountFormatter = ByteCountFormatter()
 	private let map: Map
 	private let cacheManager: HttpCacheManager
 	private var timer: Timer?
-	
+
 	init(
 		map: Map,
 		cacheManager: HttpCacheManager
@@ -26,7 +28,7 @@ final class CacheDemoViewModel: ObservableObject {
 		self.byteCountFormatter.allowedUnits = [.useKB, .useMB, .useGB]
 		self.byteCountFormatter.countStyle = .memory
 		self.cacheSize = Double(self.cacheManager.maxSize)
-		self.timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) {[weak self] _ in
+		self.timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
 			self?.updateCurrentCacheSize()
 		}
 	}
@@ -34,7 +36,7 @@ final class CacheDemoViewModel: ObservableObject {
 	func clearCache() {
 		self.cacheManager.clear()
 	}
-	
+
 	private func setCacheSize(size: UInt64) {
 		self.cacheManager.maxSize = size
 	}

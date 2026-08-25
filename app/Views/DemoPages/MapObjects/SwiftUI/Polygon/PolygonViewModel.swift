@@ -1,5 +1,6 @@
-import SwiftUI
+import Combine
 import DGis
+import SwiftUI
 
 final class PolygonViewModel: ObservableObject {
 	private enum Constants {
@@ -62,11 +63,11 @@ final class PolygonViewModel: ObservableObject {
 			return []
 		}
 
-		return (1...count).map { _ in
-			(1...size).map { item in
+		return (1 ... count).map { _ in
+			(1 ... size).map { item in
 				flatPoint.move(
 					bearing: Bearing(value: angle * Double(item)),
-					meter: .init(value: Float.random(in: 50000.0...100000.0))
+					meter: .init(value: Float.random(in: 50000.0 ... 100000.0))
 				)
 			}
 		}

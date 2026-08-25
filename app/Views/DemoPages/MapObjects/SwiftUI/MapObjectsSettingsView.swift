@@ -28,17 +28,17 @@ struct MapObjectsSettingsView: View {
 			ZStack {
 				List {
 					self.makeGroupingTypePicker()
-					SettingsFormTextField(
+					SettingsFormTextFieldView(
 						title: "Grouping width",
 						value: self.$groupingWidth
 					)
 					.padding(.bottom)
-					SettingsFormTextField(
+					SettingsFormTextFieldView(
 						title: "Min zoom",
 						value: self.$minZoom
 					)
 					.padding(.bottom)
-					SettingsFormTextField(
+					SettingsFormTextFieldView(
 						title: "Max zoom",
 						value: self.$maxZoom
 					)

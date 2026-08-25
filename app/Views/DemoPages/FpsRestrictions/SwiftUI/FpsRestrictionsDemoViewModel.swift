@@ -1,5 +1,6 @@
-import SwiftUI
+import Combine
 import DGis
+import SwiftUI
 
 final class MoveController: CameraMoveController {
 	private let initialPosition: CameraPosition
@@ -11,19 +12,20 @@ final class MoveController: CameraMoveController {
 	func position(time: TimeInterval) -> CameraPosition {
 		let zoomOffset = Float(sin(time * 1000)) * 0.0000001
 		return CameraPosition(
-			point: initialPosition.point,
-			zoom: Zoom(value: max(0.0, initialPosition.zoom.value + zoomOffset)),
-			tilt: initialPosition.tilt,
-			bearing: initialPosition.bearing
+			point: self.initialPosition.point,
+			zoom: Zoom(value: max(0.0, self.initialPosition.zoom.value + zoomOffset)),
+			tilt: self.initialPosition.tilt,
+			bearing: self.initialPosition.bearing
 		)
 	}
 
 	func animationTime() -> TimeInterval {
-		return .infinity
+		.infinity
 	}
 }
 
-final class FpsRestrictionsDemoViewModel: ObservableObject {
+@MainActor
+final class FpsRestrictionsDemoViewModel: ObservableObject, @unchecked Sendable {
 	@Published var maxRefreshRate = Double(UIScreen.main.maximumFramesPerSecond)
 	@Published var currentFps: Double = 0.0
 	@Published var maxFps = Double(UIScreen.main.maximumFramesPerSecond) {
@@ -33,6 +35,7 @@ final class FpsRestrictionsDemoViewModel: ObservableObject {
 			}
 		}
 	}
+
 	@Published var powerSavingMaxFps = Double(UIScreen.main.maximumFramesPerSecond) * 0.5 {
 		didSet {
 			if self.powerSavingMaxFps != oldValue {
@@ -44,7 +47,7 @@ final class FpsRestrictionsDemoViewModel: ObservableObject {
 	private let map: Map
 	private let energyConsumption: IEnergyConsumption
 
-	private var cameraAnimated: Future<CameraAnimatedMoveResult>?
+	private var cameraAnimated: DGis.Future<CameraAnimatedMoveResult>?
 
 	init(
 		map: Map,
@@ -63,4 +66,3 @@ final class FpsRestrictionsDemoViewModel: ObservableObject {
 		self.cameraAnimated = self.map.camera.move(moveController: MoveController(initialPosition: self.map.camera.position))
 	}
 }
-

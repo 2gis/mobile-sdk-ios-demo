@@ -21,7 +21,7 @@ struct MultiViewPortsDemoView: View {
 		GeometryReader { geometry in
 			VStack(alignment: .leading) {
 				ZStack(alignment: .topTrailing) {
-					self.firstMapFactory.mapViewOverlay
+					self.firstMapFactory.mapView
 					.frame(height: geometry.size.height / 2)
 					Circle()
 					.fill(self.viewModel.firstMapLoaded ? Color.green : Color.red)
@@ -30,7 +30,7 @@ struct MultiViewPortsDemoView: View {
 				}
 				Spacer()
 				ZStack(alignment: .topTrailing) {
-					self.secondMapFactory.mapViewOverlay
+					self.secondMapFactory.mapView
 					.frame(height: geometry.size.height / 2)
 					Circle()
 					.fill(self.viewModel.secondMapLoaded ? Color.green : Color.red)

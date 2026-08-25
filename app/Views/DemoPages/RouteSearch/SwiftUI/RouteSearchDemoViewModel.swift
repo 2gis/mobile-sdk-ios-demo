@@ -16,7 +16,7 @@ final class RouteSearchDemoViewModel: ObservableObject {
 	let routeEditorSourceFactory: (RouteEditor) -> RouteEditorSource
 	let routeEditorFactory: () -> RouteEditor
 	let feedbackGenerator: FeedbackGenerator
-	let navigationViewFactory: INavigationViewFactory
+	let navigationUIViewFactory: INavigationUIViewFactory
 
 	private let map: Map
 
@@ -27,14 +27,14 @@ final class RouteSearchDemoViewModel: ObservableObject {
 		routeEditorSourceFactory: @escaping (RouteEditor) -> RouteEditorSource,
 		routeEditorFactory: @escaping () -> RouteEditor,
 		feedbackGenerator: FeedbackGenerator,
-		navigationViewFactory: INavigationViewFactory
+		navigationUIViewFactory: INavigationUIViewFactory
 	) {
 		self.map = map
 		self.sourceFactory = sourceFactory
 		self.routeEditorSourceFactory = routeEditorSourceFactory
 		self.routeEditorFactory = routeEditorFactory
 		self.feedbackGenerator = feedbackGenerator
-		self.navigationViewFactory = navigationViewFactory
+		self.navigationUIViewFactory = navigationUIViewFactory
 
 		let source = mapSourceFactory.makeMyLocationMapObjectSource(bearingSource: .satellite)
 		map.addSource(source: source)

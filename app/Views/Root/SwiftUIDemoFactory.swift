@@ -33,6 +33,8 @@ final class SwiftUIDemoFactory: RootViewFactory {
 			try self.makeLocaleDemoPage()
 		case .mapControls:
 			try self.makeMapControlsDemoPage()
+        case .mapGestureSettings:
+            try self.makeMapGestureSettingsDemoPage()
 		case .mapInteraction:
 			try self.makeMapInteractionDemoPage()
 		case .mapObjects:
@@ -49,6 +51,8 @@ final class SwiftUIDemoFactory: RootViewFactory {
 			try self.makeParkingsDemoPage()
 		case .rasterTiles:
 			try self.makeRasterTilesDemoPage()
+		case .roadEvents:
+			try self.makeRoadEventsDemoPage()
 		case .staticMaps:
 			try self.makeStaticMapsDemoPage()
 		case .trafficContol:
@@ -61,18 +65,23 @@ final class SwiftUIDemoFactory: RootViewFactory {
 			try self.makeMiniMapDemoPage()
 		case .navigator:
 			try self.makeNavigatorViewDemoPage()
-		case .packageManager:
-			try self.makePackageManagerDemoView()
+		case .navigatorWithMiniMap:
+			try self.makeNavigatorWithMiniMapViewDemoPage()
+		case .territoryManager:
+			try self.makeTerritoryManagerDemoView()
 		case .routeEditor:
 			try self.makeRouteSearchDemoPage()
+        case .routeEditorControl:
+            try self.makeRouteSearchDemoWithBuiltinUIComponentView()
 		default: Text("Unsupported demo page")
 		}
 	}
 
 	private func makeBenchmarkDemoPage() throws -> some View {
 		let mapFactory = try self.makeMapFactory()
-		let viewModel = BenchmarkViewModel(
+		let viewModel = try BenchmarkViewModel(
 			map: mapFactory.map,
+			geometryMapObjectSource: self.makeGeometrySource(),
 			energyConsumption: mapFactory.energyConsumption,
 			imageFactory: self.makeImageFactory(),
 			logger: self.logger
@@ -98,6 +107,7 @@ final class SwiftUIDemoFactory: RootViewFactory {
 	private func makeCameraMovesDemoPage() throws -> some View {
 		let mapFactory = try self.makeMapFactory()
 		let viewModel = CameraMovesDemoViewModel(
+			locationManagerFactory: self.locationManagerFactory,
 			map: mapFactory.map,
 			logger: self.logger,
 			mapSourceFactory: MapSourceFactory(context: self.context, settingsService: self.settingsService)
@@ -128,14 +138,10 @@ final class SwiftUIDemoFactory: RootViewFactory {
 			logger: self.logger,
 			mapSourceFactory: MapSourceFactory(context: self.context, settingsService: self.settingsService)
 		)
-		if #available(iOS 15, *) {
-			return CameraRestrictionsDemoView(
-				viewModel: viewModel,
-				mapFactory: mapFactory
-			)
-		} else {
-			return Text("This demo is only available starting with iOS 15.")
-		}
+		return CameraRestrictionsDemoView(
+			viewModel: viewModel,
+			mapFactory: mapFactory
+		)
 	}
 
 	private func makeClusteringDemoPage() throws -> some View {
@@ -189,6 +195,18 @@ final class SwiftUIDemoFactory: RootViewFactory {
 		)
 	}
 
+    private func makeMapGestureSettingsDemoPage() throws -> some View {
+        let mapFactory = try self.makeMapFactory()
+        let viewModel = MapGestureSettingsDemoViewModel(
+            mapFactory: mapFactory,
+            imageFactory: self.makeImageFactory()
+        )
+        return MapGestureSettingsDemoView(
+            viewModel: viewModel,
+            mapFactory: mapFactory
+        )
+    }
+
 	private func makeDirectorySearchDemoPage() throws -> some View {
 		let mapFactory = try self.makeMapFactory()
 		let viewModel = try SearchDemoViewModel(
@@ -200,10 +218,10 @@ final class SwiftUIDemoFactory: RootViewFactory {
 			logger: self.logger,
 			searchHistory: self.makeSearchHistory()
 		)
-		return SearchDemoView(
+		return try SearchDemoView(
 			viewModel: viewModel,
 			mapFactory: mapFactory,
-			directoryViewsFactory: try self.sdk.makeDirectoryViewsFactory()
+			directoryViewsFactory: self.sdk.makeDirectoryViewsFactory()
 		)
 	}
 
@@ -313,7 +331,7 @@ final class SwiftUIDemoFactory: RootViewFactory {
 		let viewModel = try MapViewMarkersDemoViewModel(
 			searchManager: self.makeSearchManager(),
 			map: mapFactory.map,
-			mapMarkerViewOverlay: mapFactory.mapMarkerViewOverlay,
+			markerOverlayView: mapFactory.markerOverlayView,
 			mapSourceFactory: MapSourceFactory(context: self.context, settingsService: self.settingsService),
 			logger: self.logger
 		)
@@ -360,6 +378,19 @@ final class SwiftUIDemoFactory: RootViewFactory {
 		return RasterTilesDemoView(
 			viewModel: viewModel,
 			mapFactory: mapFactory
+		)
+	}
+
+	private func makeRoadEventsDemoPage() throws -> some View {
+		let mapFactory = try self.makeMapFactory()
+		let viewModel = RoadEventsDemoViewModel(
+			map: mapFactory.map,
+			mapSourceFactory: MapSourceFactory(context: self.context, settingsService: self.settingsService)
+		)
+		return try RoadEventsDemoView(
+			viewModel: viewModel,
+			mapFactory: mapFactory,
+			roadEventViewFactory: self.sdk.makeRoadEventViewFactory()
 		)
 	}
 
@@ -413,22 +444,27 @@ final class SwiftUIDemoFactory: RootViewFactory {
 			mapFactory: mapFactory
 		)
 	}
+}
 
+extension SwiftUIDemoFactory {
 	private func makeMiniMapDemoPage() throws -> some View {
-		let mapFactory = try self.makeMapFactory()
-		let miniMapFactory = try self.makeMapFactory()
-		let targetMapFactory = try self.makeMapFactory()
+		let source = self.makeMapSource()
+		let mapFactory = try self.makeMapFactoryWithSource(source: source)
+		let miniMapFactory = try self.makeMapFactoryWithStyles(stylesName: "minimap_styles", source: source)
+		let targetMapFactory = try self.makeMapFactoryWithStyles(stylesName: "minimap_styles", source: source)
 		let minimapViewModel = try MinimapDemoViewModel(
 			map: mapFactory.map,
 			miniMap: miniMapFactory.map,
 			targetMiniMap: targetMapFactory.map,
+			mainMapEnergyConsumption: mapFactory.energyConsumption,
+			miniMapEnergyConsumption: miniMapFactory.energyConsumption,
+			targetMiniMapEnergyConsumption: targetMapFactory.energyConsumption,
 			imageFactory: self.makeImageFactory(),
-			mapSourceFactory: MapSourceFactory(context: self.context, settingsService: self.settingsService),
 			navigationManager: NavigationManager(platformContext: self.context),
 			trafficRouter: TrafficRouter(context: self.context),
 			logger: self.logger
 		)
-		return MinimapDemoView(
+		return try MinimapDemoView(
 			viewModel: minimapViewModel,
 			mapFactory: mapFactory,
 			miniMapFactory: miniMapFactory,
@@ -444,9 +480,10 @@ final class SwiftUIDemoFactory: RootViewFactory {
 		)
 		let viewModel = try NavigatorDemoViewModel(
 			map: mapFactory.map,
+			mainMapEnergyConsumption: mapFactory.energyConsumption,
 			trafficRouter: TrafficRouter(context: self.context),
 			navigationManager: NavigationManager(platformContext: self.context),
-			locationService: LocationService(),
+			locationService: self.locationManagerFactory(),
 			voiceManager: self.sdk.voiceManager,
 			applicationIdleTimerService: self.applicationIdleTimerService,
 			navigatorSettings: self.navigatorSettings,
@@ -455,23 +492,64 @@ final class SwiftUIDemoFactory: RootViewFactory {
 			logger: self.logger,
 			imageFactory: self.makeImageFactory()
 		)
-		let navigatorViewFactory = try self.sdk.makeNavigatorViewFactory(options: NavigationViewOptions.default)
+		var options = NavigationViewOptions.default
+		if self.settingsService.navigatorTheme == .custom {
+			options.theme = .custom
+		}
+		let navigationViewFactory = try self.sdk.makeNavigationViewFactory(options: options)
 		return NavigatorDemoView(
 			viewModel: viewModel,
 			mapFactory: mapFactory,
-			navigatorViewFactory: navigatorViewFactory
+			navigationViewFactory: navigationViewFactory
 		)
 	}
 
-	private func makePackageManagerDemoView() throws -> some View {
-		let mapFactory = try self.makeMapFactory()
-		let viewModel = PackageManagerDemoViewModel(
-			packageManager: getPackageManager(context: self.context),
-			territoryManager: getTerritoryManager(context: self.context),
-			roadMacroGraph: getRoadMacroGraph(context: self.context),
-			map: mapFactory.map
+	private func makeNavigatorWithMiniMapViewDemoPage() throws -> some View {
+		let source = self.makeMapSource()
+		let mapFactory = try self.makeMapFactoryWithSource(source: source)
+		let miniMapFactory = try self.makeMapFactoryWithStyles(stylesName: "minimap_styles", source: source)
+		let mapSourceFactory = MapSourceFactory(
+			context: self.context,
+			settingsService: self.settingsService
 		)
-		return PackageManagerDemoView(
+		let viewModel = try NavigatorDemoViewModel(
+			map: mapFactory.map,
+			mainMapEnergyConsumption: mapFactory.energyConsumption,
+			miniMapEnergyConsumption: miniMapFactory.energyConsumption,
+			trafficRouter: TrafficRouter(context: self.context),
+			navigationManager: NavigationManager(platformContext: self.context),
+			locationService: self.locationManagerFactory(),
+			voiceManager: self.sdk.voiceManager,
+			applicationIdleTimerService: self.applicationIdleTimerService,
+			navigatorSettings: self.navigatorSettings,
+			mapSourceFactory: mapSourceFactory,
+			settingsService: self.settingsService,
+			logger: self.logger,
+			imageFactory: self.makeImageFactory()
+		)
+		var options = NavigationViewOptions.default
+		if self.settingsService.navigatorTheme == .custom {
+			options.theme = .custom
+		}
+		let navigationViewFactory = try self.sdk.makeNavigationViewFactory(options: options)
+		return NavigatorWithMiniMapView(
+			viewModel: viewModel,
+			mapFactory: mapFactory,
+			miniMapFactory: miniMapFactory,
+			navigationViewFactory: navigationViewFactory
+		)
+	}
+
+	private func makeTerritoryManagerDemoView() throws -> some View {
+		let mapFactory = try self.makeMapFactory()
+		let viewModel = try TerritoryManagerDemoViewModel(
+			territoryManager: TerritoryManager.instance(context: self.context),
+			mapSourceFactory: MapSourceFactory(context: self.context, settingsService: self.settingsService),
+			map: mapFactory.map,
+			locationService: self.sdk.locationService,
+			logger: self.logger
+		)
+		return TerritoryManagerDemoView(
 			viewModel: viewModel,
 			mapFactory: mapFactory
 		)
@@ -485,18 +563,48 @@ final class SwiftUIDemoFactory: RootViewFactory {
 			sourceFactory: { [sdk = self.sdk] in
 				try! sdk.sourceFactory
 			},
-			routeEditorSourceFactory: { [context = self.context] routeEditor in
-				return RouteEditorSource(context: context, routeEditor: routeEditor)
-			},
+            routeEditorSourceFactory: { [context = self.context] routeEditor in
+                return RouteEditorSource(
+                    context: context,
+                    routeEditor: routeEditor,
+                    activeCalloutLabelFlags: [.duration, .length]
+                )
+            },
 			routeEditorFactory: { [context = self.context] in
 				return RouteEditor(context: context)
 			},
 			feedbackGenerator: FeedbackGenerator(),
-			navigationViewFactory: try! self.sdk.makeNavigationViewFactory()
+			navigationUIViewFactory: try! self.sdk.makeNavigationUIViewFactory()
 		)
 		return RouteSearchDemoView(
 			viewModel: viewModel,
 			mapFactory: mapFactory
 		)
 	}
+    
+    private func makeRouteSearchDemoWithBuiltinUIComponentView() throws -> some View {
+        let mapFactory = try self.makeMapFactory()
+        let routingViewsFactory = try self.sdk.makeRoutingViewsFactory()
+        let viewModel = try RouteSearchNGDemoViewModel(
+            map: mapFactory.map,
+            routeEditorSourceFactory: { [context = self.context] routeEditor in
+                return RouteEditorSource(
+                    context: context,
+                    routeEditor: routeEditor,
+                    activeCalloutLabelFlags: [.duration, .length]
+                )
+            },
+            routeEditorFactory: { [context = self.context] in
+                return RouteEditor(context: context)
+            },
+            searchManager: self.makeSearchManager(),
+            geometrySource: self.makeGeometrySource()
+        )
+        return RouteSearchNGDemoView(
+            mapFactory: mapFactory,
+            routeEditorViewFactory: routingViewsFactory.makeRouteEditorViewFactory(),
+            trafficRouter: self.makeTrafficRouter(),
+            viewModel: viewModel
+        )
+    }
 }

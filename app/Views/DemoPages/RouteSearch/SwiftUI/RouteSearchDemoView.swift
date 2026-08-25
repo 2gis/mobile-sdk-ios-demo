@@ -1,10 +1,9 @@
-import SwiftUI
 import DGis
+import SwiftUI
 
 struct RouteSearchDemoView: View {
 	@ObservedObject private var viewModel: RouteSearchDemoViewModel
 	private let mapFactory: IMapFactory
-
 
 	init(
 		viewModel: RouteSearchDemoViewModel,
@@ -16,34 +15,35 @@ struct RouteSearchDemoView: View {
 
 	var body: some View {
 		ZStack {
-			self.mapFactory.mapViewOverlay
-			.mapViewOverlayCopyrightAlignment(.bottomLeft)
+			self.mapFactory.mapView
+				.copyrightAlignment(.bottomLeft)
 			if self.viewModel.showRoutes {
 				HStack {
 					Spacer()
 					Image(systemName: "multiply")
-					.font(Font.system(size: 20, weight: .bold))
-					.foregroundColor(.red)
-					.shadow(radius: 3, x: 1, y: 1)
+						.font(Font.system(size: 20, weight: .bold))
+						.foregroundColor(.red)
+						.shadow(radius: 3, x: 1, y: 1)
 					Spacer()
 				}
-				RouteView(viewModel:
-							RouteViewModel(
-								transportType: self.viewModel.transportType,
-								carRouteSearchOptions: self.viewModel.carRouteSearchOptions,
-								publicTransportRouteSearchOptions: self.viewModel.publicTransportRouteSearchOptions,
-								truckRouteSearchOptions: self.viewModel.truckRouteSearchOptions,
-								taxiRouteSearchOptions: self.viewModel.taxiRouteSearchOptions,
-								bicycleRouteSearchOptions: self.viewModel.bicycleRouteSearchOptions,
-								pedestrianRouteSearchOptions: self.viewModel.pedestrianRouteSearchOptions,
-								sourceFactory: self.viewModel.sourceFactory,
-								routeEditorSourceFactory: self.viewModel.routeEditorSourceFactory,
-								routeEditorFactory: self.viewModel.routeEditorFactory,
-								map: self.mapFactory.map,
-								feedbackGenerator: self.viewModel.feedbackGenerator,
-								navigationViewFactory: self.viewModel.navigationViewFactory
-							),
-						  show: self.$viewModel.showRoutes)
+				RouteView(
+					viewModel: RouteViewModel(
+						transportType: self.viewModel.transportType,
+						carRouteSearchOptions: self.viewModel.carRouteSearchOptions,
+						publicTransportRouteSearchOptions: self.viewModel.publicTransportRouteSearchOptions,
+						truckRouteSearchOptions: self.viewModel.truckRouteSearchOptions,
+						taxiRouteSearchOptions: self.viewModel.taxiRouteSearchOptions,
+						bicycleRouteSearchOptions: self.viewModel.bicycleRouteSearchOptions,
+						pedestrianRouteSearchOptions: self.viewModel.pedestrianRouteSearchOptions,
+						sourceFactory: self.viewModel.sourceFactory,
+						routeEditorSourceFactory: self.viewModel.routeEditorSourceFactory,
+						routeEditorFactory: self.viewModel.routeEditorFactory,
+						map: self.mapFactory.map,
+						feedbackGenerator: self.viewModel.feedbackGenerator,
+						navigationViewFactory: self.viewModel.navigationUIViewFactory
+					),
+					show: self.$viewModel.showRoutes
+				)
 				.frame(maxWidth: .infinity, maxHeight: .infinity)
 			} else {
 				HStack {
@@ -52,7 +52,7 @@ struct RouteSearchDemoView: View {
 						Spacer()
 						VStack(alignment: .trailing) {
 							self.searchRouteButton()
-							.padding(.bottom, 10)
+								.padding(.bottom, 10)
 							self.settingsButton()
 						}
 						.padding(.bottom, 40)
@@ -62,21 +62,21 @@ struct RouteSearchDemoView: View {
 			}
 			HStack {
 				if self.viewModel.transportType == .pedestrian {
-					self.mapFactory.mapControlViewFactory.makeIndoorView()
-					.frame(width: 38, height: 119)
-					.fixedSize()
-					.padding(.leading, 20)
+					self.mapFactory.mapViewsFactory.makeIndoorView()
+						.frame(width: 38, height: 119)
+						.fixedSize()
+						.padding(.leading, 20)
 				}
 				Spacer()
 				VStack {
-					self.mapFactory.mapControlViewFactory.makeZoomView()
-					.frame(width: 48, height: 102)
-					.fixedSize()
-					.padding(20)
-					self.mapFactory.mapControlViewFactory.makeCurrentLocationView()
-					.frame(width: 48, height: 48)
-					.fixedSize()
-					.padding(20)
+					self.mapFactory.mapViewsFactory.makeZoomView()
+						.frame(width: 48, height: 102)
+						.fixedSize()
+						.padding(20)
+					self.mapFactory.mapViewsFactory.makeCurrentLocationView()
+						.frame(width: 48, height: 48)
+						.fixedSize()
+						.padding(20)
 				}
 			}
 		}
@@ -101,13 +101,13 @@ struct RouteSearchDemoView: View {
 		}) {
 			HStack {
 				Text(self.viewModel.transportType.name)
-				.fontWeight(.bold)
+					.fontWeight(.bold)
 				Image(systemName: self.viewModel.transportType.iconName)
-				.frame(width: 40, height: 40, alignment: .center)
-				.background(
-					Circle()
-					.fill(Color(UIColor.systemBackground))
-				)
+					.frame(width: 40, height: 40, alignment: .center)
+					.background(
+						Circle()
+							.fill(Color(UIColor.systemBackground))
+					)
 			}
 		}
 	}
@@ -122,14 +122,17 @@ struct RouteSearchDemoView: View {
 private extension TransportType {
 	var iconName: String {
 		switch self {
-			case .publicTransport:
-				return "bus.fill"
-			case .bicycle:
-				return "bicycle"
-			case .pedestrian:
-				return "figure.walk"
-			case .car, .taxi, .truck:
-				return "car.fill"
+		case .publicTransport:
+			return "bus.fill"
+		case .bicycle:
+			return "bicycle"
+		case .pedestrian:
+			return "figure.walk"
+		case .car, .taxi, .truck:
+			return "car.fill"
+		@unknown default:
+			assertionFailure("Unknown type: \(self)")
+			return "Unknown \(self.rawValue)"
 		}
 	}
 }

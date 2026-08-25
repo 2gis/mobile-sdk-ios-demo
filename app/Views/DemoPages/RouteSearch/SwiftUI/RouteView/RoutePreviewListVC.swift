@@ -4,13 +4,13 @@ import DGis
 final class RoutePreviewListVC: UIViewController {
 	var onDidTapCancelButton: (() -> Void)?
 	var onDidSelectRoute: ((TrafficRoute) -> Void)?
-	private let factory: INavigationViewFactory
+	private let factory: INavigationUIViewFactory
 	private let routesInfo: RouteEditorRoutesInfo
-	private lazy var routeListView: IRouteListView = {
-		self.factory.makeRouteListView(self.routesInfo.routes)
+	private lazy var routeListView: IRouteListUIView = {
+		self.factory.makeRouteListUIView(self.routesInfo.routes)
 	}()
 
-	init(routesInfo: RouteEditorRoutesInfo, factory: INavigationViewFactory) {
+	init(routesInfo: RouteEditorRoutesInfo, factory: INavigationUIViewFactory) {
 		self.routesInfo = routesInfo
 		self.factory = factory
 		super.init(nibName: nil, bundle: nil)

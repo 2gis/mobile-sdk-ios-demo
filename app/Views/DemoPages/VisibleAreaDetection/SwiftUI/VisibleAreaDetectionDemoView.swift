@@ -1,5 +1,5 @@
-import SwiftUI
 import DGis
+import SwiftUI
 
 struct VisibleAreaDetectionDemoView: View {
 	@ObservedObject private var viewModel: VisibleAreaDetectionDemoViewModel
@@ -16,17 +16,17 @@ struct VisibleAreaDetectionDemoView: View {
 	var body: some View {
 		ZStack(alignment: .bottomTrailing) {
 			Group {
-				self.mapFactory.mapViewOverlay
-				.mapViewOverlayCopyrightAlignment(.bottomLeft)
+				self.mapFactory.mapView
+					.copyrightAlignment(.bottomLeft)
 				HStack {
 					Spacer()
 					VStack {
 						Spacer()
-						self.mapFactory.mapControlViewFactory.makeZoomView()
-						.frame(width: 48, height: 102)
-						.padding(.bottom, 10)
-						self.mapFactory.mapControlViewFactory.makeCurrentLocationView()
-						.frame(width: 48, height: 48)
+						self.mapFactory.mapViewsFactory.makeZoomView()
+							.frame(width: 48, height: 102)
+							.padding(.bottom, 10)
+						self.mapFactory.mapViewsFactory.makeCurrentLocationView()
+							.frame(width: 48, height: 48)
 						Spacer()
 					}
 					.padding(.trailing, 10)
@@ -35,20 +35,20 @@ struct VisibleAreaDetectionDemoView: View {
 			.overlay(self.visibleAreaStateIndicator(), alignment: .bottom)
 			if self.viewModel.isTrackingActive {
 				self.stopTrackingButton()
-				.padding()
+					.padding()
 			} else {
 				VStack(alignment: .trailing) {
 					self.startTrackingButton()
-					.padding(.bottom, 10)
+						.padding(.bottom, 10)
 					VStack {
-						Text("Rect expansion ration")
-						.fontWeight(.light)
-						.padding([.top, .leading, .trailing], 10)
+						Text("Rect expansion ratio")
+							.fontWeight(.light)
+							.padding([.top, .leading, .trailing], 10)
 						HStack {
 							Text(String(format: "%.1f", self.viewModel.rectExpansionRatio))
 							Slider(
 								value: self.$viewModel.rectExpansionRatio,
-								in: self.viewModel.minRectExpansionRatio...self.viewModel.maxRectExpansionRatio
+								in: self.viewModel.minRectExpansionRatio ... self.viewModel.maxRectExpansionRatio
 							)
 							.frame(maxWidth: 200)
 						}
@@ -56,7 +56,7 @@ struct VisibleAreaDetectionDemoView: View {
 					}
 					.background(
 						RoundedRectangle(cornerRadius: 5)
-						.fill(Color.white)
+							.fill(Color.white)
 					)
 				}
 				.padding([.bottom, .trailing])
@@ -72,9 +72,9 @@ struct VisibleAreaDetectionDemoView: View {
 		HStack {
 			if let state = self.viewModel.visibleAreaIndicatorState {
 				Circle()
-				.foregroundColor(.from(state))
-				.frame(width: 24, height: 24)
-				.shadow(color: .gray, radius: 0.2, x: 1, y: 1)
+					.foregroundColor(.from(state))
+					.frame(width: 24, height: 24)
+					.shadow(color: .gray, radius: 0.2, x: 1, y: 1)
 				Text(state == .inside ? "Inside" : "Outside")
 			}
 		}
@@ -98,22 +98,21 @@ struct VisibleAreaDetectionDemoView: View {
 		_ action: @escaping () -> Void
 	) -> some View {
 		Button(action: action,
-			   label: {
-			Image(systemName: imageSystemName)
-			.resizable()
-			.frame(width: 44, height: 44, alignment: .center)
-			.foregroundColor(.white)
-			.shadow(color: .gray, radius: 1)
-		})
+		       label: {
+		       	Image(systemName: imageSystemName)
+		       		.resizable()
+		       		.frame(width: 44, height: 44, alignment: .center)
+		       		.foregroundColor(.white)
+		       		.shadow(color: .gray, radius: 1)
+		       })
 	}
 }
 
 private extension SwiftUI.Color {
 	static func from(_ state: VisibleAreaDetectionDemoViewModel.VisibleAreaState) -> SwiftUI.Color {
-		let color: SwiftUI.Color
-		switch state {
-			case .inside: color = .green
-			case .outside: color = .red
+		let color: SwiftUI.Color = switch state {
+		case .inside: .green
+		case .outside: .red
 		}
 		return color
 	}

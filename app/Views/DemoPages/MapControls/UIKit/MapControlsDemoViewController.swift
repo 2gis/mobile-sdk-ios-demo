@@ -3,15 +3,15 @@ import DGis
 
 class MapControlsDemoViewController: UIViewController {
     private let mapFactory: IMapFactory
-	private let mapControlFactory: IMapControlFactory
-    private var mapView: UIView & IMapView
+	private let mapControlsFactory: IMapUIControlsFactory
+    private var mapView: UIView & IMapUIView
 	private var viewModel: MapControlsDemoViewModel
 
     init(mapFactory: IMapFactory, viewModel: MapControlsDemoViewModel) {
         self.mapFactory = mapFactory
-		self.mapControlFactory = mapFactory.mapControlFactory
+		self.mapControlsFactory = mapFactory.mapUIControlsFactory
 		self.viewModel = viewModel
-		self.mapView = mapFactory.mapView
+		self.mapView = mapFactory.mapUIView
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -38,11 +38,11 @@ class MapControlsDemoViewController: UIViewController {
         ])
 
         // Add Controls
-		let indoorControl = self.mapControlFactory.makeIndoorControl()
-		let trafficControl = self.mapControlFactory.makeTrafficControl()
-		let zoomControl = self.mapControlFactory.makeZoomControl()
-		let compassControl = self.mapControlFactory.makeCompassControl()
-		let currentLocationControl = self.mapControlFactory.makeCurrentLocationControl()
+		let indoorControl = self.mapControlsFactory.makeIndoorUIControl()
+		let trafficControl = self.mapControlsFactory.makeTrafficUIControl()
+		let zoomControl = self.mapControlsFactory.makeZoomUIControl()
+		let compassControl = self.mapControlsFactory.makeCompassUIControl()
+		let currentLocationControl = self.mapControlsFactory.makeCurrentLocationUIControl()
 
         [indoorControl, trafficControl, zoomControl, compassControl, currentLocationControl].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false

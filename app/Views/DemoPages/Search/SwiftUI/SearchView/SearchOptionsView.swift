@@ -1,5 +1,5 @@
-import SwiftUI
 import DGis
+import SwiftUI
 
 struct SearchOptionsView: View {
 	private enum Constants {
@@ -29,7 +29,7 @@ struct SearchOptionsView: View {
 			ScrollView {
 				VStack(alignment: .leading) {
 					PickerView(
-						title: "Тип сортировки",
+						title: "Sort type",
 						titleFont: Constants.titleFont,
 						selection: self.$searchOptions.sortingType,
 						options: SortingType.availableTypes,
@@ -37,7 +37,7 @@ struct SearchOptionsView: View {
 					)
 					.padding(.bottom)
 
-					self.makeTitle("Количество элементов на странице результатов")
+					self.makeTitle("Items per page")
 					HStack {
 						Text("\(self.searchOptions.pageSize)")
 						Slider(
@@ -48,14 +48,14 @@ struct SearchOptionsView: View {
 									self.searchOptions.pageSize = Int32($0)
 								}
 							),
-							in: Double(self.searchOptions.minPageSize)...Double(self.searchOptions.maxPageSize),
+							in: Double(self.searchOptions.minPageSize) ... Double(self.searchOptions.maxPageSize),
 							step: 1
 						)
 					}
 					.padding(.bottom)
 
 					PickerView(
-						title: "Фильтры для справочника",
+						title: "Directory filter",
 						titleFont: Constants.titleFont,
 						selection: Binding<DirectoryFilterType>(
 							get: {
@@ -64,12 +64,12 @@ struct SearchOptionsView: View {
 							set: {
 								self.directoryFilterType = $0
 								switch $0 {
-									case .none:
-										self.searchOptions.filter.directoryFilter = nil
-									case .isOpenNow:
-										self.searchOptions.filter.directoryFilter = .init(workTime: .isOpenNow(.init()), dynamic: [])
-									case .workTime:
-										self.searchOptions.filter.directoryFilter = .init(workTime: .workTime(self.weekTime), dynamic: [])
+								case .none:
+									self.searchOptions.filter.directoryFilter = nil
+								case .isOpenNow:
+									self.searchOptions.filter.directoryFilter = .init(workTime: .isOpenNow(.init()), dynamic: [])
+								case .workTime:
+									self.searchOptions.filter.directoryFilter = .init(workTime: .workTime(self.weekTime), dynamic: [])
 								}
 							}
 						),
@@ -83,14 +83,14 @@ struct SearchOptionsView: View {
 							},
 							set: {
 								self.weekTime = $0
-								if case .workTime(_) = self.searchOptions.filter.directoryFilter?.workTime {
+								if case .workTime = self.searchOptions.filter.directoryFilter?.workTime {
 									self.searchOptions.filter.directoryFilter = .init(workTime: .workTime(self.weekTime), dynamic: [])
 								}
 							}
 						))
 					}
 
-					self.makeTitle("Типы объектов, разрешенные в результате запроса")
+					self.makeTitle("Allowed result types")
 					MultiSelectionPickerView(
 						selection: self.$searchOptions.filter.allowedResultTypes,
 						options: ObjectType.availableTypes
@@ -99,10 +99,10 @@ struct SearchOptionsView: View {
 				}
 				.padding()
 			}
-			.navigationBarTitle("Настройки поиска", displayMode: .inline)
+			.navigationBarTitle("Search settings", displayMode: .inline)
 			.navigationBarItems(
-				leading: Button("Отмена", action: { self.isPresented = false }),
-				trailing: Button("Сохранить", action: {
+				leading: Button("Cancel", action: { self.isPresented = false }),
+				trailing: Button("Save", action: {
 					self.onDidSaveOptions(self.searchOptions)
 					self.isPresented = false
 				})
@@ -128,12 +128,15 @@ extension DirectoryFilterType: PickerViewOption {
 
 	var name: String {
 		switch self {
-			case .none:
-				return "Без фильтра"
-			case .isOpenNow:
-				return "Открыто сейчас"
-			case .workTime:
-				return "Время работы объекта"
+		case .none:
+			return "Without filter"
+		case .isOpenNow:
+			return "Open now"
+		case .workTime:
+			return "By work time"
+		@unknown default:
+			assertionFailure("Unsupported DirectoryFilterType: \(self)")
+			return "Unsupported DirectoryFilterType"
 		}
 	}
 }
@@ -142,12 +145,12 @@ private extension SearchOptions {
 	var directoryFilterType: DirectoryFilterType {
 		if let filter = self.filter.directoryFilter, let workTime = filter.workTime {
 			switch workTime {
-				case .isOpenNow:
-					return .isOpenNow
-				case .workTime:
-					return .workTime
-				@unknown default:
-					fatalError("Unsupported WorkTimeFilter: \(self)")
+			case .isOpenNow:
+				return .isOpenNow
+			case .workTime:
+				return .workTime
+			@unknown default:
+				fatalError("Unsupported WorkTimeFilter: \(self)")
 			}
 		} else {
 			return .none
@@ -155,25 +158,29 @@ private extension SearchOptions {
 	}
 }
 
+extension SortingType: @retroactive Identifiable {}
+
 extension SortingType: PickerViewOption {
 	public var id: SortingType { self }
 
 	var name: String {
 		switch self {
-			case .byRelevance:
-				return "По релевантности"
-			case .byDistance:
-				return "По расстоянию"
-			case .byRating:
-				return "По рейтингу"
-			@unknown default:
-				assertionFailure("Unsupported SortingType: \(self)")
-				return "Неизвестный тип"
+		case .byRelevance:
+			return "By relevance"
+		case .byDistance:
+			return "By distance"
+		case .byRating:
+			return "By rating"
+		@unknown default:
+			assertionFailure("Unsupported SortingType: \(self)")
+			return "Unsupported SortingType"
 		}
 	}
 
 	static let availableTypes: [SortingType] = [.byRelevance, .byDistance, .byRating]
 }
+
+extension ObjectType: @retroactive Identifiable {}
 
 extension ObjectType: PickerViewOption {
 	public var id: ObjectType { self }
@@ -199,7 +206,7 @@ extension ObjectType: PickerViewOption {
 		.station,
 		.stationEntrance,
 		.street,
-		.unknown
+		.unknown,
 	]
 }
 
@@ -207,10 +214,10 @@ private extension DirectoryFilter {
 	var weekTime: WeekTime? {
 		guard let workTimeFilter = self.workTime else { return nil }
 		switch workTimeFilter {
-			case .workTime(let weekTime):
-				return weekTime
-			default:
-				return nil
+		case let .workTime(weekTime):
+			return weekTime
+		default:
+			return nil
 		}
 	}
 }

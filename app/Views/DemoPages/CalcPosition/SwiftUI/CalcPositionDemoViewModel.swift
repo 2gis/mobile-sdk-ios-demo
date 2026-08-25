@@ -1,7 +1,8 @@
-import SwiftUI
+import Combine
 import DGis
+import SwiftUI
 
-final class CalcPositionDemoViewModel: ObservableObject {
+final class CalcPositionDemoViewModel: ObservableObject, @unchecked Sendable {
 	@Published var paddingRect = PaddingRect()
 	@Published var tilt = Tilt()
 	@Published var bearing = Bearing()
@@ -32,77 +33,82 @@ final class CalcPositionDemoViewModel: ObservableObject {
 		self.logger = logger
 		self.imageFactory = imageFactory
 		self.mapObjectManager = MapObjectManager(map: map)
-		
-		CalcPositionMapObjects.allCases.forEach { item in
+
+		for item in CalcPositionMapObjects.allCases {
 			self.mapObjectManager.addObjects(objects: item.getObjects(factory: self.objectFactory))
 		}
 		self.cameraSetPosition(
 			calcPosition(
 				camera: self.map.camera,
-				objects: self.selectedObjects.getObjects(factory: objectFactory))
+				objects: self.selectedObjects.getObjects(factory: self.objectFactory)
+			)
 		)
 	}
 
 	func applyCameraSettings() {
-		switch calcPositionWay {
+		switch self.calcPositionWay {
 		case .cameraParams:
 			self.useCameraParams()
 		case .clonedCameraParams:
 			self.useClonedCameraParams()
 		case .calcPositionParams:
 			self.useCalcPositionParams()
+		@unknown default:
+			fatalError("Unknown type: \(self.calcPositionWay)")
 		}
 	}
-	
+
 	private func useCameraParams() {
 		self.changeCameraSettings(
 			camera: self.map.camera,
-			padding: paddingRect.toDGisPadding(),
+			padding: self.paddingRect.toDGisPadding(),
 			tilt: self.tilt,
 			bearing: self.bearing
 		)
 		self.cameraMove(
 			calcPosition(
 				camera: self.map.camera,
-				objects: self.selectedObjects.getObjects(factory: objectFactory))
+				objects: self.selectedObjects.getObjects(factory: self.objectFactory)
+			)
 		)
 	}
-	
+
 	private func useClonedCameraParams() {
 		self.resetCameraSettings()
 		let newCamera = self.map.camera.clone()
 		self.changeCameraSettings(
 			camera: newCamera,
-			padding: paddingRect.toDGisPadding(),
+			padding: self.paddingRect.toDGisPadding(),
 			tilt: self.tilt,
 			bearing: self.bearing
 		)
 		self.cameraMove(
 			calcPosition(
 				camera: newCamera,
-				objects: self.selectedObjects.getObjects(factory: objectFactory))
+				objects: self.selectedObjects.getObjects(factory: self.objectFactory)
+			)
 		)
 		self.changeCameraSettings(
 			camera: self.map.camera,
-			padding: paddingRect.toDGisPadding(),
+			padding: self.paddingRect.toDGisPadding(),
 			tilt: self.tilt,
 			bearing: self.bearing
 		)
 	}
-	
+
 	private func useCalcPositionParams() {
 		self.resetCameraSettings()
 		self.cameraMove(
 			calcPosition(
 				camera: self.map.camera,
-				objects: self.selectedObjects.getObjects(factory: objectFactory),
-				screenArea: paddingRect.toDGisPadding(),
+				objects: self.selectedObjects.getObjects(factory: self.objectFactory),
+				screenArea: self.paddingRect.toDGisPadding(),
 				tilt: self.tilt,
 				bearing: self.bearing
 			)
 		)
 	}
-	
+
 	private func resetCameraSettings() {
 		self.map.camera.padding = Padding()
 		do {
@@ -113,7 +119,7 @@ final class CalcPositionDemoViewModel: ObservableObject {
 				)
 			)
 		} catch {
-			self.errorMessage = ("Failed to reset camera settings: \(error.localizedDescription)")
+			self.errorMessage = "Failed to reset camera settings: \(error.localizedDescription)"
 			return
 		}
 	}
@@ -128,13 +134,13 @@ final class CalcPositionDemoViewModel: ObservableObject {
 				)
 			)
 		} catch {
-			self.errorMessage = ("Failed to update camera settings: \(error.localizedDescription)")
+			self.errorMessage = "Failed to update camera settings: \(error.localizedDescription)"
 			return
 		}
 	}
 
 	private func cameraMove(_ position: CameraPosition) {
-		let cameraMoveQueue: DispatchQueue = DispatchQueue(
+		let cameraMoveQueue = DispatchQueue(
 			label: "ru.mobile.sdk.app.camera-move-queue",
 			qos: .default
 		)
@@ -143,8 +149,7 @@ final class CalcPositionDemoViewModel: ObservableObject {
 			self.moveCameraCancellable = self.map.camera.move(
 				position: position,
 				time: 2
-			).sink { _ in
-				return
+			).sinkOnMainThread { _ in
 			} failure: { [weak self] error in
 				self?.logger.error("Something went wrong: \(error.localizedDescription)")
 			}
@@ -155,9 +160,8 @@ final class CalcPositionDemoViewModel: ObservableObject {
 		do {
 			try self.map.camera.setPosition(position: position)
 		} catch {
-			self.errorMessage = ("Failed to set camera position: \(error.localizedDescription)")
+			self.errorMessage = "Failed to set camera position: \(error.localizedDescription)"
 			return
 		}
 	}
 }
-

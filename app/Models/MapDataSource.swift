@@ -1,7 +1,8 @@
-import Foundation 
+import Foundation
 
 enum MapDataSource: String, CaseIterable {
-	case online, hybrid, offline
+	case online
+	case hybrid, offline
 }
 
 extension MapDataSource {
@@ -11,12 +12,14 @@ extension MapDataSource {
 
 	var name: String {
 		switch self {
-			case .online:
-				return "Online"
-			case .offline:
-				return "Offline"
-			case .hybrid:
-				return "Hybrid"
+		case .online:
+			return "Online"
+		case .offline:
+			return "Offline"
+		case .hybrid:
+			return "Hybrid"
+		@unknown default:
+			assertionFailure("Unknown value for MapDataSource")
 		}
 	}
 }

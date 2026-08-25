@@ -2,13 +2,13 @@ import UIKit
 import DGis
 
 final class RouteDetailsVC: UIViewController {
-	private let factory: INavigationViewFactory
+	private let factory: INavigationUIViewFactory
 	private let route: TrafficRoute
-	private lazy var routeDetailsView: IRouteDetailsView = {
-		self.factory.makeRouteDetailsView(self.route, startName: nil, finishName: nil)
+	private lazy var routeDetailsView: IRouteDetailsUIView = {
+		self.factory.makeRouteDetailsUIView(self.route, startName: nil, finishName: nil)
 	}()
 
-	init(route: TrafficRoute, factory: INavigationViewFactory) {
+	init(route: TrafficRoute, factory: INavigationUIViewFactory) {
 		self.route = route
 		self.factory = factory
 		super.init(nibName: nil, bundle: nil)

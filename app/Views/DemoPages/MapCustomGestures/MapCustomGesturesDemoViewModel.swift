@@ -1,20 +1,24 @@
+import Combine
 import DGis
 import SwiftUI
 
-final class MapCustomGesturesDemoViewModel: ObservableObject {
+@MainActor
+final class MapCustomGesturesDemoViewModel: ObservableObject, @unchecked Sendable {
 	enum ShiftDirection {
 		case left, right, top, down
 
 		var screenShift: ScreenShift {
 			switch self {
 			case .left:
-				return .init(dx: 100, dy: 0)
+				.init(dx: 100, dy: 0)
 			case .right:
-				return .init(dx: -100, dy: 0)
+				.init(dx: -100, dy: 0)
 			case .top:
-				return .init(dx: 0, dy: 100)
+				.init(dx: 0, dy: 100)
 			case .down:
-				return .init(dx: 0, dy: -100)
+				.init(dx: 0, dy: -100)
+			@unknown default:
+				fatalError("Unknown type: \(self)")
 			}
 		}
 	}
@@ -25,9 +29,11 @@ final class MapCustomGesturesDemoViewModel: ObservableObject {
 		var bearingDelta: Bearing {
 			switch self {
 			case .clockwise:
-				return .init(floatLiteral: 10)
+				.init(floatLiteral: 10)
 			case .counterClockwise:
-				return .init(floatLiteral: -10)
+				.init(floatLiteral: -10)
+			@unknown default:
+				fatalError("Unknown type: \(self)")
 			}
 		}
 	}
@@ -38,9 +44,11 @@ final class MapCustomGesturesDemoViewModel: ObservableObject {
 		var tiltDelta: Float {
 			switch self {
 			case .up:
-				return 5
+				5
 			case .down:
-				return -5
+				-5
+			@unknown default:
+				fatalError("Unknown type: \(self)")
 			}
 		}
 	}
@@ -51,9 +59,11 @@ final class MapCustomGesturesDemoViewModel: ObservableObject {
 		var zoomDelta: Float {
 			switch self {
 			case .zoomIn:
-				return 0.3
+				0.3
 			case .zoomOut:
-				return -0.3
+				-0.3
+			@unknown default:
+				fatalError("Unknown type: \(self)")
 			}
 		}
 	}

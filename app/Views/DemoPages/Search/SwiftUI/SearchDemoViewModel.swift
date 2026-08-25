@@ -1,14 +1,15 @@
-import SwiftUI
 import Combine
 import DGis
+import SwiftUI
 
-final class SearchDemoViewModel: ObservableObject {
+@MainActor
+final class SearchDemoViewModel: ObservableObject, @unchecked Sendable {
 	private enum Constants {
 		static let directoryStateKey = "Global/DirectoryState"
 		static let moscowPosition = GeoPoint(latitude: 55.7522200, longitude: 37.6155600)
 		static let defaultZoom = Zoom(value: 10.0)
 	}
-	
+
 	struct SearchItemInfo {
 		var id: String
 		var coordinate: String
@@ -31,12 +32,12 @@ final class SearchDemoViewModel: ObservableObject {
 	let logger: ILogger
 
 	private let searchManager: SearchManager
-    private let searchHistory: SearchHistory
+	private let searchHistory: SearchHistory
 	private let map: Map
 	private let imageFactory: IImageFactory
 	private let locationService: DGis.LocationService
 	private let service: SearchService
-    private let history: SearchHistoryService
+	private let history: SearchHistoryService
 	private lazy var storage: IKeyValueStorage = UserDefaults.standard
 	private var objectInfoCancellable: DGis.Cancellable?
 	private var searchResultCancellable: DGis.Cancellable?
@@ -48,25 +49,24 @@ final class SearchDemoViewModel: ObservableObject {
 		mapSourceFactory: IMapSourceFactory,
 		locationService: DGis.LocationService,
 		logger: ILogger,
-        searchHistory: SearchHistory
+		searchHistory: SearchHistory
 	) throws {
 		self.searchManager = searchManager
-        self.searchHistory = searchHistory
+		self.searchHistory = searchHistory
 		self.map = map
 		self.imageFactory = imageFactory
 		self.locationService = locationService
 		self.logger = logger
-        self.history = SearchHistoryService(searchHistory: self.searchHistory, scheduler: DispatchQueue.main)
+		self.history = SearchHistoryService(searchHistory: self.searchHistory)
 		self.service = SearchService(
 			searchManager: self.searchManager,
-            searchHistory: self.history,
+			searchHistory: self.history,
 			map: self.map,
 			imageFactory: self.imageFactory,
 			logger: self.logger,
-			locationService: self.locationService,
-			scheduler: DispatchQueue.main
+			locationService: self.locationService
 		)
-        let reducer = SearchReducer(service: self.service, history: self.history)
+		let reducer = SearchReducer(service: self.service, history: self.history)
 		self.searchStore = SearchStore(initialState: .init(), reducer: reducer)
 		try self.map.camera.setPosition(
 			point: Constants.moscowPosition,
@@ -74,23 +74,6 @@ final class SearchDemoViewModel: ObservableObject {
 		)
 		let locationSource = mapSourceFactory.makeMyLocationMapObjectSource(bearingSource: .magnetic)
 		self.map.addSource(source: locationSource)
-	}
-
-	func makeSearchViewModel() -> SearchViewModel {
-		let service = SearchService(
-			searchManager: self.searchManager,
-            searchHistory: self.history,
-			map: self.map,
-			imageFactory: self.imageFactory,
-			logger: self.logger,
-			locationService: self.locationService,
-			scheduler: DispatchQueue.main
-		)
-		let viewModel = SearchViewModel(
-			searchStore: self.searchStore,
-			searchService: service
-		)
-		return viewModel
 	}
 
 	func saveState() {
@@ -135,13 +118,15 @@ final class SearchDemoViewModel: ObservableObject {
 			}
 		}
 		self.searchStore.state.queryText = directoryState.queryText
-        self.service.search(query: directoryState.toSearchQuery(), title: "", subtitle: "", addToHistory: false).callAsFunction { [weak self] action in
-			if case let .setSearchResult(result) = action {
-				self?.searchStore.state.result = result
+		self.service.search(query: directoryState.toSearchQuery(), title: "", subtitle: "", addToHistory: false).callAsFunction { [weak self] action in
+			Task { @MainActor [weak self] in
+				if case let .setSearchResult(result) = action {
+					self?.searchStore.state.result = result
+				}
 			}
 		}
 	}
-	
+
 	func getMarkerItemInfo(objectInfo: RenderedObjectInfo) {
 		switch objectInfo.item.item {
 		case let marker as Marker:
@@ -151,16 +136,17 @@ final class SearchDemoViewModel: ObservableObject {
 			return
 		}
 	}
-	
+
 	private func searchById(id: DgisObjectId) {
-		self.searchResultCancellable = self.searchManager.searchByDirectoryObjectId(objectId: id).sink {
-			[weak self] result in
-			guard let self = self,
-				  let object = result,
-				  let id = object.id,
-				  let point = object.markerPosition?.point
-			else { return }
-			DispatchQueue.main.async {
+		self.searchResultCancellable = self.searchManager.searchByDirectoryObjectId(
+			objectId: id
+		).sinkOnMainThread { [weak self] result in
+			Task { @MainActor [weak self] in
+				guard let self,
+				      let object = result,
+				      let id = object.id,
+				      let point = object.markerPosition?.point
+				else { return }
 				self.searchItemInfo = .init(
 					id: "\(id.objectId)",
 					coordinate: "Latitude: \(point.latitude.value), Longitude: \(point.longitude.value)",
@@ -169,19 +155,21 @@ final class SearchDemoViewModel: ObservableObject {
 					address: object.formattedAddress(type: .short)?.streetAddress ?? "(no address)"
 				)
 				self.showInfo = true
+				_ = self.map.camera.move(
+					position: .init(
+						point: point,
+						zoom: self.map.camera.position.zoom,
+						tilt: self.map.camera.position.tilt,
+						bearing: self.map.camera.position.bearing
+					),
+					time: 0.3,
+					animationType: .linear
+				)
 			}
-			_ = self.map.camera.move(
-				position: .init(
-					point: point,
-					zoom: self.map.camera.position.zoom,
-					tilt: self.map.camera.position.tilt,
-					bearing: self.map.camera.position.bearing
-				),
-				time: 0.3,
-				animationType: .linear
-			)
 		} failure: { error in
-			self.logger.error("Failed to get object data: \(error)")
+			Task { @MainActor [weak self] in
+				self?.logger.error("Failed to get object data: \(error)")
+			}
 		}
 	}
 
@@ -196,7 +184,7 @@ final class SearchDemoViewModel: ObservableObject {
 			GeoPoint(
 				latitude: geoRect.northEastPoint.latitude,
 				longitude: geoRect.southWestPoint.longitude
-			)
+			),
 		]
 		return PolygonGeometry(contours: [points])
 	}

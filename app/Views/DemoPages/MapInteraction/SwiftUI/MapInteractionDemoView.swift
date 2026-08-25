@@ -24,7 +24,7 @@ struct MapInteractionDemoView: View {
 		VStack(spacing: 0) {
 			ForEach(0..<self.self.mapFactories.count, id: \.self) { index in
 				ZStack(alignment: .bottomLeading) {
-					self.mapFactories[index].mapViewOverlay
+					self.mapFactories[index].mapView
 					Toggle("", isOn: $interactionStates[index])
 						.toggleStyle(SwitchToggleStyle(tint: .accentColor))
 						.labelsHidden()

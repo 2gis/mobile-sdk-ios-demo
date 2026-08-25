@@ -20,41 +20,39 @@ struct CameraRestrictionsSettingsView: View {
 					HStack {
 						Text("Min zoom:")
 						Spacer()
-						TextField("Min zoom", value: $minZoom, formatter: .zoomFormatter)
-						.textFieldStyle(.roundedBorder)
-						.keyboardType(.numbersAndPunctuation)
-						.frame(width: Constants.textFieldFrameWidth)
+						TextField("Enter a value", value: self.$minZoom, formatter: .zoomFormatter)
+							.textFieldStyle(.roundedBorder)
+							.keyboardType(.numbersAndPunctuation)
+							.frame(width: Constants.textFieldFrameWidth)
 					}
 					HStack {
 						Text("Max Zoom:")
 						Spacer()
-						TextField("Max zoom", value: $maxZoom, formatter: .zoomFormatter)
-						.textFieldStyle(.roundedBorder)
-						.keyboardType(.numbersAndPunctuation)
-						.frame(width: Constants.textFieldFrameWidth)
+						TextField("Enter a value", value: self.$maxZoom, formatter: .zoomFormatter)
+							.textFieldStyle(.roundedBorder)
+							.keyboardType(.numbersAndPunctuation)
+							.frame(width: Constants.textFieldFrameWidth)
 					}
 				}
-				if #available(iOS 15, *) {
-					RelationPointsView(
-						relationPoints: self.$maxTiltRelationPoints,
-						sectionName: "Max Tilt Relation Points",
-						textFieldFrameWidth: Constants.textFieldFrameWidth
-					)
-					RelationPointsView(
-						relationPoints: self.$zoomToTiltRelationPoints,
-						sectionName: "Style Zoom To Tilt Relation Points",
-						textFieldFrameWidth: Constants.textFieldFrameWidth
-					)
-				}
+				RelationPointsView(
+					relationPoints: self.$maxTiltRelationPoints,
+					sectionName: "Max Tilt Relation Points",
+					textFieldFrameWidth: Constants.textFieldFrameWidth
+				)
+				RelationPointsView(
+					relationPoints: self.$zoomToTiltRelationPoints,
+					sectionName: "Style Zoom To Tilt Relation Points",
+					textFieldFrameWidth: Constants.textFieldFrameWidth
+				)
 
 				Button(action: {
 					self.isPresented = false
 					self.onApplySettings()
 				}) {
 					Text("Apply Settings")
-					.foregroundColor(.white)
-					.padding()
-					.frame(maxWidth: .infinity)
+						.foregroundColor(.white)
+						.padding()
+						.frame(maxWidth: .infinity)
 				}
 				.listRowBackground(Color.clear)
 				.background(Color.green)

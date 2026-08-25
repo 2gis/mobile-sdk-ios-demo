@@ -1,11 +1,13 @@
-import UIKit
 import DGis
+import UIKit
 
 protocol IMapProvider: AnyObject {
+	@MainActor
 	var map: DGis.Map { get }
 }
 
 protocol IMapSnapshotterProvider: AnyObject {
+	@MainActor
 	var snapshotter: IMapSnapshotter { get }
 }
 
@@ -13,18 +15,19 @@ enum MapGesturesType: CaseIterable, Equatable {
 	enum ScalingCenter {
 		case camera, event
 	}
+
 	case `default`(ScalingCenter), custom
 
 	static let allCases: [MapGesturesType] = [.default(.camera), .default(.event), custom]
 
 	static func == (lhs: MapGesturesType, rhs: MapGesturesType) -> Bool {
 		switch (lhs, rhs) {
-			case (.custom, .custom):
-				return true
-			case (.default(let lhs), .default(let rhs)):
-				return lhs == rhs
-			default:
-				return false
+		case (.custom, .custom):
+			true
+		case let (.default(lhs), .default(rhs)):
+			lhs == rhs
+		default:
+			false
 		}
 	}
 }
@@ -32,10 +35,12 @@ enum MapGesturesType: CaseIterable, Equatable {
 protocol IMapFactoryProvider: AnyObject {
 	var mapFactory: DGis.IMapFactory { get }
 
-	func makeGestureView(mapGesturesType: MapGesturesType) -> (UIView & IMapGestureView)?
+	@MainActor
+	func makeGestureView(mapGesturesType: MapGesturesType) -> (UIView & IMapGestureUIView)?
 }
 
-class MapFactoryProvider: IMapFactoryProvider {
+class MapFactoryProvider: @preconcurrency IMapFactoryProvider {
+	@MainActor
 	private(set) lazy var mapFactory: DGis.IMapFactory = self.makeMapFactory()
 
 	private let sdkContainer: DGis.Container
@@ -46,22 +51,24 @@ class MapFactoryProvider: IMapFactoryProvider {
 		self.mapGesturesType = mapGesturesType
 	}
 
-	func makeGestureView(mapGesturesType: MapGesturesType) -> (UIView & IMapGestureView)? {
-		let factory: IMapGestureViewFactory? = self.makeGestureViewFactory(mapGesturesType: mapGesturesType)
-		return factory?.makeGestureView(
+	func makeGestureView(mapGesturesType: MapGesturesType) -> (UIView & IMapGestureUIView)? {
+		let factory: IMapGestureUIViewFactory? = self.makeGestureViewFactory(mapGesturesType: mapGesturesType)
+		return factory?.makeGestureUIView(
 			map: self.mapFactory.map,
 			eventProcessor: self.mapFactory.mapEventProcessor,
 			coordinateSpace: self.mapFactory.mapCoordinateSpace
 		)
 	}
 
+	@MainActor
 	func resetMapFactory() {
 		self.mapFactory = self.makeMapFactory()
 	}
 
+	@MainActor
 	private func makeMapFactory() -> IMapFactory {
 		var options = MapOptions.default
-		options.gestureViewFactory = self.makeGestureViewFactory(mapGesturesType: self.mapGesturesType)
+		options.gestureUIViewFactory = self.makeGestureViewFactory(mapGesturesType: self.mapGesturesType)
 		do {
 			return try self.sdkContainer.makeMapFactory(options: options)
 		} catch {
@@ -69,37 +76,36 @@ class MapFactoryProvider: IMapFactoryProvider {
 		}
 	}
 
-	private func makeGestureViewFactory(mapGesturesType: MapGesturesType) -> IMapGestureViewFactory {
+	private func makeGestureViewFactory(mapGesturesType: MapGesturesType) -> IMapGestureUIViewFactory {
 		switch mapGesturesType {
-			case .default(let scalingCenter):
-				let center: MapGestureViewOptions.ScalingCenter
-				switch scalingCenter {
-					case .camera:
-						center = .cameraPosition
-					case .event:
-						center = .eventCenter
-				}
-				return MapGestureViewFactory(
-					options: MapGestureViewOptions(
-						doubleTapScalingCenter: center,
-						twoFingerTapScalingCenter: center,
-						pinchScalingCenter: center
-					)
+		case let .default(scalingCenter):
+			let center: MapGestureViewOptions.ScalingCenter = switch scalingCenter {
+			case .camera:
+				.cameraPosition
+			case .event:
+				.eventCenter
+			}
+			return MapGestureUIViewFactory(
+				options: MapGestureViewOptions(
+					doubleTapScalingCenter: center,
+					twoFingerTapScalingCenter: center,
+					pinchScalingCenter: center
 				)
-			case .custom:
-				return CustomGestureViewFactory()
+			)
+		case .custom:
+			return CustomGestureViewFactory()
 		}
 	}
 }
 
 extension MapFactoryProvider: IMapProvider {
 	var map: Map {
-		return self.mapFactory.map
+		self.mapFactory.map
 	}
 }
 
 extension MapFactoryProvider: IMapSnapshotterProvider {
 	var snapshotter: IMapSnapshotter {
-		return self.mapFactory.snapshotter
+		self.mapFactory.snapshotter
 	}
 }

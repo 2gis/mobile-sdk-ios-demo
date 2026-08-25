@@ -17,19 +17,19 @@ struct TrafficControlDemoView: View {
 
 	var body: some View {
 		ZStack {
-			self.mapFactory.mapViewOverlay
-			.mapViewOverlayCopyrightAlignment(.bottomLeft)
+			self.mapFactory.mapView
+			.copyrightAlignment(.bottomLeft)
 			ZStack(alignment: .top) {
 				VStack(alignment: .trailing) {
 					HStack {
-						self.mapFactory.mapControlViewFactory.makeTrafficView(colors: .default)
+						self.mapFactory.mapViewsFactory.makeTrafficView(colors: .default)
 						.frame(width: 48, height: 102)
 						.fixedSize()
 						.padding(20)
 					}
 					HStack {
 						Spacer()
-						self.mapFactory.mapControlViewFactory.makeZoomView()
+						self.mapFactory.mapViewsFactory.makeZoomView()
 						.frame(width: 48, height: 48)
 						.fixedSize()
 						.padding(20)

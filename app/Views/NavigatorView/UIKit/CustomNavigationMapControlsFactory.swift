@@ -1,60 +1,56 @@
 import UIKit
 import DGis
 
-class CustomNavigationMapControlsFactory: INavigationMapControlsFactory {
-	var followManager: INavigatorFollowManager {
-		self._followManager
-	}
-
-	private let mapControlFactory: IMapControlFactory
-	private let _followManager: INavigatorFollowManager
-	private let navigationMapControlsFactory: INavigationMapControlsFactory
+class CustomNavigationMapUIControlsFactory: INavigationMapUIControlsFactory {
+	private let mapControlsFactory: IMapUIControlsFactory
+	internal var followManager: INavigatorFollowManager
+	private let navigationMapControlsFactory: INavigationMapUIControlsFactory
 
 	init(
 		mapFactory: IMapFactory,
-		navigationViewFactory: INavigationViewFactory
+		navigationViewFactory: INavigationUIViewFactory
 	) {
-		self.mapControlFactory = mapFactory.mapControlFactory
+		self.mapControlsFactory = mapFactory.mapUIControlsFactory
 		let map = mapFactory.map
-		self._followManager = NavigatorFollowManager(map: map, followMode: .none)
-		self.navigationMapControlsFactory = navigationViewFactory.makeNavigationMapControlsFactory(
+		self.followManager = NavigatorFollowManager(map: map, followMode: .none)
+		self.navigationMapControlsFactory = navigationViewFactory.makeNavigationMapUIControlsFactory(
 			map: map,
-			followManager: self._followManager
+			followManager: self.followManager
 		)
 	}
 
-	func makeZoomControl() -> UIControl {
-		self.mapControlFactory.makeZoomControl()
+	func makeZoomUIControl() -> UIControl {
+		self.mapControlsFactory.makeZoomUIControl()
 	}
 
-	func makeTrafficAndParkingMapControl() -> UIControl {
-		self.navigationMapControlsFactory.makeParkingControl()
+	func makeTrafficAndParkingMapUIControl() -> UIControl {
+		self.navigationMapControlsFactory.makeParkingUIControl()
 	}
 	
-	func makeTrafficControl() -> UIControl {
-		self.navigationMapControlsFactory.makeTrafficControl()
+	func makeTrafficUIControl() -> UIControl {
+		self.navigationMapControlsFactory.makeTrafficUIControl()
 	}
 	
-	func makeParkingControl() -> UIControl {
-		self.navigationMapControlsFactory.makeParkingControl()
+	func makeParkingUIControl() -> UIControl {
+		self.navigationMapControlsFactory.makeParkingUIControl()
 	}
 
-	func makeCompassControl(icon: UIImage? = nil, highlightedIcon: UIImage? = nil) -> UIControl {
-		self.navigationMapControlsFactory.makeCompassControl(
+	func makeCompassUIControl(icon: UIImage? = nil, highlightedIcon: UIImage? = nil) -> UIControl {
+		self.navigationMapControlsFactory.makeCompassUIControl(
 			icon: UIImage(named: "svg/compass"),
 			highlightedIcon: UIImage(named: "svg/compass_highlighted")
 		)
 	}
 
-	func makeNavigationFollowingControl() -> NavigationFollowingControl {
-		self.navigationMapControlsFactory.makeNavigationFollowingControl()
+	func makeNavigationFollowingUIControl() -> NavigationFollowingUIControl {
+		self.navigationMapControlsFactory.makeNavigationFollowingUIControl()
 	}
 
-	func makeTUGCControl() -> UIControl {
-		self.navigationMapControlsFactory.makeTUGCControl()
+	func makeTUGCUIControl() -> UIControl {
+		self.navigationMapControlsFactory.makeTUGCUIControl()
 	}
 
-	func makeIndoorControl() -> IndoorControl {
-		self.mapControlFactory.makeIndoorControl(.default)
+	func makeIndoorUIControl() -> IndoorUIControl {
+		self.mapControlsFactory.makeIndoorUIControl(.default)
 	}
 }

@@ -2,7 +2,7 @@ enum CalcPositionWays: String, CaseIterable, Identifiable {
 	case cameraParams, clonedCameraParams, calcPositionParams
 
 	var id: String {
-		return self.rawValue
+		self.rawValue
 	}
 
 	var displayName: String {
@@ -10,6 +10,7 @@ enum CalcPositionWays: String, CaseIterable, Identifiable {
 		case .cameraParams: return "Camera params"
 		case .clonedCameraParams: return "Cloned camera params"
 		case .calcPositionParams: return "CalcPosition params"
+		@unknown default: fatalError("Unknown type: \(self)")
 		}
 	}
 }

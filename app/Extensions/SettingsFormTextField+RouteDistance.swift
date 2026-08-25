@@ -1,7 +1,7 @@
 import SwiftUI
 import DGis
 
-extension SettingsFormTextField where Value == RouteDistance {
+extension SettingsFormTextFieldView where Value == RouteDistance {
 	init(
 		title: String,
 		value: Binding<RouteDistance>

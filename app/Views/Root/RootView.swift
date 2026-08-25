@@ -8,6 +8,7 @@ struct RootView: View {
 	@State private var selectedFramework: DemoFramework = .swiftUI
 	let swiftUIFactory: SwiftUIDemoFactory
 	let uiKitFactory: UIKitDemoFactory
+    let reinitializeSdkFunction: () -> Void
 
 	private var filteredCategories: [DemoCategory] {
 		DemoCategory.allCases.filter { category in
@@ -68,9 +69,12 @@ struct RootView: View {
 		}
 		.navigationViewStyle(StackNavigationViewStyle())
 		.navigationBarHidden(false)
-		.navigationTitle("Demo app")
+		.navigationTitle("TestApp")
 		.navigationBarItems(
-			leading: self.makefilterButton(),
+			leading: HStack(spacing: 6) {
+                self.makefilterButton()
+                self.makeReinitializeSdkButton()
+            },
 			trailing: self.makeSettingsButton()
 		)
 	}
@@ -94,6 +98,19 @@ struct RootView: View {
 		}
 	}
 
+    private func makeReinitializeSdkButton() -> some View {
+        Button(action: {
+            self.reinitializeSdkFunction()
+        }) {
+            Image(systemName: "arrow.clockwise")
+                .renderingMode(.template)
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(width: 24, height: 24)
+                .foregroundColor(.accentColor)
+        }
+    }
+
 	private func makeSettingsButton() -> some View {
 		Button(action: {
 			self.viewModel.showsSettings = true
@@ -105,7 +122,7 @@ struct RootView: View {
 	}
 
 	private func makeTabLabel(category: DemoCategory) -> some View {
-		let demoPageCount: Int = self.viewModel.demos(for: category).filter { $0.framework.contains(self.selectedFramework) }.count
+		let demoPageCount: Int = self.viewModel.demos(for: category).count(where: { $0.framework.contains(self.selectedFramework) })
 		let title = "\(category.displayName) " + "(\(demoPageCount))"
 		return Label(title, systemImage: category.iconName)
 	}
@@ -130,6 +147,8 @@ struct DemoListView: View {
 						try self.navigationService.push(self.destinationView(for: demo), animated: true)
 					case .uiKit:
 						try self.navigationService.push(self.destinationUIViewController(for: demo), animated: true)
+					@unknown default:
+						assertionFailure("Unknown type: \(self)")
 					}
 				} catch let error as DGis.SDKError {
 					self.viewModel.errorMessage = error.description

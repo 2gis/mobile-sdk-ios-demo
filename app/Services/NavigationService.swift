@@ -1,24 +1,26 @@
+import Combine
 import SwiftUI
 
+@MainActor
 class NavigationService: ObservableObject {
 	private var keyWindows: [UIWindow] {
 		UIApplication.shared.connectedScenes
 			.compactMap { $0 as? UIWindowScene }
-			.flatMap { $0.windows }
+			.flatMap(\.windows)
 			.sorted { a, _ in a.isKeyWindow }
 	}
 
 	private var topNavigationController: UINavigationController? {
-		return self.keyWindows
+		self.keyWindows
 			.lazy
-			.compactMap { $0.topNavigationController }
+			.compactMap(\.topNavigationController)
 			.first
 	}
 
 	private var topViewController: UIViewController? {
-		return self.keyWindows
+		self.keyWindows
 			.lazy
-			.compactMap { $0.topViewController }
+			.compactMap(\.topViewController)
 			.first
 	}
 
@@ -30,11 +32,11 @@ class NavigationService: ObservableObject {
 		topVC.present(viewController, animated: animated, completion: completion)
 	}
 
-	func present<Content>(
-		_ view: Content,
+	func present(
+		_ view: some View,
 		animated: Bool = true,
 		completion: (() -> Void)? = nil
-	) where Content : View {
+	) {
 		self.present(UIHostingController(rootView: view), animated: animated, completion: completion)
 	}
 
@@ -50,7 +52,7 @@ class NavigationService: ObservableObject {
 		self.topNavigationController?.pushViewController(viewController, animated: animated)
 	}
 
-	func push<Content>(_ view: Content, animated: Bool = true) where Content : View {
+	func push(_ view: some View, animated: Bool = true) {
 		self.push(UIHostingController(rootView: view), animated: animated)
 	}
 

@@ -48,7 +48,7 @@ To run the demo app, do the following:
 
 ## Documentation
 
-Full documentation, including [usage examples](https://docs.2gis.com/en/ios/sdk/examples) and [API reference](https://docs.2gis.com/ios/sdk/reference/stable/class#container) with detailed descriptions of all classes and methods, can be found at [docs.2gis.com](https://docs.2gis.com/en/ios/sdk/overview).
+Full documentation, including [usage examples](https://docs.2gis.com/en/ios/sdk/examples) and [API reference](https://docs.2gis.com/en/ios/sdk/reference/Container) with detailed descriptions of all classes and methods, can be found at [docs.2gis.com](https://docs.2gis.com/en/ios/sdk/overview).
 
 ## License
 

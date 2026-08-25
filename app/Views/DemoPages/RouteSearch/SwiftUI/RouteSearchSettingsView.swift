@@ -1,5 +1,5 @@
-import SwiftUI
 import DGis
+import SwiftUI
 
 struct RouteSearchSettingsView: View {
 	@Binding private var shown: Bool
@@ -35,21 +35,21 @@ struct RouteSearchSettingsView: View {
 		NavigationView {
 			List {
 				self.makeTransportTypePicker()
-				.padding(.bottom, 5)
+					.padding(.bottom, 5)
 				self.makeCarRouteSearchOptionsView()
-				.padding(.bottom, 5)
+					.padding(.bottom, 5)
 				self.makePublicTransportRouteSearchOptionsView()
-				.padding(.bottom, 5)
+					.padding(.bottom, 5)
 				self.makeTruckRouteSearchOptionsView()
-				.padding(.bottom, 5)
+					.padding(.bottom, 5)
 				self.makeTaxiRouteSearchOptionsView()
-				.padding(.bottom, 5)
+					.padding(.bottom, 5)
 				self.makeBicycleRouteSearchOptionsView()
-				.padding(.bottom, 5)
+					.padding(.bottom, 5)
 			}
-			.navigationBarTitle(Text("Настройки"), displayMode: .inline)
+			.navigationBarTitle(Text("Settings"), displayMode: .inline)
 			.navigationBarItems(
-				trailing: Button("Закрыть", action: {
+				trailing: Button("Close", action: {
 					self.shown = false
 				})
 			)
@@ -58,7 +58,7 @@ struct RouteSearchSettingsView: View {
 
 	private func makeTransportTypePicker() -> some View {
 		PickerView(
-			title: "Тип транспорта:",
+			title: "Transport type:",
 			selection: self.$transportType,
 			options: TransportType.allCases,
 			pickerStyle: WheelPickerStyle()
@@ -67,7 +67,7 @@ struct RouteSearchSettingsView: View {
 
 	private func makeCarRouteSearchOptionsView() -> some View {
 		VStack(alignment: .leading) {
-			self.makeSectionTitle("Авто:")
+			self.makeSectionTitle("Car:")
 			self.makeCarRouteSearchOptionsContent(
 				avoidTollRoads: self.$carRouteSearchOptions.avoidTollRoads,
 				avoidUnpavedRoads: self.$carRouteSearchOptions.avoidUnpavedRoads,
@@ -85,16 +85,16 @@ struct RouteSearchSettingsView: View {
 		routeSearchType: Binding<RouteSearchType>
 	) -> some View {
 		Toggle(isOn: avoidTollRoads, label: {
-			self.makeOptionTitle("Избегать платные дороги")
+			self.makeOptionTitle("Avoid toll roads")
 		})
 		Toggle(isOn: avoidUnpavedRoads, label: {
-			self.makeOptionTitle("Избегать грунтовые дороги")
+			self.makeOptionTitle("Avoid unpaved roads")
 		})
 		Toggle(isOn: avoidFerry, label: {
-			self.makeOptionTitle("Избегать паромные переправы")
+			self.makeOptionTitle("Avoid ferry")
 		})
 		PickerView(
-			title: "Тип поиска маршрута",
+			title: "Route search type:",
 			selection: routeSearchType,
 			options: RouteSearchType.availableTypes,
 			pickerStyle: SegmentedPickerStyle()
@@ -103,42 +103,42 @@ struct RouteSearchSettingsView: View {
 
 	private func makePublicTransportRouteSearchOptionsView() -> some View {
 		VStack(alignment: .leading) {
-			self.makeSectionTitle("Общественный транспорт:")
+			self.makeSectionTitle("Public transport:")
 			Toggle(isOn: self.$publicTransportRouteSearchOptions.useSchedule, label: {
-				self.makeOptionTitle("Учитывать расписания")
+				self.makeOptionTitle("Use schedule")
 			})
 			RouteSearchSettingsDatePicker(
-				title: "Время в UTC, на которое нужно построить маршрут.",
-				subtitle: "Если не задано, используется текущее время",
+				title: "The UTC time for which the route should be built",
+				subtitle: "If not specified, the current time is used",
 				date: self.$publicTransportRouteSearchOptions.startTime
 			)
 			self.makePublicTransportTypePicker()
-			.padding(.top, 10)
+				.padding(.top, 10)
 		}
 	}
 
 	@ViewBuilder
 	private func makePublicTransportTypePicker() -> some View {
-		self.makeOptionTitle("Типы общественного транспорта")
-		Text("Если не заполнены, маршруты будут строиться для всех поддерживаемых типов общественного транспорта.")
-		.fontWeight(.light)
-		.foregroundColor(.primaryTitle)
-		.fixedSize(horizontal: false, vertical: true)
+		self.makeOptionTitle("Public transport types")
+		Text("If not provided, routes will be built for all supported types of public transport.")
+			.fontWeight(.light)
+			.foregroundColor(.primaryTitle)
+			.fixedSize(horizontal: false, vertical: true)
 		ForEach(PublicTransportTypeOptionSet.availableTypes) { type in
 			HStack {
 				Text(type.name)
-				.fixedSize(horizontal: false, vertical: true)
+					.fixedSize(horizontal: false, vertical: true)
 				Spacer()
 				if self.publicTransportRouteSearchOptions.transportTypes.contains(type) {
 					Image(systemName: "checkmark.circle")
-					.resizable()
-					.frame(width: 20, height: 20)
-					.foregroundColor(.blue)
+						.resizable()
+						.frame(width: 20, height: 20)
+						.foregroundColor(.blue)
 				} else {
 					Image(systemName: "circle")
-					.resizable()
-					.frame(width: 20, height: 20)
-					.foregroundColor(.blue)
+						.resizable()
+						.frame(width: 20, height: 20)
+						.foregroundColor(.blue)
 				}
 			}
 			.frame(height: 30)
@@ -152,12 +152,12 @@ struct RouteSearchSettingsView: View {
 
 	private func makeTruckRouteSearchOptionsView() -> some View {
 		VStack(alignment: .leading) {
-			self.makeSectionTitle("Грузовики:")
+			self.makeSectionTitle("Trucks:")
 			Toggle(isOn: self.$truckRouteSearchOptions.dangerousCargo, label: {
-				self.makeOptionTitle("Признак наличия опасного груза")
+				self.makeOptionTitle("Danagerous cargo")
 			})
 			Toggle(isOn: self.$truckRouteSearchOptions.explosiveCargo, label: {
-				self.makeOptionTitle("Признак наличия взрывчатых веществ в грузе")
+				self.makeOptionTitle("Explosive cargo")
 			})
 			self.makeCarRouteSearchOptionsContent(
 				avoidTollRoads: self.$truckRouteSearchOptions.car.avoidTollRoads,
@@ -172,63 +172,63 @@ struct RouteSearchSettingsView: View {
 
 	@ViewBuilder
 	private func makeTruckFieldSetting() -> some View {
-		SettingsFormTextField(
-			title: "Длина грузового транспортного средства в миллиметрах",
+		SettingsFormTextFieldView(
+			title: "Length of the truck in millimeters",
 			value: self.$truckRouteSearchOptions.truckLength
 		)
-		SettingsFormTextField(
-			title: "Высота грузового транспортного средства в миллиметрах",
+		SettingsFormTextFieldView(
+			title: "Height of the truck in millimeters",
 			value: self.$truckRouteSearchOptions.truckHeight
 		)
-		SettingsFormTextField(
-			title: "Ширина грузового транспортного средства в миллиметрах",
+		SettingsFormTextFieldView(
+			title: "Width of the truck in millimeters",
 			value: self.$truckRouteSearchOptions.truckWidth
 		)
-		SettingsFormTextField(
-			title: "Фактическая масса грузового транспортного средства в килограммах",
+		SettingsFormTextFieldView(
+			title: "Current mass of the truck in kilograms",
 			value: self.$truckRouteSearchOptions.actualMass
 		)
-		SettingsFormTextField(
-			title: "Разрешённая максимальная масса грузового транспортного средства в килограммах",
+		SettingsFormTextFieldView(
+			title: "Allowed mass of the truck in kilograms",
 			value: self.$truckRouteSearchOptions.maxPermittedMass
 		)
-		SettingsFormTextField(
-			title: "Нагрузка на ось в килограммах",
+		SettingsFormTextFieldView(
+			title: "Axle load of the truck in kilograms",
 			value: self.$truckRouteSearchOptions.axleLoad
 		)
 	}
 
 	@ViewBuilder
 	private func makeTruckPassIdPicker() -> some View {
-		self.makeOptionTitle("Идентификаторы имеющихся у пользователя пропусков, требующихся для движения в пределах пропускных зон")
+		self.makeOptionTitle("Identifiers of the passes the user possesses, required for traveling within permit zones")
 		ForEach(Array(self.truckRouteSearchOptions.passIds), id: \.self) { id in
 			HStack {
 				Text("\(id.value)")
 				Spacer()
 				Image(systemName: "clear")
-				.frame(width: 30, height: 30)
-				.foregroundColor(.red)
-				.onTapGesture {
-					self.truckRouteSearchOptions.passIds.remove(id)
-				}
+					.frame(width: 30, height: 30)
+					.foregroundColor(.red)
+					.onTapGesture {
+						self.truckRouteSearchOptions.passIds.remove(id)
+					}
 			}
 			.frame(height: 40)
 		}
 		HStack {
-			Text("Добавить пропуск")
+			Text("Add pass")
 			Image(systemName: "plus.circle")
-			.frame(width: 30, height: 30)
-			.foregroundColor(.green)
-			.onTapGesture {
-				self.createNewPassId()
-			}
+				.frame(width: 30, height: 30)
+				.foregroundColor(.green)
+				.onTapGesture {
+					self.createNewPassId()
+				}
 		}
 		.frame(height: 40)
 	}
 
 	private func makeTaxiRouteSearchOptionsView() -> some View {
 		VStack(alignment: .leading) {
-			self.makeSectionTitle("Такси:")
+			self.makeSectionTitle("Taxi:")
 			self.makeCarRouteSearchOptionsContent(
 				avoidTollRoads: self.$taxiRouteSearchOptions.car.avoidTollRoads,
 				avoidUnpavedRoads: self.$taxiRouteSearchOptions.car.avoidUnpavedRoads,
@@ -240,52 +240,52 @@ struct RouteSearchSettingsView: View {
 
 	private func makeBicycleRouteSearchOptionsView() -> some View {
 		VStack(alignment: .leading) {
-			self.makeSectionTitle("Велосипед:")
+			self.makeSectionTitle("Bicycle:")
 			Toggle(isOn: self.$bicycleRouteSearchOptions.avoidCarRoads, label: {
-				self.makeOptionTitle("Избегать автомобильные дороги")
+				self.makeOptionTitle("Avoiding car roads")
 			})
 			Toggle(isOn: self.$bicycleRouteSearchOptions.avoidStairways, label: {
-				self.makeOptionTitle("Избегать лестницы")
+				self.makeOptionTitle("Avoiding stairways")
 			})
 			Toggle(isOn: self.$bicycleRouteSearchOptions.avoidUnderpassesAndOverpasses, label: {
-				self.makeOptionTitle("Избегать подземных и надземных переходов")
+				self.makeOptionTitle("Avoiding underpasses and overpasses")
 			})
 		}
 	}
 
 	private func makeSectionTitle(_ text: String) -> some View {
 		Text(text)
-		.font(.system(size: 20))
-		.fontWeight(.bold)
-		.foregroundColor(.primaryTitle)
+			.font(.system(size: 20))
+			.fontWeight(.bold)
+			.foregroundColor(.primaryTitle)
 	}
 
 	private func makeOptionTitle(_ text: String) -> some View {
 		Text(text)
-		.fontWeight(.bold)
-		.foregroundColor(.primaryTitle)
-		.fixedSize(horizontal: false, vertical: true)
+			.fontWeight(.bold)
+			.foregroundColor(.primaryTitle)
+			.fixedSize(horizontal: false, vertical: true)
 	}
 
 	private func createNewPassId() {
 		guard let presenter = UIApplication.shared.keyWindow?.topViewController else { return }
-		let alert = UIAlertController(title: "Новый пропуск", message: nil, preferredStyle: .alert)
+		let alert = UIAlertController(title: "New pass", message: nil, preferredStyle: .alert)
 		var textField: UITextField?
 		alert.addTextField { field in
 			field.keyboardType = .numberPad
 			field.clearButtonMode = .whileEditing
 			textField = field
 		}
-		alert.addAction(UIAlertAction(title: "Добавить", style: .default, handler: { action in
+		alert.addAction(UIAlertAction(title: "Add", style: .default, handler: { _ in
 			if let rawValue = textField?.text,
-			   let value = UInt32(rawValue) {
+			   let value = UInt32(rawValue)
+			{
 				self.truckRouteSearchOptions.passIds.insert(.init(value: value))
 			}
 		}))
-		alert.addAction(UIAlertAction(title: "Отмена", style: .cancel, handler: nil))
+		alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
 		presenter.present(alert, animated: true, completion: nil)
 	}
-
 }
 
 extension TransportType: PickerViewOption {
@@ -294,6 +294,8 @@ extension TransportType: PickerViewOption {
 	}
 }
 
+extension RouteSearchType: @retroactive Identifiable {}
+
 extension RouteSearchType: PickerViewOption {
 	public var id: RouteSearchType {
 		self
@@ -301,15 +303,15 @@ extension RouteSearchType: PickerViewOption {
 
 	var name: String {
 		switch self {
-			case .jam:
-				return "Jam"
-			case .shortest:
-				return "Shortest"
-			case .statistic:
-				return "Statistic"
-			@unknown default:
-				assertionFailure("Unknown type: \(self)")
-				return "Unknown \(self.rawValue)"
+		case .jam:
+			return "Jam"
+		case .shortest:
+			return "Shortest"
+		case .statistic:
+			return "Statistic"
+		@unknown default:
+			assertionFailure("Unknown type: \(self)")
+			return "Unknown \(self.rawValue)"
 		}
 	}
 
@@ -318,13 +320,13 @@ extension RouteSearchType: PickerViewOption {
 	}
 }
 
-extension TruckPassZoneId: Identifiable {
+extension TruckPassZoneId: @retroactive Identifiable {
 	public var id: TruckPassZoneId {
 		self
 	}
 }
 
-extension PublicTransportTypeOptionSet: Identifiable {
+extension PublicTransportTypeOptionSet: @retroactive Identifiable {
 	public var id: PublicTransportTypeOptionSet {
 		self
 	}
@@ -333,59 +335,59 @@ extension PublicTransportTypeOptionSet: Identifiable {
 		[
 			.bus, .trolleybus, .tram, .shuttleBus, .metro, .suburbanTrain,
 			.funicularRailway, .monorail, .waterwayTransport, .cableCar, .speedTram,
-			.premetro, .lightMetro, .aeroexpress, .moscowCentralRing, .moscowCentralDiameters
+			.premetro, .lightMetro, .aeroexpress, .moscowCentralRing, .moscowCentralDiameters,
 		]
 	}
 
 	fileprivate var name: String {
 		var names: [String] = []
 		if self.contains(.bus) {
-			names.append("Автобус")
+			names.append("Bus")
 		}
 		if self.contains(.trolleybus) {
-			names.append("Троллейбус")
+			names.append("Trolleybus")
 		}
 		if self.contains(.tram) {
-			names.append("Трамвай")
+			names.append("Tram")
 		}
 		if self.contains(.shuttleBus) {
-			names.append("Маршрутное такси")
+			names.append("Shuttle Bus")
 		}
 		if self.contains(.metro) {
-			names.append("Метро")
+			names.append("Metro")
 		}
 		if self.contains(.suburbanTrain) {
-			names.append("Электропоезд")
+			names.append("Suburban train")
 		}
 		if self.contains(.funicularRailway) {
-			names.append("Фуникулёр")
+			names.append("Funicular railway")
 		}
 		if self.contains(.monorail) {
-			names.append("Монорельс")
+			names.append("Monorail")
 		}
 		if self.contains(.waterwayTransport) {
-			names.append("Водный транспорт")
+			names.append("Waterway transport")
 		}
 		if self.contains(.cableCar) {
-			names.append("Канатная дорога")
+			names.append("Cable car")
 		}
 		if self.contains(.speedTram) {
-			names.append("Скоростной трамвай")
+			names.append("Speed tram")
 		}
 		if self.contains(.premetro) {
-			names.append("Подземный трамвай")
+			names.append("Premetro")
 		}
 		if self.contains(.lightMetro) {
-			names.append("Лёгкое метро")
+			names.append("Light metro")
 		}
 		if self.contains(.aeroexpress) {
-			names.append("Аэроэкспресс")
+			names.append("Aeroexpress")
 		}
 		if self.contains(.moscowCentralRing) {
-			names.append("Московское центральное кольцо")
+			names.append("Moscow central ring")
 		}
 		if self.contains(.moscowCentralDiameters) {
-			names.append("Московские центральные диаметры")
+			names.append("Moscow central diameters")
 		}
 		return names.joined(separator: ", ")
 	}

@@ -1,5 +1,6 @@
-import SwiftUI
+import Combine
 import DGis
+import SwiftUI
 
 final class PolylineViewModel: ObservableObject {
 	private enum Constants {
@@ -39,8 +40,8 @@ final class PolylineViewModel: ObservableObject {
 				borderColor: $0.borderColor,
 				secondBorderColor: $0.secondBorderColor,
 				colors: $0.colors,
-				colorIndices: self.adjustedData(base: [0,1,2,3,4], length: points.count - 1)
-			)}
+				colorIndices: self.adjustedData(base: [0, 1, 2, 3, 4], length: points.count - 1)
+			) }
 		}
 		let indexValue = UInt32(self.zIndex) ?? 0
 		let options = PolylineOptions(
@@ -72,14 +73,14 @@ final class PolylineViewModel: ObservableObject {
 		}
 		let angle = Constants.bearingMax / Double(size)
 
-		return (1...size).map { item in
+		return (1 ... size).map { item in
 			flatPoint.move(
 				bearing: Bearing(value: angle * Double(item)),
-				meter: .init(value: Float.random(in: 50000.0...100000.0))
+				meter: .init(value: Float.random(in: 50000.0 ... 100000.0))
 			)
 		}
 	}
-	
+
 	private func adjustedData(base: [UInt8], length: Int) -> Data {
 		var result = [UInt8]()
 		while result.count < length {

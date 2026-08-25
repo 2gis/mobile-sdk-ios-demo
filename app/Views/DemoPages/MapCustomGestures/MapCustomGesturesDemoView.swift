@@ -9,12 +9,12 @@ struct MapCustomGesturesDemoView: View {
 	@Environment(\.presentationMode) private var presentationMode
 	@ObservedObject private var viewModel: MapCustomGesturesDemoViewModel
 	private let mapFactory: IMapFactory
-	private let gestureView: any UIView & IMapGestureView
+	private let gestureView: any UIView & IMapGestureUIView
 
 	init(
 		viewModel: MapCustomGesturesDemoViewModel,
 		mapFactory: IMapFactory,
-		gestureView: any UIView & IMapGestureView
+		gestureView: any UIView & IMapGestureUIView
 	) {
 		self.viewModel = viewModel
 		self.mapFactory = mapFactory
@@ -23,10 +23,10 @@ struct MapCustomGesturesDemoView: View {
 
 	var body: some View {
 		ZStack(alignment: .bottomTrailing) {
-			self.mapFactory.mapViewOverlay
-				.mapViewOverlayGestureView(self.gestureView)
-				.mapViewOverlayShowsAPIVersion(true)
-				.mapViewOverlayCopyrightAlignment(.bottomLeft)
+			self.mapFactory.mapView
+				.gestureView(self.gestureView)
+				.showsAPIVersion(true)
+				.copyrightAlignment(.bottomLeft)
 				.edgesIgnoringSafeArea(.all)
 
 			VStack {

@@ -1,5 +1,5 @@
-import SwiftUI
 import DGis
+import SwiftUI
 
 struct NavigatorDemoView: View {
 	private enum Constants {
@@ -19,38 +19,44 @@ struct NavigatorDemoView: View {
 	@ObservedObject private var viewModel: NavigatorDemoViewModel
 
 	private let mapFactory: IMapFactory
-	private let mapControlViewFactory: IMapControlViewFactory
-	private let navigatorViewFactory: INavigatorViewFactory
+	private let mapViewsFactory: IMapViewsFactory
+	private let navigationViewFactory: INavigationViewFactory
 
 	init(
 		viewModel: NavigatorDemoViewModel,
 		mapFactory: IMapFactory,
-		navigatorViewFactory: INavigatorViewFactory
+		navigationViewFactory: INavigationViewFactory
 	) {
 		self.viewModel = viewModel
 		self.mapFactory = mapFactory
-		self.mapControlViewFactory = mapFactory.mapControlViewFactory
-		self.navigatorViewFactory = navigatorViewFactory
+		self.mapViewsFactory = mapFactory.mapViewsFactory
+		self.navigationViewFactory = navigationViewFactory
 	}
 
 	var body: some View {
 		ZStack {
-			self.mapFactory.mapViewOverlay
-				.mapViewOverlayObjectTappedCallback(callback: .init(callback: { [viewModel = self.viewModel] objectInfo in
-					viewModel.tap(objectInfo) }))
-				.mapViewOverlayObjectLongPressCallback(callback: .init(callback: { [viewModel = self.viewModel] objectInfo in
-					viewModel.longPress(objectInfo)}))
+			self.mapFactory.mapView
+				.objectTappedCallback(callback: .init(callback: { [viewModel = self.viewModel] objectInfo in
+					Task { @MainActor in
+						viewModel.tap(objectInfo)
+					}
+				}))
+				.objectLongPressCallback(callback: .init(callback: { [viewModel = self.viewModel] objectInfo in
+					Task { @MainActor in
+						viewModel.longPress(objectInfo)
+					}
+				}))
 				.edgesIgnoringSafeArea(.all)
-			self.navigatorViewFactory.makeNavigationView(
+			self.navigationViewFactory.makeNavigationView(
 				map: self.mapFactory.map,
 				navigationManager: self.viewModel.navigationManager
 			)
-			.navigatorViewFinishButtonCallback({ [viewModel = self.viewModel] in
+			.finishButtonCallback { [viewModel = self.viewModel] in
 				viewModel.stopNavigation()
-			})
+			}
 			if self.viewModel.showTargetPointPicker {
 				HStack {
-					self.mapControlViewFactory.makeIndoorView()
+					self.mapViewsFactory.makeIndoorView()
 						.frame(width: 38, height: 119)
 						.fixedSize()
 						.padding(.leading, 20)
@@ -59,11 +65,11 @@ struct NavigatorDemoView: View {
 				HStack {
 					Spacer()
 					VStack {
-						self.mapControlViewFactory.makeZoomView()
+						self.mapViewsFactory.makeZoomView()
 							.frame(width: 48, height: 102)
 							.fixedSize()
 							.padding(20)
-						self.mapControlViewFactory.makeCurrentLocationView()
+						self.mapViewsFactory.makeCurrentLocationView()
 							.frame(width: 48, height: 48)
 							.fixedSize()
 					}
@@ -72,8 +78,8 @@ struct NavigatorDemoView: View {
 			}
 
 			if self.viewModel.showRouteSearchMessage {
-				Text("Route search...")
-				.fontWeight(.bold)
+				Text("Searching for a route...")
+					.fontWeight(.bold)
 			}
 			if self.viewModel.isStopNavigationButtonVisible {
 				VStack(alignment: .leading) {
@@ -99,10 +105,10 @@ struct NavigatorDemoView: View {
 		}
 		.actionSheet(item: self.$viewModel.request, content: { request in
 			switch request {
-				case .routeSelection(let trafficRoutes):
-					return self.routeSelectionActionSheet(trafficRoutes)
-				case .addIntermediatePoint(let point):
-					return self.addIntermediatePointActionSheet(point)
+			case let .routeSelection(trafficRoutes):
+				self.routeSelectionActionSheet(trafficRoutes)
+			case let .addIntermediatePoint(point):
+				self.addIntermediatePointActionSheet(point)
 			}
 		})
 	}
@@ -123,7 +129,7 @@ struct NavigatorDemoView: View {
 	}
 
 	private func closeButton() -> some View {
-		return Button.makeCircleButton(iconName: "xmark") {
+		Button.makeCircleButton(iconName: "xmark") {
 			self.stopNavigation()
 			self.presentationMode.wrappedValue.dismiss()
 		}
@@ -156,7 +162,7 @@ struct NavigatorDemoView: View {
 				},
 				.cancel {
 					self.viewModel.cancelAddIntermediatePoint()
-				}
+				},
 			]
 		)
 	}

@@ -1,27 +1,32 @@
-import SwiftUI
+import Combine
 import DGis
+import SwiftUI
 
 enum TransportType: Int, CaseIterable {
 	case car, publicTransport, bicycle, pedestrian, taxi, truck
 
 	var name: String {
 		switch self {
-			case .car:
-				return "Car"
-			case .publicTransport:
-				return "Public transport"
-			case .truck:
-				return "Truck"
-			case .taxi:
-				return "Taxi"
-			case .pedestrian:
-				return "Pedestrian"
-			case .bicycle:
-				return "Bicycle"
+		case .car:
+			return "Car"
+		case .publicTransport:
+			return "Public transport"
+		case .truck:
+			return "Truck"
+		case .taxi:
+			return "Taxi"
+		case .pedestrian:
+			return "Pedestrian"
+		case .bicycle:
+			return "Bicycle"
+		@unknown default:
+			assertionFailure("Unknown type: \(self)")
+			return "Unknown \(self.rawValue)"
 		}
 	}
 }
 
+@MainActor
 final class RouteViewModel: ObservableObject {
 	enum State {
 		case buildRoutePoints
@@ -50,14 +55,17 @@ final class RouteViewModel: ObservableObject {
 	var shouldShowSearchRouteButton: Bool {
 		[.readyToSearch, .routesNotFound].contains(self.state)
 	}
+
 	var shouldShowRemoveRouteButton: Bool {
 		self.state == .routesFound
 	}
+
 	let transportType: TransportType
-	let navigationViewFactory: INavigationViewFactory
+	let navigationViewFactory: INavigationUIViewFactory
 	var routeEditorRoutesInfo: RouteEditorRoutesInfo? {
-		return self.routeEditor.routesInfo
+		self.routeEditor.routesInfo
 	}
+
 	private let carRouteSearchOptions: CarRouteSearchOptions
 	private let publicTransportRouteSearchOptions: PublicTransportRouteSearchOptions
 	private let truckRouteSearchOptions: TruckRouteSearchOptions
@@ -70,16 +78,19 @@ final class RouteViewModel: ObservableObject {
 			self.pointADescription = "A: " + self.pointA.pointDescription
 		}
 	}
+
 	private var pointB: RouteSearchPoint? = nil {
 		didSet {
 			self.pointBDescription = "B: " + self.pointB.pointDescription
 		}
 	}
+
 	private var intermediatePoints: [RouteSearchPoint] = [] {
 		didSet {
-			self.intermediatePointsDescription = "Intermediate points count: \(intermediatePoints.count)"
+			self.intermediatePointsDescription = "Intermediate points count: \(self.intermediatePoints.count)"
 		}
 	}
+
 	private var pointAMapObject: GeometryMapObject? = nil
 	private var pointBMapObject: GeometryMapObject? = nil
 	private var draggedMapObject: GeometryMapObject?
@@ -91,9 +102,7 @@ final class RouteViewModel: ObservableObject {
 	private let routeEditorFactory: () -> RouteEditor
 	private let map: Map
 	private let feedbackGenerator: FeedbackGenerator
-	private lazy var geometryObjectSource: GeometryMapObjectSource = {
-		self.sourceFactory().createGeometryMapObjectSourceBuilder().createSource()
-	}()
+	private lazy var geometryObjectSource: GeometryMapObjectSource = self.sourceFactory().createGeometryMapObjectSourceBuilder().createSource()
 
 	private lazy var routeEditor = self.routeEditorFactory()
 	private lazy var source = self.routeEditorSourceFactory(self.routeEditor)
@@ -116,7 +125,7 @@ final class RouteViewModel: ObservableObject {
 		routeEditorFactory: @escaping () -> RouteEditor,
 		map: Map,
 		feedbackGenerator: FeedbackGenerator,
-		navigationViewFactory: INavigationViewFactory
+		navigationViewFactory: INavigationUIViewFactory
 	) {
 		self.transportType = transportType
 		self.carRouteSearchOptions = carRouteSearchOptions
@@ -138,32 +147,30 @@ final class RouteViewModel: ObservableObject {
 		self.map.addSource(source: self.geometryObjectSource)
 		self.updatePointA(nil)
 		self.updatePointB(nil)
-		self.routeInfoCancellable = self.routeEditor.routesInfoChannel.sinkOnMainThread({
+		self.routeInfoCancellable = self.routeEditor.routesInfoChannel.sinkOnMainThread {
 			[weak self] info in
-			self?.handle(info)
-		})
+			Task { @MainActor [weak self] in
+				self?.handle(info)
+			}
+		}
 	}
 
 	deinit {
-		self.removeRoute()
+		MainActor.assumeIsolated { [self] in
+			self.removeRoute()
+		}
 	}
 
 	func setupPointA() {
-		_ = self.map.camera.positionChannel.sinkOnMainThread { [weak self] position in
-			self?.updatePointA(position.point)
-		}
+		self.updatePointA(self.map.camera.position.point)
 	}
 
 	func setupPointB() {
-		_ = self.map.camera.positionChannel.sinkOnMainThread { [weak self] position in
-			self?.updatePointB(position.point)
-		}
+		self.updatePointB(self.map.camera.position.point)
 	}
 
 	func setupIntermediatePoint() {
-		_ = self.map.camera.positionChannel.sinkOnMainThread { [weak self] position in
-			self?.createIntermediatePoint(position.point)
-		}
+		self.createIntermediatePoint(self.map.camera.position.point)
 	}
 
 	func findRoute() {
@@ -197,7 +204,7 @@ final class RouteViewModel: ObservableObject {
 		self.pointAMapObject = nil
 		self.pointBMapObject = nil
 		self.intermediatePoints.removeAll()
-		self.intermediatePointsMapObjects.forEach { point in
+		for point in self.intermediatePointsMapObjects {
 			self.remove(geometryMapObject: point)
 		}
 		self.intermediatePointsMapObjects.removeAll()
@@ -278,9 +285,9 @@ final class RouteViewModel: ObservableObject {
 		attributes: [String: AttributeValue],
 		levelId: LevelId?
 	) -> GeometryMapObject? {
-		guard let point = point else { return nil }
+		guard let point else { return nil }
 		var objectAttributes = attributes
-		if let levelId = levelId {
+		if let levelId {
 			objectAttributes[Constants.dbPlanId] = .integer(Int64(levelId.value))
 		}
 		return GeometryMapObjectBuilder()
@@ -293,20 +300,21 @@ final class RouteViewModel: ObservableObject {
 	private func buildRouteEditorRouteParams() -> RouteEditorRouteParams? {
 		guard let pointA = self.pointA, let pointB = self.pointB else { return nil }
 
-		let routeSearchOptions: RouteSearchOptions
-		switch self.transportType {
-			case .car:
-				routeSearchOptions = .car(self.carRouteSearchOptions)
-			case .publicTransport:
-				routeSearchOptions = .publicTransport(self.publicTransportRouteSearchOptions)
-			case .truck:
-				routeSearchOptions = .truck(self.truckRouteSearchOptions)
-			case .taxi:
-				routeSearchOptions = .taxi(self.taxiRouteSearchOptions)
-			case .bicycle:
-				routeSearchOptions = .bicycle(self.bicycleRouteSearchOptions)
-			case .pedestrian:
-				routeSearchOptions = .pedestrian(self.pedestrianRouteSearchOptions)
+		let routeSearchOptions: RouteSearchOptions = switch self.transportType {
+		case .car:
+			.car(self.carRouteSearchOptions)
+		case .publicTransport:
+			.publicTransport(self.publicTransportRouteSearchOptions)
+		case .truck:
+			.truck(self.truckRouteSearchOptions)
+		case .taxi:
+			.taxi(self.taxiRouteSearchOptions)
+		case .bicycle:
+			.bicycle(self.bicycleRouteSearchOptions)
+		case .pedestrian:
+			.pedestrian(self.pedestrianRouteSearchOptions)
+		@unknown default:
+			.car(self.carRouteSearchOptions)
 		}
 		return RouteEditorRouteParams(
 			startPoint: pointA,
@@ -319,11 +327,11 @@ final class RouteViewModel: ObservableObject {
 	private func updatePoint(
 		point: GeoPoint?,
 		pointCancellable: inout ICancellable,
-		updatePointCallback: @escaping (GeoPoint?, RenderedObjectInfo?) -> Void
+		updatePointCallback: @MainActor @Sendable @escaping (GeoPoint?, RenderedObjectInfo?) -> Void
 	) {
 		pointCancellable.cancel()
 		guard
-			let point = point,
+			let point,
 			let screenPoint = self.map.camera.projection.mapToScreen(point: point)
 		else {
 			updatePointCallback(nil, nil)
@@ -334,14 +342,18 @@ final class RouteViewModel: ObservableObject {
 
 		pointCancellable = self.map.getRenderedObjects(centerPoint: screenPoint, radius: Constants.tapRadius).sinkOnMainThread(
 			receiveValue: { [weak self] infos in
-				updatePointCallback(point, infos.first)
-				self?.hasRoutes = self?.pointA != nil && self?.pointB != nil
-				self?.handleRoutePointsUpdate()
+				Task { @MainActor [weak self] in
+					updatePointCallback(point, infos.first)
+					self?.hasRoutes = self?.pointA != nil && self?.pointB != nil
+					self?.handleRoutePointsUpdate()
+				}
 			},
 			failure: { [weak self] _ in
-				updatePointCallback(point, nil)
-				self?.hasRoutes = self?.pointA != nil && self?.pointB != nil
-				self?.handleRoutePointsUpdate()
+				Task { @MainActor [weak self] in
+					updatePointCallback(point, nil)
+					self?.hasRoutes = self?.pointA != nil && self?.pointB != nil
+					self?.handleRoutePointsUpdate()
+				}
 			}
 		)
 	}
@@ -350,20 +362,20 @@ final class RouteViewModel: ObservableObject {
 extension RouteViewModel {
 	func handleDragGesture(_ state: LongPressAndDragRecognizerState) {
 		switch state {
-			case .started(let location):
-				if let pointObject = self.getPointObject(at: location) {
-					self.feedbackGenerator.impactFeedback()
-					self.map.interactive = false
-					self.draggedMapObject = pointObject
-				}
-			case.changed(let location):
-				self.moveRoutePointMapObject(self.draggedMapObject, to: location)
-			case .inactive:
-				if self.draggedMapObject != nil {
-					self.map.interactive = true
-					self.draggedMapObject = nil
-					self.handleRoutePointsUpdate()
-				}
+		case let .started(location):
+			if let pointObject = self.getPointObject(at: location) {
+				self.feedbackGenerator.impactFeedback()
+				self.map.interactive = false
+				self.draggedMapObject = pointObject
+			}
+		case let .changed(location):
+			self.moveRoutePointMapObject(self.draggedMapObject, to: location)
+		case .inactive:
+			if self.draggedMapObject != nil {
+				self.map.interactive = true
+				self.draggedMapObject = nil
+				self.handleRoutePointsUpdate()
+			}
 		}
 	}
 
@@ -389,7 +401,7 @@ extension RouteViewModel {
 	}
 
 	private func moveRoutePointMapObject(_ mapObject: GeometryMapObject?, to newPoint: CGPoint) {
-		guard let mapObject = mapObject else { return }
+		guard let mapObject else { return }
 		let screenPoint = ScreenPoint(newPoint.applying(self.toMapTransform))
 		if let point = self.map.camera.projection.screenToMap(point: screenPoint) {
 			mapObject.geometry = PointGeometry(point: point)
@@ -406,11 +418,11 @@ extension RouteViewModel {
 	}
 
 	private func makeRouteSearchPoint(point: GeoPoint?, objectInfo: RenderedObjectInfo?) -> RouteSearchPoint? {
-		guard let point = point else {
+		guard let point else {
 			return nil
 		}
 
-		guard let objectInfo = objectInfo else {
+		guard let objectInfo else {
 			let idx = self.objectIdx
 			self.objectIdx += 1
 			return RouteSearchPoint(
@@ -438,7 +450,7 @@ extension RouteViewModel {
 	}
 }
 
-private extension Optional where Wrapped == RouteSearchPoint {
+private extension RouteSearchPoint? {
 	var pointDescription: String {
 		guard let point = self?.coordinates else { return "Not set" }
 		return String(format: "lat: %.2f, lon: %.2f", point.latitude.value, point.longitude.value)

@@ -19,8 +19,8 @@ struct VisibleRectVisibleAreaDemoView: View {
 
 	var body: some View {
 		ZStack {
-			self.mapFactory.mapViewOverlay
-				.mapViewOverlayCopyrightAlignment(.topLeft)
+			self.mapFactory.mapView
+				.copyrightAlignment(.topLeft)
 			ZStack(alignment: .top) {
 				VStack(alignment: .trailing) {
 					Spacer()

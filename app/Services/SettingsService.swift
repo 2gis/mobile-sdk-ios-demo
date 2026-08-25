@@ -8,6 +8,7 @@ protocol ISettingsService: AnyObject {
 	var customStyleUrl: URL? { get set }
 	var mapDataSource: MapDataSource { get set }
 	var language: Language { get set }
+	var positioningServicesSource: PositioningServicesSource { get set }
 	var httpCacheEnabled: Bool { get set }
 	var httpTimeout: Double { get set }
 	var muteOtherSounds: Bool { get set }
@@ -20,6 +21,7 @@ protocol ISettingsService: AnyObject {
 	var navigatorTheme: NavigatorTheme { get set }
 	var navigatorControls: NavigatorControls { get set }
 	var navigatorDashboardButton: NavigatorDashboardButton { get set }
+	var isMiniMapSelected: Bool { get set }
 
 	func setLanguage(_ language: Language)
 }
@@ -29,6 +31,7 @@ final class SettingsService: ISettingsService {
 		static let mapDataSource = "Global/MapDataSource"
 		static let language = "Global/Language"
 		static let customStyleURL = "Global/CustomStyleURL"
+		static let positioningServicesSource = "Global/PositioningServicesSource"
 		static let httpCacheEnabled = "Global/HttpCacheEnabled"
 		static let httpTimeout = "Global/HttpTimeout"
 		static let muteOtherSounds = "Global/MuteOtherSounds"
@@ -41,6 +44,7 @@ final class SettingsService: ISettingsService {
 		static let mapTheme = "Global/MapTheme"
 		static let geolocationMarkerType = "Global/GeolocationMarkerType"
 		static let graphicsOption = "Global/GraphicsOption"
+		static let isMiniMapSelected = "Global/IsMiniMapSelected"
 	}
 
 	private enum Constants {
@@ -67,6 +71,16 @@ final class SettingsService: ISettingsService {
 		}
 		set {
 			self.storage.set(newValue?.absoluteString ?? nil, forKey: Keys.customStyleURL)
+		}
+	}
+
+	var positioningServicesSource: PositioningServicesSource {
+		get {
+			let rawValue: String? = self.storage.value(forKey: Keys.positioningServicesSource)
+			return rawValue.flatMap { PositioningServicesSource(rawValue: $0) } ?? .default
+		}
+		set {
+			self.storage.set(newValue.rawValue, forKey: Keys.positioningServicesSource)
 		}
 	}
 	var onCurrentLanguageDidChange: (() -> Void)?
@@ -207,6 +221,15 @@ final class SettingsService: ISettingsService {
 		}
 		set {
 			self.storage.set(newValue.rawValue, forKey: Keys.navigatorDashboardButton)
+		}
+	}
+
+	var isMiniMapSelected: Bool {
+		get {
+			return self.storage.value(forKey: Keys.isMiniMapSelected) ?? true
+		}
+		set {
+			self.storage.set(newValue, forKey: Keys.isMiniMapSelected)
 		}
 	}
 

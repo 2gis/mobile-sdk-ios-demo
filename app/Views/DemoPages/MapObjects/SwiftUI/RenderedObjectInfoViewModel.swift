@@ -1,5 +1,6 @@
-import SwiftUI
+import Combine
 import DGis
+import SwiftUI
 
 final class RenderedObjectInfoViewModel: ObservableObject {
 	typealias CloseCallback = () -> Void
@@ -31,16 +32,16 @@ final class RenderedObjectInfoViewModel: ObservableObject {
 	private func fetchObjectInfo() {
 		let mapObject = self.objectInfo.item.item
 		switch mapObject {
-			case let circle as DGis.Circle:
-				self.fetchInfo(circle: circle)
-			case let marker as Marker:
-				self.fetchInfo(marker: marker)
-			case let polygon as Polygon:
-				self.fetchInfo(polygon: polygon)
-			case let polyline as Polyline:
-				self.fetchInfo(polyline: polyline)
-			default:
-				self.fetchInfo(objectInfo: self.objectInfo)
+		case let circle as DGis.Circle:
+			self.fetchInfo(circle: circle)
+		case let marker as Marker:
+			self.fetchInfo(marker: marker)
+		case let polygon as Polygon:
+			self.fetchInfo(polygon: polygon)
+		case let polyline as Polyline:
+			self.fetchInfo(polyline: polyline)
+		default:
+			self.fetchInfo(objectInfo: self.objectInfo)
 		}
 	}
 

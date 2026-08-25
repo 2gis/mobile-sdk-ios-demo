@@ -49,19 +49,19 @@ struct AnchorSheetView: View {
 
 			VStack(spacing: 20) {
 				HStack(spacing: 20) {
-					anchorButton(title: "↖︎", anchorPoint: .topLeading)
-					anchorButton(title: "↑", anchorPoint: .top)
-					anchorButton(title: "↗︎", anchorPoint: .topTrailing)
+					self.anchorButton(title: "↖︎", anchorPoint: .topLeading)
+					self.anchorButton(title: "↑", anchorPoint: .top)
+					self.anchorButton(title: "↗︎", anchorPoint: .topTrailing)
 				}
 				HStack(spacing: 20) {
-					anchorButton(title: "←", anchorPoint: .leading)
-					anchorButton(title: "●", anchorPoint: .center)
-					anchorButton(title: "→", anchorPoint: .trailing)
+					self.anchorButton(title: "←", anchorPoint: .leading)
+					self.anchorButton(title: "●", anchorPoint: .center)
+					self.anchorButton(title: "→", anchorPoint: .trailing)
 				}
 				HStack(spacing: 20) {
-					anchorButton(title: "↙︎", anchorPoint: .bottomLeading)
-					anchorButton(title: "↓", anchorPoint: .bottom)
-					anchorButton(title: "↘︎", anchorPoint: .bottomTrailing)
+					self.anchorButton(title: "↙︎", anchorPoint: .bottomLeading)
+					self.anchorButton(title: "↓", anchorPoint: .bottom)
+					self.anchorButton(title: "↘︎", anchorPoint: .bottomTrailing)
 				}
 			}
 			.padding()
@@ -79,17 +79,6 @@ struct AnchorSheetView: View {
 				.background(self.anchor == anchorPoint ? Color.accentColor : Color(UIColor.secondarySystemBackground))
 				.cornerRadius(10)
 				.foregroundColor(.black)
-		}
-	}
-}
-
-private extension View {
-	@ViewBuilder
-	func ifAvailableIOS15<Content: View>(_ transform: (Self) -> Content) -> some View {
-		if #available(iOS 15, *) {
-			transform(self)
-		} else {
-			self
 		}
 	}
 }

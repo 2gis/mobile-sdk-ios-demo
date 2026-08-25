@@ -1,19 +1,22 @@
-import Foundation
 import Combine
 import DGis
+import Foundation
 
-class VoiceRowViewModel: ObservableObject, Identifiable {
+class VoiceRowViewModel: ObservableObject, Identifiable, @unchecked Sendable {
 	typealias UninstallVoiceCallback = (Voice) -> Void
 
 	var id: String {
 		self.voice.id
 	}
+
 	var name: String {
 		"\(self.voice.info.name) (\(self.voice.language))"
 	}
+
 	var downloadAvailable: Bool {
 		!self.voice.info.installed || self.voice.info.hasUpdate
 	}
+
 	var uninstallAvailable: Bool {
 		self.voice.isReadyToUse && !self.voice.info.preinstalled
 	}
@@ -34,11 +37,13 @@ class VoiceRowViewModel: ObservableObject, Identifiable {
 		self.status = voice.status
 		self.isReadyToUse = voice.isReadyToUse
 
-		let updateStatusCallback: (Any?) -> Void = {
+		let updateStatusCallback: @Sendable (Any?) -> Void = {
 			[weak self] _ in
-			guard let self = self else { return }
-			self.isReadyToUse = self.voice.isReadyToUse
-			self.status = self.voice.status
+			Task { @MainActor [weak self] in
+				guard let self else { return }
+				self.isReadyToUse = self.voice.isReadyToUse
+				self.status = self.voice.status
+			}
 		}
 		self.progressCancellable = voice.progressChannel.sinkOnMainThread(updateStatusCallback)
 		self.infoCancellable = voice.infoChannel.sinkOnMainThread(updateStatusCallback)
@@ -54,7 +59,7 @@ class VoiceRowViewModel: ObservableObject, Identifiable {
 		self.uninstallVoiceCallback?(self.voice)
 		self.isReadyToUse = false
 	}
-	
+
 	func play() {
 		_ = self.voice.playWelcome()
 	}

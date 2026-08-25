@@ -1,8 +1,8 @@
-import SwiftUI
 import Combine
 import DGis
+import SwiftUI
 
-final class ParkingsDemoViewModel: ObservableObject {
+final class ParkingsDemoViewModel: ObservableObject, @unchecked Sendable {
 	private enum Constants {
 		static let tapRadius = ScreenDistance(value: 5)
 		static let parkingsKey = "parkingOn"
@@ -14,6 +14,7 @@ final class ParkingsDemoViewModel: ObservableObject {
 			self.updateParkings()
 		}
 	}
+
 	private let map: Map
 	private let logger: ILogger
 	private let searchManager: SearchManager

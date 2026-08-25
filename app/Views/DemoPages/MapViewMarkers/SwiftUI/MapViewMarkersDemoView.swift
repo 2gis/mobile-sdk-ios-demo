@@ -6,7 +6,7 @@ struct MapViewMarkersDemoView: View {
 	@ObservedObject private var viewModel: MapViewMarkersDemoViewModel
 
 	private let mapFactory: IMapFactory
-	private let mapControlViewFactory: IMapControlViewFactory
+	private let mapViewsFactory: IMapViewsFactory
 
 	init(
 		viewModel: MapViewMarkersDemoViewModel,
@@ -14,26 +14,28 @@ struct MapViewMarkersDemoView: View {
 	) {
 		self.viewModel = viewModel
 		self.mapFactory = mapFactory
-		self.mapControlViewFactory = self.mapFactory.mapControlViewFactory
+		self.mapViewsFactory = self.mapFactory.mapViewsFactory
 	}
 
 	var body: some View {
 		ZStack {
 			ZStack {
-				self.mapFactory.mapViewOverlay
-					.mapViewOverlayShowsAPIVersion(true)
-					.mapViewOverlayObjectTappedCallback(callback: .init(
+				self.mapFactory.mapView
+					.showsAPIVersion(true)
+					.objectTappedCallback(callback: .init(
 						callback: { [viewModel = self.viewModel] objectInfo in
-							viewModel.tap(objectInfo: objectInfo)
+							Task { @MainActor [weak viewModel] in
+								viewModel?.tap(objectInfo: objectInfo)
+							}
 						}
 					))
-				self.viewModel.mapMarkerViewOverlay
+				self.viewModel.markerOverlayView
 			}
 			.edgesIgnoringSafeArea(.all)
 			HStack {
 				VStack {
 					Spacer()
-					self.mapControlViewFactory.makeIndoorView()
+					self.mapViewsFactory.makeIndoorView()
 						.frame(width: 38, height: 119)
 						.fixedSize()
 					Spacer()
@@ -42,15 +44,15 @@ struct MapViewMarkersDemoView: View {
 				Spacer()
 				VStack {
 					Spacer()
-					self.mapControlViewFactory.makeZoomView()
+					self.mapViewsFactory.makeZoomView()
 						.frame(width: 48, height: 102)
 						.fixedSize()
 					Spacer()
-					self.mapControlViewFactory.makeCompassView()
+					self.mapViewsFactory.makeCompassView()
 						.frame(width: 48)
 						.fixedSize()
 						.padding(.bottom, -32)
-					self.mapControlViewFactory.makeCurrentLocationView()
+					self.mapViewsFactory.makeCurrentLocationView()
 						.frame(width: 48)
 						.fixedSize()
 				}

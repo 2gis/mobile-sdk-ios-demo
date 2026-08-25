@@ -9,6 +9,7 @@ final class SettingsViewModel: ObservableObject {
 	let navigatorControlsList: [NavigatorControls]
 	let navigatorDashboardButtons: [NavigatorDashboardButton]
 	let mapDataSources: [MapDataSource]
+	let positioningServicesSources: [PositioningServicesSource]
 	let logLevels: [DGis.LogLevel]
 	let mapThemes: [MapTheme]
 	let geolocationMarkerTypes: [GeolocationMarkerType]
@@ -27,6 +28,13 @@ final class SettingsViewModel: ObservableObject {
 		didSet {
 			if oldValue != self.language {
 				self.settingsService.language = self.language
+			}
+		}
+	}
+	@Published var positioningServicesSource: PositioningServicesSource {
+		didSet {
+			if oldValue != self.positioningServicesSource {
+				self.settingsService.positioningServicesSource = self.positioningServicesSource
 			}
 		}
 	}
@@ -141,6 +149,7 @@ final class SettingsViewModel: ObservableObject {
 	init(
 		settingsService: ISettingsService,
 		mapDataSources: [MapDataSource] = MapDataSource.allCases,
+		positioningServicesSources: [PositioningServicesSource] = PositioningServicesSource.allCases,
 		navigatorThemes: [NavigatorTheme] = NavigatorTheme.allCases,
 		navigatorControlsList: [NavigatorControls] = NavigatorControls.allCases,
 		navigatorDashboardButtons: [NavigatorDashboardButton] = NavigatorDashboardButton.allCases,
@@ -154,6 +163,8 @@ final class SettingsViewModel: ObservableObject {
 		self.settingsService = settingsService
 		self.mapDataSources = mapDataSources
 		self.mapDataSource = settingsService.mapDataSource
+		self.positioningServicesSources = positioningServicesSources
+		self.positioningServicesSource = settingsService.positioningServicesSource
 		self.navigatorThemes = navigatorThemes
 		self.navigatorTheme = settingsService.navigatorTheme
 		self.navigatorControlsList = navigatorControlsList

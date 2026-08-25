@@ -1,7 +1,7 @@
-import SwiftUI
 import Combine
 import CoreLocation
 import DGis
+import SwiftUI
 
 enum StyleZoomFollowControllerType: CaseIterable, PickerViewOption {
 	case `default`, custom
@@ -9,15 +9,19 @@ enum StyleZoomFollowControllerType: CaseIterable, PickerViewOption {
 	var id: StyleZoomFollowControllerType { self }
 	var name: String {
 		switch self {
-			case .default:
-				return "Default"
-			case .custom:
-				return "Custom"
+		case .default:
+			return "Default"
+		case .custom:
+			return "Custom"
+		@unknown default:
+			assertionFailure("Unknown type: \(self)")
+			return "Unknown type: \(self)"
 		}
 	}
 }
 
-final class NavigatorDemoViewModel: ObservableObject {
+@MainActor
+final class NavigatorDemoViewModel: ObservableObject, @unchecked Sendable {
 	private enum Constants {
 		static let kmhToMs = 1 / 3.6
 		static let minStyleZoom: Double = 15.0
@@ -55,31 +59,44 @@ final class NavigatorDemoViewModel: ObservableObject {
 			self.stateChangedCallback?()
 		}
 	}
+
 	@Published var isErrorAlertShown: Bool = false
 	@Published var request: RequestType? {
 		didSet {
 			self.requestChangedCallback?()
 		}
 	}
+
 	@Published var styleZoomFollowControllerType: StyleZoomFollowControllerType {
 		didSet {
 			if oldValue != self.styleZoomFollowControllerType {
 				switch self.styleZoomFollowControllerType {
-					case .default:
-						self.stopStyleZoomVariation()
-					case .custom:
-						self.startStyleZoomVariation()
+				case .default:
+					self.stopStyleZoomVariation()
+				case .custom:
+					self.startStyleZoomVariation()
+				@unknown default:
+					assertionFailure("Unknown type: \(self)")
 				}
 			}
 		}
 	}
+
 	@Published var showCloseMenu: Bool = false
+	@Published var isMiniMapSelected: Bool {
+		didSet {
+			self.settingsService.isMiniMapSelected = self.isMiniMapSelected
+		}
+	}
+
 	var isStopNavigationButtonVisible: Bool {
 		self.isTargetPointSearchInProgress
 	}
+
 	var showTargetPointPicker: Bool {
 		self.isTargetPointSearchInProgress
 	}
+
 	var showRouteSearchMessage: Bool {
 		guard case .routeSearch = self.state else { return false }
 		return true
@@ -90,17 +107,21 @@ final class NavigatorDemoViewModel: ObservableObject {
 			self.isErrorAlertShown = self.errorMessage != nil
 		}
 	}
+
 	let navigatorSettingsViewModel: NavigatorSettingsViewModel
 	let settingsService: ISettingsService
 	var navigatorModel: DGis.Model {
 		self.navigationManager.uiModel
 	}
+
 	var mapId: String {
 		"\(self.map.id.value)"
 	}
+
 	var isFreeRoam: Bool {
 		self.navigatorModel.isFreeRoam
 	}
+
 	let navigationManager: NavigationManager
 	var stateChangedCallback: (() -> Void)?
 	var requestChangedCallback: (() -> Void)?
@@ -112,6 +133,8 @@ final class NavigatorDemoViewModel: ObservableObject {
 	}
 
 	private let map: Map
+	private let mainMapEnergyConsumption: IEnergyConsumption
+	private var miniMapEnergyConsumption: IEnergyConsumption?
 	private let trafficRouter: TrafficRouter
 	private let locationService: ILocationService
 	private let voiceManager: VoiceManager
@@ -124,12 +147,13 @@ final class NavigatorDemoViewModel: ObservableObject {
 	private var voiceChangedCancellable: AnyCancellable?
 	private var getRenderedObjectsCancellable: ICancellable?
 	private var styleZoomFollowControllerTypeCancellable: AnyCancellable?
+	private var cameraStateCancellable: DGis.Cancellable?
 	private var isVoiceConfigured: Bool = false
-	private var styleZoomAnimator: ValueAnimator? = nil
+	private var styleZoomAnimator: ValueAnimator?
 	private var intermediatePoints: [RouteSearchPoint] = []
 	private let logger: ILogger
 	private lazy var storage: IKeyValueStorage = UserDefaults.standard
-	private lazy var mapObjectManager: MapObjectManager = MapObjectManager(map: self.map)
+	private lazy var mapObjectManager: MapObjectManager = .init(map: self.map)
 	private lazy var intermediatePointMarkerIcon: DGis.Image = {
 		let icon = UIImage(systemName: "mappin.and.ellipse")!
 			.withTintColor(#colorLiteral(red: 0.2470588235, green: 0.6, blue: 0.1607843137, alpha: 1))
@@ -139,6 +163,8 @@ final class NavigatorDemoViewModel: ObservableObject {
 
 	init(
 		map: Map,
+		mainMapEnergyConsumption: IEnergyConsumption,
+		miniMapEnergyConsumption: IEnergyConsumption? = nil,
 		trafficRouter: TrafficRouter,
 		navigationManager: NavigationManager,
 		locationService: ILocationService,
@@ -151,6 +177,8 @@ final class NavigatorDemoViewModel: ObservableObject {
 		imageFactory: IImageFactory
 	) throws {
 		self.map = map
+		self.mainMapEnergyConsumption = mainMapEnergyConsumption
+		self.miniMapEnergyConsumption = miniMapEnergyConsumption
 		self.trafficRouter = trafficRouter
 		self.navigationManager = navigationManager
 		self.locationService = locationService
@@ -159,6 +187,7 @@ final class NavigatorDemoViewModel: ObservableObject {
 		self.logger = logger
 		self.settingsService = settingsService
 		self.imageFactory = imageFactory
+		self.isMiniMapSelected = settingsService.isMiniMapSelected
 		let styleZoomFollowControllerType = Constants.defaultStyleZoomFollowControllerType
 		self.styleZoomFollowControllerType = styleZoomFollowControllerType
 		self.navigatorSettingsViewModel = NavigatorSettingsViewModel(
@@ -173,7 +202,6 @@ final class NavigatorDemoViewModel: ObservableObject {
 			.receive(on: DispatchQueue.main)
 			.sink {
 				[weak self] type in
-
 				self?.styleZoomFollowControllerType = type
 			}
 
@@ -182,9 +210,8 @@ final class NavigatorDemoViewModel: ObservableObject {
 			.receive(on: DispatchQueue.main)
 			.sink {
 				[weak self] voice in
-
 				self?.updateNavigatorVoice(voice)
-		}
+			}
 
 		let locationSource = mapSourceFactory.makeMyLocationMapObjectSource(
 			bearingSource: .satellite
@@ -194,6 +221,12 @@ final class NavigatorDemoViewModel: ObservableObject {
 			self.map.addSource(source: mapSourceFactory.makeRoadEventSource())
 		}
 		self.setupCamera()
+		self.cameraStateCancellable = self.map.camera.sinkOnStatefulChangesOnMainThread(reason: .state) { [weak self] (state: CameraState) in
+			Task { @MainActor [weak self] in
+				guard let self else { return }
+				self.handleStateChange(state: state)
+			}
+		}
 	}
 
 	func tap(_ objectInfo: RenderedObjectInfo) {
@@ -204,12 +237,13 @@ final class NavigatorDemoViewModel: ObservableObject {
 		self.touchHandle(objectInfo, touchType: .longPress)
 	}
 
+	@MainActor
 	func startNavigation() {
 		guard self.isTargetPointSearchInProgress else { return }
 		self.state = .routeSearch
 		let options = self.navigatorSettingsViewModel.navigatorOptions
 		self.getCurrentPosition { [weak self] coordinate in
-			guard let coordinate = coordinate else {
+			guard let coordinate else {
 				self?.errorMessage = "We can't find you:("
 				self?.stopNavigation()
 				return
@@ -249,7 +283,7 @@ final class NavigatorDemoViewModel: ObservableObject {
 		}
 
 		guard let navigationState = self.navigatorSettingsViewModel.navigationState,
-			  let targetPoint = navigationState.finishPoint
+		      let targetPoint = navigationState.finishPoint
 		else {
 			return
 		}
@@ -284,7 +318,7 @@ final class NavigatorDemoViewModel: ObservableObject {
 
 		if self.navigationManager.uiModel.isFreeRoam {
 			self.getCurrentPosition { [weak self] coordinate in
-				guard let coordinate = coordinate else {
+				guard let coordinate else {
 					self?.errorMessage = "We can't find you:("
 					return
 				}
@@ -312,10 +346,25 @@ final class NavigatorDemoViewModel: ObservableObject {
 		}
 	}
 
+	private func handleStateChange(state: CameraState) {
+		switch state {
+		case .free:
+			self.mainMapEnergyConsumption.maxFps = 30
+			self.mainMapEnergyConsumption.powerSavingMaxFps = 20
+			self.miniMapEnergyConsumption?.maxFps = 20
+			self.miniMapEnergyConsumption?.powerSavingMaxFps = 10
+		default:
+			self.mainMapEnergyConsumption.maxFps = UIScreen.main.maximumFramesPerSecond
+			self.mainMapEnergyConsumption.powerSavingMaxFps = UIScreen.main.maximumFramesPerSecond / 2
+			self.miniMapEnergyConsumption?.maxFps = 20
+			self.miniMapEnergyConsumption?.powerSavingMaxFps = 10
+		}
+	}
+
 	private func searchRoute(
 		to targetPoint: RouteSearchPoint,
 		currentLocation: CLLocationCoordinate2D,
-		completion: @escaping (Result<[TrafficRoute], Error>) -> Void
+		completion: @escaping @Sendable (Result<[TrafficRoute], Error>) -> Void
 	) {
 		let routeSearchOptions = self.navigatorSettingsViewModel.routeType.routeSearchOptions
 		self.routeSearchCancellable?.cancel()
@@ -361,11 +410,14 @@ final class NavigatorDemoViewModel: ObservableObject {
 				objectId: mapObject.id,
 				levelId: objectInfo.levelId
 			)
-			self?.searchRoute(to: targetPoint, currentLocation: currentLocation) { [weak self] result in
-				self?.handle(routeSearchResult: result, targetPoint: targetPoint, options: options)
+			Task { @MainActor [weak self] in
+				self?.searchRoute(to: targetPoint, currentLocation: currentLocation) { [weak self] result in
+					Task { @MainActor [weak self] in
+						self?.handle(routeSearchResult: result, targetPoint: targetPoint, options: options)
+					}
+				}
 			}
 		} failure: { _ in
-			return
 		}
 	}
 
@@ -379,14 +431,14 @@ final class NavigatorDemoViewModel: ObservableObject {
 		self.navigationManager.apply(self.navigatorSettingsViewModel.betterRouteSettings)
 		self.navigationManager.apply(self.navigatorSettingsViewModel.freeRoamSettings)
 		switch options.mode {
-			case .freeRoam:
-				self.startFreeRoamNavigation()
-			case .default, .simulation:
-				self.searchRoute(
-					currentLocation: currentLocation,
-					options: options,
-					finishPoint: targetPoint
-				)
+		case .freeRoam:
+			self.startFreeRoamNavigation()
+		case .default, .simulation:
+			self.searchRoute(
+				currentLocation: currentLocation,
+				options: options,
+				finishPoint: targetPoint
+			)
 		}
 	}
 
@@ -410,22 +462,22 @@ final class NavigatorDemoViewModel: ObservableObject {
 		options: NavigatorOptions
 	) {
 		switch routeSearchResult {
-			case .success(let routes):
-				if routes.isEmpty {
-					self.handle(routeSearchError: "Route not found.")
-				} else if routes.count > 1 {
-					self.request = .routeSelection(routes)
-					self.state = .routeSelection(targetPoint, options)
-				} else {
-					self.startNavigation(
-						route: routes[0],
-						targetPoint: targetPoint,
-						simulation: options.mode == .simulation,
-						simulationSpeedKmH: options.simulationSpeedKmH
-					)
-				}
-			case .failure(let error):
-				self.handle(routeSearchError: error.localizedDescription)
+		case let .success(routes):
+			if routes.isEmpty {
+				self.handle(routeSearchError: "Route not found.")
+			} else if routes.count > 1 {
+				self.request = .routeSelection(routes)
+				self.state = .routeSelection(targetPoint, options)
+			} else {
+				self.startNavigation(
+					route: routes[0],
+					targetPoint: targetPoint,
+					simulation: options.mode == .simulation,
+					simulationSpeedKmH: options.simulationSpeedKmH
+				)
+			}
+		case let .failure(error):
+			self.handle(routeSearchError: error.localizedDescription)
 		}
 	}
 
@@ -474,7 +526,7 @@ final class NavigatorDemoViewModel: ObservableObject {
 		self.styleZoomFollowController.setStyleZoom(styleZoom: initialStyleZoom)
 	}
 
-	private func getCurrentPosition(completion: @escaping (CLLocationCoordinate2D?) -> ()) {
+	private func getCurrentPosition(completion: @escaping (CLLocationCoordinate2D?) -> Void) {
 		self.locationService.getCurrentPosition { coordinate in
 			DispatchQueue.main.async {
 				completion(coordinate)
@@ -483,19 +535,21 @@ final class NavigatorDemoViewModel: ObservableObject {
 	}
 
 	private func startStyleZoomVariation() {
-		self.map.camera.setCustomFollowController(followController: styleZoomFollowController)
+		self.map.camera.setCustomFollowController(followController: self.styleZoomFollowController)
 		guard self.styleZoomAnimator == nil else { return }
 
 		self.styleZoomAnimator = ValueAnimator(
 			from: 0,
 			to: Constants.maxStyleZoom - Constants.minStyleZoom,
 			duration: Constants.animationDuration,
-			animationCurveFunction: { time, duration in
-				return abs(sin(time))
+			animationCurveFunction: { time, _ in
+				abs(sin(time))
 			},
 			valueUpdater: { value in
 				let currentStyleZoom = Constants.minStyleZoom + value
-				self.styleZoomFollowController.setStyleZoom(styleZoom: StyleZoom(value: Float(currentStyleZoom)))
+				Task { @MainActor [weak self] in
+					self?.styleZoomFollowController.setStyleZoom(styleZoom: StyleZoom(value: Float(currentStyleZoom)))
+				}
 			}
 		)
 		self.styleZoomAnimator?.start()
@@ -512,59 +566,62 @@ final class NavigatorDemoViewModel: ObservableObject {
 		let tapPoint = objectInfo.closestViewportPoint
 		let cancel = self.map.getRenderedObjects(centerPoint: tapPoint, radius: ScreenDistance(value: 5)).sinkOnMainThread(
 			receiveValue: { [weak self] infos in
-				var roadEvent: RoadEvent? = nil
-				var alternativeRoute: TrafficRoute? = nil
-				for info in infos {
-					if roadEvent == nil, info.item.item is RoadEventMapObject {
-						roadEvent = (info.item.item as? RoadEventMapObject)?.event
-					} else if alternativeRoute == nil, info.item.item is RouteMapObject {
-						alternativeRoute = (info.item.item as! RouteMapObject).isActive ? nil : (info.item.item as! RouteMapObject).route
+				Task { @MainActor [weak self] in
+					var roadEvent: RoadEvent?
+					var alternativeRoute: TrafficRoute?
+					for info in infos {
+						if roadEvent == nil, info.item.item is RoadEventMapObject {
+							roadEvent = (info.item.item as? RoadEventMapObject)?.event
+						} else if alternativeRoute == nil, info.item.item is RouteMapObject {
+							alternativeRoute = (info.item.item as! RouteMapObject).isActive ? nil : (info.item.item as! RouteMapObject).route
+						}
+						if roadEvent != nil, alternativeRoute != nil {
+							break
+						}
 					}
-					if roadEvent != nil, alternativeRoute != nil {
-						break
-					}
-				}
-				switch touchType {
-				case .tap:
-					if let alternativeRoute {
-						self?.navigationManager.alternativeRouteSelector.selectAlternativeRoute(trafficRoute: alternativeRoute)
-					}
-					else if let roadEvent {
-						self?.roadEventCardPresenterCallback?(roadEvent)
-					}
-				case .longPress:
-					guard
-						roadEvent == nil,
-						let renderObject = infos.first,
-						let dgisObject = renderObject.item.item as? DgisMapObject,
-						let self = self
-					else {
-						return
-					}
+					switch touchType {
+					case .tap:
+						if let alternativeRoute {
+							self?.navigationManager.alternativeRouteSelector.selectAlternativeRoute(trafficRoute: alternativeRoute)
+						} else if let roadEvent {
+							self?.roadEventCardPresenterCallback?(roadEvent)
+						}
+					case .longPress:
+						guard
+							roadEvent == nil,
+							let renderObject = infos.first,
+							let dgisObject = renderObject.item.item as? DgisMapObject,
+							let self
+						else {
+							return
+						}
 
-					let mapPoint = renderObject.closestMapPoint
-					let markerOptions = MarkerOptions(
-						position: mapPoint,
-						icon: self.intermediatePointMarkerIcon
-					)
-					do {
-						let marker = try Marker(options: markerOptions)
-						self.mapObjectManager.addObject(item: marker)
-					} catch let error as SimpleError {
-						self.errorMessage = error.description
-					} catch {
-						self.errorMessage = error.localizedDescription
-					}
+						let mapPoint = renderObject.closestMapPoint
+						let markerOptions = MarkerOptions(
+							position: mapPoint,
+							icon: self.intermediatePointMarkerIcon
+						)
+						do {
+							let marker = try Marker(options: markerOptions)
+							self.mapObjectManager.addObject(item: marker)
+						} catch let error as SimpleError {
+							self.errorMessage = error.description
+						} catch {
+							self.errorMessage = error.localizedDescription
+						}
 
-					let routePoint = RouteSearchPoint(
-						coordinates: mapPoint.point,
-						objectId: dgisObject.id
-					)
-					self.request = .addIntermediatePoint(routePoint)
+						let routePoint = RouteSearchPoint(
+							coordinates: mapPoint.point,
+							objectId: dgisObject.id
+						)
+						self.request = .addIntermediatePoint(routePoint)
+					}
 				}
 			},
 			failure: { [weak self] error in
-				self?.logger.error("Failed to fetch objects: \(error)")
+				Task { @MainActor [weak self] in
+					self?.logger.error("Failed to fetch objects: \(error)")
+				}
 			}
 		)
 		self.getRenderedObjectsCancellable = cancel
@@ -583,8 +640,9 @@ final class NavigatorDemoViewModel: ObservableObject {
 		let intermediatePoints = self.navigatorModel.route.route.intermediatePoints
 		if intermediatePoints.entries.count > 0,
 		   let intermediatePointEntry = intermediatePoints.findNearForward(point: routePosition),
-		   let index = intermediatePoints.entries.firstIndex(of: intermediatePointEntry) {
-			for itemIndex in index..<intermediatePoints.entries.count {
+		   let index = intermediatePoints.entries.firstIndex(of: intermediatePointEntry)
+		{
+			for itemIndex in index ..< intermediatePoints.entries.count {
 				self.intermediatePoints.append(RouteSearchPoint(coordinates: intermediatePoints.entries[itemIndex].value))
 			}
 		}
@@ -595,12 +653,14 @@ final class NavigatorDemoViewModel: ObservableObject {
 			longitude: routePositionPoint.longitude.value
 		)
 		self.searchRoute(to: targetPoint, currentLocation: currentLocation) { [weak self] result in
-			guard let self = self else { return }
-			self.handle(
-				routeSearchResult: result,
-				targetPoint: targetPoint,
-				options: self.navigatorSettingsViewModel.navigatorOptions
-			)
+			Task { @MainActor [weak self] in
+				guard let self else { return }
+				self.handle(
+					routeSearchResult: result,
+					targetPoint: targetPoint,
+					options: self.navigatorSettingsViewModel.navigatorOptions
+				)
+			}
 		}
 	}
 }

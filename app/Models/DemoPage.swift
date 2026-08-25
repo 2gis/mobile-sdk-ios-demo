@@ -1,5 +1,5 @@
 enum DemoCategory: String, CaseIterable, Identifiable {
-	case map, search, navigation
+	case map, search, sandbox, navigation
 
 	var id: String {
 		self.rawValue
@@ -11,41 +11,51 @@ enum DemoCategory: String, CaseIterable, Identifiable {
 			return "Map"
 		case .search:
 			return "Search"
+		case .sandbox:
+			return "Sandbox"
 		case .navigation:
 			return "Navigation"
+		@unknown default:
+			assertionFailure("Unknown value for DemoCategory")
 		}
 	}
-	
+
 	var iconName: String {
 		switch self {
 		case .map:
 			return "map"
 		case .search:
 			return "magnifyingglass"
+		case .sandbox:
+			return "lightbulb"
 		case .navigation:
 			return "location.circle"
+		@unknown default:
+			assertionFailure("Unknown value for DemoCategory")
 		}
 	}
 }
 
 enum DemoFramework: String, CaseIterable, Identifiable {
 	case uiKit, swiftUI
-	
+
 	var id: String {
 		self.rawValue
 	}
-	
+
 	var displayName: String {
 		switch self {
 		case .uiKit:
 			return "UIKit"
 		case .swiftUI:
 			return "SwiftUI"
+		@unknown default:
+			assertionFailure("Unknown value for DemoFramework")
 		}
 	}
 }
 
-enum DemoPage: String, CaseIterable, Identifiable {
+enum DemoPage: String, CaseIterable {
 	case benchmark
 	case cache
 	case cameraCalcPosition
@@ -60,6 +70,7 @@ enum DemoPage: String, CaseIterable, Identifiable {
 	case graphicsOptions
 	case locale
 	case mapControls
+    case mapGestureSettings
 	case mapInteraction
 	case mapObjects
 	case mapSnapshot
@@ -75,12 +86,10 @@ enum DemoPage: String, CaseIterable, Identifiable {
 	case visibleRectVisibleArea
 	case minimap
 	case navigator
-	case packageManager
+	case navigatorWithMiniMap
+	case territoryManager
 	case routeEditor
-
-	var id: String {
-		return self.rawValue
-	}
+    case routeEditorControl
 
 	var name: String {
 		switch self {
@@ -102,6 +111,8 @@ enum DemoPage: String, CaseIterable, Identifiable {
 			return "Custom gestures"
 		case .customMapControls:
 			return "Custom map controls"
+        case .mapGestureSettings:
+            return "Map gesture settings"
 		case .directorySearch:
 			return "Directory search"
 		case .fpsRestrictions:
@@ -142,10 +153,16 @@ enum DemoPage: String, CaseIterable, Identifiable {
 			return "Minimap"
 		case .navigator:
 			return "Navigator"
-		case .packageManager:
-			return "Package manager"
+		case .navigatorWithMiniMap:
+			return "Navigator with minimap"
+		case .territoryManager:
+			return "Territory manager"
 		case .routeEditor:
 			return "Route editor"
+        case .routeEditorControl:
+            return "Route editor control"
+		@unknown default:
+			assertionFailure("Unknown value for DemoPage")
 		}
 	}
 
@@ -160,7 +177,7 @@ enum DemoPage: String, CaseIterable, Identifiable {
 		case .mapViewMarkers:
 			return [.swiftUI, .uiKit]
 		case .roadEvents:
-			return [.uiKit]
+			return [.swiftUI, .uiKit]
 		case .navigator:
 			return [.swiftUI, .uiKit]
 		default: return [.swiftUI]
@@ -173,12 +190,22 @@ enum DemoPage: String, CaseIterable, Identifiable {
 			return .search
 		case .routeEditor:
 			return .navigation
+        case .routeEditorControl:
+            return .navigation
 		case .minimap:
 			return .navigation
 		case .navigator:
 			return .navigation
-		default :
+		case .navigatorWithMiniMap:
+			return .navigation
+		default:
 			return .map
 		}
+	}
+}
+
+extension DemoPage: Identifiable {
+	var id: String {
+		self.rawValue
 	}
 }

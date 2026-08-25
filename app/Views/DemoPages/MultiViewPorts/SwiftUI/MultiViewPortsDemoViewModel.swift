@@ -1,7 +1,8 @@
-import SwiftUI
+import Combine
 import DGis
+import SwiftUI
 
-final class MultiViewPortsDemoViewModel: ObservableObject {
+final class MultiViewPortsDemoViewModel: ObservableObject, @unchecked Sendable {
 	@Published var firstMapLoaded: Bool = false
 	@Published var secondMapLoaded: Bool = false
 	@Published var useMultiViewPorts: Bool = false {
@@ -13,6 +14,7 @@ final class MultiViewPortsDemoViewModel: ObservableObject {
 			}
 		}
 	}
+
 	let firstPosition = CameraPosition(point: GeoPoint(latitude: 55.7, longitude: 37.6), zoom: 11.0)
 	let secondPosition = CameraPosition(point: GeoPoint(latitude: 55.7, longitude: 37.6), zoom: 13.0)
 	private let firstMapSource: Source?
@@ -32,13 +34,13 @@ final class MultiViewPortsDemoViewModel: ObservableObject {
 		self.secondMapSource = secondMap.sources.first
 		self.firstDataLoadingStateChannelCancellable = self.firstMap.dataLoadingStateChannel.sinkOnMainThread(
 			{ [weak self] state in
-				guard let self = self else { return }
+				guard let self else { return }
 				self.firstMapLoaded = state == .loaded
 			}
 		)
 		self.secondDataLoadingStateChannelCancellable = self.secondMap.dataLoadingStateChannel.sinkOnMainThread(
 			{ [weak self] state in
-				guard let self = self else { return }
+				guard let self else { return }
 				self.secondMapLoaded = state == .loaded
 			}
 		)

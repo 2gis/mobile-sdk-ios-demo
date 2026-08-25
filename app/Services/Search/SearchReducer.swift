@@ -1,5 +1,6 @@
 import DGis
 
+@MainActor
 final class SearchReducer {
 	private let service: SearchService
 	private let history: SearchHistoryService
@@ -92,7 +93,7 @@ final class SearchReducer {
 			state.navigation = .openSuggest(suggest.id)
 			switch suggest.applyHandler {
 			case let .objectHandler(handler):
-				let historyItem = SearchHistoryItem.directoryObject(handler!.item)
+				let historyItem = SearchHistoryItem.directoryObject(handler.item)
 				self.history.addItem(item: historyItem)
 				state.history = .empty
 			default: fatalError()
@@ -115,7 +116,7 @@ final class SearchReducer {
 		case let .handleSearchHistoryItem(itemViewModel):
 			let searchHistoryItem = itemViewModel.item
 			switch searchHistoryItem {
-			case .directoryObject(_):
+			case .directoryObject:
 				self.history.addItem(item: searchHistoryItem)
 				guard let objectViewModel = itemViewModel.objectViewModel else {
 					fatalError("Search history view model is in an inconsistent internal state.")
@@ -129,6 +130,9 @@ final class SearchReducer {
 					addToHistory: true
 				)
 				.store(in: &result)
+				state.queryText = searchQuery.title
+			@unknown default:
+				fatalError("Unknown type: \(searchHistoryItem)")
 			}
 
 		case let .removeSearchHistoryItem(itemViewModel):
@@ -141,10 +145,10 @@ final class SearchReducer {
 	}
 }
 
-typealias Dispatcher = (SearchAction) -> Void
+typealias Dispatcher = @Sendable (SearchAction) -> Void
 
 struct Thunk {
-	typealias Body = (@escaping Dispatcher) -> Void
+	typealias Body = @Sendable (@escaping Dispatcher) -> Void
 	private var body: Body
 
 	init(body: @escaping Body) {

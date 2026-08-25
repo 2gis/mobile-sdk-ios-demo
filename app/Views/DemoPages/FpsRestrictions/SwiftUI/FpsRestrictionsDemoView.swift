@@ -21,10 +21,10 @@ struct FpsRestrictionsDemoView: View {
 	var body: some View {
 		GeometryReader { geometry in
 			ZStack(alignment: .bottom) {
-				self.mapFactory.mapViewOverlay
-				.mapViewOverlayShowsAPIVersion(true)
-				.mapViewOverlayCopyrightAlignment(.bottomRight)
-				.mapViewOverlayCopyrightInsets(
+				self.mapFactory.mapView
+				.showsAPIVersion(true)
+				.copyrightAlignment(.bottomRight)
+				.copyrightInsets(
 					EdgeInsets(
 						top: 0,
 						leading: 0,

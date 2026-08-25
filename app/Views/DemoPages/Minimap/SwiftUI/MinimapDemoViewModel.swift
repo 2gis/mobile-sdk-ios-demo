@@ -1,43 +1,47 @@
-import SwiftUI
 import Combine
 import DGis
+import SwiftUI
 
-final class MinimapDemoViewModel: ObservableObject {
+final class MinimapDemoViewModel: ObservableObject, @unchecked Sendable {
 	enum State {
 		case initial
 		case routeSearch
 		case navigation
 		case error(String)
 	}
+
 	private enum Constants {
 		static let startPoint = GeoPoint(latitude: 55.75710, longitude: 37.6149)
-		static let targetPoint = GeoPoint(latitude: 57.6276827, longitude: 39.8710012)
+		static let targetPoint = GeoPoint(latitude: 48.480229, longitude: 135.071917)
 		static let cameraPositionPoint = CameraPositionPoint(x: 0.5, y: 0.8)
-		static let cameraBehaviour =  CameraBehaviour(position: .init(bearing: .on, styleZoom: .on))
-		static let miniMapCameraBehaviour =  CameraBehaviour(position: .init(bearing: .on, styleZoom: .off))
+		static let cameraBehaviour = CameraBehaviour(position: .init(bearing: .on, styleZoom: .on))
 		static let mapCameraPosition = CameraPosition(point: Constants.startPoint, zoom: Zoom(value: 15))
-		static let miniMapCameraPosition = CameraPosition(point: Constants.startPoint, zoom: Zoom(value: 12))
 		static let targetMiniMapCameraPosition = CameraPosition(point: Constants.targetPoint, zoom: Zoom(value: 12))
 		static let routeSearchErrorMessage = "Не удалось построить маршрут"
 	}
 
-
 	@Published private(set) var state: State = .initial
+	private(set) var navigationManager: NavigationManager
 	private let map: Map
 	private let miniMap: Map
 	private let targetMiniMap: Map
+	private let mainMapEnergyConsumption: IEnergyConsumption
+	private let miniMapEnergyConsumption: IEnergyConsumption
+	private let targetMiniMapEnergyConsumption: IEnergyConsumption
 	private let targetMapObjectManager: MapObjectManager
 	private let imageFactory: IImageFactory
-	private let navigationManager: NavigationManager
 	private let trafficRouter: TrafficRouter
 	private let logger: ILogger
 	private var routeSearchCancellable: ICancellable?
+	private var cameraStateCancellable: DGis.Cancellable?
 	private var isRouteSearchAvailable: Bool {
 		switch self.state {
-			case .initial, .error:
-				return true
-			case .navigation, .routeSearch:
-				return false
+		case .initial, .error:
+			true
+		case .navigation, .routeSearch:
+			false
+		@unknown default:
+			true
 		}
 	}
 
@@ -52,8 +56,10 @@ final class MinimapDemoViewModel: ObservableObject {
 		map: Map,
 		miniMap: Map,
 		targetMiniMap: Map,
+		mainMapEnergyConsumption: IEnergyConsumption,
+		miniMapEnergyConsumption: IEnergyConsumption,
+		targetMiniMapEnergyConsumption: IEnergyConsumption,
 		imageFactory: IImageFactory,
-		mapSourceFactory: IMapSourceFactory,
 		navigationManager: NavigationManager,
 		trafficRouter: TrafficRouter,
 		logger: ILogger
@@ -61,6 +67,9 @@ final class MinimapDemoViewModel: ObservableObject {
 		self.map = map
 		self.miniMap = miniMap
 		self.targetMiniMap = targetMiniMap
+		self.mainMapEnergyConsumption = mainMapEnergyConsumption
+		self.miniMapEnergyConsumption = miniMapEnergyConsumption
+		self.targetMiniMapEnergyConsumption = targetMiniMapEnergyConsumption
 		self.targetMapObjectManager = MapObjectManager(map: self.targetMiniMap)
 		self.imageFactory = imageFactory
 		self.navigationManager = navigationManager
@@ -71,24 +80,18 @@ final class MinimapDemoViewModel: ObservableObject {
 		try self.map.camera.setPosition(position: Constants.mapCameraPosition)
 		self.map.camera.setBehaviour(behaviour: Constants.cameraBehaviour)
 
-		self.miniMap.interactive = false
-		try self.miniMap.camera.setPositionPoint(positionPoint: Constants.cameraPositionPoint)
-		try self.miniMap.camera.setPosition(position: Constants.miniMapCameraPosition)
-		self.miniMap.camera.setBehaviour(behaviour: Constants.miniMapCameraBehaviour)
-
-		self.targetMiniMap.interactive = false
 		try self.targetMiniMap.camera.setPosition(position: Constants.targetMiniMapCameraPosition)
 		self.addTargetMarker()
 
 		self.navigationManager.mapManager.addMap(map: map)
-		self.navigationManager.mapManager.addMap(map: miniMap)
 	}
 
+	@MainActor
 	func startNavigation() {
 		guard self.isRouteSearchAvailable else { return }
 		self.state = .routeSearch
 		self.routeSearchCancellable?.cancel()
-		
+
 		let startPoint = RouteSearchPoint(coordinates: Constants.startPoint)
 		let finishPoint = RouteSearchPoint(coordinates: Constants.targetPoint)
 		let routeSearchOptions = RouteSearchOptions.car(.init())
@@ -107,8 +110,14 @@ final class MinimapDemoViewModel: ObservableObject {
 			self?.state = .error("\(Constants.routeSearchErrorMessage) \(error.localizedDescription)")
 			self?.logger.error("Unable to find route: \(error)")
 		}
+		self.cameraStateCancellable = self.map.camera.sinkOnStatefulChangesOnMainThread(reason: .state) { [weak self] (state: CameraState) in
+			Task { @MainActor [weak self] in
+				guard let self else { return }
+				self.handleStateChange(state: state)
+			}
+		}
 	}
-	
+
 	func stopNavigation() {
 		self.navigationManager.stop()
 	}
@@ -133,6 +142,26 @@ final class MinimapDemoViewModel: ObservableObject {
 		}
 	}
 
+	@MainActor
+	private func handleStateChange(state: CameraState) {
+		switch state {
+		case .free:
+			self.mainMapEnergyConsumption.maxFps = 30
+			self.mainMapEnergyConsumption.powerSavingMaxFps = 20
+			self.miniMapEnergyConsumption.maxFps = 20
+			self.miniMapEnergyConsumption.powerSavingMaxFps = 10
+			self.targetMiniMapEnergyConsumption.maxFps = 20
+			self.targetMiniMapEnergyConsumption.powerSavingMaxFps = 10
+		default:
+			self.mainMapEnergyConsumption.maxFps = UIScreen.main.maximumFramesPerSecond
+			self.mainMapEnergyConsumption.powerSavingMaxFps = UIScreen.main.maximumFramesPerSecond / 2
+			self.miniMapEnergyConsumption.maxFps = 20
+			self.miniMapEnergyConsumption.powerSavingMaxFps = 10
+			self.targetMiniMapEnergyConsumption.maxFps = 20
+			self.targetMiniMapEnergyConsumption.powerSavingMaxFps = 10
+		}
+	}
+
 	private func addTargetMarker() {
 		let markerOptions = MarkerOptions(
 			position: .init(point: Constants.targetPoint),
@@ -142,7 +171,7 @@ final class MinimapDemoViewModel: ObservableObject {
 		)
 
 		do {
-			self.targetMapObjectManager.addObject(item: try Marker(options: markerOptions))
+			try self.targetMapObjectManager.addObject(item: Marker(options: markerOptions))
 		} catch let error as SimpleError {
 			self.state = .error("Failed to start navigator simulation: \(error.description)")
 			self.logger.error("Failed to start navigator simulation: \(error)")

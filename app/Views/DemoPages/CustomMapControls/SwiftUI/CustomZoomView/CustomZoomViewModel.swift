@@ -1,7 +1,8 @@
+import Combine
 import DGis
 import SwiftUI
 
-public final class CustomZoomViewModel: ObservableObject {
+public final class CustomZoomViewModel: ObservableObject, @unchecked Sendable {
 	@Published var zoomInHighlighted: Bool = false {
 		didSet {
 			self.zoomInHighlighted ? self.onStartZoom(button: .zoomIn) : self.onStopZoom(button: .zoomIn)
@@ -25,11 +26,11 @@ public final class CustomZoomViewModel: ObservableObject {
 		self.model = ZoomControlModel(map: map)
 
 		self.zoomInEnabledCancellable = self.model.isEnabled(button: .zoomIn).sinkOnMainThread { [weak self] isEnabled in
-			guard let self = self else { return }
+			guard let self else { return }
 			self.zoomInEnabled = isEnabled
 		}
 		self.zoomOutEnabledCancellable = self.model.isEnabled(button: .zoomOut).sinkOnMainThread { [weak self] isEnabled in
-			guard let self = self else { return }
+			guard let self else { return }
 			self.zoomOutEnabled = isEnabled
 		}
 	}

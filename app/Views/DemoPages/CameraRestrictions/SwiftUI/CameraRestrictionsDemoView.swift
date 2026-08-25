@@ -8,7 +8,7 @@ struct CameraRestrictionsDemoView: View {
 	@ObservedObject private var viewModel: CameraRestrictionsDemoViewModel
 	@State private var showingSettings = false
 	private let mapFactory: IMapFactory
-	private let mapControlViewFactory: IMapControlViewFactory
+	private let mapViewsFactory: IMapViewsFactory
 
 	init(
 		viewModel: CameraRestrictionsDemoViewModel,
@@ -16,23 +16,23 @@ struct CameraRestrictionsDemoView: View {
 	) {
 		self.viewModel = viewModel
 		self.mapFactory = mapFactory
-		self.mapControlViewFactory = mapFactory.mapControlViewFactory
+		self.mapViewsFactory = mapFactory.mapViewsFactory
 	}
 
 	var body: some View {
 		ZStack {
 			ZStack(alignment: .center) {
-				self.mapFactory.mapViewOverlay
-				.mapViewOverlayShowsAPIVersion(true)
-				.edgesIgnoringSafeArea(.all)
+				self.mapFactory.mapView
+					.showsAPIVersion(true)
+					.edgesIgnoringSafeArea(.all)
 				HStack {
 					Spacer()
 					VStack {
-						self.mapControlViewFactory.makeZoomView()
+						self.mapViewsFactory.makeZoomView()
 						.frame(width: 48, height: 102)
 						.fixedSize()
 						.padding(20)
-						self.mapControlViewFactory.makeCompassView()
+						self.mapViewsFactory.makeCompassView()
 						.frame(width: 48, height: 48)
 						.fixedSize()
 						self.customCurrentLocationControl
@@ -94,7 +94,7 @@ struct CameraRestrictionsDemoView: View {
 	}
 
 	private var customCurrentLocationControl: some View {
-		self.mapControlViewFactory.makeCurrentLocationView()
+		self.mapViewsFactory.makeCurrentLocationView()
 			.simultaneousGesture(TapGesture().onEnded {
 				self.viewModel.followControllerButtonClick()
 			})

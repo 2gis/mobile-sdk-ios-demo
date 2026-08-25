@@ -1,20 +1,33 @@
 import DGis
+import Foundation
 
 enum PackageStatus: Equatable {
-	case preinstalled, installed, installing(progress: UInt8), notInstalled, notCompatible
+	case preinstalled,
+	     installed,
+	     installing(progress: UInt8),
+	     notInstalled,
+	     notCompatible,
+	     paused,
+	     hasUpdate
 
 	var description: String {
 		switch self {
-			case .preinstalled:
-				return "Preinstalled"
-			case .installing(let progress):
-				return "Downloading \(progress)%"
-			case .notCompatible:
-				return "Is not compatible with current version"
-			case .installed:
-				return "Installed"
-			case .notInstalled:
-				return "Not installed"
+		case .preinstalled:
+			return "Preinstalled"
+		case .installing:
+			return "Loading"
+		case .notCompatible:
+			return "Isn't compatible"
+		case .installed:
+			return "Installed"
+		case .notInstalled:
+			return "Not installed"
+		case .paused:
+			return "Paused"
+		case .hasUpdate:
+			return "Has update"
+		@unknown default:
+			assertionFailure("Unknown value for PackageStatus")
 		}
 	}
 }
@@ -23,16 +36,20 @@ extension Package {
 	var status: PackageStatus {
 		if self.info.installed {
 			if self.info.updateStatus == .inProgress {
-				return .installing(progress: self.progress)
+				.installing(progress: self.progress)
+			} else if self.info.updateStatus == .paused {
+				.paused
+			} else if self.info.hasUpdate {
+				.hasUpdate
 			} else if self.info.compatible == false {
-				return .notCompatible
+				.notCompatible
 			} else if self.info.preinstalled {
-				return .preinstalled
+				.preinstalled
 			} else {
-				return .installed
+				.installed
 			}
 		} else {
-			return .notInstalled
+			.notInstalled
 		}
 	}
 

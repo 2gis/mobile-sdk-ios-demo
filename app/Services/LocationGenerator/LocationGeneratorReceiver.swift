@@ -1,21 +1,22 @@
-import Foundation
-import Network
 import Combine
 import CoreLocation
+import Foundation
+import Network
 
 protocol ILocationGeneratorReceiver {
-	/// Latest location data.
+	/// Последние данные о местоположении.
 	var locations: CurrentValueSubject<[CLLocation], Never> { get }
 
-	/// Establish a connection to start listening.
+	/// Создать соединение на прослушивание.
+	@MainActor
 	func connect()
-
-	/// Remove the connection.
+	/// Удалить соединение.
+	@MainActor
 	func disconnect()
 }
 
-final class LocationGeneratorReceiver : NSObject, ILocationGeneratorReceiver {
-	var locations: CurrentValueSubject<[CLLocation], Never> = CurrentValueSubject<[CLLocation], Never>([])
+final class LocationGeneratorReceiver: NSObject, ILocationGeneratorReceiver, @unchecked Sendable {
+	var locations: CurrentValueSubject<[CLLocation], Never> = .init([])
 
 	private let logger: ILogger
 	private let port: UInt16
@@ -32,7 +33,9 @@ final class LocationGeneratorReceiver : NSObject, ILocationGeneratorReceiver {
 	}
 
 	deinit {
-		self.disconnect()
+		MainActor.assumeIsolated { [self] in
+			self.disconnect()
+		}
 	}
 
 	func connect() {
@@ -52,9 +55,11 @@ final class LocationGeneratorReceiver : NSObject, ILocationGeneratorReceiver {
 		self.locations.value.removeAll()
 	}
 
+	@MainActor
 	private func createListener() -> NWListener? {
 		guard let port = NWEndpoint.Port(rawValue: self.port),
-			  let listener = try? NWListener(using: .udp, on: port) else {
+		      let listener = try? NWListener(using: .udp, on: port)
+		else {
 			self.logger.info("[LocationGeneratorReceiver] Unable to create server listener.")
 			return nil
 		}
@@ -63,24 +68,27 @@ final class LocationGeneratorReceiver : NSObject, ILocationGeneratorReceiver {
 			self?.stateDidChange(to: state)
 		}
 		listener.newConnectionHandler = { [weak self] connection in
-			self?.didAccept(nwConnection: connection)
+			Task { @MainActor [weak self] in
+				self?.didAccept(nwConnection: connection)
+			}
 		}
 		return listener
 	}
 
 	private func stateDidChange(to state: NWListener.State) {
 		switch state {
-			case .ready:
-				self.logger.info("[LocationGeneratorReceiver] Server ready.")
-			case .failed(let error):
-				self.logger.error(
-					"[LocationGeneratorReceiver] Server failure, error: \(error.localizedDescription)."
-				)
-			default:
-				break
+		case .ready:
+			self.logger.info("[LocationGeneratorReceiver] Server ready.")
+		case let .failed(error):
+			self.logger.error(
+				"[LocationGeneratorReceiver] Server failure, error: \(error.localizedDescription)."
+			)
+		default:
+			break
 		}
 	}
 
+	@MainActor
 	private func didAccept(nwConnection: NWConnection) {
 		let connection = ServerConnection(nwConnection: nwConnection, queue: self.queue, logger: self.logger)
 		self.connections[connection.id] = connection
@@ -106,7 +114,7 @@ final class LocationGeneratorReceiver : NSObject, ILocationGeneratorReceiver {
 
 		let string = String(data: data, encoding: .utf8)
 		var locations: [CLLocation] = []
-		if let string = string {
+		if let string {
 			var gpsDataStrings = string.split(separator: "|")
 			if string.last != "|", let last = gpsDataStrings.last {
 				gpsDataStrings.removeLast()
@@ -127,7 +135,7 @@ final class LocationGeneratorReceiver : NSObject, ILocationGeneratorReceiver {
 						return nil
 					}
 				}()
-				if let gpsData = gpsData {
+				if let gpsData {
 					locations.append(CLLocation(gpsData: gpsData))
 				}
 			}
@@ -136,8 +144,8 @@ final class LocationGeneratorReceiver : NSObject, ILocationGeneratorReceiver {
 	}
 }
 
-private struct GpsData : Decodable {
-	struct GpsDataCoordinate : Decodable {
+private struct GpsData: Decodable {
+	struct GpsDataCoordinate: Decodable {
 		public let longitude: Double
 		public let latitude: Double
 	}
@@ -168,4 +176,3 @@ private extension CLLocation {
 		)
 	}
 }
-

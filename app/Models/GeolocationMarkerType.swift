@@ -9,6 +9,8 @@ enum GeolocationMarkerType: String, CaseIterable {
 			return .model
 		case .svgIcon:
 			return .svgIcon
+		@unknown default:
+			assertionFailure("Unknown value for GeolocationMarkerType")
 		}
 	}
 }
@@ -20,10 +22,12 @@ extension GeolocationMarkerType: PickerViewOption {
 
 	var name: String {
 		switch self {
-			case .model:
-				return "3D Model"
-			case .svgIcon:
-				return "2D Icon"
+		case .model:
+			return "3D Model"
+		case .svgIcon:
+			return "2D Icon"
+		@unknown default:
+			assertionFailure("Unknown value for GeolocationMarkerType")
 		}
 	}
 }

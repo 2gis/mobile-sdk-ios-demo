@@ -13,6 +13,8 @@ final class CustomMapControlsDemoViewModel: ObservableObject {
 				return "Default"
 			case .custom:
 				return "Custom"
+			@unknown default:
+				fatalError("Unknown type: \(self)")
 			}
 		}
 	}

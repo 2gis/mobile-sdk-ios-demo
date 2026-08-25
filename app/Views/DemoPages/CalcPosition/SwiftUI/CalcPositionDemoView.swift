@@ -19,9 +19,9 @@ struct CalcPositionDemoView: View {
 
 	var body: some View {
 		ZStack {
-			self.mapFactory.mapViewOverlay
-			.mapViewOverlayCopyrightAlignment(.bottomRight)
-			.mapViewOverlayShowsAPIVersion(false)
+			self.mapFactory.mapView
+				.copyrightAlignment(.bottomRight)
+				.showsAPIVersion(false)
 			PaddingRectView(padding: self.$viewModel.paddingRect, color: .red)
 			if !self.showSettingsView {
 				VStack(alignment: .trailing) {

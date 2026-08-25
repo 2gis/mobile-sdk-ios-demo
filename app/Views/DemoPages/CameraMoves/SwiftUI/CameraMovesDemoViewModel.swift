@@ -1,18 +1,26 @@
-import SwiftUI
+import Combine
 import DGis
+import SwiftUI
 
-final class CameraMovesDemoViewModel: ObservableObject {
+final class CameraMovesDemoViewModel: ObservableObject, @unchecked Sendable {
 	@Published var showActionSheet = false
+	private let locationManagerFactory: () -> ILocationService?
 	private let map: Map
 	private let logger: ILogger
 	private var locationService: ILocationService?
 	private var moveCameraCancellable: DGis.Cancellable?
+	private lazy var cameraMoveQueue: DispatchQueue = .init(
+		label: "ru.mobile.sdk.app-swiftui.camera-move-queue",
+		qos: .default
+	)
 
 	init(
+		locationManagerFactory: @escaping () -> ILocationService?,
 		map: Map,
 		logger: ILogger,
 		mapSourceFactory: IMapSourceFactory
 	) {
+		self.locationManagerFactory = locationManagerFactory
 		self.map = map
 		self.logger = logger
 
@@ -27,7 +35,10 @@ final class CameraMovesDemoViewModel: ObservableObject {
 	}
 
 	func showCurrentPosition() {
-		self.locationService?.getCurrentPosition { (coordinatesOptional) in
+		if self.locationService == nil {
+			self.locationService = self.locationManagerFactory()
+		}
+		self.locationService?.getCurrentPosition { coordinatesOptional in
 			if let coordinates = coordinatesOptional {
 				self.moveCameraCancellable?.cancel()
 				self.moveCameraCancellable = self.map
@@ -41,10 +52,14 @@ final class CameraMovesDemoViewModel: ObservableObject {
 						),
 						time: 1.0,
 						animationType: .linear
-					).sink { [weak self] _ in
-						self?.logger.info("Move to current location")
+					).sinkOnMainThread { [weak self] _ in
+						Task { @MainActor [weak self] in
+							self?.logger.info("Move to current location")
+						}
 					} failure: { [weak self] error in
-						self?.logger.error("Something went wrong: \(error.localizedDescription)")
+						Task { @MainActor [weak self] in
+							self?.logger.error("Something went wrong: \(error.localizedDescription)")
+						}
 					}
 			}
 		}
@@ -53,7 +68,7 @@ final class CameraMovesDemoViewModel: ObservableObject {
 	private func move(at index: Int) {
 		guard index < CameraPath.moscowDefault.count else { return }
 		let tuple = CameraPath.moscowDefault[index]
-		DispatchQueue.main.async {
+		self.cameraMoveQueue.async {
 			self.moveCameraCancellable?.cancel()
 			self.moveCameraCancellable = self.map
 				.camera
@@ -61,7 +76,7 @@ final class CameraMovesDemoViewModel: ObservableObject {
 					position: tuple.position,
 					time: tuple.time,
 					animationType: tuple.type
-				).sink { [weak self] _ in
+				).sink(on: self.cameraMoveQueue) { [weak self] _ in
 					self?.move(at: index + 1)
 				} failure: { [weak self] error in
 					self?.logger.error("Something went wrong: \(error.localizedDescription)")

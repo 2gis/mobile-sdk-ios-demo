@@ -48,7 +48,7 @@ struct ClusteringSettingsView: View {
 					self.makeMapObjectTypePicker()
 						.padding(.bottom)
 					if self.mapObjectType == .model {
-						SettingsFormTextField(
+						SettingsFormTextFieldView(
 							title: "Animation index",
 							value: self.$animationIndex
 						)
@@ -60,22 +60,22 @@ struct ClusteringSettingsView: View {
 						.padding(.bottom)
 					self.makeTextInCluserSwitch()
 						.padding(.bottom)
-					SettingsFormTextField(
+					SettingsFormTextFieldView(
 						title: "Number of mutable objects",
 						value: self.$objectsCount
 					)
 					.padding(.bottom)
-					SettingsFormTextField(
+					SettingsFormTextFieldView(
 						title: "Grouping width",
 						value: self.$groupingWidth
 					)
 					.padding(.bottom)
-					SettingsFormTextField(
+					SettingsFormTextFieldView(
 						title: "Min zoom",
 						value: self.$minZoom
 					)
 					.padding(.bottom)
-					SettingsFormTextField(
+					SettingsFormTextFieldView(
 						title: "Max zoom",
 						value: self.$maxZoom
 					)
@@ -158,7 +158,6 @@ struct ClusteringSettingsView: View {
 			.fontWeight(.bold)
 			.foregroundColor(.primary)
 	}
-
 }
 
 extension GroupingType: Identifiable {
@@ -174,6 +173,8 @@ extension GroupingType: Identifiable {
 			"Generalization"
 		case .noGrouping:
 			"WithoutGrouping"
+		@unknown default:
+			fatalError("Unknown type: \(self)")
 		}
 	}
 }
@@ -191,6 +192,8 @@ extension ClusterMapObjectType: Identifiable {
 			"Lottie"
 		case .model:
 			"Model"
+		@unknown default:
+			fatalError("Unknown type: \(self)")
 		}
 	}
 }

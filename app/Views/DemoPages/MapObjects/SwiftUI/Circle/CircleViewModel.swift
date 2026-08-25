@@ -1,5 +1,6 @@
-import SwiftUI
+import Combine
 import DGis
+import SwiftUI
 
 final class CircleViewModel: ObservableObject {
 	private enum Constants {

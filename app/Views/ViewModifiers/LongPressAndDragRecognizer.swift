@@ -9,7 +9,7 @@ enum LongPressAndDragRecognizerState: Equatable {
 private enum LongPressAndDragRecognizerConstants {
 	static let defaultLongPressDuration: TimeInterval = 0.5
 	static let minimumDistance: CGFloat = 0.5
-	static let defaultCoordinateSpace: CoordinateSpace = .local
+	@MainActor static let defaultCoordinateSpace: CoordinateSpace = .local
 }
 
 struct LongPressAndDragRecognizer: ViewModifier {
@@ -33,42 +33,42 @@ struct LongPressAndDragRecognizer: ViewModifier {
 
 	func body(content: Content) -> some View {
 		content
-		.gesture(
-			self.makeLongPressDragGesture()
-			.onChanged { value in
-				self.handleStateChange()
-			}
-			.onEnded { value in
-				self.handleStateChange()
-			}
-		)
+			.gesture(
+				self.makeLongPressDragGesture()
+					.onChanged { _ in
+						self.handleStateChange()
+					}
+					.onEnded { _ in
+						self.handleStateChange()
+					}
+			)
 	}
 
 	private func makeLongPressDragGesture() -> GestureStateGesture<SequenceGesture<LongPressGesture, DragGesture>, LongPressAndDragRecognizerState> {
 		LongPressGesture(minimumDuration: self.longPressDuration)
-		.sequenced(before: DragGesture(minimumDistance: 0, coordinateSpace: self.coordinateSpace))
-		.updating(self.$gestureState) { value, state, transaction in
-			switch value {
+			.sequenced(before: DragGesture(minimumDistance: 0, coordinateSpace: self.coordinateSpace))
+			.updating(self.$gestureState) { value, state, _ in
+				switch value {
 				case .first(true):
 					state = .inactive
 				case .second(true, let drag):
 					if let dragLocation = drag?.location {
 						switch state {
-							case .inactive:
-								state = .started(location: dragLocation)
-							case .started:
+						case .inactive:
+							state = .started(location: dragLocation)
+						case .started:
+							state = .changed(location: dragLocation)
+						case let .changed(location):
+							let distance = abs(location.distance(to: dragLocation))
+							if distance >= self.minimumDistance {
 								state = .changed(location: dragLocation)
-							case .changed(let location):
-								let distance = abs(location.distance(to: dragLocation))
-								if distance >= self.minimumDistance {
-									state = .changed(location: dragLocation)
-								}
+							}
 						}
 					}
 				default:
 					state = .inactive
+				}
 			}
-		}
 	}
 
 	private func handleStateChange() {

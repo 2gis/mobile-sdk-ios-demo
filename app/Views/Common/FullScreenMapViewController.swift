@@ -1,15 +1,16 @@
-import UIKit
 import DGis
+import UIKit
 
 final class FullScreenMapViewController: UIViewController {
-	private let mapView: IMapView & UIView
+	private let mapView: IMapUIView & UIView
 
-	init(mapView: IMapView & UIView) {
+	init(mapView: IMapUIView & UIView) {
 		self.mapView = mapView
 		super.init(nibName: nil, bundle: nil)
 	}
 
-	required init?(coder: NSCoder) {
+	@available(*, unavailable)
+	required init?(coder _: NSCoder) {
 		fatalError("Use init(mapView:)")
 	}
 
@@ -21,7 +22,7 @@ final class FullScreenMapViewController: UIViewController {
 			self.mapView.leftAnchor.constraint(equalTo: self.view.leftAnchor),
 			self.mapView.rightAnchor.constraint(equalTo: self.view.rightAnchor),
 			self.mapView.topAnchor.constraint(equalTo: self.view.topAnchor),
-			self.mapView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
+			self.mapView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
 		])
 		let dismissButton = UIButton()
 		dismissButton.backgroundColor = .gray
@@ -32,7 +33,7 @@ final class FullScreenMapViewController: UIViewController {
 			dismissButton.leftAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leftAnchor),
 			dismissButton.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
 			dismissButton.heightAnchor.constraint(equalToConstant: 44),
-			dismissButton.widthAnchor.constraint(equalToConstant: 100)
+			dismissButton.widthAnchor.constraint(equalToConstant: 100),
 		])
 		dismissButton.addTarget(self, action: #selector(self.dismissButtonTapped), for: .touchUpInside)
 	}

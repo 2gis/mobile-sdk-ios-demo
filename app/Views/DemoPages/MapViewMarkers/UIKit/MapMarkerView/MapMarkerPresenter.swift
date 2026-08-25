@@ -7,28 +7,29 @@ class MapMarkerPresenter {
 		static let hideMarkerAlpha = 0.3
 	}
 
-	private let markerViewFactory: (MapMarkerUIView, GeoPointWithElevation) -> IMarkerView
-	private var addMarkerViewCallback: ((IMarkerView) -> Void)? = nil
-	private var removeMarkerViewCallback: ((IMarkerView) -> Void)? = nil
+	private let markerViewFactory: (MapMarkerUIView, GeoPointWithElevation) -> IMarkerUIView
+	private var addMarkerViewCallback: ((IMarkerUIView) -> Void)?
+	private var removeMarkerViewCallback: ((IMarkerUIView) -> Void)?
 
 	init(
-		markerViewFactory: @escaping (MapMarkerUIView, GeoPointWithElevation) -> IMarkerView
+		markerViewFactory: @escaping (MapMarkerUIView, GeoPointWithElevation) -> IMarkerUIView
 	) {
 		self.markerViewFactory = markerViewFactory
 	}
 
-	func setAddMarkerViewCallback(addMarkerViewCallback: @escaping (IMarkerView) -> Void) {
+	func setAddMarkerViewCallback(addMarkerViewCallback: @escaping (IMarkerUIView) -> Void) {
 		self.addMarkerViewCallback = addMarkerViewCallback
 	}
 
-	func setRemoveMarkerViewCallback(removeMarkerViewCallback: @escaping (IMarkerView) -> Void) {
+	func setRemoveMarkerViewCallback(removeMarkerViewCallback: @escaping (IMarkerUIView) -> Void) {
 		self.removeMarkerViewCallback = removeMarkerViewCallback
 	}
 
+	@MainActor
 	func showMarkerView(viewModel: MapObjectCardViewModel) {
 		viewModel.titleChangedCallback = { [weak self, position = viewModel.objectPosition] title, subtitle in
 			guard
-				let self = self,
+				let self,
 				let addMarkerViewCallback = self.addMarkerViewCallback
 			else {
 				return
@@ -50,7 +51,8 @@ class MapMarkerPresenter {
 		}
 	}
 
-	private func hide(markerView: IMarkerView) {
+	@MainActor
+	private func hide(markerView: IMarkerUIView) {
 		guard let removeMarkerViewCallback = self.removeMarkerViewCallback else {
 			return
 		}

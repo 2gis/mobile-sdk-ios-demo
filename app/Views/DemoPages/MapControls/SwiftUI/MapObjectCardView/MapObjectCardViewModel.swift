@@ -1,8 +1,8 @@
-import SwiftUI
+import Combine
 import DGis
+import SwiftUI
 
-final class MapObjectCardViewModel: ObservableObject {
-
+final class MapObjectCardViewModel: ObservableObject, @unchecked Sendable {
 	typealias CloseCallback = () -> Void
 
 	@Published var title: String = "Some place" {
@@ -10,19 +10,20 @@ final class MapObjectCardViewModel: ObservableObject {
 			self.titleChangedCallback?(self.title, self.subtitle)
 		}
 	}
+
 	@Published var description: String
 
 	var objectPosition: GeoPointWithElevation {
 		self.objectInfo.closestMapPoint
 	}
 
-	var titleChangedCallback: ((String, String) -> Void)? = nil
+	var titleChangedCallback: ((String, String) -> Void)?
 
 	private let objectInfo: RenderedObjectInfo
 	private let searchManager: SearchManager
 	private let logger: ILogger
 	private let onClose: CloseCallback
-	private var getDirectoryObjectCancellable: Cancellable?
+	private var getDirectoryObjectCancellable: ICancellable?
 	private var subtitle: String = ""
 
 	init(
@@ -46,33 +47,33 @@ final class MapObjectCardViewModel: ObservableObject {
 	private func fetchObjectInfo() {
 		let mapObject = self.objectInfo.item.item
 		switch mapObject {
-			case let object as DgisMapObject:
-				self.fetchInfo(dgisMapObject: object)
-			case let marker as Marker:
-				self.fetchInfo(marker: marker)
-			default:
-				self.fetchInfo(objectInfo: self.objectInfo)
+		case let object as DgisMapObject:
+			self.fetchInfo(dgisMapObject: object)
+		case let marker as Marker:
+			self.fetchInfo(marker: marker)
+		default:
+			self.fetchInfo(objectInfo: self.objectInfo)
 		}
 	}
 
 	private func fetchInfo(dgisMapObject object: DgisMapObject) {
-		let future = searchManager.searchByDirectoryObjectId(objectId: object.id)
-		
+		let future = self.searchManager.searchByDirectoryObjectId(objectId: object.id)
+
 		self.getDirectoryObjectCancellable = future.sinkOnMainThread(
 			receiveValue: {
 				[weak self] directoryObject in
-				guard let self = self else { return }
-				guard let directoryObject = directoryObject else { return }
+				guard let self else { return }
+				guard let directoryObject else { return }
 
 				self.subtitle = directoryObject.subtitle
 				self.title = directoryObject.title
 				self.description = """
-					\(directoryObject.subtitle)
-					\(directoryObject.formattedAddress(type: .short)?.streetAddress ?? "(no address)")
-					\(directoryObject.markerPosition?.description ?? "(no location)")
-					ID: \(object.id.objectId)
-					FiasCode: \(directoryObject.address?.fiasCode ?? "")
-					"""
+				\(directoryObject.subtitle)
+				\(directoryObject.formattedAddress(type: .short)?.streetAddress ?? "(no address)")
+				\(directoryObject.markerPosition?.description ?? "(no location)")
+				ID: \(object.id.objectId)
+				FiasCode: \(directoryObject.address?.fiasCode ?? "")
+				"""
 			},
 			failure: { [weak self] error in
 				self?.logger.error("Unable to fetch a directory object. Error: \(error).")

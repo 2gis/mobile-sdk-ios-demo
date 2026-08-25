@@ -1,5 +1,5 @@
-import Foundation
 import DGis
+import Foundation
 
 struct DirectoryObjectViewModel: Identifiable {
 	let id = UUID()
@@ -50,7 +50,7 @@ struct DirectoryObjectViewModel: Identifiable {
 		object.openingHours?.weekOpeningHours.forEach { workTime in
 			openingHoursArray.append(contentsOf: workTime.map {
 				"\($0.startTime.weekDay.name): \($0.startTime.time.hours):\(String(format: "%02d", $0.startTime.time.minutes))-\($0.finishTime.time.hours):\(String(format: "%02d", $0.finishTime.time.minutes))"
-			} )
+			})
 		}
 		self.openingHours = openingHoursArray.joined(separator: "\n")
 		self.tradeLicense = object.tradeLicense.map {
@@ -62,13 +62,13 @@ struct DirectoryObjectViewModel: Identifiable {
 			"""
 		} ?? ""
 
-		let buildingLevels = object.buildingInfo.buildingLevels?.levels.map {
-			"   \($0.id): \($0.name)"
+		let buildingLevels = object.buildingInfo?.buildingLevels?.levels.map {
+			"   \(String(describing: $0.id)): \($0.name)"
 		} ?? []
 		self.buildingInfo = """
-		BuildingName: \(object.buildingInfo.buildingName ?? "")
-		PurposeName: \(object.buildingInfo.purposeName ?? "")
-		PurposeCode: \(object.buildingInfo.purposeCode.map { String($0.value) } ?? "")
+		BuildingName: \(object.buildingInfo?.buildingName ?? "")
+		PurposeName: \(object.buildingInfo?.purposeName ?? "")
+		PurposeCode: \(object.buildingInfo?.purposeCode.map { String($0.value) } ?? "")
 		BuildingLevels: \n\(buildingLevels.joined(separator: "\n"))
 		"""
 	}

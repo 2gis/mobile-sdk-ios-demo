@@ -1,15 +1,15 @@
-import SwiftUI
 import Combine
 import DGis
+import SwiftUI
 
-final class MapControlsDemoViewModel: ObservableObject {
+final class MapControlsDemoViewModel: ObservableObject, @unchecked Sendable {
 	private enum Constants {
 		static let tapRadius = ScreenDistance(value: 1)
 	}
 
 	@Published var selectedMapObject: MapObjectCardViewModel?
 	@Published var isErrorAlertShown: Bool = false
-	
+
 	private let searchManager: SearchManager
 	private let imageFactory: IImageFactory
 	private let map: Map
@@ -21,7 +21,8 @@ final class MapControlsDemoViewModel: ObservableObject {
 			self.isErrorAlertShown = self.errorMessage != nil
 		}
 	}
-	private lazy var mapObjectManager: MapObjectManager = MapObjectManager(map: self.map)
+
+	private lazy var mapObjectManager: MapObjectManager = .init(map: self.map)
 	private lazy var selectedMarkerIcon: DGis.Image = {
 		let icon = UIImage(named: "svg/marker_pin")!
 		return self.imageFactory.make(image: icon)

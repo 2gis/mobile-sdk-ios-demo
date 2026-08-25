@@ -1,6 +1,6 @@
-import SwiftUI
 import CoreLocation
 import DGis
+import SwiftUI
 
 struct GeoPointPickerView: View {
 	@Binding private var geoPoint: GeoPoint?
@@ -13,7 +13,7 @@ struct GeoPointPickerView: View {
 	init(geoPoint: Binding<GeoPoint?>) {
 		self._geoPoint = geoPoint
 		self._latitudeRawValue = State(initialValue: geoPoint.wrappedValue.map { "\($0.latitude.value)" } ?? "")
-		self._longitudeRawValue = State(initialValue: geoPoint.wrappedValue.map { "\($0.longitude.value)" } ?? "" )
+		self._longitudeRawValue = State(initialValue: geoPoint.wrappedValue.map { "\($0.longitude.value)" } ?? "")
 	}
 
 	var body: some View {
@@ -21,44 +21,42 @@ struct GeoPointPickerView: View {
 			if !self.latitudeRawValue.isEmpty, !self.longitudeRawValue.isEmpty {
 				HStack {
 					Text("{ \(self.latitudeRawValue), \(self.longitudeRawValue) }")
-					.font(.headline)
-					.foregroundColor(self.geoPoint == nil ? .red : .green)
+						.font(.headline)
+						.foregroundColor(self.geoPoint == nil ? .red : .green)
 					Image(systemName: "xmark")
-					.resizable()
-					.frame(width: 20, height: 20)
-					.foregroundColor(.red)
-					.onTapGesture {
-						self.removeGeoPoint()
-					}
+						.resizable()
+						.frame(width: 20, height: 20)
+						.foregroundColor(.red)
+						.onTapGesture {
+							self.removeGeoPoint()
+						}
 				}
 			}
 
 			HStack {
-				HStack() {
+				HStack {
 					Text("Lat:")
-					TextField("Lat", text: Binding<String>(
+					TextField("Enter a value", text: Binding<String>(
 						get: {
 							self.latitudeRawValue
 						},
 						set: { rawValue in
 							self.latitudeRawValue = rawValue
 							self.updateGeoPoint()
-						})
-					)
-					.keyboardType(.numbersAndPunctuation)
+						}))
+						.keyboardType(.numbersAndPunctuation)
 				}
 				HStack {
 					Text("Lon:")
-					TextField("Lon", text: Binding<String>(
+					TextField("Enter a value", text: Binding<String>(
 						get: {
 							self.longitudeRawValue
 						},
 						set: { rawValue in
 							self.longitudeRawValue = rawValue
 							self.updateGeoPoint()
-						})
-					)
-					.keyboardType(.numbersAndPunctuation)
+						}))
+						.keyboardType(.numbersAndPunctuation)
 				}
 			}
 		}
@@ -74,7 +72,8 @@ struct GeoPointPickerView: View {
 		var newGeoPoint: GeoPoint?
 		if let latitude = Double(self.latitudeRawValue),
 		   let longitude = Double(self.longitudeRawValue),
-		   CLLocationCoordinate2DIsValid(CLLocationCoordinate2D(latitude: latitude, longitude: longitude)) {
+		   CLLocationCoordinate2DIsValid(CLLocationCoordinate2D(latitude: latitude, longitude: longitude))
+		{
 			newGeoPoint = GeoPoint(latitude: .init(value: latitude), longitude: .init(value: longitude))
 		}
 		if newGeoPoint != self.geoPoint {

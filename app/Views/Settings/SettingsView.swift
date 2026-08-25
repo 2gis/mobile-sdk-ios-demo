@@ -28,6 +28,8 @@ struct SettingsView: View {
 						.padding(.bottom)
 					self.mapThemePicker()
 						.padding(.bottom)
+					self.positioningSourcePicker()
+						.padding(.bottom)
 					self.geolocationMarkerTypePicker()
 						.padding(.bottom)
 					self.makeHttpSettings()
@@ -101,6 +103,15 @@ struct SettingsView: View {
 		)
 	}
 
+	private func positioningSourcePicker() -> some View {
+		PickerView(
+			title: "Location data source",
+			selection: self.$viewModel.positioningServicesSource,
+			options: self.viewModel.positioningServicesSources,
+			pickerStyle: SegmentedPickerStyle()
+		)
+	}
+
 	private func geolocationMarkerTypePicker() -> some View {
 		PickerView(
 			title: "Geolocation marker type",
@@ -132,7 +143,7 @@ struct SettingsView: View {
 
 	private func httpTimeoutValue() -> some View {
 		VStack(alignment: .leading) {
-			SettingsFormTextField(
+			SettingsFormTextFieldView(
 				title: "Network timeout, s: ",
 				value: self.$viewModel.httpTimeout
 			)
@@ -262,7 +273,6 @@ struct SettingsView: View {
 		)
 	}
 
-
 	private func closeButton() -> some View {
 		Button {
 			self.show = false
@@ -290,6 +300,26 @@ extension MapDataSource: PickerViewOption {
 		self
 	}
 }
+
+extension PositioningServicesSource: PickerViewOption {
+	var id: PositioningServicesSource {
+		self
+	}
+
+	var name: String {
+		switch self {
+		case .default:
+			return "Default"
+		case .generator:
+			return "NMEA Generator"
+		@unknown default:
+			assertionFailure("Unknown type: \(self)")
+			return "Unknown type: \(self.rawValue)"
+		}
+	}
+}
+
+extension DGis.LogLevel: @retroactive Identifiable {}
 
 extension DGis.LogLevel: PickerViewOption {
 	public var id: DGis.LogLevel {
