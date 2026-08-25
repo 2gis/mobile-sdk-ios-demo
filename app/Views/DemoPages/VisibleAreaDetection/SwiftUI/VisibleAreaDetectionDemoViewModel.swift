@@ -73,8 +73,9 @@ final class VisibleAreaDetectionDemoViewModel: ObservableObject, @unchecked Send
 		self.formInitialVisibleRect(from: self.map.camera.visibleRect)
 		self.initialRectCancellable = self.map.camera.sinkOnStatefulChangesOnMainThread(reason: .visibleRect) {
 			[weak self] (visibleRect: GeoRect) in
-			guard let self else { return }
-			self.updateVisibleRect(visibleRect)
+			Task { @MainActor [weak self] in
+				self?.updateVisibleRect(visibleRect)
+			}
 		}
 	}
 

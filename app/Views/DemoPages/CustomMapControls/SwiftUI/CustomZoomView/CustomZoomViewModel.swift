@@ -26,12 +26,14 @@ public final class CustomZoomViewModel: ObservableObject, @unchecked Sendable {
 		self.model = ZoomControlModel(map: map)
 
 		self.zoomInEnabledCancellable = self.model.isEnabled(button: .zoomIn).sinkOnMainThread { [weak self] isEnabled in
-			guard let self else { return }
-			self.zoomInEnabled = isEnabled
+			Task { @MainActor [weak self] in
+				self?.zoomInEnabled = isEnabled
+			}
 		}
 		self.zoomOutEnabledCancellable = self.model.isEnabled(button: .zoomOut).sinkOnMainThread { [weak self] isEnabled in
-			guard let self else { return }
-			self.zoomOutEnabled = isEnabled
+			Task { @MainActor [weak self] in
+				self?.zoomOutEnabled = isEnabled
+			}
 		}
 	}
 

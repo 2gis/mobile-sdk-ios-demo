@@ -288,7 +288,7 @@ struct RouteSearchSettingsView: View {
 	}
 }
 
-extension TransportType: PickerViewOption {
+extension TransportType: @MainActor PickerViewOption {
 	var id: Self {
 		self
 	}
@@ -296,7 +296,7 @@ extension TransportType: PickerViewOption {
 
 extension RouteSearchType: @retroactive Identifiable {}
 
-extension RouteSearchType: PickerViewOption {
+extension RouteSearchType: @MainActor PickerViewOption {
 	public var id: RouteSearchType {
 		self
 	}

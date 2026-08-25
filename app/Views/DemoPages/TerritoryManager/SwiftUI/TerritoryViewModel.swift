@@ -39,12 +39,17 @@ class TerritoryViewModel: ObservableObject, Identifiable, @unchecked Sendable {
 
 		self.progressCancellable = package.progressChannel.sinkOnMainThread {
 			[weak self] _ in
-			self?.updateStatus()
+			Task { @MainActor [weak self] in
+				self?.updateStatus()
+			}
 		}
 		self.infoCancellable = package.infoChannel.sinkOnMainThread {
 			[weak self] info in
-			self?.dataToLoad = TerritoryViewModel.formatSize(info: info)
-			self?.updateStatus()
+			Task { @MainActor [weak self] in
+				guard let self else { return }
+				self.dataToLoad = TerritoryViewModel.formatSize(info: info)
+				self.updateStatus()
+			}
 		}
 	}
 

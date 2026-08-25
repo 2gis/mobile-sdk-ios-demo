@@ -35,7 +35,7 @@ struct MapViewMarkersDemoView: View {
 			HStack {
 				VStack {
 					Spacer()
-					self.mapViewsFactory.makeIndoorView()
+					self.mapViewsFactory.makeIndoorView(showOverview: false)
 						.frame(width: 38, height: 119)
 						.fixedSize()
 					Spacer()
@@ -52,7 +52,7 @@ struct MapViewMarkersDemoView: View {
 						.frame(width: 48)
 						.fixedSize()
 						.padding(.bottom, -32)
-					self.mapViewsFactory.makeCurrentLocationView()
+					self.mapViewsFactory.makeCurrentLocationView(permissionCallback: {})
 						.frame(width: 48)
 						.fixedSize()
 				}

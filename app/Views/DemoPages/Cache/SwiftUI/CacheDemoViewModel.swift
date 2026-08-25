@@ -29,7 +29,9 @@ final class CacheDemoViewModel: ObservableObject, @unchecked Sendable {
 		self.byteCountFormatter.countStyle = .memory
 		self.cacheSize = Double(self.cacheManager.maxSize)
 		self.timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
-			self?.updateCurrentCacheSize()
+			Task { @MainActor [weak self] in
+				self?.updateCurrentCacheSize()
+			}
 		}
 	}
 

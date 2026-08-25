@@ -19,12 +19,12 @@ enum GraphicsOption: String, CaseIterable {
 	}
 }
 
-extension GraphicsOption: PickerViewOption {
-	var id: GraphicsOption {
+extension GraphicsOption: @MainActor PickerViewOption {
+	nonisolated var id: GraphicsOption {
 		self
 	}
 
-	var name: String {
+	nonisolated var name: String {
 		switch self {
 		case .default:
 			return "Default"

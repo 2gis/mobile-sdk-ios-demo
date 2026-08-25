@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "museums.pdf",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

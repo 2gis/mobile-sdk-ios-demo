@@ -15,7 +15,6 @@ class RootViewFactory: ObservableObject {
 	let navigatorSettings: INavigatorSettings
 	let logger: ILogger
 	let localeManager: LocaleManager
-	lazy var styleFactory: IStyleFactory = self.makeStyleFactory()
 
 	init(
 		sdk: DGis.Container,
@@ -42,44 +41,54 @@ class RootViewFactory: ObservableObject {
 		self.localeManager.overrideLocales(locales: locales ?? [])
 	}
 
-	func makeMapOptions() -> MapOptions {
-		var options = MapOptions.default
-		options.maxFps = UIScreen.main.maximumFramesPerSecond
-		options.graphicsPreset = self.settingsService.graphicsOption.preset
-		if let styleUrl = self.settingsService.customStyleUrl {
-			options.styleFuture = self.styleFactory.loadFile(url: styleUrl)
+	func makeMapControllerOptions(
+		sources: [Source]? = nil,
+		styleURL: URL? = nil
+	) -> MapControllerOptions {
+		var options = MapControllerOptions(
+			sources: sources ?? self.makeDefaultMapSources(),
+			graphicsPreset: self.settingsService.graphicsOption.preset,
+			mapAppearance: self.settingsService.mapTheme.mapAppearance
+		)
+		if let styleURL {
+			options.styleFile = File(path: styleURL.standardized.path)
+		} else if let styleURL = self.settingsService.customStyleUrl {
+			options.styleFile = File(path: styleURL.standardized.path)
 		}
-		options.appearance = self.settingsService.mapTheme.mapAppearance
 		return options
 	}
 
-	func makeMapFactory() throws -> IMapFactory {
-		var options = self.makeMapOptions()
-		options.sourceDescriptors = [self.settingsService.mapDataSource.sourceDescriptor]
-		return try self.sdk.makeMapFactory(options: options)
+	func makeMapViewOptions() -> MapViewOptions {
+		MapViewOptions.default
+	}
+
+	func makeMapFactory(
+		sources: [Source]? = nil,
+		styleURL: URL? = nil
+	) throws -> IMapFactory {
+		try self.sdk.makeMapFactory(
+			options: self.makeMapControllerOptions(sources: sources, styleURL: styleURL),
+			mapViewOptions: self.makeMapViewOptions()
+		)
 	}
 
 	func makeMapFactoryWithSource(source: Source) throws -> IMapFactory {
-		var options = self.makeMapOptions()
-		options.sources = [source, self.makeSourceFactory().createImmersiveDgisSource()]
-		return try self.sdk.makeMapFactory(options: options)
+		try self.makeMapFactory(
+			sources: [source, self.makeSourceFactory().createImmersiveDgisSource()]
+		)
 	}
 
 	func makeMapFactoryWithStyles(stylesName: String) throws -> IMapFactory {
-		var options = self.makeMapOptions()
-		if let stylesURL = Bundle.main.url(forResource: stylesName, withExtension: "2gis") {
-			options.styleFuture = self.styleFactory.loadFile(url: stylesURL)
-		}
-		return try self.sdk.makeMapFactory(options: options)
+		try self.makeMapFactory(
+			styleURL: Bundle.main.url(forResource: stylesName, withExtension: "2gis")
+		)
 	}
 
 	func makeMapFactoryWithStyles(stylesName: String, source: Source) throws -> IMapFactory {
-		var options = self.makeMapOptions()
-		options.sources = [source]
-		if let stylesURL = Bundle.main.url(forResource: stylesName, withExtension: "2gis") {
-			options.styleFuture = self.styleFactory.loadFile(url: stylesURL)
-		}
-		return try self.sdk.makeMapFactory(options: options)
+		try self.makeMapFactory(
+			sources: [source],
+			styleURL: Bundle.main.url(forResource: stylesName, withExtension: "2gis")
+		)
 	}
 
 	func makeMapSource() -> Source {
@@ -104,20 +113,6 @@ class RootViewFactory: ObservableObject {
 			return sourceFactory.createOfflineDGISSource()
 		@unknown default:
 			assertionFailure("Unknown type: \(self)")
-		}
-	}
-
-	func makeStyleFactory() -> IStyleFactory {
-		do {
-			return try self.sdk.styleFactory
-		} catch let error as SimpleError {
-			let errorMessage = "IStyleFactory initialization error: \(error.description)"
-			self.logger.error(errorMessage)
-			fatalError(errorMessage)
-		} catch {
-			let errorMessage = "IStyleFactory initialization error: \(error)"
-			self.logger.error(errorMessage)
-			fatalError(errorMessage)
 		}
 	}
 
@@ -225,19 +220,11 @@ class RootViewFactory: ObservableObject {
 			fatalError(errorMessage)
 		}
 	}
-}
 
-extension MapDataSource {
-	var sourceDescriptor: MapOptions.SourceDescriptor {
-		switch self {
-		case .online:
-			return .dgisOnlineSource
-		case .hybrid:
-			return .dgisHybridSource
-		case .offline:
-			return .dgisOfflineSource
-		@unknown default:
-			assertionFailure("Unknown type: \(self)")
-		}
+	private func makeDefaultMapSources() -> [Source] {
+		[
+			self.makeMapSource(),
+			self.makeSourceFactory().createImmersiveDgisSource(),
+		]
 	}
 }

@@ -295,13 +295,13 @@ struct SettingsView: View {
 	}
 }
 
-extension MapDataSource: PickerViewOption {
+extension MapDataSource: @MainActor PickerViewOption {
 	var id: MapDataSource {
 		self
 	}
 }
 
-extension PositioningServicesSource: PickerViewOption {
+extension PositioningServicesSource: @MainActor PickerViewOption {
 	var id: PositioningServicesSource {
 		self
 	}
@@ -321,7 +321,7 @@ extension PositioningServicesSource: PickerViewOption {
 
 extension DGis.LogLevel: @retroactive Identifiable {}
 
-extension DGis.LogLevel: PickerViewOption {
+extension DGis.LogLevel: @MainActor PickerViewOption {
 	public var id: DGis.LogLevel {
 		self
 	}

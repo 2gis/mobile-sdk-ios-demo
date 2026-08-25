@@ -52,16 +52,17 @@ struct NavigatorWithMiniMapView: View {
 				.edgesIgnoringSafeArea(.all)
 			self.navigationViewFactory.makeNavigationView(
 				map: self.mapFactory.map,
-				navigationManager: self.viewModel.navigationManager,
-				miniMapFactory: self.miniMapFactory,
-				isMiniMapSelected: self.$viewModel.isMiniMapSelected
+					navigationManager: self.viewModel.navigationManager,
+					miniMapFactory: self.miniMapFactory,
+					isMiniMapSelected: self.$viewModel.isMiniMapSelected,
+					locationPermissionCallback: {}
 			)
 			.finishButtonCallback { [viewModel = self.viewModel] in
 				viewModel.stopNavigation()
 			}
 			if self.viewModel.showTargetPointPicker {
 				HStack {
-					self.mapViewsFactory.makeIndoorView()
+					self.mapViewsFactory.makeIndoorView(showOverview: false)
 						.frame(width: 38, height: 119)
 						.fixedSize()
 						.padding(.leading, 20)
@@ -74,7 +75,7 @@ struct NavigatorWithMiniMapView: View {
 							.frame(width: 48, height: 102)
 							.fixedSize()
 							.padding(20)
-						self.mapViewsFactory.makeCurrentLocationView()
+						self.mapViewsFactory.makeCurrentLocationView(permissionCallback: {})
 							.frame(width: 48, height: 48)
 							.fixedSize()
 					}

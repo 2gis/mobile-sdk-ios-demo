@@ -9,7 +9,7 @@ final class MoveController: CameraMoveController {
 		self.initialPosition = initialPosition
 	}
 
-	func position(time: TimeInterval) -> CameraPosition {
+	nonisolated func position(time: TimeInterval) -> CameraPosition {
 		let zoomOffset = Float(sin(time * 1000)) * 0.0000001
 		return CameraPosition(
 			point: self.initialPosition.point,
@@ -19,7 +19,7 @@ final class MoveController: CameraMoveController {
 		)
 	}
 
-	func animationTime() -> TimeInterval {
+	nonisolated func animationTime() -> TimeInterval {
 		.infinity
 	}
 }
@@ -31,7 +31,7 @@ final class FpsRestrictionsDemoViewModel: ObservableObject, @unchecked Sendable 
 	@Published var maxFps = Double(UIScreen.main.maximumFramesPerSecond) {
 		didSet {
 			if self.maxFps != oldValue {
-				self.energyConsumption.maxFps = Int(self.maxFps)
+				self.energyConsumption.maxFps = Fps(value: UInt32(self.maxFps))
 			}
 		}
 	}
@@ -39,7 +39,7 @@ final class FpsRestrictionsDemoViewModel: ObservableObject, @unchecked Sendable 
 	@Published var powerSavingMaxFps = Double(UIScreen.main.maximumFramesPerSecond) * 0.5 {
 		didSet {
 			if self.powerSavingMaxFps != oldValue {
-				self.energyConsumption.powerSavingMaxFps = Int(self.powerSavingMaxFps)
+				self.energyConsumption.powerSavingMaxFps = Fps(value: UInt32(self.powerSavingMaxFps))
 			}
 		}
 	}

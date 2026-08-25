@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "ev-charging.pdf",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

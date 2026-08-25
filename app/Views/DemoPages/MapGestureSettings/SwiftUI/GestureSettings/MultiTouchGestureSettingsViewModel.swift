@@ -6,7 +6,7 @@ import SwiftUI
 final class MultiTouchGestureSettingsViewModel: ObservableObject {
 	@Published var multiTouchEnabled: Bool = true
 
-	@Published var multitouchShiftThresholdMm: Float
+	@Published var multiTouchShiftThresholdMm: Float
 
 	private let gestureManager: GestureManager
 	private let multiTouchGestureSettings: MultiTouchGestureSettings
@@ -16,8 +16,8 @@ final class MultiTouchGestureSettingsViewModel: ObservableObject {
 	) {
 		self.gestureManager = gestureManager
 		self.multiTouchEnabled = gestureManager.enabledGestures.contains(.multiTouchShift)
-		self.multiTouchGestureSettings = gestureManager.multitouchShiftSettings
-		self.multitouchShiftThresholdMm = self.multiTouchGestureSettings.recognizeSettings.multitouchShiftThresholdMm
+		self.multiTouchGestureSettings = gestureManager.multiTouchShiftSettings
+		self.multiTouchShiftThresholdMm = self.multiTouchGestureSettings.recognizeSettings.multiTouchShiftThresholdMm
 	}
 
 	func set() {
@@ -28,7 +28,7 @@ final class MultiTouchGestureSettingsViewModel: ObservableObject {
 		self.gestureManager.enableGesture(gesture: .multiTouchShift)
 
 		self.multiTouchGestureSettings.recognizeSettings = .init(
-			multitouchShiftThresholdMm: self.multitouchShiftThresholdMm
+			multiTouchShiftThresholdMm: self.multiTouchShiftThresholdMm
 		)
 	}
 }

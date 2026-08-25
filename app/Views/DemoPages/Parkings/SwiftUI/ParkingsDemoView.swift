@@ -19,8 +19,10 @@ struct ParkingsDemoView: View {
 				self.mapFactory.mapView
 					.copyrightAlignment(.bottomLeft)
 					.objectTappedCallback(callback: .init(
-						callback: { [viewModel = self.viewModel] objectInfo in
-							viewModel.handleTap(objectInfo: objectInfo)
+						callback: { [weak viewModel = self.viewModel] objectInfo in
+							Task { @MainActor in
+								viewModel?.handleTap(objectInfo: objectInfo)
+							}
 						}
 					))
 				HStack {
@@ -44,7 +46,7 @@ struct ParkingsDemoView: View {
 							.frame(width: 48, height: 102)
 							.fixedSize()
 							.padding(20)
-						self.mapFactory.mapViewsFactory.makeCurrentLocationView()
+						self.mapFactory.mapViewsFactory.makeCurrentLocationView(permissionCallback: {})
 							.frame(width: 48, height: 48)
 							.fixedSize()
 					}

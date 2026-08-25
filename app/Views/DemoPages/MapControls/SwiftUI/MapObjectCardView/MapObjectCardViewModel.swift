@@ -57,26 +57,28 @@ final class MapObjectCardViewModel: ObservableObject, @unchecked Sendable {
 	}
 
 	private func fetchInfo(dgisMapObject object: DgisMapObject) {
-		let future = self.searchManager.searchByDirectoryObjectId(objectId: object.id)
+		let future = self.searchManager.searchByDirectoryObjectIds(objectIds: [object.id])
 
 		self.getDirectoryObjectCancellable = future.sinkOnMainThread(
 			receiveValue: {
-				[weak self] directoryObject in
-				guard let self else { return }
-				guard let directoryObject else { return }
-
-				self.subtitle = directoryObject.subtitle
-				self.title = directoryObject.title
-				self.description = """
-				\(directoryObject.subtitle)
-				\(directoryObject.formattedAddress(type: .short)?.streetAddress ?? "(no address)")
-				\(directoryObject.markerPosition?.description ?? "(no location)")
-				ID: \(object.id.objectId)
-				FiasCode: \(directoryObject.address?.fiasCode ?? "")
-				"""
+				[weak self] directoryObjects in
+				Task { @MainActor [weak self] in
+					guard let self, let directoryObject = directoryObjects.first else { return }
+					self.subtitle = directoryObject.subtitle
+					self.title = directoryObject.title
+					self.description = """
+					\(directoryObject.subtitle)
+					\(directoryObject.formattedAddress(type: .short)?.streetAddress ?? "(no address)")
+					\(directoryObject.markerPosition?.description ?? "(no location)")
+					ID: \(object.id.objectId)
+					FiasCode: \(directoryObject.address?.fiasCode ?? "")
+					"""
+				}
 			},
 			failure: { [weak self] error in
-				self?.logger.error("Unable to fetch a directory object. Error: \(error).")
+				Task { @MainActor [weak self] in
+					self?.logger.error("Unable to fetch a directory object. Error: \(error).")
+				}
 			}
 		)
 	}

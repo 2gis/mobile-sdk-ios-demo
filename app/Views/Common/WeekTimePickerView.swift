@@ -95,7 +95,7 @@ extension Date {
 
 extension WeekDay: @retroactive Identifiable {}
 
-extension WeekDay: PickerViewOption {
+extension WeekDay: @MainActor PickerViewOption {
 	public var id: WeekDay { self }
 
 	var name: String {

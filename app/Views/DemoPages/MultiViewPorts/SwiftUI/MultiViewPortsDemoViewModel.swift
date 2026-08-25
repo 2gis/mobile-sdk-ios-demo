@@ -34,14 +34,16 @@ final class MultiViewPortsDemoViewModel: ObservableObject, @unchecked Sendable {
 		self.secondMapSource = secondMap.sources.first
 		self.firstDataLoadingStateChannelCancellable = self.firstMap.dataLoadingStateChannel.sinkOnMainThread(
 			{ [weak self] state in
-				guard let self else { return }
-				self.firstMapLoaded = state == .loaded
+				Task { @MainActor [weak self] in
+					self?.firstMapLoaded = state == .loaded
+				}
 			}
 		)
 		self.secondDataLoadingStateChannelCancellable = self.secondMap.dataLoadingStateChannel.sinkOnMainThread(
 			{ [weak self] state in
-				guard let self else { return }
-				self.secondMapLoaded = state == .loaded
+				Task { @MainActor [weak self] in
+					self?.secondMapLoaded = state == .loaded
+				}
 			}
 		)
 		self.setInitialCameraPositions()

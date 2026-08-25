@@ -13,12 +13,12 @@ final class NavigatorSettingsViewModel: ObservableObject {
 		static let defaultMaxAllowableSpeedExcessKmH: Float = 20
 	}
 
-	enum DemoRouteType: CaseIterable, PickerViewOption {
+	enum DemoRouteType: CaseIterable, @MainActor PickerViewOption {
 		case car, bicycle, pedestrian
 
-		var id: DemoRouteType { self }
+		nonisolated var id: DemoRouteType { self }
 
-		var name: String {
+		nonisolated var name: String {
 			switch self {
 			case .car:
 				return "Car"

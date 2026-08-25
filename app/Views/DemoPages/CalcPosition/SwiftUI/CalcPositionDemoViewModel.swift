@@ -37,12 +37,12 @@ final class CalcPositionDemoViewModel: ObservableObject, @unchecked Sendable {
 		for item in CalcPositionMapObjects.allCases {
 			self.mapObjectManager.addObjects(objects: item.getObjects(factory: self.objectFactory))
 		}
-		self.cameraSetPosition(
-			calcPosition(
+		if let position = try? calcPosition(
 				camera: self.map.camera,
 				objects: self.selectedObjects.getObjects(factory: self.objectFactory)
-			)
-		)
+			) {
+			self.cameraSetPosition(position)
+		}
 	}
 
 	func applyCameraSettings() {
@@ -65,12 +65,14 @@ final class CalcPositionDemoViewModel: ObservableObject, @unchecked Sendable {
 			tilt: self.tilt,
 			bearing: self.bearing
 		)
-		self.cameraMove(
-			calcPosition(
+		guard let position = try? calcPosition(
 				camera: self.map.camera,
 				objects: self.selectedObjects.getObjects(factory: self.objectFactory)
-			)
-		)
+			) else {
+			self.errorMessage = "Failed to calculate camera position"
+			return
+		}
+		self.cameraMove(position)
 	}
 
 	private func useClonedCameraParams() {
@@ -82,12 +84,14 @@ final class CalcPositionDemoViewModel: ObservableObject, @unchecked Sendable {
 			tilt: self.tilt,
 			bearing: self.bearing
 		)
-		self.cameraMove(
-			calcPosition(
+		guard let position = try? calcPosition(
 				camera: newCamera,
 				objects: self.selectedObjects.getObjects(factory: self.objectFactory)
-			)
-		)
+			) else {
+			self.errorMessage = "Failed to calculate cloned camera position"
+			return
+		}
+		self.cameraMove(position)
 		self.changeCameraSettings(
 			camera: self.map.camera,
 			padding: self.paddingRect.toDGisPadding(),
@@ -98,15 +102,17 @@ final class CalcPositionDemoViewModel: ObservableObject, @unchecked Sendable {
 
 	private func useCalcPositionParams() {
 		self.resetCameraSettings()
-		self.cameraMove(
-			calcPosition(
+		guard let position = try? calcPosition(
 				camera: self.map.camera,
 				objects: self.selectedObjects.getObjects(factory: self.objectFactory),
 				screenArea: self.paddingRect.toDGisPadding(),
 				tilt: self.tilt,
 				bearing: self.bearing
-			)
-		)
+			) else {
+			self.errorMessage = "Failed to calculate camera position with parameters"
+			return
+		}
+		self.cameraMove(position)
 	}
 
 	private func resetCameraSettings() {
@@ -144,14 +150,19 @@ final class CalcPositionDemoViewModel: ObservableObject, @unchecked Sendable {
 			label: "ru.mobile.sdk.app.camera-move-queue",
 			qos: .default
 		)
-		cameraMoveQueue.async {
-			self.moveCameraCancellable?.cancel()
-			self.moveCameraCancellable = self.map.camera.move(
-				position: position,
-				time: 2
-			).sinkOnMainThread { _ in
-			} failure: { [weak self] error in
-				self?.logger.error("Something went wrong: \(error.localizedDescription)")
+		cameraMoveQueue.async { [weak self] in
+			Task { @MainActor [weak self] in
+				guard let self else { return }
+				self.moveCameraCancellable?.cancel()
+				self.moveCameraCancellable = self.map.camera.move(
+					position: position,
+					time: 2
+				).sinkOnMainThread { _ in
+				} failure: { [weak self] error in
+					Task { @MainActor [weak self] in
+						self?.logger.error("Something went wrong: \(error.localizedDescription)")
+					}
+				}
 			}
 		}
 	}

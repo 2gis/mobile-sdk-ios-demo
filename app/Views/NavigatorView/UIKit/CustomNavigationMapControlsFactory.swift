@@ -1,56 +1,45 @@
-import UIKit
 import DGis
+import UIKit
 
-class CustomNavigationMapUIControlsFactory: INavigationMapUIControlsFactory {
+final class CustomNavigationMapUIControlsFactory: IMapUIControlsFactory {
 	private let mapControlsFactory: IMapUIControlsFactory
-	internal var followManager: INavigatorFollowManager
-	private let navigationMapControlsFactory: INavigationMapUIControlsFactory
 
 	init(
 		mapFactory: IMapFactory,
-		navigationViewFactory: INavigationUIViewFactory
+		theme: MapControlsTheme
 	) {
-		self.mapControlsFactory = mapFactory.mapUIControlsFactory
-		let map = mapFactory.map
-		self.followManager = NavigatorFollowManager(map: map, followMode: .none)
-		self.navigationMapControlsFactory = navigationViewFactory.makeNavigationMapUIControlsFactory(
-			map: map,
-			followManager: self.followManager
-		)
+		self.mapControlsFactory = mapFactory.makeMapUIControlsFactory(theme: theme)
 	}
 
 	func makeZoomUIControl() -> UIControl {
 		self.mapControlsFactory.makeZoomUIControl()
 	}
 
-	func makeTrafficAndParkingMapUIControl() -> UIControl {
-		self.navigationMapControlsFactory.makeParkingUIControl()
+	func makeCurrentLocationUIControl(permissionCallback: @escaping () -> Void) -> UIControl {
+		self.mapControlsFactory.makeCurrentLocationUIControl(permissionCallback: permissionCallback)
 	}
-	
+
+	func makeRoadEventCreatorButtonUIControl(action: @escaping () -> Void) -> UIControl {
+		self.mapControlsFactory.makeRoadEventCreatorButtonUIControl(action: action)
+	}
+
+	func makeCompassUIControl() -> UIControl {
+		self.mapControlsFactory.makeCompassUIControl()
+	}
+
 	func makeTrafficUIControl() -> UIControl {
-		self.navigationMapControlsFactory.makeTrafficUIControl()
+		self.mapControlsFactory.makeTrafficUIControl()
 	}
-	
+
 	func makeParkingUIControl() -> UIControl {
-		self.navigationMapControlsFactory.makeParkingUIControl()
+		self.mapControlsFactory.makeParkingUIControl()
 	}
 
-	func makeCompassUIControl(icon: UIImage? = nil, highlightedIcon: UIImage? = nil) -> UIControl {
-		self.navigationMapControlsFactory.makeCompassUIControl(
-			icon: UIImage(named: "svg/compass"),
-			highlightedIcon: UIImage(named: "svg/compass_highlighted")
-		)
+	func makeTrafficAndParkingUIControl() -> UIControl {
+		self.mapControlsFactory.makeTrafficAndParkingUIControl()
 	}
 
-	func makeNavigationFollowingUIControl() -> NavigationFollowingUIControl {
-		self.navigationMapControlsFactory.makeNavigationFollowingUIControl()
-	}
-
-	func makeTUGCUIControl() -> UIControl {
-		self.navigationMapControlsFactory.makeTUGCUIControl()
-	}
-
-	func makeIndoorUIControl() -> IndoorUIControl {
-		self.mapControlsFactory.makeIndoorUIControl(.default)
+	func makeIndoorUIControl(showOverview: Bool) -> UIView {
+		self.mapControlsFactory.makeIndoorUIControl(showOverview: showOverview)
 	}
 }

@@ -1,4 +1,4 @@
-import Combine
+@preconcurrency import Combine
 import class CoreLocation.CLLocation
 import DGis
 import Foundation
@@ -6,7 +6,7 @@ import Foundation
 class GeneratorLocationProvider: NSObject, ILocationProvider, @unchecked Sendable {
 	var lastLocation: CLLocation?
 	var locations: CurrentValueSubject<[CLLocation], Never> {
-		self.receiver.locations
+		self._locations
 	}
 
 	private var locationCallback: LocationCallback?
@@ -14,15 +14,17 @@ class GeneratorLocationProvider: NSObject, ILocationProvider, @unchecked Sendabl
 
 	private let queue: DispatchQueue
 	private let receiver: ILocationGeneratorReceiver
+	private let _locations: CurrentValueSubject<[CLLocation], Never>
 	private var locationsCancellable: AnyCancellable?
 
 	init(queue: DispatchQueue, receiver: ILocationGeneratorReceiver) {
 		self.queue = queue
 		self.receiver = receiver
+		self._locations = MainActor.assumeIsolated { receiver.locations }
 
 		super.init()
 
-		self.locationsCancellable = receiver.locations.receive(on: queue).sink(receiveValue: {
+		self.locationsCancellable = self._locations.receive(on: queue).sink(receiveValue: {
 			[weak self] locations in
 			self?.handle(locations: locations)
 		})

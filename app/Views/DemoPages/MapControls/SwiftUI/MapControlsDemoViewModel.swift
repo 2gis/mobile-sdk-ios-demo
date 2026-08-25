@@ -34,7 +34,7 @@ final class MapControlsDemoViewModel: ObservableObject, @unchecked Sendable {
 		map: Map,
 		mapSourceFactory: IMapSourceFactory,
 		logger: ILogger
-	) {
+	) throws {
 		self.searchManager = searchManager
 		self.imageFactory = imageFactory
 		self.map = map
@@ -45,7 +45,7 @@ final class MapControlsDemoViewModel: ObservableObject, @unchecked Sendable {
 			bearingSource: .satellite
 		)
 		self.map.addSource(source: locationSource)
-		self.map.addSource(source: mapSourceFactory.makeRoadEventSource())
+		self.map.addSource(source: try mapSourceFactory.makeRoadEventSource())
 	}
 
 	func tap(objectInfo: RenderedObjectInfo) {

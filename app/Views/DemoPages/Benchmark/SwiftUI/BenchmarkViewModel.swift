@@ -48,7 +48,9 @@ final class BenchmarkViewModel: ObservableObject, @unchecked Sendable {
 		self.map.addSource(source: self.geometryMapObjectSource)
 		self.energyConsumption.setFpsCallback { [weak self] fps in
 			let currentTime = Date().timeIntervalSince1970
-			self?.fpsValues.append((timestamp: currentTime, fps: fps))
+			Task { @MainActor [weak self] in
+				self?.fpsValues.append((timestamp: currentTime, fps: fps))
+			}
 		}
 	}
 
@@ -84,23 +86,28 @@ final class BenchmarkViewModel: ObservableObject, @unchecked Sendable {
 			return
 		}
 		let tuple = path[index]
-		self.cameraMoveQueue.async {
-			self.moveCameraCancellable?.cancel()
-			self.moveCameraCancellable = self.map
-				.camera
-				.move(
-					position: tuple.position,
-					time: tuple.time,
-					animationType: tuple.type
-				).sink(on: self.cameraMoveQueue) { [weak self] _ in
-					self?.move(at: index + 1, path: path, reportName: reportName)
-				} failure: { error in
-					print("Something went wrong: \(error.localizedDescription)")
+		self.cameraMoveQueue.async { [weak self] in
+			Task { @MainActor [weak self] in
+				guard let self else { return }
+				self.moveCameraCancellable?.cancel()
+				self.moveCameraCancellable = self.map
+					.camera
+					.move(
+						position: tuple.position,
+						time: tuple.time,
+						animationType: tuple.type
+					).sink(on: self.cameraMoveQueue) { [weak self] _ in
+						Task { @MainActor [weak self] in
+							self?.move(at: index + 1, path: path, reportName: reportName)
+						}
+					} failure: { error in
+						print("Something went wrong: \(error.localizedDescription)")
+					}
 				}
+			}
 		}
-	}
 
-	private func cleanUp() {
+		private func cleanUp() {
 		self.objectManager.removeAll()
 		self.geometryMapObjectSource.removeObjects(objects: self.geometryObjects)
 		self.geometryObjects.removeAll()

@@ -40,10 +40,10 @@ final class CameraRestrictionsDemoViewModel: ObservableObject {
 		map: Map,
 		logger: ILogger,
 		mapSourceFactory: IMapSourceFactory
-	) {
+	) throws {
 		self.map = map
 		self.logger = logger
-		self.followController = TiltFollowController(styleZoomToTilt: createDefaultStyleZoomToTiltRelation())
+		self.followController = try TiltFollowController(styleZoomToTilt: createDefaultStyleZoomToTiltRelation())
 		let locationSource = mapSourceFactory.makeSmoothMyLocationMapObjectSource(bearingSource: .auto)
 		self.map.addSource(source: locationSource)
 		self.applySettings()
@@ -89,7 +89,13 @@ final class CameraRestrictionsDemoViewModel: ObservableObject {
 			let tiltValue = Tilt(value: point.tilt)
 			relation[zoom] = tiltValue
 		}
-		self.map.camera.maxTiltRestriction = createStyleZoomToTiltRelation(points: points)
+		do {
+			self.map.camera.maxTiltRestriction = try createStyleZoomToTiltRelation(points: points)
+		} catch let error as SimpleError {
+			self.errorMessage = error.description
+		} catch {
+			self.errorMessage = error.localizedDescription
+		}
 	}
 
 	private func setStyleZoomToTiltRelation() {
@@ -109,9 +115,15 @@ final class CameraRestrictionsDemoViewModel: ObservableObject {
 			let tiltValue = Tilt(value: point.tilt)
 			relation[zoom] = tiltValue
 		}
-		let styleZoomToTiltRelation = createStyleZoomToTiltRelation(points: points)
-		self.followController = TiltFollowController(styleZoomToTilt: styleZoomToTiltRelation)
-		self.map.camera.addFollowController(followController: self.followController)
+		do {
+			let styleZoomToTiltRelation = try createStyleZoomToTiltRelation(points: points)
+			self.followController = TiltFollowController(styleZoomToTilt: styleZoomToTiltRelation)
+			self.map.camera.addFollowController(followController: self.followController)
+		} catch let error as SimpleError {
+			self.errorMessage = error.description
+		} catch {
+			self.errorMessage = error.localizedDescription
+		}
 	}
 
 	private func setZoomRestrictions() {

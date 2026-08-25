@@ -15,7 +15,11 @@ protocol IMapSourceFactory {
 		bearingSource: BearingSource
 	) -> MyLocationMapObjectSource
 
-	func makeRoadEventSource() -> RoadEventSource
+	func makeRoadEventSource() throws -> RoadEventSource
+
+	func makeRoadEventFilter(
+		displayCategories: RoadEventDisplayCategoryOptionSet
+	) -> RoadEventFilter
 }
 
 struct MapSourceFactory: IMapSourceFactory {
@@ -57,7 +61,17 @@ struct MapSourceFactory: IMapSourceFactory {
 		)
 	}
 
-	func makeRoadEventSource() -> RoadEventSource {
-		RoadEventSource(context: self.context)
+	func makeRoadEventSource() throws -> RoadEventSource {
+		try RoadEventSource(context: self.context)
+	}
+
+	func makeRoadEventFilter(
+		displayCategories: RoadEventDisplayCategoryOptionSet
+	) -> RoadEventFilter {
+		DefaultRoadEventFilter.create(
+			context: self.context,
+			displayCategories: displayCategories,
+			startTimeCutoff: nil
+		)
 	}
 }

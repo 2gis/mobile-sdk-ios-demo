@@ -70,11 +70,10 @@ extension NavigationViewTheme {
 		theme.messageBarControlTheme.activityIndicatorColor = .purple
 		theme.messageBarControlTheme.textFont = UIFont(name: "AmericanTypewriter", size: 16)!
 
-		theme.mapControlsTheme.trafficControlTheme.lowJamsColor = .green
-		theme.mapControlsTheme.trafficControlTheme.mediumJamsColor = .yellow
-		theme.mapControlsTheme.trafficControlTheme.hightJamsColor = .purple
-		theme.mapControlsTheme.trafficControlTheme.textFont = UIFont(name: "AmericanTypewriter-Semibold", size: 16)!
-		theme.mapControlsTheme.parkingControlTheme.icon = UIImage(named: "svg/parking")?.withRenderingMode(.alwaysTemplate)
+		theme.mapControlsTheme.trafficAndParkingControlTheme.highTrafficColor = .purple
+		theme.mapControlsTheme.trafficAndParkingControlTheme.scoreFont = UIFont(name: "AmericanTypewriter-Semibold", size: 16)!
+		theme.mapControlsTheme.trafficAndParkingControlTheme.parkingIcon = UIImage(named: "svg/parking")?.withRenderingMode(.alwaysTemplate)
+			?? theme.mapControlsTheme.trafficAndParkingControlTheme.parkingIcon
 
 		theme.betterRouteControlTheme.progressBarColor = .purple
 

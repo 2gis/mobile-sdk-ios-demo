@@ -47,9 +47,11 @@ final class GraphicsOptionsDemoViewModel: ObservableObject, @unchecked Sendable 
 		self.mapGraphicsPresetHintCancellable = self.map.graphicsPresetHintChannel.sinkOnMainThread(
 			{
 				[weak self] preset in
-				guard let self else { return }
-				if let option = GraphicsOption.allCases.first(where: { $0.preset == preset }) {
-					self.recommendedOption = option.name
+				Task { @MainActor [weak self] in
+					guard let self else { return }
+					if let option = GraphicsOption.allCases.first(where: { $0.preset == preset }) {
+						self.recommendedOption = option.name
+					}
 				}
 			}
 		)

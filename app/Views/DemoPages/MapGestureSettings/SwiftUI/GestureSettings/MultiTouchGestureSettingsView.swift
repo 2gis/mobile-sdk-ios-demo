@@ -21,7 +21,7 @@ struct MultiTouchGestureSettingsView: View {
 						sectionGestureSetting {
 							SettingsFormTextFieldView(
 								title: "MultitouchShiftThresholdMm",
-								value: self.$viewModel.multitouchShiftThresholdMm
+								value: self.$viewModel.multiTouchShiftThresholdMm
 							)
 						}
 					}

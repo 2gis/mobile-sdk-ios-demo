@@ -66,6 +66,7 @@ enum DemoPage: String, CaseIterable {
 	case customGestures
 	case customMapControls
 	case directorySearch
+	case directorySearchControl
 	case fpsRestrictions
 	case graphicsOptions
 	case locale
@@ -89,7 +90,7 @@ enum DemoPage: String, CaseIterable {
 	case navigatorWithMiniMap
 	case territoryManager
 	case routeEditor
-    case routeEditorControl
+	case routeEditorControl
 
 	var name: String {
 		switch self {
@@ -115,6 +116,8 @@ enum DemoPage: String, CaseIterable {
             return "Map gesture settings"
 		case .directorySearch:
 			return "Directory search"
+		case .directorySearchControl:
+			return "Directory search control"
 		case .fpsRestrictions:
 			return "FPS restrictions"
 		case .graphicsOptions:
@@ -159,8 +162,8 @@ enum DemoPage: String, CaseIterable {
 			return "Territory manager"
 		case .routeEditor:
 			return "Route editor"
-        case .routeEditorControl:
-            return "Route editor control"
+		case .routeEditorControl:
+			return "Route editor control"
 		@unknown default:
 			assertionFailure("Unknown value for DemoPage")
 		}
@@ -186,12 +189,12 @@ enum DemoPage: String, CaseIterable {
 
 	var category: DemoCategory {
 		switch self {
-		case .directorySearch:
+		case .directorySearch, .directorySearchControl:
 			return .search
 		case .routeEditor:
 			return .navigation
-        case .routeEditorControl:
-            return .navigation
+		case .routeEditorControl:
+			return .navigation
 		case .minimap:
 			return .navigation
 		case .navigator:

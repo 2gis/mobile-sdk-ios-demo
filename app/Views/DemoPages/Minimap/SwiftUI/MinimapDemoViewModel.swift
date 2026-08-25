@@ -100,15 +100,20 @@ final class MinimapDemoViewModel: ObservableObject, @unchecked Sendable {
 			finishPoint: finishPoint,
 			routeSearchOptions: routeSearchOptions
 		).sinkOnMainThread { [weak self] routes in
-			if let route = routes.first {
-				self?.handle(route, finishPoint: finishPoint, routeSearchOptions: routeSearchOptions)
-			} else {
-				let errorMessage = Constants.routeSearchErrorMessage
-				self?.state = .error(errorMessage)
+			Task { @MainActor [weak self] in
+				guard let self else { return }
+				if let route = routes.first {
+					self.handle(route, finishPoint: finishPoint, routeSearchOptions: routeSearchOptions)
+				} else {
+					self.state = .error(Constants.routeSearchErrorMessage)
+				}
 			}
 		} failure: { [weak self] error in
-			self?.state = .error("\(Constants.routeSearchErrorMessage) \(error.localizedDescription)")
-			self?.logger.error("Unable to find route: \(error)")
+			Task { @MainActor [weak self] in
+				guard let self else { return }
+				self.state = .error("\(Constants.routeSearchErrorMessage) \(error.localizedDescription)")
+				self.logger.error("Unable to find route: \(error)")
+			}
 		}
 		self.cameraStateCancellable = self.map.camera.sinkOnStatefulChangesOnMainThread(reason: .state) { [weak self] (state: CameraState) in
 			Task { @MainActor [weak self] in
@@ -153,8 +158,8 @@ final class MinimapDemoViewModel: ObservableObject, @unchecked Sendable {
 			self.targetMiniMapEnergyConsumption.maxFps = 20
 			self.targetMiniMapEnergyConsumption.powerSavingMaxFps = 10
 		default:
-			self.mainMapEnergyConsumption.maxFps = UIScreen.main.maximumFramesPerSecond
-			self.mainMapEnergyConsumption.powerSavingMaxFps = UIScreen.main.maximumFramesPerSecond / 2
+			self.mainMapEnergyConsumption.maxFps = Fps(value: UInt32(UIScreen.main.maximumFramesPerSecond))
+			self.mainMapEnergyConsumption.powerSavingMaxFps = Fps(value: UInt32(UIScreen.main.maximumFramesPerSecond / 2))
 			self.miniMapEnergyConsumption.maxFps = 20
 			self.miniMapEnergyConsumption.powerSavingMaxFps = 10
 			self.targetMiniMapEnergyConsumption.maxFps = 20

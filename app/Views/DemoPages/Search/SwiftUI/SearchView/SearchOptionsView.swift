@@ -121,7 +121,7 @@ private enum DirectoryFilterType: CaseIterable {
 	case workTime
 }
 
-extension DirectoryFilterType: PickerViewOption {
+extension DirectoryFilterType: @MainActor PickerViewOption {
 	var id: DirectoryFilterType {
 		self
 	}
@@ -147,6 +147,8 @@ private extension SearchOptions {
 			switch workTime {
 			case .isOpenNow:
 				return .isOpenNow
+			case .isOpenAllDay:
+				return .isOpenNow
 			case .workTime:
 				return .workTime
 			@unknown default:
@@ -160,7 +162,7 @@ private extension SearchOptions {
 
 extension SortingType: @retroactive Identifiable {}
 
-extension SortingType: PickerViewOption {
+extension SortingType: @MainActor PickerViewOption {
 	public var id: SortingType { self }
 
 	var name: String {
@@ -182,7 +184,7 @@ extension SortingType: PickerViewOption {
 
 extension ObjectType: @retroactive Identifiable {}
 
-extension ObjectType: PickerViewOption {
+extension ObjectType: @MainActor PickerViewOption {
 	public var id: ObjectType { self }
 
 	static let defaultTypes: [ObjectType] = {

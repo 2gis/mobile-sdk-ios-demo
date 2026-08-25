@@ -49,14 +49,15 @@ struct NavigatorDemoView: View {
 				.edgesIgnoringSafeArea(.all)
 			self.navigationViewFactory.makeNavigationView(
 				map: self.mapFactory.map,
-				navigationManager: self.viewModel.navigationManager
+				navigationManager: self.viewModel.navigationManager,
+				locationPermissionCallback: {}
 			)
 			.finishButtonCallback { [viewModel = self.viewModel] in
 				viewModel.stopNavigation()
 			}
 			if self.viewModel.showTargetPointPicker {
 				HStack {
-					self.mapViewsFactory.makeIndoorView()
+					self.mapViewsFactory.makeIndoorView(showOverview: false)
 						.frame(width: 38, height: 119)
 						.fixedSize()
 						.padding(.leading, 20)
@@ -69,7 +70,7 @@ struct NavigatorDemoView: View {
 							.frame(width: 48, height: 102)
 							.fixedSize()
 							.padding(20)
-						self.mapViewsFactory.makeCurrentLocationView()
+						self.mapViewsFactory.makeCurrentLocationView(permissionCallback: {})
 							.frame(width: 48, height: 48)
 							.fixedSize()
 					}

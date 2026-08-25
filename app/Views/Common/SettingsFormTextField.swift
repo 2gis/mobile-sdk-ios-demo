@@ -134,7 +134,7 @@ extension SettingsFormTextFieldView where Value == Float {
 	}
 }
 
-class SettingsFormTextFieldUIView<Value>: UIView, UITextFieldDelegate {
+final class SettingsFormTextFieldUIView<Value>: UIView, UITextFieldDelegate {
 
 	typealias RawToValueConverter = (String) -> Value?
 	typealias ValueToRawConverter = (Value) -> String?
@@ -175,8 +175,13 @@ class SettingsFormTextFieldUIView<Value>: UIView, UITextFieldDelegate {
 		configure(title: title, keyboardType: keyboardType)
 	}
 
-	required init?(coder: NSCoder) {
+	@available(*, unavailable)
+	required init?(coder _: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
+	}
+
+	deinit {
+		self.textField.delegate = nil
 	}
 
 	private func setupViews() {

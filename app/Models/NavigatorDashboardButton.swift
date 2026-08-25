@@ -4,12 +4,12 @@ enum NavigatorDashboardButton: String, CaseIterable {
 	case `default`, exitButton
 }
 
-extension NavigatorDashboardButton: PickerViewOption {
-	var id: NavigatorDashboardButton {
+extension NavigatorDashboardButton: @MainActor PickerViewOption {
+	nonisolated var id: NavigatorDashboardButton {
 		self
 	}
 
-	var name: String {
+	nonisolated var name: String {
 		switch self {
 		case .default:
 			return "Default"

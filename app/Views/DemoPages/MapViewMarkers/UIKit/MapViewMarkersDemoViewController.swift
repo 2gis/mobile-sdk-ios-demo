@@ -5,8 +5,8 @@ class MapViewMarkersDemoViewController: UIViewController {
 	private let viewModel: MapViewMarkersDemoUIViewModel
 	private let mapFactory: IMapFactory
 	private let mapControlsFactory: IMapUIControlsFactory
-	private let zoomControl: ZoomUIControl
-	private let currentLocationControl: CurrentLocationUIControl
+	private let zoomControl: UIControl
+	private let currentLocationControl: UIControl
 	private var mapView: any UIView & IMapUIView
 	private var markerViewOverlay: any UIView & IMarkerOverlayUIView
 
@@ -19,7 +19,7 @@ class MapViewMarkersDemoViewController: UIViewController {
 		self.mapControlsFactory = self.mapFactory.mapUIControlsFactory
 
 		self.zoomControl = self.mapControlsFactory.makeZoomUIControl()
-		self.currentLocationControl = self.mapControlsFactory.makeCurrentLocationUIControl()
+		self.currentLocationControl = self.mapControlsFactory.makeCurrentLocationUIControl(permissionCallback: {})
 
 		self.mapView = self.mapFactory.mapUIView
 		self.markerViewOverlay = self.mapFactory.markerOverlayUIView

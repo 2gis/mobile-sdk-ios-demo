@@ -58,7 +58,7 @@ final class UIKitDemoFactory: RootViewFactory {
 
 	private func makeRoadEventsDemoPage() throws -> UIViewController {
 		let mapFactory = try self.makeMapFactory()
-		let viewModel = RoadEventsDemoViewModel(
+		let viewModel = try RoadEventsDemoViewModel(
 			map: mapFactory.map,
 			mapSourceFactory: MapSourceFactory(context: self.context, settingsService: self.settingsService)
 		)

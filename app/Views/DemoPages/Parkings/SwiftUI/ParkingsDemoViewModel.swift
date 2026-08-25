@@ -46,14 +46,18 @@ final class ParkingsDemoViewModel: ObservableObject, @unchecked Sendable {
 
 	private func handle(_ mapObject: DgisMapObject) {
 		self.searchCancellable?.cancel()
-		self.searchCancellable = self.searchManager.searchByDirectoryObjectId(
-			objectId: mapObject.id
+		self.searchCancellable = self.searchManager.searchByDirectoryObjectIds(
+			objectIds: [mapObject.id]
 		)
 		.sinkOnMainThread(
-			receiveValue: { [weak self] object in
-				self?.directoryObject = object
+			receiveValue: { [weak self] objects in
+				Task { @MainActor [weak self] in
+					self?.directoryObject = objects.first
+				}
 			}, failure: { [weak self] error in
-				self?.logger.error("Unable to find directory object: \(error)")
+				Task { @MainActor [weak self] in
+					self?.logger.error("Unable to find directory object: \(error)")
+				}
 			}
 		)
 	}

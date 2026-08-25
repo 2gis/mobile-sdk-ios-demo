@@ -10,7 +10,7 @@ protocol ILogger {
 	var logFileURL: URL? { get }
 	var logFilesFolderURL: URL? { get }
 
-	func log(
+	nonisolated func log(
 		_ message: String,
 		level: LogLevel,
 		file: String,
@@ -101,11 +101,11 @@ final class Logger: ILogger {
 		self.logFilesFolderURL = fileDestination.logFileURL?.deletingLastPathComponent()
 	}
 
-	func log(
+	nonisolated func log(
 		_ message: String,
 		level: LogLevel,
 		file: String,
-		function: String,
+		function _: String,
 		line: Int
 	) {
 		self.log.custom(
@@ -114,18 +114,18 @@ final class Logger: ILogger {
 		)
 	}
 
-	private func makeLevelString(_ level: LogLevel) -> String {
+	private nonisolated func makeLevelString(_ level: LogLevel) -> String {
 		switch level {
-			case .verbose:
-				return "VERBOSE"
-			case .info:
-				return "INFO"
-			case .warning:
-				return "WARNING"
-			case .error:
-				return "ERROR"
-			case .fault:
-				return "FATAL"
+		case .verbose:
+			"VERBOSE"
+		case .info:
+			"INFO"
+		case .warning:
+			"WARNING"
+		case .error:
+			"ERROR"
+		case .fault:
+			"FATAL"
 		}
 	}
 }
