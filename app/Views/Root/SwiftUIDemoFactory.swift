@@ -15,6 +15,8 @@ final class SwiftUIDemoFactory: RootViewFactory {
 			try self.makeCameraMovesDemoPage()
 		case .cameraRestrictions:
 			try self.makeCameraRestrictionsDemoPage()
+		case .clusterHeatMap:
+			try self.makeClusterHeatMapDemoPage()
 		case .clustering:
 			try self.makeClusteringDemoPage()
 		case .copyrightSettings:
@@ -156,6 +158,19 @@ final class SwiftUIDemoFactory: RootViewFactory {
 			logger: self.logger
 		)
 		return ClusteringDemoView(
+			viewModel: viewModel,
+			mapFactory: mapFactory
+		)
+	}
+
+	private func makeClusterHeatMapDemoPage() throws -> some View {
+		let mapFactory = try self.makeMapFactory()
+		let viewModel = ClusterHeatMapDemoViewModel(
+			mapFactory: mapFactory,
+			imageFactory: self.makeImageFactory(),
+			logger: self.logger
+		)
+		return ClusterHeatMapDemoView(
 			viewModel: viewModel,
 			mapFactory: mapFactory
 		)
