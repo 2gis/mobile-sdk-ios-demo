@@ -61,6 +61,7 @@ enum DemoPage: String, CaseIterable {
 	case cameraCalcPosition
 	case cameraMoves
 	case cameraRestrictions
+	case clusterHeatMap
 	case clustering
 	case copyrightSettings
 	case customGestures
@@ -104,6 +105,8 @@ enum DemoPage: String, CaseIterable {
 			return "Camera restrictions"
 		case .cameraMoves:
 			return "Camera moves"
+		case .clusterHeatMap:
+			return "Cluster heat map"
 		case .clustering:
 			return "Clustering"
 		case .copyrightSettings:

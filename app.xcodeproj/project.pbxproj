@@ -135,6 +135,10 @@
 		64C859ED2B81621E00F9CF2C /* RenderedObjectInfoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64C859EB2B81621D00F9CF2C /* RenderedObjectInfoViewModel.swift */; };
 		64C859F12B81621E00F9CF2C /* RenderedObjectInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64C859EC2B81621E00F9CF2C /* RenderedObjectInfoView.swift */; };
 		64CFA1EF290946F1009AF855 /* Meter+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64CFA1EE290946F0009AF855 /* Meter+Helpers.swift */; };
+		C1E7A1102FA1000000AABBCC /* ClusterHeatMapDemoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1E7A1012FA1000000AABBCC /* ClusterHeatMapDemoViewModel.swift */; };
+		C1E7A1112FA1000000AABBCC /* ClusterHeatMapDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1E7A1022FA1000000AABBCC /* ClusterHeatMapDemoView.swift */; };
+		C1E7A1122FA1000000AABBCC /* ClusterHeatMapDemoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1E7A1012FA1000000AABBCC /* ClusterHeatMapDemoViewModel.swift */; };
+		C1E7A1132FA1000000AABBCC /* ClusterHeatMapDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1E7A1022FA1000000AABBCC /* ClusterHeatMapDemoView.swift */; };
 		64D90FBE26A6FB0200225ABD /* ClusteringDemoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64D90FBC26A6FB0200225ABD /* ClusteringDemoViewModel.swift */; };
 		64D90FBF26A6FB0200225ABD /* ClusteringDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64D90FBD26A6FB0200225ABD /* ClusteringDemoView.swift */; };
 		64E4B4CF2D0B706100691058 /* ModelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64E4B4CC2D0B706100691058 /* ModelView.swift */; };
@@ -704,6 +708,8 @@
 		64C859EB2B81621D00F9CF2C /* RenderedObjectInfoViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RenderedObjectInfoViewModel.swift; sourceTree = "<group>"; };
 		64C859EC2B81621E00F9CF2C /* RenderedObjectInfoView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RenderedObjectInfoView.swift; sourceTree = "<group>"; };
 		64CFA1EE290946F0009AF855 /* Meter+Helpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Meter+Helpers.swift"; sourceTree = "<group>"; };
+		C1E7A1012FA1000000AABBCC /* ClusterHeatMapDemoViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClusterHeatMapDemoViewModel.swift; sourceTree = "<group>"; };
+		C1E7A1022FA1000000AABBCC /* ClusterHeatMapDemoView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClusterHeatMapDemoView.swift; sourceTree = "<group>"; };
 		64D90FBC26A6FB0200225ABD /* ClusteringDemoViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClusteringDemoViewModel.swift; sourceTree = "<group>"; };
 		64D90FBD26A6FB0200225ABD /* ClusteringDemoView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClusteringDemoView.swift; sourceTree = "<group>"; };
 		64E4B4CC2D0B706100691058 /* ModelView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModelView.swift; sourceTree = "<group>"; };
@@ -1246,6 +1252,7 @@
 				C4FE2FA02B3958F80045BBA9 /* CalcPosition */,
 				64A23985269EFE77007385DA /* CameraMoves */,
 				C44B26F32B8DAEA100DD5362 /* CameraRestrictions */,
+				C1E7A1032FA1000000AABBCC /* ClusterHeatMap */,
 				64D90FBB26A6FB0200225ABD /* Clustering */,
 				B794FD7427089D16005C4B3C /* CopyrightSettings */,
 				649008CE2A58946500ABED24 /* CustomMapControls */,
@@ -1285,6 +1292,23 @@
 				C41699E12D7891770050EA44 /* SwiftUI */,
 			);
 			path = VisibleAreaDetection;
+			sourceTree = "<group>";
+		};
+		C1E7A1032FA1000000AABBCC /* ClusterHeatMap */ = {
+			isa = PBXGroup;
+			children = (
+				C1E7A1042FA1000000AABBCC /* SwiftUI */,
+			);
+			path = ClusterHeatMap;
+			sourceTree = "<group>";
+		};
+		C1E7A1042FA1000000AABBCC /* SwiftUI */ = {
+			isa = PBXGroup;
+			children = (
+				C1E7A1022FA1000000AABBCC /* ClusterHeatMapDemoView.swift */,
+				C1E7A1012FA1000000AABBCC /* ClusterHeatMapDemoViewModel.swift */,
+			);
+			path = SwiftUI;
 			sourceTree = "<group>";
 		};
 		64A23985269EFE77007385DA /* CameraMoves */ = {
@@ -2198,6 +2222,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C1E7A1102FA1000000AABBCC /* ClusterHeatMapDemoViewModel.swift in Sources */,
+				C1E7A1112FA1000000AABBCC /* ClusterHeatMapDemoView.swift in Sources */,
 				B7D4D7EE26E6312F00A5FF60 /* ILocationService.swift in Sources */,
 				64C0C6C429B3854E00195A11 /* ClusteringSettingsView.swift in Sources */,
 				C44B26F52B8DAECA00DD5362 /* CameraRestrictionsDemoView.swift in Sources */,
@@ -2485,6 +2511,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C1E7A1122FA1000000AABBCC /* ClusterHeatMapDemoViewModel.swift in Sources */,
+				C1E7A1132FA1000000AABBCC /* ClusterHeatMapDemoView.swift in Sources */,
 				C4AB88652C06031200FF713C /* CameraMovesDemoView.swift in Sources */,
 				C4AB88662C06031200FF713C /* SettingsViewModel.swift in Sources */,
 				C4F31F672D82F32E00E0C3A6 /* CustomMapControlsDemoViewController.swift in Sources */,
