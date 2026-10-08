@@ -12,8 +12,8 @@ final class ClusterHeatMapDemoViewModel: ObservableObject {
 		static let clusterRadius = LogicalPixel(value: 28.0)
 		static let clustersEndAtZoom = Zoom(value: 15.5)
 		static let heatSpotWidth = LogicalPixel(value: 72.0)
-		static let markerCount = 100_000
-		static let markerBatchSize = 5_000
+		static let markerCount = 100000
+		static let markerBatchSize = 5000
 	}
 
 	@Published private(set) var isReady = false
@@ -123,7 +123,9 @@ final class ClusterHeatMapDemoViewModel: ObservableObject {
 					icon: imagePalette.image(for: heatMapPoint.dbIntensity),
 					iconWidth: Constants.heatSpotWidth,
 					userData: HeatMapPointPayload(dbIntensity: heatMapPoint.dbIntensity),
-					zIndex: ZIndex(value: 1)
+					zIndex: ZIndex(value: 1),
+					animatedAppearance: false,
+					suppressOnOverlap: false
 				))
 				markers.append(marker)
 			} catch {
@@ -189,7 +191,7 @@ private nonisolated enum HeatMapPointGenerator {
 	]
 
 	static func makePoints(count: Int) -> [HeatMapPoint] {
-		var generator = Generator(seed: 0x2D15_C0DE)
+		var generator = Generator(seed: 0x2D15C0DE)
 		var points: [HeatMapPoint] = []
 		points.reserveCapacity(count)
 		for _ in 0 ..< count {
@@ -219,7 +221,7 @@ private nonisolated enum HeatMapPointGenerator {
 		}
 
 		private mutating func nextUnit() -> Double {
-			self.state = self.state &* 6_364_136_223_846_793_005 &+ 1
+			self.state = self.state &* 6364136223846793005 &+ 1
 			return Double(self.state >> 11) / Double(1 << 53)
 		}
 
@@ -235,7 +237,7 @@ private nonisolated enum HeatMapPointAggregator {
 		let longitude: Int64
 	}
 
-	private static let coordinatePrecision = 1_000_000.0
+	private static let coordinatePrecision = 1000000.0
 
 	static func aggregate(_ points: [HeatMapPointGenerator.HeatMapPoint]) -> [HeatMapPointGenerator.HeatMapPoint] {
 		var pointsByCoordinate: [CoordinateKey: HeatMapPointGenerator.HeatMapPoint] = [:]
@@ -243,8 +245,8 @@ private nonisolated enum HeatMapPointAggregator {
 
 		for point in points {
 			let key = CoordinateKey(
-				latitude: Int64((point.latitude * coordinatePrecision).rounded()),
-				longitude: Int64((point.longitude * coordinatePrecision).rounded())
+				latitude: Int64((point.latitude * self.coordinatePrecision).rounded()),
+				longitude: Int64((point.longitude * self.coordinatePrecision).rounded())
 			)
 			if let existingPoint = pointsByCoordinate[key] {
 				pointsByCoordinate[key] = .init(
@@ -264,8 +266,8 @@ private nonisolated enum HeatMapPointAggregator {
 private nonisolated enum HeatMapIntensity {
 	static let buckets: [Double] = [
 		1.0, 2.0, 4.0, 8.0, 16.0, 32.0, 64.0, 128.0, 256.0,
-		512.0, 1_024.0, 2_048.0, 4_096.0, 8_192.0, 16_384.0,
-		32_768.0, 65_536.0, 100_000.0,
+		512.0, 1024.0, 2048.0, 4096.0, 8192.0, 16384.0,
+		32768.0, 65536.0, 100000.0,
 	]
 
 	static func centerOpacity(for intensity: Double) -> CGFloat {
@@ -275,7 +277,7 @@ private nonisolated enum HeatMapIntensity {
 	}
 }
 
-private nonisolated final class HeatMapPointPayload: @unchecked Sendable {
+private final nonisolated class HeatMapPointPayload: @unchecked Sendable {
 	let dbIntensity: Double
 
 	init(dbIntensity: Double) {
@@ -283,7 +285,7 @@ private nonisolated final class HeatMapPointPayload: @unchecked Sendable {
 	}
 }
 
-private nonisolated final class HeatMapImagePalette: @unchecked Sendable {
+private final nonisolated class HeatMapImagePalette: @unchecked Sendable {
 	private let images: [DGis.Image]
 
 	init(images: [DGis.Image]) {
@@ -297,7 +299,7 @@ private nonisolated final class HeatMapImagePalette: @unchecked Sendable {
 	}
 }
 
-private nonisolated final class ClusterHeatMapRenderer: SimpleClusterRenderer {
+private final nonisolated class ClusterHeatMapRenderer: SimpleClusterRenderer {
 	private let imagePalette: HeatMapImagePalette
 
 	init(imagePalette: HeatMapImagePalette) {
@@ -312,7 +314,9 @@ private nonisolated final class ClusterHeatMapRenderer: SimpleClusterRenderer {
 		return SimpleClusterOptions(
 			icon: self.imagePalette.image(for: dbIntensity),
 			iconWidth: LogicalPixel(value: 72.0),
-			zIndex: ZIndex(value: 2)
+			zIndex: ZIndex(value: 2),
+			animatedAppearance: false,
+			suppressOnOverlap: false
 		)
 	}
 }

@@ -3,7 +3,7 @@ import SwiftUI
 
 struct ClusterHeatMapDemoView: View {
 	typealias State = SwiftUI.State
-	
+
 	@ObservedObject private var viewModel: ClusterHeatMapDemoViewModel
 	@State private var mapViewsFactory: IMapViewsFactory?
 	private let mapFactory: IMapFactory
