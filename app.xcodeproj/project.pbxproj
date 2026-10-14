@@ -3053,7 +3053,7 @@
 			repositoryURL = "https://github.com/2gis/mobile-sdk-full-swift-package.git";
 			requirement = {
 				kind = exactVersion;
-				version = 14.1.0;
+				version = 14.2.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
